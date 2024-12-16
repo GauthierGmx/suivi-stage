@@ -1,0 +1,5 @@
+Afin que le docker-compose fonctionne correctement, il vous faudra créer différents dossiers en plus (à l'intérieur du dossier où se situe le docker-compose.yml) :
+
+- Un dossier mysql_data
+- Un dossier php comportant les deux sous-dossiers angular et laravel
+

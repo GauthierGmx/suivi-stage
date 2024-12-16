@@ -1,0 +1,54 @@
+version: '3.1'
+services:
+  php:
+    user: root
+    build: ./dockerphp
+    #image: rogh/sae-php74:latest
+    volumes:
+      - ./php/laravel:/var/www/html
+      - ./apachedefaultconf:/etc/apache2/site-enabled
+    ports:
+      - "8000:80"
+    depends_on:
+      - mysql
+    links:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: db_suivi_stage
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    restart: always
+    ports:
+      - 8082:80
+    volumes:
+      - /sessions
+    depends_on:
+      - mysql
+
+  angular:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - ./php/angular/appli-test:/app   
+    command: sh -c "npm install && npm run start"
+    ports:
+      - "4200:4200"
+
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
