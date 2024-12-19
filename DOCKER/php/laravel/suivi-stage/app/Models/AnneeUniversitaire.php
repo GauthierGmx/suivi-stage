@@ -19,4 +19,28 @@ class AnneeUniversitaire extends Model
     protected $primaryKey = 'idAnneeUniversitaire';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+    
+    // Relation N-N avec Etudiant
+    public function etudiants()
+    {
+        return $this->hasMany(Etudiant::class);
+    }
+
+    // Relation N-N avec TD
+    public function tds()
+    {
+        return $this->hasMany(TD::class);
+    }
+
+    // Relation N-N avec TP
+    public function tps()
+    {
+        return $this->hasMany(TP::class);
+    }
+
+    // Relation N-N avec AnneeFormation
+    public function anneeFormations()
+    {
+        return $this->hasMany(AnneeFormation::class);
+    }
 }

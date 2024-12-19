@@ -17,4 +17,16 @@ class Droit extends Model
     protected $primaryKey = 'idDroit';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+
+    // Relation 1-N avec Admin
+    public function admins()
+    {
+        return $this->hasMany(Admin::class);
+    }
+
+    // Relation N-N avec Personnel
+    public function personnels()
+    {
+        return $this->hasMany(Personnel::class);
+    }
 }

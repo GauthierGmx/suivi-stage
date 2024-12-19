@@ -33,4 +33,16 @@ class FicheDescriptive extends Model
     protected $primaryKey = 'idFicheDescriptive';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+
+    // Relation 1-N avec TuteurEntreprise
+    public function tuteurEntreprise()
+    {
+        return $this->belongsTo(TuteurEntreprise::class);
+    }
+
+    // Relation N-N avec Etudiant
+    public function etudiants()
+    {
+        return $this->hasMany(Etudiant::class);
+    }
 }

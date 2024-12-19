@@ -19,4 +19,22 @@ class DepartementIUT extends Model
     protected $primaryKey = 'idDepartement';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+
+    // Relation 1-N avec Parcours
+    public function parcours()
+    {
+        return $this->hasMany(Parcours::class);
+    }
+
+    // Relation 1-N avec Etudiant
+    public function etudiants()
+    {
+        return $this->hasMany(Etudiant::class);
+    }
+
+    // Relation N-N avec Personnel
+    public function personnels()
+    {
+        return $this->hasMany(Personnel::class);
+    }
 }

@@ -32,4 +32,10 @@ class RechercheStage extends Model
     protected $primaryKey = 'idParametre';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+
+    // Relation 1-N avec Etudiant
+    public function etudiant()
+    {
+        return $this->belongsTo(Etudiant::class);
+    }
 }

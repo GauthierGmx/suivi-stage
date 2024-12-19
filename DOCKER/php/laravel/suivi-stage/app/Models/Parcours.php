@@ -19,4 +19,16 @@ class Parcours extends Model
     protected $primaryKey = 'idParcours';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+
+    // Relation 1-N avec DepartementIUT
+    public function departementIUT()
+    {
+        return $this->belongsTo(DepartementIUT::class);
+    }
+
+    // Relation 1-N avec Etudiant
+    public function etudiants()
+    {
+        return $this->hasMany(Etudiant::class);
+    }
 }

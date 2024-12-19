@@ -27,4 +27,28 @@ class Personnel extends Model
     protected $primaryKey = 'idPersonnel';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+
+    // Relation 1-N avec Admin
+    public function admins()
+    {
+        return $this->hasMany(Admin::class);
+    }
+
+    // Relation N-N avec Droit
+    public function droits()
+    {
+        return $this->hasMany(Droit::class);
+    }
+
+    // Relation N-N avec DepartementIUT
+    public function departementIUTs()
+    {
+        return $this->hasMany(DepartementIUT::class);
+    }
+
+    // Relation N-N avec Etudiant
+    public function etudiants()
+    {
+        return $this->hasMany(Etudiant::class);
+    }
 }
