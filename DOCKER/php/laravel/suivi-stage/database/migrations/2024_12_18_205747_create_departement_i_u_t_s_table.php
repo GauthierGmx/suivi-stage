@@ -14,8 +14,12 @@ class CreateDepartementIUTSTable extends Migration
     public function up()
     {
         Schema::create('departement_i_u_t_s', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->engine = 'InnoDB';
+            // Clé primaire
+            $table->tinyIncrements('idDepartement');
+            
+            // Attributs
+            $table->string('libelle', 100);
         });
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTuteurEntreprisesTable extends Migration
+class CreateTPSTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,13 @@ class CreateTuteurEntreprisesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tuteur_entreprises', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('t_p_s', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            // Clé primaire
+            $table->increments('idTP');
+
+            // Attributs
+            $table->string('libelle',2);
         });
     }
 
@@ -26,6 +30,6 @@ class CreateTuteurEntreprisesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tuteur_entreprises');
+        Schema::dropIfExists('t_p_s');
     }
 }
