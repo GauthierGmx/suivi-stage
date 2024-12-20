@@ -13,7 +13,7 @@ class Admin extends Model
         'idAdmin',
         'motDePasse',
         'sel'
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idAdmin';
     // Précise que la table ne contient pas de created_at et updated_at

@@ -22,7 +22,7 @@ class Personnel extends Model
         'longGPS',
         'latGPS',
         'coptaEtudiant'
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idPersonnel';
     // Précise que la table ne contient pas de created_at et updated_at
@@ -37,18 +37,18 @@ class Personnel extends Model
     // Relation N-N avec Droit
     public function droits()
     {
-        return $this->hasMany(Droit::class);
+        return $this->belongsToMany(Droit::class);
     }
 
     // Relation N-N avec DepartementIUT
     public function departementIUTs()
     {
-        return $this->hasMany(DepartementIUT::class);
+        return $this->belongsToMany(DepartementIUT::class);
     }
 
     // Relation N-N avec Etudiant
     public function etudiants()
     {
-        return $this->hasMany(Etudiant::class);
+        return $this->belongsToMany(Etudiant::class);
     }
 }

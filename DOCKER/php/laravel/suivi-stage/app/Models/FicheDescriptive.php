@@ -28,7 +28,7 @@ class FicheDescriptive extends Model
         'clauseConfidentialite',
         'statut',
         'numeroConvention'
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idFicheDescriptive';
     // Précise que la table ne contient pas de created_at et updated_at
@@ -43,6 +43,6 @@ class FicheDescriptive extends Model
     // Relation N-N avec Etudiant
     public function etudiants()
     {
-        return $this->hasMany(Etudiant::class);
+        return $this->belongsToMany(Etudiant::class);
     }
 }

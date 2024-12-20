@@ -14,7 +14,7 @@ class AnneeUniversitaire extends Model
     protected $fillable = [
         'idAnneeUniversitaire',
         'libelle',
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idAnneeUniversitaire';
     // Précise que la table ne contient pas de created_at et updated_at
@@ -23,24 +23,24 @@ class AnneeUniversitaire extends Model
     // Relation N-N avec Etudiant
     public function etudiants()
     {
-        return $this->hasMany(Etudiant::class);
+        return $this->belongsToMany(Etudiant::class);
     }
 
     // Relation N-N avec TD
     public function tds()
     {
-        return $this->hasMany(TD::class);
+        return $this->belongsToMany(TD::class);
     }
 
     // Relation N-N avec TP
     public function tps()
     {
-        return $this->hasMany(TP::class);
+        return $this->belongsToMany(TP::class);
     }
 
     // Relation N-N avec AnneeFormation
     public function anneeFormations()
     {
-        return $this->hasMany(AnneeFormation::class);
+        return $this->belongsToMany(AnneeFormation::class);
     }
 }

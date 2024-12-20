@@ -14,7 +14,7 @@ class Parcours extends Model
     protected $fillable = [
         'idParcours',
         'libelle',
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idParcours';
     // Précise que la table ne contient pas de created_at et updated_at

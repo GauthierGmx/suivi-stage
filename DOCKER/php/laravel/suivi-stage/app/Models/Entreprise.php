@@ -25,7 +25,7 @@ class Entreprise extends Model
         'representantLegal',
         'longGPS',
         'latGPS'
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idEntreprise';
     // Précise que la table ne contient pas de created_at et updated_at

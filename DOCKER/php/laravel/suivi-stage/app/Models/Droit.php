@@ -12,7 +12,7 @@ class Droit extends Model
     protected $fillable = [
         'idDroit',
         'libelle'
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idDroit';
     // Précise que la table ne contient pas de created_at et updated_at
@@ -27,6 +27,6 @@ class Droit extends Model
     // Relation N-N avec Personnel
     public function personnels()
     {
-        return $this->hasMany(Personnel::class);
+        return $this->belongsToMany(Personnel::class);
     }
 }

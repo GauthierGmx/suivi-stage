@@ -16,7 +16,7 @@ class ParametresGeneraux extends Model
         'libelle',
         'valeur',
         'description'
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idParametre';
     // Précise que la table ne contient pas de created_at et updated_at

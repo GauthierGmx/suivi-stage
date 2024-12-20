@@ -18,7 +18,7 @@ class TuteurEntreprise extends Model
         'telephone',
         'adresseMail',
         'fonction'
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idTuteur';
     // Précise que la table ne contient pas de created_at et updated_at

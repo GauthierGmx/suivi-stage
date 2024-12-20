@@ -10,6 +10,7 @@ class Etudiant extends Model
     use HasFactory;
     // Définit les attributs pouvant être remplis
     protected $fillable = [
+        'idEtudiant',
         'idUPPA',
         'nom',
         'prenom',
@@ -18,9 +19,9 @@ class Etudiant extends Model
         'codePostal',
         'telephone',
         'adresseMail',
-    ]
+    ];
     // Définit l'attribut de la clé primaire
-    protected $primaryKey = 'idUPPA';
+    protected $primaryKey = 'idEtudiant';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
 
@@ -51,42 +52,42 @@ class Etudiant extends Model
     // Relation N-N avec Personnel
     public function personnels()
     {
-        return $this->hasMany(Personnel::class);
+        return $this->belongsToMany(Personnel::class);
     }
 
     // Relation N-N avec RechercheStage
     public function rechercheStages()
     {
-        return $this->hasMany(RechercheStage::class);
+        return $this->belongsToMany(RechercheStage::class);
     }
 
     // Relation N-N avec FicheDescriptive
     public function ficheDescriptives()
     {
-        return $this->hasMany(FicheDescriptive::class);
+        return $this->belongsToMany(FicheDescriptive::class);
     }
 
     // Relation N-N avec TP
     public function tps()
     {
-        return $this->hasMany(TP::class);
+        return $this->belongsToMany(TP::class);
     }
 
     // Relation N-N avec TD
     public function tds()
     {
-        return $this->hasMany(TD::class);
+        return $this->belongsToMany(TD::class);
     }
 
     // Relation N-N avec AnneeFormation
     public function anneeFormations()
     {
-        return $this->hasMany(AnneeFormation::class);
+        return $this->belongsToMany(AnneeFormation::class);
     }
 
     // Relation N-N avec AnneeUniversitaire
     public function anneeUniversitaires()
     {
-        return $this->hasMany(AnneeUniversitaire::class);
+        return $this->belongsToMany(AnneeUniversitaire::class);
     }
 }

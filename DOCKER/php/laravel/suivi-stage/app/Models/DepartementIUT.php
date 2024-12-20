@@ -14,7 +14,7 @@ class DepartementIUT extends Model
     protected $fillable = [
         'idDepartement',
         'libelle',
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idDepartement';
     // Précise que la table ne contient pas de created_at et updated_at
@@ -35,6 +35,6 @@ class DepartementIUT extends Model
     // Relation N-N avec Personnel
     public function personnels()
     {
-        return $this->hasMany(Personnel::class);
+        return $this->belongsToMany(Personnel::class);
     }
 }
