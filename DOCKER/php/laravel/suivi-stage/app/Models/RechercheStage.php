@@ -17,10 +17,6 @@ class RechercheStage extends Model
         'dateModification',
         'date1erContact',
         'typeContact',
-        'nomEntreprise',
-        'adresseEntreprise',
-        'villeEntreprise',
-        'codePostalEntreprise',
         'nomPrenomContact',
         'fonctionContact',
         'telephoneContact',
@@ -37,5 +33,11 @@ class RechercheStage extends Model
     public function etudiant()
     {
         return $this->belongsTo(Etudiant::class);
+    }
+
+    // Relation 1-N avec Entreprise
+    public function entreprise()
+    {
+        return $this->belongsTo(Entreprise::class);
     }
 }

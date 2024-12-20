@@ -42,4 +42,10 @@ class Entreprise extends Model
     {
         return $this->hasMany(Etudiant::class);
     }
+
+    // Relation 1-N avec RechercheStage
+    public function rechercheStages()
+    {
+        return $this->hasMany(RechercheStage::class);
+    }
 }
