@@ -16,7 +16,7 @@ class CreateTPSTable extends Migration
         Schema::create('t_p_s', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             // Clé primaire
-            $table->increments('idTP');
+            $table->tinyIncrements('idTP');
 
             // Attributs
             $table->string('libelle',2);

@@ -23,7 +23,7 @@ class CreateParcoursTable extends Migration
 
             // Clé étrangère
             $table->unsignedTinyInteger('idDepartement');
-            $table->foreign('idDepartement')->references('idDepartement')->on('departements_i_u_t_s');
+            $table->foreign('idDepartement')->references('idDepartement')->on('departement_i_u_t_s');
         });
     }
 

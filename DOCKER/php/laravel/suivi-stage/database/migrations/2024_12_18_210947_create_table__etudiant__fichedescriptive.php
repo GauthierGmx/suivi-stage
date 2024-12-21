@@ -16,14 +16,14 @@ class CreateTableEtudiantFichedescriptive extends Migration
         Schema::create('table__etudiant__fichedescriptive', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             // Clé primaire
-            $table->primary(['idEtudiant','idFicheDescriptive']);
+            $table->primary(['idEtudiant','idFicheDescriptive'],'etudiant_fichedescriptive_primary');
 
             // Clé étrangère
             $table->unsignedInteger('idEtudiant');
             $table->foreign('idEtudiant')->references('idEtudiant')->on('etudiants')->onDelete('cascade')->onUpdate('cascade');
 
             $table->unsignedInteger('idFicheDescriptive');
-            $table->foreign('idFicheDescriptive')->references('idFicheDescriptive')->on('fichesDescriptive')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('idFicheDescriptive')->references('idFicheDescriptive')->on('fiche_descriptives')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

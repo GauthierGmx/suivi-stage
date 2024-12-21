@@ -33,13 +33,13 @@ class CreateEtudiantsTable extends Migration
             $table->foreign('idParcours')->references('idParcours')->on('parcours');
 
             $table->unsignedTinyInteger('idDepartement');
-            $table->foreign('idDepartement')->references('idDepartement')->on('departementsIUT');
+            $table->foreign('idDepartement')->references('idDepartement')->on('departement_i_u_t_s');
 
             $table->unsignedInteger('idEntreprise');
             $table->foreign('idEntreprise')->references('idEntreprise')->on('entreprises');
 
-            $table->unsignedInteger('idTuteurEntreprise');
-            $table->foreign('idTuteurEntreprise')->references('idTuteurEntreprise')->on('tuteursEntreprise');
+            $table->unsignedInteger('idTuteur');
+            $table->foreign('idTuteur')->references('idTuteur')->on('tuteur_entreprises');
         });
     }
 

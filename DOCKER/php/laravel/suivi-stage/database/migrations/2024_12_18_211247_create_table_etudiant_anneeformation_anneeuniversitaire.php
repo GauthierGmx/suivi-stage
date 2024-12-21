@@ -16,17 +16,17 @@ class CreateTableEtudiantAnneeformationAnneeuniversitaire extends Migration
         Schema::create('table_etudiant_anneeformation_anneeuniversitaire', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             // Clé primaire
-            $table->primary(['idEtudiant','idAnneeFormation','idAnneeUniversitaire']);
+            $table->primary(['idEtudiant','idAnneeFormation','idAnneeUniversitaire'],'etudiant_anneeFormation_anneeUniversitaire_primary');
 
             // Clé étrangère
             $table->unsignedInteger('idEtudiant');
             $table->foreign('idEtudiant')->references('idEtudiant')->on('etudiants')->onUpdate('cascade');
 
             $table->unsignedTinyInteger('idAnneeFormation');
-            $table->foreign('idAnneeFormation')->references('idAnneeFormation')->on('anneesFormation')->onUpdate('cascade');
+            $table->foreign('idAnneeFormation')->references('idAnneeFormation')->on('annee_formations')->onUpdate('cascade');
 
             $table->unsignedInteger('idAnneeUniversitaire');
-            $table->foreign('idAnneeUniversitaire')->references('idAnneeUniversitaire')->on('anneesUniversitaire')->onUpdate('cascade');
+            $table->foreign('idAnneeUniversitaire')->references('idAnneeUniversitaire')->on('annee_universitaires')->onUpdate('cascade');
         });
     }
 
