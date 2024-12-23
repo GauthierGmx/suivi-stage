@@ -22,10 +22,10 @@ class CreateEtudiantsTable extends Migration
             $table->string('idUPPA', 10)->unique();
             $table->string('nom', 50);
             $table->string('prenom', 50);
-            $table->string('adresse', 100);
-            $table->string('ville', 50);
-            $table->string('codePostal', 5);
-            $table->string('telephone', 12);
+            $table->string('adresse', 100)->nullable();
+            $table->string('ville', 50)->nullable();
+            $table->string('codePostal', 5)->nullable();
+            $table->string('telephone', 12)->nullable();
             $table->string('adresseMail', 50);
 
             // Clé étrangère

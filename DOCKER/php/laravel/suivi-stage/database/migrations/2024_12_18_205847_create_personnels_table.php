@@ -22,9 +22,9 @@ class CreatePersonnelsTable extends Migration
             $table->enum('roles', ['Gestionnaire','Enseignant']);
             $table->string('nom', 50);
             $table->string('prenom', 50);
-            $table->string('adresse', 100);
-            $table->string('ville', 50);
-            $table->string('codePostal', 5);
+            $table->string('adresse', 100)->nullable();
+            $table->string('ville', 50)->nullable();
+            $table->string('codePostal', 5)->nullable();
             $table->string('telephone', 12);
             $table->string('adresseMail', 50);
             $table->string('longGPS', 20)->nullable();

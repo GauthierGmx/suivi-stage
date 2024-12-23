@@ -13,7 +13,8 @@ class CreateTableEtudiantAnneeformationAnneeuniversitaire extends Migration
      */
     public function up()
     {
-        Schema::create('table_etudiant_anneeformation_anneeuniversitaire', function (Blueprint $table) {
+        // Changement du nom de table : "table_etudiant_anneeformation_anneeuniversitaire" (trop long) en "table_etudiant_anneeform_anneeuniv"
+        Schema::create('table_etudiant_anneeform_anneeuniv', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             // Clé primaire
             $table->primary(['idEtudiant','idAnneeFormation','idAnneeUniversitaire'],'etudiant_anneeFormation_anneeUniversitaire_primary');
@@ -37,6 +38,7 @@ class CreateTableEtudiantAnneeformationAnneeuniversitaire extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_etudiant_anneeformation_anneeuniversitaire');
+        // Changement du nom de table : "table_etudiant_anneeformation_anneeuniversitaire" (trop long) en "table_etudiant_anneeform_anneeuniv"
+        Schema::dropIfExists('table_etudiant_anneeform_anneeuniv');
     }
 }

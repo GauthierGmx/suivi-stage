@@ -21,9 +21,9 @@ class CreateTuteurEntreprisesTable extends Migration
             // Attributs
             $table->string('nom',50);
             $table->string('prenom',50);
-            $table->string('telephone',12);
-            $table->string('adresseMail',50);
-            $table->string('fonction',50);
+            $table->string('telephone',12)->nullable();
+            $table->string('adresseMail',50)->nullable();
+            $table->string('fonction',50)->nullable();
 
             // Clé étrangère
             $table->unsignedInteger('idEntreprise');
