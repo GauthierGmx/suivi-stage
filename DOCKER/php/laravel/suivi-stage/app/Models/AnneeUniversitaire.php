@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class AnneeUniversitaire extends Model
 {
     use HasFactory;
-    // Définit le nom de la table dans la base de données
-    protected $table = 'anneesUniversitaire';
     // Définit les attributs pouvant être remplis
     protected $fillable = [
         'idAnneeUniversitaire',
