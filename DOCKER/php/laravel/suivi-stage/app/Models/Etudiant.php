@@ -49,6 +49,12 @@ class Etudiant extends Model
         return $this->belongsTo(Parcours::class);
     }
 
+    // Relation N-N avec FicheDescriptive
+    public function ficheDescriptives()
+    {
+        return $this->hasMany(FicheDescriptive::class);
+    }
+
     // Relation N-N avec Personnel
     public function personnels()
     {
@@ -59,12 +65,6 @@ class Etudiant extends Model
     public function rechercheStages()
     {
         return $this->belongsToMany(RechercheStage::class);
-    }
-
-    // Relation N-N avec FicheDescriptive
-    public function ficheDescriptives()
-    {
-        return $this->belongsToMany(FicheDescriptive::class);
     }
 
     // Relation N-N avec TP

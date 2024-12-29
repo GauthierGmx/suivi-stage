@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class FicheDescriptive extends Model
 {
     use HasFactory;
-    // Définit le nom de la table dans la base de données
-    protected $table = 'fichesDescriptives';
     // Définit les attributs pouvant être remplis
     protected $fillable = [
         'idFicheDescriptive',
@@ -40,9 +38,9 @@ class FicheDescriptive extends Model
         return $this->belongsTo(TuteurEntreprise::class);
     }
 
-    // Relation N-N avec Etudiant
-    public function etudiants()
+    // Relation 1-N avec Etudiant
+    public function etudiant()
     {
-        return $this->belongsToMany(Etudiant::class);
+        return $this->belongsTo(Etudiant::class);
     }
 }

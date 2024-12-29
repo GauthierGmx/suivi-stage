@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class DepartementIUT extends Model
 {
     use HasFactory;
-    // Définit le nom de la table dans la base de données
-    protected $table = 'departementsIUT';
     // Définit les attributs pouvant être remplis
     protected $fillable = [
         'idDepartement',

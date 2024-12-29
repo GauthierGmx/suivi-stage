@@ -38,6 +38,9 @@ class CreateFicheDescriptivesTable extends Migration
             // Clé étrangère
             $table->unsignedInteger('idTuteurEntreprise');
             $table->foreign('idTuteurEntreprise')->references('idTuteur')->on('tuteur_entreprises');
+
+            $table->unsignedInteger('idEtudiant');
+            $table->foreign('idEtudiant')->references('idEtudiant')->on('etudiants');
         });
     }
 
