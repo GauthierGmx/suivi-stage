@@ -14,8 +14,12 @@ class CreateAnneeFormationsTable extends Migration
     public function up()
     {
         Schema::create('annee_formations', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->engine = 'InnoDB';
+            // Clé primaire
+            $table->tinyIncrements('idAnneeFormation');
+            
+            // Attributs
+            $table->string('libelle',6);
         });
     }
 

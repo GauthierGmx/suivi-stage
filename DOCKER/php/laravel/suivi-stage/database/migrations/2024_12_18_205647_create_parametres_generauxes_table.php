@@ -14,8 +14,14 @@ class CreateParametresGenerauxesTable extends Migration
     public function up()
     {
         Schema::create('parametres_generauxes', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->engine = 'InnoDB';
+            // Clé primaire
+            $table->tinyIncrements('idParametre');
+
+            // Attributs
+            $table->string('libelle',50);
+            $table->integer('valeur');
+            $table->string('description',100);
         });
     }
 

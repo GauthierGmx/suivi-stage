@@ -25,9 +25,27 @@ class Entreprise extends Model
         'representantLegal',
         'longGPS',
         'latGPS'
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idEntreprise';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+    
+    // Relation 1-N avec TuteurEntreprise
+    public function tuteurEntreprises()
+    {
+        return $this->hasMany(TuteurEntreprise::class);
+    }
+
+    // Relation 1-N avec Etudiant
+    public function etudiants()
+    {
+        return $this->hasMany(Etudiant::class);
+    }
+
+    // Relation 1-N avec RechercheStage
+    public function rechercheStages()
+    {
+        return $this->hasMany(RechercheStage::class);
+    }
 }

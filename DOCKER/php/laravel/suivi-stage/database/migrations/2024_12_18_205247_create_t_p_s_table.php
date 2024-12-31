@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEtudiantsTable extends Migration
+class CreateTPSTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,13 @@ class CreateEtudiantsTable extends Migration
      */
     public function up()
     {
-        Schema::create('etudiants', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('t_p_s', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            // Clé primaire
+            $table->tinyIncrements('idTP');
+
+            // Attributs
+            $table->string('libelle',2);
         });
     }
 
@@ -26,6 +30,6 @@ class CreateEtudiantsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('etudiants');
+        Schema::dropIfExists('t_p_s');
     }
 }
