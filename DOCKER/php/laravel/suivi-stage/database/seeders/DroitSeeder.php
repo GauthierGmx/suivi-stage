@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DroitSeeder extends Seeder
 {
@@ -13,6 +14,16 @@ class DroitSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('droits')->insert([
+            [
+                'libelle' => 'Lire fiche étudiant'
+            ],
+            [
+                'libelle' => 'Modifier paramètres parcours'
+            ],
+            [
+                'libelle' => 'Modifier paramètres application'
+            ]
+        ]);
     }
 }

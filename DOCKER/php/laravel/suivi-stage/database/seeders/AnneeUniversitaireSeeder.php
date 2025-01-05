@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class AnneeUniversitaireSeeder extends Seeder
 {
@@ -13,6 +14,13 @@ class AnneeUniversitaireSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('annee_universitaires')->insert([
+            [
+                'libelle' => '2023-2024'
+            ],
+            [
+                'libelle' => '2024-2025'
+            ]
+        ]);
     }
 }
