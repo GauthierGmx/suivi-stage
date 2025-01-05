@@ -19,7 +19,7 @@ class CreateTDSTable extends Migration
             $table->tinyIncrements('idTD');
         
             // Attributs
-            $table->string('libelle',2);
+            $table->string('libelle',4);
         });
     }
 
