@@ -14,7 +14,8 @@ importation des différents fichiers contenant les fonctions de l'algorithme'
 """
 import affichage as aff
 import connexion_bd as bd
-
+import fonctions as fn
+import pandas as pd
 
 def main():
     """
@@ -22,16 +23,26 @@ def main():
         INITIALISATION
     #####################
     """
+    conn = bd.active_connection()
+    matrice_data_prof = fn.recup_matrice_prof(conn.cursor)
+    
     # Noms des critères (colonnes)
-    criteres = [f"crit{i+1}" for i in range(8)] + ["SOMME"]
+    criteres = [["NOM"] + ["COMPTEUR_ETUDIANT_MAX"] + ["COMPTEUR_ACTUEL"] +["CODE_POSTAL_VILLE_ENTREPRISE"] + ["DISTANCE_GPS_PROF_ENTREPRISE"] + ["ETUDIANT_DEJA_PRESENT"] + ["EQUITE_DEUX_TROIS_ANNEE"] + ["SOMME"]]
     
     # Noms des professeurs (lignes)
-    professeurs = [f"M. X{i+1}" if i % 2 == 0 else f"Mme Y{i+1}" for i in range(8)]
+    professeurs = []
+    for i in range(len(matrice_data_prof)):
+        professeurs.append(matrice_data_prof[0][i])
     
-    # Initialiser une matrice vide (8x9)
-    matrice_critere = [[0 for _ in criteres] for _ in professeurs]
-
-    matrice_critere = aff.aleatoire(matrice_critere, criteres)
+    # Création du DataFrame avec les critères en ligne et les professeurs comme colonnes
+    df = pd.DataFrame(columns=professeurs, index=criteres)
+    
+    
+    """
+    ######################
+       CORPS ALGORITHME
+    #####################
+    """
 
     # Afficher la matrice avec indices des colonnes (critères) et des lignes (professeurs)
     print(f"{'':<15} " + " ".join([f"{crit:<10}" for crit in criteres]))
@@ -42,6 +53,10 @@ def main():
     liste_prof = aff.max_prof(matrice_critere, professeurs)
     print("\nProfesseurs triés par SOMME :", liste_prof)
     
+    
+    #Fermeture de l'accès à la BD    
+    cursor = conn.cursor()
+    conn.close()
 
 """
     APPELLE DE LA FONCTION PRINCIPALE

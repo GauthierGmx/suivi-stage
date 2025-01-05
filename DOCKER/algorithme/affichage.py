@@ -50,3 +50,7 @@ def aleatoire(matrice, criteres):
         matrice[i][-1] = sum(matrice[i][:-1])
         
     return matrice
+
+
+def recupereation_data_bd():
+    
