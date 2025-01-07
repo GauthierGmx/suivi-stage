@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class PersonnelEtudiantSeeder extends Seeder
+class PersonnelEtudiantAnneeunivSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,30 +14,36 @@ class PersonnelEtudiantSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('table_personnel_etudiant')->insert([
+        DB::table('table_personnel_etudiant_anneeuniv')->insert([
             [
                 'idPersonnel' => 1,
-                'idEtudiant' => 1
+                'idEtudiant' => 1,
+                'idAnneeUniversitaire' => 1
             ],
             [
                 'idPersonnel' => 1,
-                'idEtudiant' => 2
+                'idEtudiant' => 2,
+                'idAnneeUniversitaire' => 1
             ],
             [
                 'idPersonnel' => 1,
-                'idEtudiant' => 3
+                'idEtudiant' => 3,
+                'idAnneeUniversitaire' => 1
             ],
             [
                 'idPersonnel' => 1,
-                'idEtudiant' => 4
+                'idEtudiant' => 4,
+                'idAnneeUniversitaire' => 1
             ],
             [
                 'idPersonnel' => 1,
-                'idEtudiant' => 5
+                'idEtudiant' => 5,
+                'idAnneeUniversitaire' => 1
             ],
             [
                 'idPersonnel' => 2,
-                'idEtudiant' => 6
+                'idEtudiant' => 6,
+                'idAnneeUniversitaire' => 1
             ]
         ]);
     }

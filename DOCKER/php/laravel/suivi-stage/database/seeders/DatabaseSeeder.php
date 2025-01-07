@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         RechercheStageSeeder::class,
         DroitPersonnelSeeder::class,
         PersonnelDepartementSeeder::class,
-        PersonnelEtudiantSeeder::class,
+        PersonnelEtudiantAnneeunivSeeder::class,
         EtudiantTpAnneeunivSeeder::class,
         EtudiantTdAnneeunivSeeder::class,
         EtudiantAnneeformAnneeunivSeeder::class
