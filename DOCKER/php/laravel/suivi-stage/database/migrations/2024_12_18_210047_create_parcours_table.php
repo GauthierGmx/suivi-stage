@@ -19,7 +19,7 @@ class CreateParcoursTable extends Migration
             $table->tinyIncrements('idParcours');
 
             // Attributs
-            $table->string('libelle', 50);
+            $table->string('libelle', 100);
 
             // Clé étrangère
             $table->unsignedTinyInteger('idDepartement');
