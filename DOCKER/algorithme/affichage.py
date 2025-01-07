@@ -52,5 +52,4 @@ def aleatoire(matrice, criteres):
     return matrice
 
 
-def recupereation_data_bd():
     

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+r#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Wed Dec 11 14:49:23 2024
@@ -16,49 +16,95 @@ import affichage as aff
 import connexion_bd as bd
 import fonctions as fn
 import pandas as pd
+import sys 
+
 
 def main():
     """
     ######################
         INITIALISATION
     #####################
+    
+    Pour python 
+    
+    import sys
+    
+    def main():
+        if len(sys.argv) != 2:
+            print("Erreur : Vous devez fournir un idEtudiant.")
+            return
+        
+        id_etudiant = sys.argv[1]
+        print(f"Traitement pour l'étudiant avec l'ID : {id_etudiant}")
+    
+    if __name__ == "__main__":
+        main()
+
+    Pour php
+    ?php
+        $idEtudiant = 12345; // Remplacez par l'ID approprié
+        $command = escapeshellcmd("python3 script.py " . $idEtudiant);
+        $output = shell_exec($command);
+        
+        echo "Résultat du script Python : <br>";
+        echo nl2br($output);
+    ?>
+
     """
+    
+    idEtud = sys.argv[1]
+    print(f"Traitement pour l'étudiant avec l'ID : {idEtud}")
+        
+    # Récupérer les données
     conn = bd.active_connection()
-    matrice_data_prof = fn.recup_matrice_prof(conn.cursor)
+    matrice_data_prof = fn.recup_matrice_prof(conn.cursor())
+    donnees_etudiant = fn.recup_donnees_etudiant(idEtud, conn.cursor())
     
-    # Noms des critères (colonnes)
-    criteres = [["NOM"] + ["COMPTEUR_ETUDIANT_MAX"] + ["COMPTEUR_ACTUEL"] +["CODE_POSTAL_VILLE_ENTREPRISE"] + ["DISTANCE_GPS_PROF_ENTREPRISE"] + ["ETUDIANT_DEJA_PRESENT"] + ["EQUITE_DEUX_TROIS_ANNEE"] + ["SOMME"]]
+    # Extraire les coordonnées GPS de l'étudiant
+    coordonnees_gps_etud = [(row[3], row[4]) for row in donnees_etudiant]
     
-    # Noms des professeurs (lignes)
-    professeurs = []
-    for i in range(len(matrice_data_prof)):
-        professeurs.append(matrice_data_prof[0][i])
+    # Définir les critères et les professeurs
+    criteres = ["NOM", "COMPTEUR_ETUDIANT", "CODE_POSTAL_VILLE_ENTREPRISE", "DISTANCE_GPS_PROF_ENTREPRISE", "ETUDIANT_DEJA_PRESENT", "EQUITE_DEUX_TROIS_ANNEE", "SOMME"]
+    professeurs = [matrice_data_prof[i][0] for i in range(len(matrice_data_prof))]
     
-    # Création du DataFrame avec les critères en ligne et les professeurs comme colonnes
-    df = pd.DataFrame(columns=professeurs, index=criteres)
+    # Créer le DataFrame
+    df = pd.DataFrame(columns=criteres, index=professeurs)
     
     
     """
     ######################
-       CORPS ALGORITHME
+        CORPS ALGO
     #####################
     """
-
-    # Afficher la matrice avec indices des colonnes (critères) et des lignes (professeurs)
-    print(f"{'':<15} " + " ".join([f"{crit:<10}" for crit in criteres]))
-    for i, row in enumerate(matrice_critere):
-        print(f"{professeurs[i]:<15} " + " ".join([f"{cell:<10}" for cell in row]))
-
-    # Appeler la fonction affichage pour trier les professeurs
-    liste_prof = aff.max_prof(matrice_critere, professeurs)
-    print("\nProfesseurs triés par SOMME :", liste_prof)
     
+    # Calculer les distances
+    for prof_index, prof_nom in enumerate(professeurs):
+        coordonnees_prof = (matrice_data_prof[prof_index][3], matrice_data_prof[prof_index][4])
+        distance = fn.calculate_distance(coordonnees_prof, coordonnees_gps_etud)
+        df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = distance
+    
+
+
+    """
+    ######################
+          FERMETURE
+    #####################
+    """
     
     #Fermeture de l'accès à la BD    
-    cursor = conn.cursor()
+    conn.cursor()
     conn.close()
+    
+    # Trier les professeurs
+    liste_prof = aff.max_prof(df, professeurs)
+    print("\nProfesseurs triés par probabilité :", liste_prof)
+    return liste_prof
+
 
 """
     APPELLE DE LA FONCTION PRINCIPALE
 """
-main()
+
+if __name__ == "__main__":
+    main()
+
