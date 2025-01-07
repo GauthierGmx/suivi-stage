@@ -11,7 +11,7 @@ Modified on Sun Jan 05 2025
 from dotenv import load_dotenv
 import os
 import logging
-import mysql.conn
+import mysql.connector
 
 # Configuration du journal
 logging.basicConfig(level=logging.INFO)
@@ -21,7 +21,8 @@ path="/home/max/Bureau/suivi-stage/DOCKER/php/laravel/suivi-stage/.env"
 load_dotenv(path)
 
 # Vérifier les variables essentielles
-required_vars = ["API_KEY", "DB_HOST", "DB_USER", "DB_PASS"]
+#required_vars = ["API_KEY", "DB_HOST", "DB_USERNAME", "DB_PASSWORD"]
+required_vars = ["DB_HOST", "DB_USERNAME", "DB_PASSWORD"]
 for var in required_vars:
     if not os.getenv(var):
         raise ValueError(f"La variable d'environnement {var} est manquante.")
@@ -29,8 +30,8 @@ for var in required_vars:
 # Récupérer les variables
 api_key = os.getenv("API_KEY")
 db_host = os.getenv("DB_HOST")
-db_user = os.getenv("DB_USER")
-db_pass = os.getenv("DB_PASS")
+db_user = os.getenv("DB_USERNAME")
+db_pass = os.getenv("DB_PASSWORD")
 
 # Utilisation (sans afficher les secrets)
 logging.info("Les variables d'environnement ont été chargées avec succès.")

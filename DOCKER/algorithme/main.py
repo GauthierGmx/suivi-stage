@@ -1,4 +1,4 @@
-r#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Wed Dec 11 14:49:23 2024
@@ -16,6 +16,7 @@ import affichage as aff
 import connexion_bd as bd
 import fonctions as fn
 import pandas as pd
+import numpy as np
 import sys 
 
 
@@ -52,7 +53,8 @@ def main():
 
     """
     
-    idEtud = sys.argv[1]
+    #idEtud = sys.argv[1]
+    idEtud = 3 
     print(f"Traitement pour l'étudiant avec l'ID : {idEtud}")
         
     # Récupérer les données
@@ -68,7 +70,8 @@ def main():
     professeurs = [matrice_data_prof[i][0] for i in range(len(matrice_data_prof))]
     
     # Créer le DataFrame
-    df = pd.DataFrame(columns=criteres, index=professeurs)
+    df = pd.DataFrame(np.zeros((len(professeurs), len(criteres))), columns=criteres, index=professeurs)
+
     
     
     """
@@ -77,14 +80,24 @@ def main():
     #####################
     """
     
-    # Calculer les distances
     for prof_index, prof_nom in enumerate(professeurs):
+        # Récupérer les coordonnées GPS du professeur
         coordonnees_prof = (matrice_data_prof[prof_index][3], matrice_data_prof[prof_index][4])
+        
+        # Calculer la distance entre le professeur et l'étudiant
         distance = fn.calculate_distance(coordonnees_prof, coordonnees_gps_etud)
-        df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = distance
-    
-
-
+        
+        # Vérifier les conditions sur la distance et le code postal
+        if distance > 20:
+            # Vérifier si le code postal de l'étudiant n'est pas dans ["64", "40"]
+            code_postal = donnees_etudiant[0][5] if donnees_etudiant and len(donnees_etudiant[0]) > 5 else None
+            if code_postal not in ["64", "40"]:
+                # Affecter la distance dans le DataFrame
+                df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = 1
+            else: 
+                #Distance dans la colonne si l'étudiant n'est pas dans le 64/40
+                df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = distance
+                
     """
     ######################
           FERMETURE
