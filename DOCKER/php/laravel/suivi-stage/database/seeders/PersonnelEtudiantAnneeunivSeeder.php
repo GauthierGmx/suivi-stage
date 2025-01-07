@@ -21,22 +21,22 @@ class PersonnelEtudiantAnneeunivSeeder extends Seeder
                 'idAnneeUniversitaire' => 1
             ],
             [
-                'idPersonnel' => 1,
+                'idPersonnel' => 2,
                 'idEtudiant' => 2,
                 'idAnneeUniversitaire' => 1
             ],
             [
-                'idPersonnel' => 1,
+                'idPersonnel' => 3,
                 'idEtudiant' => 3,
                 'idAnneeUniversitaire' => 1
             ],
             [
-                'idPersonnel' => 1,
+                'idPersonnel' => 4,
                 'idEtudiant' => 4,
                 'idAnneeUniversitaire' => 1
             ],
             [
-                'idPersonnel' => 1,
+                'idPersonnel' => 5,
                 'idEtudiant' => 5,
                 'idAnneeUniversitaire' => 1
             ],
