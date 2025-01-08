@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
         TDSeeder::class,
         AnneeFormationSeeder::class,
         AnneeUniversitaireSeeder::class,
-        ParametresGenerauxSeeder::class,
         DepartementIUTSeeder::class,
         PersonnelSeeder::class,
         EntrepriseSeeder::class,
@@ -34,7 +33,8 @@ class DatabaseSeeder extends Seeder
         PersonnelEtudiantAnneeunivSeeder::class,
         EtudiantTpAnneeunivSeeder::class,
         EtudiantTdAnneeunivSeeder::class,
-        EtudiantAnneeformAnneeunivSeeder::class
+        EtudiantAnneeformAnneeunivSeeder::class,
+        EtudiantParcoursAnneeunivSeeder::class,
        ]);
     }
 }

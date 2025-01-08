@@ -16,7 +16,7 @@ class CreateParcoursTable extends Migration
         Schema::create('parcours', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             // Clé primaire
-            $table->tinyIncrements('idParcours');
+            $table->string('codeParcours')->primary();
 
             // Attributs
             $table->string('libelle', 100);

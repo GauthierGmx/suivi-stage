@@ -28,14 +28,14 @@ class CreateRechercheStagesTable extends Migration
             $table->string('telephoneContact', 12)->nullable();
             $table->string('adresseMailContact', 50)->nullable();
             $table->date('dateRelance')->nullable();
-            $table->enum('statut',['En cours','Validé','Refusé','Relancé']);
+            $table->enum('statut',['En cours','Validé','Refusé','Relancé'])->default('En cours');
 
             // Clé étrangère
-            $table->unsignedInteger('idEtudiant');
-            $table->foreign('idEtudiant')->references('idEtudiant')->on('etudiants')->onDelete('cascade');
+            $table->string('idUPPA');
+            $table->foreign('idUPPA')->references('idUPPA')->on('etudiants');
 
-            $table->unsignedInteger('idEntreprise');
-            $table->foreign('idEntreprise')->references('idEntreprise')->on('entreprises');
+            $table->string('numSIRET');
+            $table->foreign('numSIRET')->references('numSIRET')->on('entreprises');
         });
     }
 

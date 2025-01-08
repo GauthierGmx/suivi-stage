@@ -26,8 +26,8 @@ class CreateTuteurEntreprisesTable extends Migration
             $table->string('fonction',50)->nullable();
 
             // Clé étrangère
-            $table->unsignedInteger('idEntreprise');
-            $table->foreign('idEntreprise')->references('idEntreprise')->on('entreprises');
+            $table->string('numSIRET');
+            $table->foreign('numSIRET')->references('numSIRET')->on('entreprises');
         });
     }
 

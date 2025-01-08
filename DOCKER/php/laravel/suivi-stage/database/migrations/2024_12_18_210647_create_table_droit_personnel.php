@@ -20,10 +20,10 @@ class CreateTableDroitPersonnel extends Migration
             
             // Clé étrangère
             $table->unsignedInteger('idDroit');
-            $table->foreign('idDroit')->references('idDroit')->on('droits')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('idDroit')->references('idDroit')->on('droits');
             
             $table->unsignedInteger('idPersonnel');
-            $table->foreign('idPersonnel')->references('idPersonnel')->on('personnels')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('idPersonnel')->references('idPersonnel')->on('personnels');
             });
     }
 

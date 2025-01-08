@@ -19,37 +19,37 @@ class TuteurEntrepriseSeeder extends Seeder
                 'nom' => 'NAVAUD',
                 'prenom' => 'Pierre-Louis',
                 'fonction' => 'Chef de projet - développeur',
-                'idEntreprise' => 1,
+                'numSIRET' => '33530702100030',
             ],
             [
                 'nom' => 'GUILLOT',
                 'prenom' => 'Romain',
                 'fonction' => 'Chef de projet - responsable roadmap produit',
-                'idEntreprise' => 2,
+                'numSIRET' => '01020304051234',
             ],
             [
                 'nom' => 'ROCQUES',
                 'prenom' => 'Lionel',
                 'fonction' => 'Chef de projet',
-                'idEntreprise' => 3,
+                'numSIRET' => '89746755100023',
             ],
             [
                 'nom' => 'BAGIEU',
                 'prenom' => 'Pascal',
                 'fonction' => 'Responsable scolarité',
-                'idEntreprise' => 4,
+                'numSIRET' => '82445767500059',
             ],
             [
                 'nom' => 'DARRIEUTORT',
                 'prenom' => 'Alban',
                 'fonction' => 'Chef de projet - développeur',
-                'idEntreprise' => 5,
+                'numSIRET' => '33027484600030',
             ],
             [
                 'nom' => 'GUIDICE',
                 'prenom' => 'Dorian',
                 'fonction' => 'Chef de projet - développeur',
-                'idEntreprise' => 6,
+                'numSIRET' => '09080706059876',
             ]
         ]);
     }
