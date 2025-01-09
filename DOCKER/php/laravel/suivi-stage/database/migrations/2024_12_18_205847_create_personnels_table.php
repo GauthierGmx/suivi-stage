@@ -25,10 +25,10 @@ class CreatePersonnelsTable extends Migration
             $table->string('adresse', 100)->nullable();
             $table->string('ville', 50)->nullable();
             $table->string('codePostal', 5)->nullable();
-            $table->string('telephone', 12);
+            $table->string('telephone', 12)->nullable();
             $table->string('adresseMail', 50);
-            $table->string('longGPS', 20)->nullable();
-            $table->string('latGPS', 20)->nullable();
+            $table->string('longitudeAdresse', 20)->nullable();
+            $table->string('latitudeAdresse', 20)->nullable();
             $table->unsignedTinyInteger('coptaEtudiant');
         });
     }

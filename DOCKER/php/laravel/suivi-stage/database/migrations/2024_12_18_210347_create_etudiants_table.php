@@ -16,10 +16,9 @@ class CreateEtudiantsTable extends Migration
         Schema::create('etudiants', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             // Clé primaire
-            $table->increments('idEtudiant');
+            $table->string('idUPPA', 10)->primary();
 
             // Attributs
-            $table->string('idUPPA', 10)->unique();
             $table->string('nom', 50);
             $table->string('prenom', 50);
             $table->string('adresse', 100)->nullable();
@@ -29,14 +28,11 @@ class CreateEtudiantsTable extends Migration
             $table->string('adresseMail', 50);
 
             // Clé étrangère
-            $table->unsignedTinyInteger('idParcours');
-            $table->foreign('idParcours')->references('idParcours')->on('parcours');
-
             $table->unsignedTinyInteger('idDepartement');
             $table->foreign('idDepartement')->references('idDepartement')->on('departement_i_u_t_s');
 
-            $table->unsignedInteger('idEntreprise');
-            $table->foreign('idEntreprise')->references('idEntreprise')->on('entreprises');
+            $table->string('numSIRET');
+            $table->foreign('numSIRET')->references('numSIRET')->on('entreprises');
 
             $table->unsignedInteger('idTuteur');
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteur_entreprises');

@@ -19,8 +19,8 @@ class Personnel extends Model
         'codePostal',
         'telephone',
         'adresseMail',
-        'longGPS',
-        'latGPS',
+        'longitudeAdresse',
+        'latitudeAdresse',
         'coptaEtudiant'
     ];
     // Définit l'attribut de la clé primaire

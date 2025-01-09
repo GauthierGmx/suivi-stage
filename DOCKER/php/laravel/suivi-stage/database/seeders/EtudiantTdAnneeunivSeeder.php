@@ -16,62 +16,62 @@ class EtudiantTdAnneeunivSeeder extends Seeder
     {
         DB::table('table_etudiant_td_anneeuniv')->insert([
             [
-                'idEtudiant' => 1,
+                'idUPPA' => '610000',
                 'idTD' => 2,
                 'idAnneeUniversitaire' => 1,
             ],
             [
-                'idEtudiant' => 2,
+                'idUPPA' => '610001',
                 'idTD' => 2,
                 'idAnneeUniversitaire' => 1,
             ],
             [
-                'idEtudiant' => 3,
+                'idUPPA' => '611000',
                 'idTD' => 1,
                 'idAnneeUniversitaire' => 1,
             ],
             [
-                'idEtudiant' => 4,
+                'idUPPA' => '611082',
                 'idTD' => 2,
                 'idAnneeUniversitaire' => 1,
             ],
             [
-                'idEtudiant' => 5,
+                'idUPPA' => '610459',
                 'idTD' => 2,
                 'idAnneeUniversitaire' => 1,
             ],
             [
-                'idEtudiant' => 6,
+                'idUPPA' => '613453',
                 'idTD' => 2,
                 'idAnneeUniversitaire' => 1,
             ],
             [
-                'idEtudiant' => 1,
+                'idUPPA' => '610000',
                 'idTD' => 2,
                 'idAnneeUniversitaire' => 2,
             ],
             [
-                'idEtudiant' => 2,
+                'idUPPA' => '610001',
                 'idTD' => 2,
                 'idAnneeUniversitaire' => 2,
             ],
             [
-                'idEtudiant' => 3,
+                'idUPPA' => '611000',
                 'idTD' => 1,
                 'idAnneeUniversitaire' => 2,
             ],
             [
-                'idEtudiant' => 4,
+                'idUPPA' => '611082',
                 'idTD' => 2,
                 'idAnneeUniversitaire' => 2,
             ],
             [
-                'idEtudiant' => 5,
+                'idUPPA' => '610459',
                 'idTD' => 2,
                 'idAnneeUniversitaire' => 2,
             ],
             [
-                'idEtudiant' => 6,
+                'idUPPA' => '613453',
                 'idTD' => 2,
                 'idAnneeUniversitaire' => 2,
             ]

@@ -20,9 +20,8 @@ class EtudiantSeeder extends Seeder
                 'nom' => 'MONTOURO',
                 'prenom' => 'Maxime',
                 'adresseMail' => 'mmontour@iutbayonne.univ-pau.fr',
-                'idParcours' => 2,
                 'idDepartement' => 1,
-                'idEntreprise' => 1,
+                'numSIRET' => '33530702100030',
                 'idTuteur' => 1
             ],
             [
@@ -30,9 +29,8 @@ class EtudiantSeeder extends Seeder
                 'nom' => 'CONGUISTI',
                 'prenom' => 'Nicolas',
                 'adresseMail' => 'nconguisti@iutbayonne.univ-pau.fr',
-                'idParcours' => 1,
                 'idDepartement' => 1,
-                'idEntreprise' => 2,
+                'numSIRET' => '01020304051234',
                 'idTuteur' => 2
             ],
             [
@@ -40,9 +38,8 @@ class EtudiantSeeder extends Seeder
                 'nom' => 'CONSTANS',
                 'prenom' => 'Fanny',
                 'adresseMail' => 'fconstant@iutbayonne.univ-pau.fr',
-                'idParcours' => 1,
                 'idDepartement' => 1,
-                'idEntreprise' => 3,
+                'numSIRET' => '89746755100023',
                 'idTuteur' => 3
             ],
             [
@@ -50,9 +47,8 @@ class EtudiantSeeder extends Seeder
                 'nom' => 'MARTIN',
                 'prenom' => 'Solène',
                 'adresseMail' => 'smartin@iutbayonne.univ-pau.fr',
-                'idParcours' => 2,
                 'idDepartement' => 1,
-                'idEntreprise' => 4,
+                'numSIRET' => '82445767500059',
                 'idTuteur' => 4
             ],
             [
@@ -60,9 +56,8 @@ class EtudiantSeeder extends Seeder
                 'nom' => 'VERNIS',
                 'prenom' => 'Gabriel',
                 'adresseMail' => 'gvernis@iutbayonne.univ-pau.fr',
-                'idParcours' => 2,
                 'idDepartement' => 1,
-                'idEntreprise' => 5,
+                'numSIRET' => '33027484600030',
                 'idTuteur' => 5
             ],
             [
@@ -70,9 +65,8 @@ class EtudiantSeeder extends Seeder
                 'nom' => 'LORIDANT',
                 'prenom' => 'Julien',
                 'adresseMail' => 'jloridant@iutbayonne.univ-pau.fr',
-                'idParcours' => 2,
                 'idDepartement' => 1,
-                'idEntreprise' => 6,
+                'numSIRET' => '09080706059876',
                 'idTuteur' => 6
             ]
         ]);

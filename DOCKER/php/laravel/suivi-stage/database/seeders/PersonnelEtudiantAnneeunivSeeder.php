@@ -17,32 +17,32 @@ class PersonnelEtudiantAnneeunivSeeder extends Seeder
         DB::table('table_personnel_etudiant_anneeuniv')->insert([
             [
                 'idPersonnel' => 1,
-                'idEtudiant' => 1,
+                'idUPPA' => '610000',
                 'idAnneeUniversitaire' => 1
             ],
             [
                 'idPersonnel' => 2,
-                'idEtudiant' => 2,
+                'idUPPA' => '610001',
                 'idAnneeUniversitaire' => 1
             ],
             [
                 'idPersonnel' => 3,
-                'idEtudiant' => 3,
+                'idUPPA' => '611000',
                 'idAnneeUniversitaire' => 1
             ],
             [
                 'idPersonnel' => 4,
-                'idEtudiant' => 4,
+                'idUPPA' => '611082',
                 'idAnneeUniversitaire' => 1
             ],
             [
                 'idPersonnel' => 5,
-                'idEtudiant' => 5,
+                'idUPPA' => '610459',
                 'idAnneeUniversitaire' => 1
             ],
             [
                 'idPersonnel' => 2,
-                'idEtudiant' => 6,
+                'idUPPA' => '613453',
                 'idAnneeUniversitaire' => 1
             ]
         ]);

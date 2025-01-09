@@ -12,6 +12,7 @@ class FicheDescriptive extends Model
     protected $fillable = [
         'idFicheDescriptive',
         'dateCreation',
+        'dateDerniereModification',
         'contenuStage',
         'thematique',
         'sujet',
@@ -25,12 +26,23 @@ class FicheDescriptive extends Model
         'nbHeureSemaine',
         'clauseConfidentialite',
         'statut',
-        'numeroConvention'
+        'numeroConvention',
+        'interruptionEntreprise',
+        'dateDebutInterruption',
+        'dateFinInterruption',
+        'personnelTechniqueDisponible',
+        'materielPrete'
     ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idFicheDescriptive';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+
+    // Relation 1-N avec Entreprise
+    public function entreprise()
+    {
+        return $this->belongsTo(Entreprise::class);
+    }
 
     // Relation 1-N avec TuteurEntreprise
     public function tuteurEntreprise()

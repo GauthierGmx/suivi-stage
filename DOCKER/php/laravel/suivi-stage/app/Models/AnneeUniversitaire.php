@@ -18,10 +18,28 @@ class AnneeUniversitaire extends Model
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
     
+    // Relation N-N avec AnneeFormation
+    public function anneeFormations()
+    {
+        return $this->belongsToMany(AnneeFormation::class);
+    }
+
     // Relation N-N avec Etudiant
     public function etudiants()
     {
         return $this->belongsToMany(Etudiant::class);
+    }
+
+    // Relation N-N avec Parcours
+    public function parcours()
+    {
+        return $this->belongsToMany(Parcours::class);
+    }
+
+    // Relation N-N avec Personnel
+    public function personnels()
+    {
+        return $this->belongsToMany(Personnel::class);
     }
 
     // Relation N-N avec TD
@@ -34,11 +52,5 @@ class AnneeUniversitaire extends Model
     public function tps()
     {
         return $this->belongsToMany(TP::class);
-    }
-
-    // Relation N-N avec AnneeFormation
-    public function anneeFormations()
-    {
-        return $this->belongsToMany(AnneeFormation::class);
     }
 }

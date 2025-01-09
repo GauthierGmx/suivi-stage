@@ -16,10 +16,9 @@ class CreateEntreprisesTable extends Migration
         Schema::create('entreprises', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             // Clé primaire
-            $table->increments('idEntreprise');
+            $table->string('numSIRET',14)->primary();
 
             // Attributs
-            $table->string('numSIRET',14)->unique()->nullable();
             $table->string('raisonSociale',100);
             $table->enum('typeEtablissement',['Administration','Association','Entreprise','Etablissement public'])->nullable();
             $table->string('adresse',100)->nullable();
@@ -31,8 +30,8 @@ class CreateEntreprisesTable extends Migration
             $table->enum('statutJuridique',['EI','EURL','SARL','SASU','SAS','SA','SNC','SCS','SCA'])->nullable();
             $table->unsignedSmallInteger('effectif')->nullable();
             $table->string('representantLegal',100)->nullable();
-            $table->string('longGPS',20)->nullable();
-            $table->string('latGPS',20)->nullable();
+            $table->string('longitudeAdresse',20)->nullable();
+            $table->string('latitudeAdresse',20)->nullable();
         });
     }
 
