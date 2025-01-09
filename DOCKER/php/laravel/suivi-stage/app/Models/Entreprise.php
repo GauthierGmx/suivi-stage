@@ -10,6 +10,7 @@ class Entreprise extends Model
     use HasFactory;
     // Définit les attributs pouvant être remplis
     protected $fillable = [
+        'idEntreprise',
         'numSIRET',
         'raisonSociale',
         'typeEtablissement',
@@ -26,7 +27,7 @@ class Entreprise extends Model
         'latitudeAdresse'
     ];
     // Définit l'attribut de la clé primaire
-    protected $primaryKey = 'numSIRET';
+    protected $primaryKey = 'idEntreprise';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
     

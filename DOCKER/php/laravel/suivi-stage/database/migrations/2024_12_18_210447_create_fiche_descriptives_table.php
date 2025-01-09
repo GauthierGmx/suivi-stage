@@ -42,8 +42,8 @@ class CreateFicheDescriptivesTable extends Migration
             $table->text('materielPrete')->nullable();
 
             // Clé étrangère
-            $table->string('numSIRET');
-            $table->foreign('numSIRET')->references('numSIRET')->on('entreprises');
+            $table->unsignedInteger('idEntreprise');
+            $table->foreign('idEntreprise')->references('idEntreprise')->on('entreprises');
 
             $table->unsignedInteger('idTuteurEntreprise');
             $table->foreign('idTuteurEntreprise')->references('idTuteur')->on('tuteur_entreprises');

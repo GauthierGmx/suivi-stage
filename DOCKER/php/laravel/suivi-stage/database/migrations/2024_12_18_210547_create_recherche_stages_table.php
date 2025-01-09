@@ -23,7 +23,8 @@ class CreateRechercheStagesTable extends Migration
             $table->date('dateModification');
             $table->date('date1erContact');
             $table->enum('typeContact',['Courrier','Mail','Présentiel','Téléphone','Site de recrutement']);
-            $table->string('nomPrenomContact', 50);
+            $table->string('nomContact', 50);
+            $table->string('prenomContact', 50);
             $table->string('fonctionContact', 50);
             $table->string('telephoneContact', 12)->nullable();
             $table->string('adresseMailContact', 50)->nullable();
@@ -34,8 +35,8 @@ class CreateRechercheStagesTable extends Migration
             $table->string('idUPPA');
             $table->foreign('idUPPA')->references('idUPPA')->on('etudiants');
 
-            $table->string('numSIRET');
-            $table->foreign('numSIRET')->references('numSIRET')->on('entreprises');
+            $table->unsignedInteger('idEntreprise');
+            $table->foreign('idEntreprise')->references('idEntreprise')->on('entreprises');
         });
     }
 
