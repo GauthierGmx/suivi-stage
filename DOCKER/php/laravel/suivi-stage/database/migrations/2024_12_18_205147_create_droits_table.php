@@ -14,8 +14,12 @@ class CreateDroitsTable extends Migration
     public function up()
     {
         Schema::create('droits', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->engine = 'InnoDB';
+            // Clé primaire
+            $table->increments('idDroit');
+            
+            // Attributs
+            $table->string('libelle',50);
         });
     }
 

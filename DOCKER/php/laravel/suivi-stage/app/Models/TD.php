@@ -14,9 +14,21 @@ class TD extends Model
     protected $fillable = [
         'idTD',
         'libelle',
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idTD';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+
+    // Relation N-N avec Etudiant
+    public function etudiants()
+    {
+        return $this->belongsToMany(Etudiant::class);
+    }
+
+    // Relation N-N avec AnneeUniversitaire
+    public function anneeUniversitaires()
+    {
+        return $this->belongsToMany(AnneeUniversitaire::class);
+    }
 }

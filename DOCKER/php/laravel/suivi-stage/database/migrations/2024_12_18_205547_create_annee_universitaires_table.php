@@ -14,8 +14,12 @@ class CreateAnneeUniversitairesTable extends Migration
     public function up()
     {
         Schema::create('annee_universitaires', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->engine = 'InnoDB';
+            // Clé primaire
+            $table->increments('idAnneeUniversitaire');
+            
+            // Attributs
+            $table->string('libelle',10);
         });
     }
 

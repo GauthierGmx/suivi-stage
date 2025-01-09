@@ -14,8 +14,16 @@ class CreateParcoursTable extends Migration
     public function up()
     {
         Schema::create('parcours', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->engine = 'InnoDB';
+            // Clé primaire
+            $table->string('codeParcours')->primary();
+
+            // Attributs
+            $table->string('libelle', 100);
+
+            // Clé étrangère
+            $table->unsignedTinyInteger('idDepartement');
+            $table->foreign('idDepartement')->references('idDepartement')->on('departement_i_u_t_s');
         });
     }
 

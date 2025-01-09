@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFicheDescriptivesTable extends Migration
+class CreateTPSTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,13 @@ class CreateFicheDescriptivesTable extends Migration
      */
     public function up()
     {
-        Schema::create('fiche_descriptives', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('t_p_s', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            // Clé primaire
+            $table->tinyIncrements('idTP');
+
+            // Attributs
+            $table->string('libelle',4);
         });
     }
 
@@ -26,6 +30,6 @@ class CreateFicheDescriptivesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fiche_descriptives');
+        Schema::dropIfExists('t_p_s');
     }
 }

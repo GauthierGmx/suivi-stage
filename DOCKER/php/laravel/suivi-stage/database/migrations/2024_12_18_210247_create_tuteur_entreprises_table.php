@@ -14,8 +14,20 @@ class CreateTuteurEntreprisesTable extends Migration
     public function up()
     {
         Schema::create('tuteur_entreprises', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->engine = 'InnoDB';
+            // Clé primaire
+            $table->increments('idTuteur');
+
+            // Attributs
+            $table->string('nom',50);
+            $table->string('prenom',50);
+            $table->string('telephone',12)->nullable();
+            $table->string('adresseMail',50)->nullable();
+            $table->string('fonction',50)->nullable();
+
+            // Clé étrangère
+            $table->string('numSIRET');
+            $table->foreign('numSIRET')->references('numSIRET')->on('entreprises');
         });
     }
 

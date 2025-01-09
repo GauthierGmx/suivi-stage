@@ -19,12 +19,36 @@ class Personnel extends Model
         'codePostal',
         'telephone',
         'adresseMail',
-        'longGPS',
-        'latGPS',
+        'longitudeAdresse',
+        'latitudeAdresse',
         'coptaEtudiant'
-    ]
+    ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idPersonnel';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+
+    // Relation 1-N avec Admin
+    public function admins()
+    {
+        return $this->hasMany(Admin::class);
+    }
+
+    // Relation N-N avec Droit
+    public function droits()
+    {
+        return $this->belongsToMany(Droit::class);
+    }
+
+    // Relation N-N avec DepartementIUT
+    public function departementIUTs()
+    {
+        return $this->belongsToMany(DepartementIUT::class);
+    }
+
+    // Relation N-N avec Etudiant
+    public function etudiants()
+    {
+        return $this->belongsToMany(Etudiant::class);
+    }
 }
