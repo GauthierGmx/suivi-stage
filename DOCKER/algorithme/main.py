@@ -54,7 +54,8 @@ def main():
     """
     
     #idEtud = sys.argv[1]
-    idEtud = 3 
+    idEtud = 3 #valeur de test actuelle
+
     print(f"Traitement pour l'étudiant avec l'ID : {idEtud}")
         
     # Récupérer les données
@@ -64,6 +65,7 @@ def main():
     
     # Extraire les coordonnées GPS de l'étudiant
     coordonnees_gps_etud = [(row[3], row[4]) for row in donnees_etudiant]
+    idEntreprise = donnees_etudiant[0][6] if donnees_etudiant and len(donnees_etudiant[0]) > 6 else None
     
     # Définir les critères et les professeurs
     criteres = ["NOM", "COMPTEUR_ETUDIANT", "CODE_POSTAL_VILLE_ENTREPRISE", "DISTANCE_GPS_PROF_ENTREPRISE", "ETUDIANT_DEJA_PRESENT", "EQUITE_DEUX_TROIS_ANNEE", "SOMME"]
@@ -95,8 +97,8 @@ def main():
                 # Affecter la distance dans le DataFrame
                 df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = 1
             else: 
-                #Distance dans la colonne si l'étudiant n'est pas dans le 64/40
-                df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = distance
+                #Recherche étudiant dans la même ville
+                df.loc[prof_nom, "ETUDIANT_DEJA_PRESENT"] = fn.est_etudiant_deja_present(idEntreprise, conn.cursor())
                 
     """
     ######################

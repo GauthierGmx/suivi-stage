@@ -17,7 +17,7 @@ import mysql.connector
 logging.basicConfig(level=logging.INFO)
 
 # Charger le fichier .env
-path="/home/max/Bureau/suivi-stage/DOCKER/php/laravel/suivi-stage/.env"
+path="./DOCKER/php/laravel/suivi-stage/.env"
 load_dotenv(path)
 
 # Vérifier les variables essentielles

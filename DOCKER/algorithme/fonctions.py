@@ -48,7 +48,7 @@ def recup_donnees_etudiant(idEtud: int, cursor) -> List[List[Any]]:
     
     # Exécuter la requête
     cursor.execute(
-        "SELECT idUPPA, nomEtudiant, prenomEtudiant, longGPS, latGPS, codePostalEntreprise FROM Entreprise JOIN Etudiant ON Entreprise.idUPPA=Etudiant.idUPPA WHERE idUPPA = %s",
+        "SELECT idUPPA, nomEtudiant, prenomEtudiant, longitudeAdresse, latitudeAdresse, codePostalEntreprise, idEntreprise FROM Entreprise JOIN Etudiant ON Entreprise.idUPPA=Etudiant.idUPPA WHERE idUPPA = %s",
         (idEtud,)
     )
     rows = cursor.fetchall()
@@ -80,7 +80,7 @@ def calculate_distance(prof_coords, student_coords):
     float - Distance en kilomètres
     """
     # Rayon de la Terre en kilomètres
-    R = 6371.0
+    RAYON_TERRE = 6371.0
 
     # Conversion des degrés en radians
     lat1, lon1 = map(math.radians, prof_coords)
@@ -95,7 +95,7 @@ def calculate_distance(prof_coords, student_coords):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     # Distance
-    distance = R * c
+    distance = RAYON_TERRE * c
     return distance
 
 # Exemple d'utilisation
@@ -136,3 +136,81 @@ coords = get_gps_coordinates(adresse)
 if coords:
     print(f"Les coordonnées GPS de l'adresse '{adresse}' sont : {coords}")
 """
+
+
+def est_etudiant_deja_present_ville(codePostalEntreprise:str, cursor) -> [bool, int]:
+    """
+    Chreche dans la base si un étudiant est déjà présent dans cette entreprise
+    
+    Paramètre:
+        - code Postal de l'entreprise si il n'est pas dans le 64/40
+    
+    Retourne:
+        - un booléen pour savoir si il existe un étudiant déjà présent dans la ville
+        - si il existe un seul étudiant, retourne aussi son nom sinon un étudiant dans l
+    """
+    
+    cursor.execute(
+        """
+        SELECT idEntreprise, nomEntreprise, codePostalEntreprise, nomEtudiant, count(idUPPA)
+        FROM Entreprise 
+        JOIN Etudiant ON Entreprise.idUPPA = Etudiant.idUPPA
+        WHERE LEFT(codePostalEntreprise, 2) NOT IN ('64', '40');
+         """)
+    
+    rows = cursor.fetchall()
+    
+    # Gestion des résultats
+    if not rows:
+        print(f"Aucun étudiant n'effectute de stage dans des villes en dehors des Pyrénées Atlantique et des Landes")
+        return [0,0]
+    else:
+        #On regarde si plusieurs étudiants sont dans d'autres villes
+        count_etudiant_ville =  #nombre d'étudiant déjà présent dans d'autres villes
+        if rows[count_etudiant_ville] > 1 :
+            
+            #recherche entreprise 
+            idEntreprise = rows[0]
+            est_deja_dans_entreprise, indiceEtudiantDejaPresent= est_deja_dans_entreprise(idEntreprise, cursor)
+        else: 
+            code_postal_entreprise = 2 #colonne dans la requête
+            return [1, rows[code_postal_entreprise]]
+        
+
+
+def est_deja_dans_entreprise(idEntreprise: int, cursor) -> [bool, int]:
+    """
+    Cherche dans la base si un étudiant est déjà présent dans cette entreprise
+    
+    Paramètre:
+        - idEntreprise : l'identifiant de l'entreprise
+    
+    Retourne:
+        - Un booléen pour savoir s'il existe un étudiant déjà présent dans l'entreprise
+        - Si un étudiant existe, retourne aussi son nom sinon retourne 0
+    """
+    
+    cursor.execute(
+        """
+        SELECT idEntreprise, nomEntreprise, codePostalEntreprise, nomEtudiant, idUPPA
+        FROM Entreprise 
+        JOIN Etudiant ON Entreprise.idUPPA = Etudiant.idUPPA
+        WHERE idEntreprise = %s;
+        """,
+        (idEntreprise,)
+    )
+    
+    rows = cursor.fetchall()
+    
+    # Gestion des résultats
+    if not rows:
+        print(f"Aucun étudiant n'effectue de stage dans cette entreprise")
+        return [False, 0]
+    
+    # Si plusieurs étudiants sont présents dans l'entreprise
+    if len(rows) > 1:
+        return [True, 0]
+    
+    # Si un seul étudiant est trouvé
+    nomEtudiant = rows[0][3]  # L'indice 3 correspond à la colonne 'nomEtudiant' dans le SELECT
+    return [True, nomEtudiant]
