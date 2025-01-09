@@ -21,7 +21,7 @@ class EtudiantSeeder extends Seeder
                 'prenom' => 'Maxime',
                 'adresseMail' => 'mmontour@iutbayonne.univ-pau.fr',
                 'idDepartement' => 1,
-                'numSIRET' => '33530702100030',
+                'idEntreprise' => 1,
                 'idTuteur' => 1
             ],
             [
@@ -30,7 +30,7 @@ class EtudiantSeeder extends Seeder
                 'prenom' => 'Nicolas',
                 'adresseMail' => 'nconguisti@iutbayonne.univ-pau.fr',
                 'idDepartement' => 1,
-                'numSIRET' => '01020304051234',
+                'idEntreprise' => 2,
                 'idTuteur' => 2
             ],
             [
@@ -39,7 +39,7 @@ class EtudiantSeeder extends Seeder
                 'prenom' => 'Fanny',
                 'adresseMail' => 'fconstant@iutbayonne.univ-pau.fr',
                 'idDepartement' => 1,
-                'numSIRET' => '89746755100023',
+                'idEntreprise' => 3,
                 'idTuteur' => 3
             ],
             [
@@ -48,7 +48,7 @@ class EtudiantSeeder extends Seeder
                 'prenom' => 'Solène',
                 'adresseMail' => 'smartin@iutbayonne.univ-pau.fr',
                 'idDepartement' => 1,
-                'numSIRET' => '82445767500059',
+                'idEntreprise' => 4,
                 'idTuteur' => 4
             ],
             [
@@ -57,7 +57,7 @@ class EtudiantSeeder extends Seeder
                 'prenom' => 'Gabriel',
                 'adresseMail' => 'gvernis@iutbayonne.univ-pau.fr',
                 'idDepartement' => 1,
-                'numSIRET' => '33027484600030',
+                'idEntreprise' => 5,
                 'idTuteur' => 5
             ],
             [
@@ -66,7 +66,7 @@ class EtudiantSeeder extends Seeder
                 'prenom' => 'Julien',
                 'adresseMail' => 'jloridant@iutbayonne.univ-pau.fr',
                 'idDepartement' => 1,
-                'numSIRET' => '09080706059876',
+                'idEntreprise' => 6,
                 'idTuteur' => 6
             ]
         ]);

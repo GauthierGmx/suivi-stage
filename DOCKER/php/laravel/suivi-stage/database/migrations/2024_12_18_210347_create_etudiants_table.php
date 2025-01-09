@@ -31,8 +31,8 @@ class CreateEtudiantsTable extends Migration
             $table->unsignedTinyInteger('idDepartement');
             $table->foreign('idDepartement')->references('idDepartement')->on('departement_i_u_t_s');
 
-            $table->string('numSIRET');
-            $table->foreign('numSIRET')->references('numSIRET')->on('entreprises');
+            $table->unsignedInteger('idEntreprise');
+            $table->foreign('idEntreprise')->references('idEntreprise')->on('entreprises');
 
             $table->unsignedInteger('idTuteur');
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteur_entreprises');
