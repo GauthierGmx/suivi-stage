@@ -31,7 +31,7 @@ if missing_vars:
 db_host = os.getenv("DB_HOST")
 db_user = os.getenv("DB_USERNAME")
 db_pass = os.getenv("DB_PASSWORD")
-db_name = os.getenv("DB_DATABASE", "db_suivi_stage")  # Valeur par défaut si non définie
+db_name = os.getenv("DB_DATABASE")  # Valeur par défaut si non définie
 api_key = os.getenv("API_KEY")
 
 # Utilisation (sans afficher les secrets)
