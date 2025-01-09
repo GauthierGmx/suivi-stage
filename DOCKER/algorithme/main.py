@@ -54,11 +54,13 @@ def main():
     """
     
     #idEtud = sys.argv[1]
+    
     idEtud = 3 #valeur de test actuelle
 
     print(f"Traitement pour l'étudiant avec l'ID : {idEtud}")
         
     # Récupérer les données
+    #conn, cursor = fn.setup_test_database("jeu_donnees_test.json")
     conn = bd.active_connection()
     matrice_data_prof = fn.recup_matrice_prof(conn.cursor())
     donnees_etudiant = fn.recup_donnees_etudiant(idEtud, conn.cursor())
@@ -83,6 +85,9 @@ def main():
     """
     
     for prof_index, prof_nom in enumerate(professeurs):
+        # Récuperer l'id du professeur 
+        idProf = matrice_data_prof[prof_index][len(matrice_data_prof[prof_index])-1]
+
         # Récupérer les coordonnées GPS du professeur
         coordonnees_prof = (matrice_data_prof[prof_index][3], matrice_data_prof[prof_index][4])
         
@@ -96,17 +101,28 @@ def main():
             if code_postal not in ["64", "40"]:
                 # Affecter la distance dans le DataFrame
                 df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = 1
-            else: 
-                #Recherche étudiant dans la même ville
-                df.loc[prof_nom, "ETUDIANT_DEJA_PRESENT"] = fn.est_etudiant_deja_present(idEntreprise, conn.cursor())
-                
+            else:
+                df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = 0
+        else:
+            df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = 1
+               
+        # Vérifier si un étudiant est déjà présent dans l'entreprise
+        etudiant_present = fn.etudiant_deja_present(idEntreprise, conn.cursor())
+        if etudiant_present != 0:
+            df.loc[prof_nom, "ETUDIANT_DEJA_PRESENT"] = 1
+        else:
+            df.loc[prof_nom, "ETUDIANT_DEJA_PRESENT"] = 0
+
+        #Verifie l'équité des étudiants de 2ème et 3ème année
+        equite = fn.equite_deux_trois_annee(idProf, conn.cursor())
+
     """
     ######################
           FERMETURE
     #####################
     """
     
-    #Fermeture de l'accès à la BD    
+    #Fermeture de l'accès à la BD       
     conn.cursor()
     conn.close()
     
