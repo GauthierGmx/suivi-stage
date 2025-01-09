@@ -20,6 +20,7 @@ class RechercheStage extends Model
         'fonctionContact',
         'telephoneContact',
         'adresseMailContact',
+        'observations',
         'dateRelance',
         'statut'
     ];
