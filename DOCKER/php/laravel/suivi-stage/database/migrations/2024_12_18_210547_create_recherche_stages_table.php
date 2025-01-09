@@ -27,7 +27,7 @@ class CreateRechercheStagesTable extends Migration
             $table->string('prenomContact', 50);
             $table->string('fonctionContact', 50);
             $table->string('telephoneContact', 12)->nullable();
-            $table->string('adresseMailContact', 50)->nullable();
+            $table->string('adresseMailContact', 100)->nullable();
             $table->text('observations')->nullable();
             $table->date('dateRelance')->nullable();
             $table->enum('statut',['En cours','Validé','Refusé','Relancé'])->default('En cours');
