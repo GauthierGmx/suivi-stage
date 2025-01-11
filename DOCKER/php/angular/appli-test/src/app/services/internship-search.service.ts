@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, forkJoin, BehaviorSubject } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { InternshipSearch, SearchStatus } from '../models/internship-search.model';
 import { EnterpriseService } from './enterprise.service';
 import { StudentService } from './student.service';
@@ -58,7 +58,7 @@ export class InternshipSearchService {
       telContact: '0634567890',
       mailContact: 'pierre.dubois@drewcano.fr',
       dateRelance: new Date('2024-02-10'),
-      statut: 'En cours',
+      statut: 'En attente',
       idEntreprise: 3,
       idEtudiant: 3,
       observations: 'Dossier en cours d\'étude par le service RH'
@@ -90,7 +90,7 @@ export class InternshipSearchService {
       telContact: '0656789012',
       mailContact: 'lucas.martin@digitalwave.fr',
       dateRelance: new Date('2024-02-25'),
-      statut: 'En cours',
+      statut: 'En attente',
       idEntreprise: 5,
       idEtudiant: 4,
       observations: 'En attente de validation budgétaire'
@@ -186,7 +186,7 @@ export class InternshipSearchService {
       telContact: '0612345678',
       mailContact: 'emma.bernard@futuretech.fr',
       dateRelance: new Date('2024-03-01'),
-      statut: 'En cours',
+      statut: 'En attente',
       idEntreprise: 11,
       idEtudiant: 5,
       observations: 'En attente de retour suite à l\'entretien'
@@ -369,10 +369,10 @@ export class InternshipSearchService {
   }
 
   private getBestStatus(searches: InternshipSearch[] | undefined): SearchStatus {
-    if (!searches || searches.length === 0) return 'En cours';
+    if (!searches || searches.length === 0) return 'En attente';
     const statusPriority = {
       'Validé': 4,
-      'En cours': 3,
+      'En attente': 3,
       'Relancé': 2,
       'Refusé': 1
     };
@@ -426,7 +426,7 @@ export class InternshipSearchService {
     
     const stats = {
       searchCount: userSearches.length,
-      pendingCount: userSearches.filter(s => s.statut === 'En cours').length,
+      pendingCount: userSearches.filter(s => s.statut === 'En attente').length,
       refusedCount: userSearches.filter(s => s.statut === 'Refusé').length
     };
     return of(stats);

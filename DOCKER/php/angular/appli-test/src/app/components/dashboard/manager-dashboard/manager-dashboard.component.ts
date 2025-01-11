@@ -4,8 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../../models/user.model';
 import { InternshipSearchService } from '../../../services/internship-search.service';
 import { NavigationService } from '../../../services/navigation.service';
-import { BreadcrumbComponent } from '../../shared/breadcrumb/breadcrumb.component';
 import { SearchStatus } from '../../../models/internship-search.model';
+import { StudentService } from '../../../services/student.service';
+import { forkJoin } from 'rxjs';
 
 interface StudentInternshipStatus {
   id: number;
@@ -21,16 +22,18 @@ interface ManagerDashboardStats {
   studentsWithoutSearch: number;
 }
 
+interface DetailedManagerDashboardStats extends ManagerDashboardStats {
+  studentsInProgress: number;
+  totalSearches: number;
+  averageSearchesPerStudent: number;
+}
+
 @Component({
   selector: 'app-manager-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, BreadcrumbComponent],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="space-y-6">
-      <app-breadcrumb 
-        [items]="breadcrumbs"
-        [showBack]="false"
-      />
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
         <div class="p-4 bg-[#EDEEFC] rounded-lg">
@@ -163,10 +166,13 @@ interface ManagerDashboardStats {
 export class ManagerDashboardComponent implements OnInit {
   @Input() currentUser!: User;
   
-  stats: ManagerDashboardStats = {
+  stats: DetailedManagerDashboardStats = {
     studentsWithValidInternship: 0,
     totalStudents: 0,
-    studentsWithoutSearch: 0
+    studentsWithoutSearch: 0,
+    studentsInProgress: 0,
+    totalSearches: 0,
+    averageSearchesPerStudent: 0
   };
 
   searchTerm: string = '';
@@ -177,7 +183,8 @@ export class ManagerDashboardComponent implements OnInit {
 
   constructor(
     private readonly internshipSearchService: InternshipSearchService,
-    private readonly navigationService: NavigationService
+    private readonly navigationService: NavigationService,
+    private readonly studentService: StudentService
   ) {}
 
   ngOnInit() {
@@ -185,18 +192,38 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   private loadStudentStats() {
-    this.internshipSearchService.getStudentSearchStats().subscribe(students => {
-      this.students = students;
+    forkJoin({
+      searchStats: this.internshipSearchService.getStudentSearchStats(),
+      students: this.studentService.getStudents()
+    }).subscribe(({ searchStats, students }) => {
+      this.students = searchStats.map(stat => {
+        const student = students.find(s => s.idEtudiant === stat.id);
+        return {
+          ...stat,
+          studentName: student ? `${student.prenomEtudiant} ${student.nomEtudiant}` : 'Inconnu'
+        };
+      });
       this.updateStats();
     });
   }
 
   private updateStats() {
+    const validatedStudents = this.students.filter(s => s.bestStatus === 'Validé');
+    const studentsWithoutSearch = this.students.filter(s => s.searchCount === 0);
+
     this.stats = {
-      studentsWithValidInternship: this.students.filter(s => s.bestStatus === 'Validé').length,
+      ...this.stats,
+      studentsWithValidInternship: validatedStudents.length,
       totalStudents: this.students.length,
-      studentsWithoutSearch: this.students.filter(s => s.searchCount === 0).length
+      studentsWithoutSearch: studentsWithoutSearch.length,
+      averageSearchesPerStudent: this.calculateAverageSearches()
     };
+  }
+
+  private calculateAverageSearches(): number {
+    if (this.students.length === 0) return 0;
+    const totalSearches = this.students.reduce((sum, student) => sum + student.searchCount, 0);
+    return totalSearches / this.students.length;
   }
 
   getFilteredStudents() {
@@ -236,10 +263,11 @@ export class ManagerDashboardComponent implements OnInit {
     const labels: Record<SearchStatus, string> = {
       'Relancé': 'Relancé',
       'Validé': 'Validé',
-      'En cours': 'En cours',
-      'Refusé': 'Refusé'
+      'En attente': 'En attente',
+      'Refusé': 'Refusé',
+
     };
-    return labels[status];
+    return labels[status] || status;
   }
 
   getStatusClass(status: string): string {
@@ -248,7 +276,8 @@ export class ManagerDashboardComponent implements OnInit {
       'RELANCE': `${baseClasses} bg-purple-100 text-purple-800`,
       'ACCEPTE': `${baseClasses} bg-green-100 text-green-800`,
       'EN_ATTENTE': `${baseClasses} bg-blue-100 text-blue-800`,
-      'REFUSE': `${baseClasses} bg-red-100 text-red-800`
+      'REFUSE': `${baseClasses} bg-red-100 text-red-800`,
+      'EN_COURS': `${baseClasses} bg-yellow-100 text-yellow-800`
     };
     return statusClasses[status] || baseClasses;
   }

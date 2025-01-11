@@ -50,4 +50,8 @@ export class NavigationService {
       this.router.navigate(['/search-form']);
     }
   }
+
+  navigateToSearchView(searchId: number) {
+    this.router.navigate(['/search', searchId, 'view']);
+  }
 } 

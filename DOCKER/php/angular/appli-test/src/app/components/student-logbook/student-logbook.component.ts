@@ -34,7 +34,7 @@ import { Student } from '../../models/student.model';
             </div>
             <div class="bg-purple-50 p-4 rounded-lg">
               <h3 class="font-semibold text-sm text-gray-600">En attente de réponse</h3>
-              <p class="text-2xl font-bold">{{ getSearchCountByStatus('En cours') }}</p>
+              <p class="text-2xl font-bold">{{ getSearchCountByStatus('En attente') }}</p>
             </div>
           </div>
         </div>
@@ -48,6 +48,7 @@ import { Student } from '../../models/student.model';
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ville</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[100px]">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -61,6 +62,18 @@ import { Student } from '../../models/student.model';
                     <span [class]="getStatusClass(search.statut)">
                       {{ getStatusLabel(search.statut) }}
                     </span>
+                  </td>
+                  <td class="px-2 py-4 w-[100px]">
+                    <button 
+                      class="bg-blue-100 text-blue-600 hover:bg-blue-200 p-1.5 rounded-lg flex items-center"
+                      (click)="viewSearchDetails(search.idRecherche)"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      <span class="ml-1">Voir</span>
+                    </button>
                   </td>
                 </tr>
               }
@@ -119,7 +132,7 @@ export class StudentLogbookComponent implements OnInit {
     const labels: Record<SearchStatus, string> = {
       'Relancé': 'Relancé',
       'Validé': 'Validé',
-      'En cours': 'En cours',
+      'En attente': 'En attente',
       'Refusé': 'Refusé'
     };
     return labels[status];
@@ -134,5 +147,9 @@ export class StudentLogbookComponent implements OnInit {
       'REFUSE': `${baseClasses} bg-red-100 text-red-800`
     };
     return statusClasses[status] || baseClasses;
+  }
+
+  viewSearchDetails(searchId: number) {
+    this.navigationService.navigateToSearchView(searchId);
   }
 } 

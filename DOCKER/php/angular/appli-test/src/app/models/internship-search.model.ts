@@ -1,7 +1,7 @@
 import { Enterprise } from '../services/enterprise.service';
 
 export type ContactType = 'Courrier' | 'Mail' | 'Présentiel' | 'Téléphone' | 'Site de recrutement';
-export type SearchStatus = 'Refusé' | 'En cours' | 'Relancé' | 'Validé';
+export type SearchStatus = 'Refusé' | 'En attente' | 'Relancé' | 'Validé';
 
 export interface InternshipSearch {
   idRecherche: number;

@@ -12,307 +12,8 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
   selector: 'app-search-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  template: `
-    <div class="container mx-auto py-8 px-6">
-      <div class="max-w-6xl mx-auto">
-        <h1 class="text-xl font-normal text-gray-600 mb-8">
-          Étudiant - {{ isEditMode ? 'Modifier' : 'Ajouter' }} une recherche
-        </h1>
-        
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-8 bg-white rounded-lg p-8">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <!-- Type de contact et Date 1er contact -->
-            <div class="flex flex-col w-full items-center">
-              <div class="w-3/4">
-                <label class="block text-base font-medium text-gray-900 mb-2">Type de contact</label>
-                <select 
-                  formControlName="typeContact"
-                  class="w-full h-11 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                >
-                  <option value="Courrier">Courrier</option>
-                  <option value="Mail">Mail</option>
-                  <option value="Présentiel">Présentiel</option>
-                  <option value="Téléphone">Téléphone</option>
-                  <option value="Site de recrutement">Site de recrutement</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="flex flex-col w-full items-center">
-              <div class="w-3/4">
-                <label class="block text-base font-medium text-gray-900 mb-2">Date 1er contact</label>
-                <input 
-                  type="date" 
-                  formControlName="date1erContact"
-                  class="w-full h-11 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                >
-              </div>
-            </div>
-
-            <!-- Nom de l'entreprise -->
-            <div class="flex flex-col w-full items-center">
-              <div class="w-3/4">
-                <div class="flex items-center justify-between mb-2">
-                  <label class="block text-base font-medium text-gray-900">Nom de l'entreprise</label>
-                  @if (!isEditMode) {
-                    <button 
-                      type="button"
-                      (click)="openEnterpriseForm()"
-                      class="text-blue-600 hover:text-blue-700 font-medium flex items-center"
-                    >
-                      <span class="text-xl mr-1">+</span> Nouvelle entreprise
-                    </button>
-                  }
-                </div>
-                <div class="relative">
-                  <input
-                    type="text"
-                    [formControl]="searchControl"
-                    class="w-full h-11 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                    placeholder="Rechercher une entreprise..."
-                    (focus)="showDropdown = true"
-                  >
-                  @if (showDropdown && filteredEnterprises.length > 0) {
-                    <div class="absolute z-10 w-full mt-1 bg-white border-2 border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
-                      @for (enterprise of filteredEnterprises; track enterprise.idEntreprise) {
-                        <div
-                          class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          (click)="selectEnterprise(enterprise)"
-                        >
-                          {{ enterprise.raisonSociale }}
-                        </div>
-                      }
-                    </div>
-                  }
-                </div>
-              </div>
-            </div>
-
-            <!-- Adresse -->
-            <div class="flex flex-col w-full items-center">
-              <div class="w-3/4">
-                <label class="block text-base font-medium text-gray-900 mb-2">Adresse - Numéro et Rue</label>
-                <input 
-                  type="text" 
-                  [value]="selectedEnterprise?.adresseEntreprise || ''"
-                  disabled
-                  class="w-full h-11 rounded-md border-2 border-gray-200 bg-gray-50 px-3"
-                >
-              </div>
-            </div>
-
-            <!-- Code Postal et Ville -->
-            <div class="flex flex-col w-full items-center">
-              <div class="w-3/4">
-                <label class="block text-base font-medium text-gray-900 mb-2">Adresse - Code Postal</label>
-                <input 
-                  type="text" 
-                  [value]="selectedEnterprise?.codePostalEntreprise || ''"
-                  disabled
-                  class="w-full h-11 rounded-md border-2 border-gray-200 bg-gray-50 px-3"
-                >
-              </div>
-            </div>
-
-            <div class="flex flex-col w-full items-center">
-              <div class="w-3/4">
-                <label class="block text-base font-medium text-gray-900 mb-2">Adresse - Ville</label>
-                <input 
-                  type="text" 
-                  [value]="selectedEnterprise?.villeEntreprise || ''"
-                  disabled
-                  class="w-full h-11 rounded-md border-2 border-gray-200 bg-gray-50 px-3"
-                >
-              </div>
-            </div>
-
-            <!-- Contact -->
-            <div class="flex flex-col w-full items-center">
-              <div class="w-3/4">
-                <label class="block text-base font-medium text-gray-900 mb-2">Nom du contact</label>
-                <input 
-                  type="text" 
-                  formControlName="nomPrenomContact"
-                  class="w-full h-11 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                >
-              </div>
-            </div>
-
-            <div class="flex flex-col w-full items-center">
-              <div class="w-3/4">
-                <label class="block text-base font-medium text-gray-900 mb-2">Fonction du contact</label>
-                <input 
-                  type="text" 
-                  formControlName="fonctionContact"
-                  class="w-full h-11 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                >
-              </div>
-            </div>
-
-            <!-- Téléphone et Mail -->
-            <div class="flex flex-col w-full items-center">
-              <div class="w-3/4">
-                <label class="block text-base font-medium text-gray-900 mb-2">Téléphone</label>
-                <input 
-                  type="tel" 
-                  formControlName="telContact"
-                  class="w-full h-11 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                >
-              </div>
-            </div>
-
-            <div class="flex flex-col w-full items-center">
-              <div class="w-3/4">
-                <label class="block text-base font-medium text-gray-900 mb-2">Email</label>
-                <input 
-                  type="email" 
-                  formControlName="mailContact"
-                  class="w-full h-11 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- Statut -->
-          <div class="mt-8">
-            <label class="block text-base font-medium text-gray-900 mb-3">Statut recherche</label>
-            <div class="inline-flex rounded-full overflow-hidden border-2 border-gray-200">
-              <button 
-                type="button"
-                [class]="getStatusButtonClass('Refusé')"
-                (click)="setStatus('Refusé')"
-              >
-                Refusé
-              </button>
-              <button 
-                type="button"
-                [class]="getStatusButtonClass('En cours')"
-                (click)="setStatus('En cours')"
-              >
-                En attente
-              </button>
-              <button 
-                type="button"
-                [class]="getStatusButtonClass('Relancé')"
-                (click)="setStatus('Relancé')"
-              >
-                Relancé
-              </button>
-              <button 
-                type="button"
-                [class]="getStatusButtonClass('Validé')"
-                (click)="setStatus('Validé')"
-              >
-                Accepté
-              </button>
-            </div>
-          </div>
-
-          <!-- Observations -->
-          <div class="mt-6">
-            <label class="block text-base font-medium text-gray-900 mb-2">Observations</label>
-            <textarea 
-              formControlName="observations"
-              rows="4"
-              class="w-full rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3 py-2"
-              placeholder="Ajoutez vos observations ici..."
-            ></textarea>
-          </div>
-
-          <!-- Boutons d'action -->
-          <div class="flex justify-end space-x-4 pt-8">
-            <button 
-              type="button"
-              class="px-8 h-11 border-2 border-gray-200 rounded-md hover:bg-gray-50 transition-colors duration-200"
-              (click)="onCancel()"
-            >
-              Annuler
-            </button>
-            <button 
-              type="submit"
-              class="px-8 h-11 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50"
-              [disabled]="!form.valid"
-            >
-              Ajouter
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Modale de création d'entreprise -->
-    @if (showEnterpriseModal) {
-      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-md">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Nouvelle entreprise</h3>
-          
-          <form [formGroup]="enterpriseForm" (ngSubmit)="createEnterprise()" class="space-y-4">
-            <!-- Raison sociale -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Raison sociale</label>
-              <input 
-                type="text"
-                formControlName="raisonSociale"
-                class="w-full h-10 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                placeholder="Nom de l'entreprise"
-              >
-            </div>
-
-            <!-- Adresse -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Numéro et rue</label>
-              <input 
-                type="text"
-                formControlName="adresseEntreprise"
-                class="w-full h-10 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                placeholder="12 rue de l'exemple"
-              >
-            </div>
-
-            <!-- Code postal -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Code postal</label>
-              <input 
-                type="text"
-                formControlName="codePostalEntreprise"
-                class="w-full h-10 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                placeholder="64000"
-              >
-            </div>
-
-            <!-- Ville -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
-              <input 
-                type="text"
-                formControlName="villeEntreprise"
-                class="w-full h-10 rounded-md border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 px-3"
-                placeholder="Pau"
-              >
-            </div>
-
-            <!-- Boutons -->
-            <div class="flex justify-end space-x-3 pt-4">
-              <button 
-                type="button"
-                (click)="showEnterpriseModal = false"
-                class="px-4 py-2 border-2 border-gray-200 rounded-md hover:bg-gray-50"
-              >
-                Annuler
-              </button>
-              <button 
-                type="submit"
-                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                [disabled]="!enterpriseForm.valid"
-              >
-                Créer
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    }
-  `
+  templateUrl: './search-form.component.html',
+  styleUrls: ['./search-form.component.css']
 })
 export class SearchFormComponent implements OnInit {
   form: FormGroup;
@@ -364,15 +65,21 @@ export class SearchFormComponent implements OnInit {
 
     // Configurer le filtrage des entreprises
     this.searchControl.valueChanges.pipe(
-      debounceTime(800),
+      debounceTime(300),
       distinctUntilChanged(),
-      map(value => value?.toLowerCase() ?? '')
     ).subscribe(searchTerm => {
-      this.filteredEnterprises = this.enterprises
-        .filter(enterprise =>
-          enterprise.raisonSociale.toLowerCase().includes(searchTerm)
-        )
-        .slice(0, 10); // Limite à 10 résultats
+      if (searchTerm) {
+        this.filteredEnterprises = this.enterprises
+          .filter(enterprise => 
+            enterprise.raisonSociale.toLowerCase()
+              .includes(searchTerm.toLowerCase())
+          )
+          .slice(0, 10);
+        this.showDropdown = true;
+      } else {
+        this.filteredEnterprises = [];
+        this.showDropdown = false;
+      }
     });
 
     // Gérer le clic en dehors du dropdown
@@ -401,10 +108,15 @@ export class SearchFormComponent implements OnInit {
   private loadSearchData(searchId: string) {
     this.internshipSearchService.getSearchById(parseInt(searchId)).subscribe(search => {
       if (search) {
+        this.enterpriseService.getEnterpriseById(search.idEntreprise).subscribe(enterprise => {
+          this.selectedEnterprise = enterprise;
+          this.searchControl.setValue(enterprise?.raisonSociale ?? null);
+        });
+
         this.form.patchValue({
           ...search,
-          date1erContact: this.formatDate(search.date1erContact),
-          dateRelance: search.dateRelance ? this.formatDate(search.dateRelance) : '',
+          date1erContact: this.formatDateForInput(search.date1erContact),
+          dateRelance: search.dateRelance ? this.formatDateForInput(search.dateRelance) : '',
           idEntreprise: search.idEntreprise
         });
       }
@@ -420,6 +132,14 @@ export class SearchFormComponent implements OnInit {
   }
 
   private formatDate(date: Date): string {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  private formatDateForInput(date: Date): string {
     return new Date(date).toISOString().split('T')[0];
   }
 
@@ -434,11 +154,19 @@ export class SearchFormComponent implements OnInit {
       };
 
       try {
+        // Attendre que la modification/création soit terminée
         if (this.isEditMode) {
-          await this.internshipSearchService.updateSearch(parseInt(this.searchId!), searchData).toPromise();
+          const updatedSearch = await this.internshipSearchService.updateSearch(parseInt(this.searchId!), searchData).toPromise();
+          console.log('Recherche modifiée:', updatedSearch);
         } else {
-          await this.internshipSearchService.addSearch(searchData).toPromise();
+          const newSearch = await this.internshipSearchService.addSearch(searchData).toPromise();
+          console.log('Nouvelle recherche:', newSearch);
         }
+
+        // Attendre que la liste soit rechargée
+        const allSearches = await this.internshipSearchService.getSearchesByStudentId(currentUser.id).toPromise();
+        console.log('Toutes les recherches après sauvegarde:', allSearches);
+
         this.navigationService.goBack();
       } catch (error) {
         console.error('Erreur lors de la sauvegarde:', error);
@@ -450,9 +178,22 @@ export class SearchFormComponent implements OnInit {
     this.navigationService.goBack();
   }
 
-  getStatusButtonClass(status: string): string {
+  getStatusButtonClass(status: string, position: 'first' | 'middle' | 'last'): string {
     const isSelected = this.form.get('statut')?.value === status;
-    const baseClasses = 'px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200';
+    let roundedClasses = '';
+    
+    switch (position) {
+      case 'first':
+        roundedClasses = 'rounded-l-full';
+        break;
+      case 'last':
+        roundedClasses = 'rounded-r-full';
+        break;
+      default:
+        roundedClasses = '';
+    }
+
+    const baseClasses = `w-36 px-4 py-2 text-sm font-medium transition-colors duration-200 ${roundedClasses}`;
     
     if (isSelected) {
       switch (status) {
@@ -494,9 +235,9 @@ export class SearchFormComponent implements OnInit {
   }
 
   selectEnterprise(enterprise: Enterprise) {
+    this.selectedEnterprise = enterprise;
     this.form.patchValue({ idEntreprise: enterprise.idEntreprise });
     this.searchControl.setValue(enterprise.raisonSociale, { emitEvent: false });
     this.showDropdown = false;
-    this.selectedEnterprise = enterprise;
   }
 } 

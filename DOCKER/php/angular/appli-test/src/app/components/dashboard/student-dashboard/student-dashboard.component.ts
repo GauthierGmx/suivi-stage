@@ -9,19 +9,14 @@ import { StudentService } from '../../../services/student.service';
 import { EnterpriseService } from '../../../services/enterprise.service';
 import { SearchFormComponent } from './search-form/search-form.component';
 import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component';
-import { BreadcrumbComponent } from '../../shared/breadcrumb/breadcrumb.component';
 import { NavigationService } from '../../../services/navigation.service';
 
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchFormComponent, ConfirmationModalComponent, BreadcrumbComponent],
+  imports: [CommonModule, FormsModule, SearchFormComponent, ConfirmationModalComponent],
   template: `
     <div class="space-y-6">
-      <app-breadcrumb 
-        [items]="breadcrumbs"
-        [showBack]="false"
-      />
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
         <div class="p-4 bg-[#EDEEFC] rounded-lg">
@@ -62,22 +57,22 @@ import { NavigationService } from '../../../services/navigation.service';
           <table class="w-full">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Entreprise</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ville</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date de recherche</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dernière modification</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Entreprise</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Ville</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Date de recherche</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Dernière modification</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Statut</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
               @for (search of getFilteredSearches(); track search.idRecherche) {
                 <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4">{{ search.entreprise?.raisonSociale }}</td>
-                  <td class="px-6 py-4">{{ search.entreprise?.villeEntreprise }}</td>
-                  <td class="px-6 py-4">{{ search.dateCreation | date:'dd MMM yyyy' }}</td>
-                  <td class="px-6 py-4">{{ search.dateModification | date:'dd MMM yyyy' }}</td>
-                  <td class="px-6 py-4">
+                  <td class="px-6 py-4 text-center">{{ search.entreprise?.raisonSociale }}</td>
+                  <td class="px-6 py-4 text-center">{{ search.entreprise?.villeEntreprise }}</td>
+                  <td class="px-6 py-4 text-center">{{ formatDate(search.dateCreation) }}</td>
+                  <td class="px-6 py-4 text-center">{{ formatDate(search.dateModification) }}</td>
+                  <td class="px-6 py-4 text-center">
                     <span [class]="getStatusClass(search.statut)">
                       {{ getStatusLabel(search.statut) }}
                     </span>
@@ -163,6 +158,7 @@ export class StudentDashboardComponent implements OnInit {
       .subscribe(student => {
         if (student) {
           this.student = student;
+          console.log('Données étudiant:', student);
         }
       });
 
@@ -170,14 +166,16 @@ export class StudentDashboardComponent implements OnInit {
     this.internshipSearchService.getSearchesByStudentId(this.currentUser.id)
       .subscribe(searches => {
         this.searches = searches;
+        console.log('Recherches chargées:', searches);
         this.updateStats();
+        console.log('Stats mises à jour:', this.stats);
       });
   }
 
   private updateStats() {
     this.stats = {
       searchCount: this.searches.length,
-      pendingContacts: this.searches.filter(s => s.statut === 'En cours').length,
+      pendingContacts: this.searches.filter(s => s.statut === 'En attente').length,
       rejectedInternships: this.searches.filter(s => s.statut === 'Refusé').length
     };
   }
@@ -236,7 +234,7 @@ export class StudentDashboardComponent implements OnInit {
     const labels: Record<SearchStatus, string> = {
       'Relancé': 'Relancé',
       'Validé': 'Validé',
-      'En cours': 'En cours',
+      'En attente': 'En attente',
       'Refusé': 'Refusé'
     };
     return labels[status];
@@ -247,31 +245,39 @@ export class StudentDashboardComponent implements OnInit {
     const statusClasses: Record<SearchStatus, string> = {
       'Relancé': `${baseClasses} bg-purple-100 text-purple-800`,
       'Validé': `${baseClasses} bg-green-100 text-green-800`,
-      'En cours': `${baseClasses} bg-blue-100 text-blue-800`,
+      'En attente': `${baseClasses} bg-blue-100 text-blue-800`,
       'Refusé': `${baseClasses} bg-red-100 text-red-800`
     };
     return statusClasses[status];
   }
 
   getFilteredSearches(): InternshipSearch[] {
-    if (!this.searchTerm.trim()) {
-      return this.searches;
-    }
-
-    const searchTermLower = this.searchTerm.toLowerCase().trim();
+    const filtered = this.searchTerm.trim() 
+      ? this.searches.filter(search => {
+          const matches = (
+            search.entreprise?.raisonSociale.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+            search.entreprise?.villeEntreprise.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+            search.dateCreation.toLocaleDateString().includes(this.searchTerm.toLowerCase()) ||
+            search.dateModification.toLocaleDateString().includes(this.searchTerm.toLowerCase()) ||
+            this.getStatusLabel(search.statut).toLowerCase().includes(this.searchTerm.toLowerCase())
+          );
+          return matches;
+        })
+      : this.searches;
     
-    return this.searches.filter(search => {
-      return (
-        search.entreprise?.raisonSociale.toLowerCase().includes(searchTermLower) ||
-        search.entreprise?.villeEntreprise.toLowerCase().includes(searchTermLower) ||
-        search.dateCreation.toLocaleDateString().includes(searchTermLower) ||
-        search.dateModification.toLocaleDateString().includes(searchTermLower) ||
-        this.getStatusLabel(search.statut).toLowerCase().includes(searchTermLower)
-      );
-    });
+    console.log('Recherches filtrées:', filtered);
+    return filtered;
   }
 
   navigateToSearchForm() {
     this.navigationService.navigateToSearchForm();
+  }
+
+  formatDate(date: Date): string {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
   }
 } 

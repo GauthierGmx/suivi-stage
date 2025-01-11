@@ -5,6 +5,7 @@ import { authGuard } from './guards/auth.guard';
 import { StudentLogbookComponent } from './components/student-logbook/student-logbook.component';
 import { SearchFormComponent } from './components/dashboard/student-dashboard/search-form/search-form.component';
 import { StudentFactsheetsComponent } from './components/factsheets/student-factsheets/student-factsheets.component';
+import { SearchViewComponent } from './components/search/search-view/search-view.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -32,6 +33,10 @@ export const routes: Routes = [
     path: 'factsheets',
     component: StudentFactsheetsComponent,
     canActivate: [authGuard]
+  },
+  {
+    path: 'search/:id/view',
+    component: SearchViewComponent
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
