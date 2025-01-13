@@ -82,6 +82,7 @@ class EntrepriseSeeder extends Seeder
                 'latitudeAdresse' => '44.833333'
             ],
             [
+                'idEntreprise' => 7,
                 'numSIRET' => '12345678901234',
                 'raisonSociale' => 'IUT de Bayonne',
                 'adresse' => '2 allée du parc montaury',

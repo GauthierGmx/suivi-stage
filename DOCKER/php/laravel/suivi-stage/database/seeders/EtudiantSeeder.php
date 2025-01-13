@@ -75,7 +75,7 @@ class EtudiantSeeder extends Seeder
                 'prenom' => 'Lucas',
                 'adresseMail' => 'lcrussiere@iutbayonne.univ-pau.fr',
                 'idDepartement' => 1,
-                'numSIRET' => '12345678901234',
+                'idEntreprise' => 7,
                 'idTuteur' => 7
             ],
             [
@@ -84,7 +84,7 @@ class EtudiantSeeder extends Seeder
                 'prenom' => 'Elsa',
                 'adresseMail' => 'elavergne@iutbayonne.univ-pau.fr',
                 'idDepartement' => 1,
-                'numSIRET' => '01020304051234',
+                'idEntreprise' => 2,
                 'idTuteur' => 2
             ]
         ]);
