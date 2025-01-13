@@ -6,7 +6,7 @@ services:
     #image: rogh/sae-php74:latest
     volumes:
       - ./php/laravel:/var/www/html
-      - ./apachedefaultconf:/etc/apache2/site-enabled
+      - ./apachedefaultconf:/etc/apache2/sites-enabled
     ports:
       - "8000:80"
     depends_on:
@@ -23,8 +23,6 @@ services:
       MYSQL_PASSWORD: admin
     volumes:
       - ./mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
 
   phpmyadmin:
     image: phpmyadmin:5.2
