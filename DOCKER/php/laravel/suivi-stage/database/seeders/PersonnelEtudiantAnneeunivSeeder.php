@@ -44,6 +44,11 @@ class PersonnelEtudiantAnneeunivSeeder extends Seeder
                 'idPersonnel' => 2,
                 'idUPPA' => '613453',
                 'idAnneeUniversitaire' => 1
+            ],
+            [
+                'idPersonnel' => 2,
+                'idUPPA' => '610124',
+                'idAnneeUniversitaire' => 1
             ]
         ]);
     }

@@ -50,6 +50,12 @@ class TuteurEntrepriseSeeder extends Seeder
                 'prenom' => 'Dorian',
                 'fonction' => 'Chef de projet - développeur',
                 'numSIRET' => '09080706059876',
+            ],
+            [
+                'nom' => 'DUPONT',
+                'prenom' => 'Jean',
+                'fonction' => 'Chef de projet - développeur',
+                'numSIRET' => '12345678901234'
             ]
         ]);
     }
