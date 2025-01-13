@@ -1,0 +1,104 @@
+<div class="dashboard">
+  <div class="stats-grid">
+    <div class="stats-card primary">
+      <h3>Stages refusés</h3>
+      <p>{{ stats.rejectedInternships }}</p>
+    </div>
+    
+    <div class="stats-card secondary">
+      <h3>Contacts en attente</h3>
+      <p>{{ stats.pendingContacts }}</p>
+    </div>
+    
+    <div class="stats-card tertiary">
+      <h3>Recherches saisies</h3>
+      <p>{{ stats.searchCount }}</p>
+    </div>
+  </div>
+
+  <div class="content-box">
+    <div class="header">
+      <div class="search-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm"
+          placeholder="Recherche..." 
+          class="search-input"
+        >
+      </div>
+      <button 
+        class="add-button"
+        (click)="navigateToSearchForm()"
+      >
+        Ajouter une recherche
+      </button>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Entreprise</th>
+            <th>Ville</th>
+            <th>Date de recherche</th>
+            <th>Dernière modification</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (search of getFilteredSearches(); track search.idRecherche) {
+            <tr>
+              <td>{{ search.entreprise?.raisonSociale }}</td>
+              <td>{{ search.entreprise?.villeEntreprise }}</td>
+              <td>{{ formatDate(search.dateCreation) }}</td>
+              <td>{{ formatDate(search.dateModification) }}</td>
+              <td>
+                <span [class]="getStatusClass(search.statut)">
+                  {{ getStatusLabel(search.statut) }}
+                </span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button 
+                    class="edit-button"
+                    (click)="showEditForm(search)"
+                  >
+                    <svg class="icon" viewBox="0 0 24 24">
+                      <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <span>Modifier</span>
+                  </button>
+                  <button 
+                    class="delete-button"
+                    (click)="confirmDelete(search.idRecherche)"
+                  >
+                    <svg class="icon" viewBox="0 0 24 24">
+                      <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    <span>Supprimer</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+@if (showForm) {
+  <app-search-form
+    [search]="selectedSearch"
+    (save)="saveSearch($event)"
+    (cancel)="hideForm()"
+  />
+}
+
+@if (showDeleteConfirmation) {
+  <app-confirmation-modal
+    (confirm)="onDeleteConfirmed()"
+    (cancel)="hideDeleteConfirmation()"
+  />
+} 

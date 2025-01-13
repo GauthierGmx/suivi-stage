@@ -302,6 +302,22 @@ export class InternshipSearchService {
       idEntreprise: 18,
       idEtudiant: 5,
       observations: 'Entreprise en restructuration'
+    },
+    {
+      idRecherche: 19,
+      dateCreation: new Date('2025-01-10'),
+      dateModification: new Date('2025-01-12'),
+      date1erContact: new Date('2025-01-10'),
+      typeContact: 'Téléphone',
+      nomPrenomContact: 'Virgile Espinasse',
+      fonctionContact: 'Directeur technique',
+      telContact: '0623456789',
+      mailContact: 'virgile.espinasse@natali.fr',
+      dateRelance: new Date('2025-01-12'),
+      statut: 'En attente',
+      idEntreprise: 2,
+      idEtudiant: 3,
+      observations: 'Entretien prévu la semaine prochaine'
     }
   ];
 
@@ -379,7 +395,7 @@ export class InternshipSearchService {
     
     return searches.reduce((best, current) => {
       return statusPriority[current.statut] > statusPriority[best.statut] ? current : best;
-    }).statut;
+    }, searches[0]).statut;
   }
 
   addSearch(search: Omit<InternshipSearch, 'idRecherche'>): Observable<InternshipSearch> {
@@ -387,7 +403,7 @@ export class InternshipSearchService {
       ...search,
       idRecherche: this.mockSearches.length + 1,
       dateModification: new Date(),
-      observations: search.observations || ''
+      observations: search.observations ?? ''
     };
     
     this.mockSearches = [...this.mockSearches, newSearch];
@@ -402,7 +418,7 @@ export class InternshipSearchService {
         ...this.mockSearches[index],
         ...search,
         dateModification: new Date(),
-        observations: search.observations !== undefined ? search.observations : this.mockSearches[index].observations
+        observations: search.observations ?? this.mockSearches[index].observations
       };
       this.searchesSubject.next(this.mockSearches);
       return of(this.mockSearches[index]);

@@ -51,6 +51,21 @@ export class StudentService {
       idDepartement: 1,
       idEntreprise: null,
       idTuteur: null
+    },
+    {
+      idEtudiant: 6,
+      idUPPA: 'ETU12348',
+      nomEtudiant: 'Espinasse',
+      prenomEtudiant: 'Virgile',
+      adresseEtudiant: '17 rue de la paix',
+      villeEtudiant: 'Paris',
+      codePostalEtudiant: '75000',
+      telephoneEtudiant: '0612345678',
+      adresseMailEtudiant: 'virgile.espinasse@etud.univ-pau.fr',
+      idParcours: 1,
+      idDepartement: 1,
+      idEntreprise: null,
+      idTuteur: null
     }
   ];
 

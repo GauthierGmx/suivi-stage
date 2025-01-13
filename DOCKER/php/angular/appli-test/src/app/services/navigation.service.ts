@@ -7,11 +7,11 @@ import { filter } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class NavigationService {
-  private history: string[] = [];
+  private readonly history: string[] = [];
 
   constructor(
-    private router: Router,
-    private location: Location
+    private readonly router: Router,
+    private readonly location: Location
   ) {
     this.router.events
       .pipe(filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd))
@@ -53,5 +53,9 @@ export class NavigationService {
 
   navigateToSearchView(searchId: number) {
     this.router.navigate(['/search', searchId, 'view']);
+  }
+
+  navigateToStudentDashboard() {
+    this.router.navigate(['/dashboard']);
   }
 } 

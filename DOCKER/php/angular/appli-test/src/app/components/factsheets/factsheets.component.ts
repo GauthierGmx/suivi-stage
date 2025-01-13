@@ -1,57 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { User, UserRole } from '../../models/user.model';
-import { StudentDashboardComponent } from '../dashboard/student-dashboard/student-dashboard.component';
-import { ManagerDashboardComponent } from '../dashboard/manager-dashboard/manager-dashboard.component';
+import { User } from '../../models/user.model';
+import { StudentFactsheetsComponent } from './student-factsheets/student-factsheets.component';
+import { NavigationService } from '../../services/navigation.service';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-factsheets',
   standalone: true,
-  imports: [CommonModule, StudentDashboardComponent],
-  template: `
-    <div class="container mx-auto py-8">
-      <div class="">
-        <h1 class="text-2xl font-bold mb-6">Tableau de bord</h1>
-        @if (currentUser) {
-          <div class="space-y-4">
-            <div class="p-4 bg-blue-50 rounded-lg">
-              <h2 class="text-xl mb-2">Bienvenue, {{ currentUser.firstName }} {{ currentUser.lastName }}</h2>
-              <p class="text-gray-600">Vous êtes connecté en {{ getRoleName(currentUser.role) }}</p>
-            </div>
-            
-            @if (currentUser.role === 'STUDENT') {
-              <app-student-dashboard [currentUser]="currentUser" />
-            }
-            
-            <!-- @if (currentUser.role === 'INTERNSHIP_MANAGER') {
-              <app-manager-dashboard [currentUser]="currentUser" />
-            } -->
-          </div>
-        }
-      </div>
-    </div>
-  `
+  imports: [CommonModule, StudentFactsheetsComponent],
+  templateUrl: './factsheets.component.html',
+  styleUrls: ['./factsheets.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class FactsheetsComponent implements OnInit {
   currentUser: User | null = null;
+  breadcrumbs = this.navigationService.getBreadcrumbs('Fiches');
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly navigationService: NavigationService
+  ) {}
 
   ngOnInit() {
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
-  }
-
-  getRoleName(role: UserRole): string {
-    const roles: { [key in UserRole]: string } = {
-      'SUPERADMIN': 'Super Administrateur',
-      'ADMIN': 'Administrateur',
-      'STUDENT': 'Étudiant',
-      'TEACHER': 'Enseignant',
-      'INTERNSHIP_MANAGER': 'Responsable des stages'
-    };
-    return roles[role] || role;
   }
 }

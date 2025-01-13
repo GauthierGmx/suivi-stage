@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { InternshipSearchService } from '../../services/internship-search.service';
 import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
 import { BreadcrumbComponent } from '../shared/breadcrumb/breadcrumb.component';
@@ -11,89 +12,16 @@ import { Student } from '../../models/student.model';
 @Component({
   selector: 'app-student-logbook',
   standalone: true,
-  imports: [CommonModule, BreadcrumbComponent],
-  template: `
-    <div class="container mx-auto py-8 px-4">
-      <app-breadcrumb [items]="breadcrumbs"/>
-      
-      <div class="mb-6">
-        <h1 class="text-2xl font-bold mb-2">Journal de bord - {{ student?.nomEtudiant }} {{ student?.prenomEtudiant }}</h1>
-        <p class="text-gray-600">Suivi des recherches de stage</p>
-      </div>
-
-      <div class="bg-white rounded-lg shadow">
-        <div class="p-4 border-b">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-blue-50 p-4 rounded-lg">
-              <h3 class="font-semibold text-sm text-gray-600">Total des recherches</h3>
-              <p class="text-2xl font-bold">{{ searches.length }}</p>
-            </div>
-            <div class="bg-green-50 p-4 rounded-lg">
-              <h3 class="font-semibold text-sm text-gray-600">Réponses positives</h3>
-              <p class="text-2xl font-bold">{{ getSearchCountByStatus('Validé') }}</p>
-            </div>
-            <div class="bg-purple-50 p-4 rounded-lg">
-              <h3 class="font-semibold text-sm text-gray-600">En attente de réponse</h3>
-              <p class="text-2xl font-bold">{{ getSearchCountByStatus('En attente') }}</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Entreprise</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ville</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
-                <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[100px]">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              @for (search of sortedSearches; track search.idRecherche) {
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4">{{ search.dateCreation | date:'dd MMM yyyy' }}</td>
-                  <td class="px-6 py-4">{{ search.entreprise?.raisonSociale }}</td>
-                  <td class="px-6 py-4">{{ search.entreprise?.villeEntreprise }}</td>
-                  <td class="px-6 py-4">{{ search.nomPrenomContact }}</td>
-                  <td class="px-6 py-4">
-                    <span [class]="getStatusClass(search.statut)">
-                      {{ getStatusLabel(search.statut) }}
-                    </span>
-                  </td>
-                  <td class="px-2 py-4 w-[100px]">
-                    <button 
-                      class="bg-blue-100 text-blue-600 hover:bg-blue-200 p-1.5 rounded-lg flex items-center"
-                      (click)="viewSearchDetails(search.idRecherche)"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      <span class="ml-1">Voir</span>
-                    </button>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  `
+  imports: [CommonModule, BreadcrumbComponent, FormsModule],
+  templateUrl: './student-logbook.component.html',
+  styleUrls: ['./student-logbook.component.css']
 })
 export class StudentLogbookComponent implements OnInit {
   student?: Student;
   searches: InternshipSearch[] = [];
   breadcrumbs: { label: string; path?: string; }[] = [];
-
-  get sortedSearches() {
-    return [...this.searches].sort((a, b) => 
-      b.dateModification.getTime() - a.dateModification.getTime()
-    );
-  }
+  searchTerm: string = '';
+  currentFilter: 'all' | 'waiting' | 'validated' | 'date_asc' | 'date_desc' = 'all';
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -107,8 +35,40 @@ export class StudentLogbookComponent implements OnInit {
     this.loadStudentData(studentId);
   }
 
+  get filteredSearches() {
+    let filtered = [...this.searches];
+
+    if (this.searchTerm.trim()) {
+      const searchTermLower = this.searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(search => {
+        return (
+          search.entreprise?.raisonSociale?.toLowerCase().includes(searchTermLower) ||
+          search.entreprise?.villeEntreprise?.toLowerCase().includes(searchTermLower) ||
+          search.nomPrenomContact?.toLowerCase().includes(searchTermLower) ||
+          this.getStatusLabel(search.statut).toLowerCase().includes(searchTermLower)
+        );
+      });
+    }
+
+    switch (this.currentFilter) {
+      case 'waiting':
+        filtered = filtered.filter(s => s.statut === 'En attente');
+        break;
+      case 'validated':
+        filtered = filtered.filter(s => s.statut === 'Validé');
+        break;
+      case 'date_asc':
+        filtered.sort((a, b) => a.dateCreation.getTime() - b.dateCreation.getTime());
+        break;
+      case 'date_desc':
+        filtered.sort((a, b) => b.dateCreation.getTime() - a.dateCreation.getTime());
+        break;
+    }
+
+    return filtered;
+  }
+
   private loadStudentData(studentId: string) {
-    // Charger les données de l'étudiant
     this.studentService.getStudentById(parseInt(studentId)).subscribe(student => {
       if (student) {
         this.student = student;
@@ -118,10 +78,23 @@ export class StudentLogbookComponent implements OnInit {
       }
     });
 
-    // Charger les recherches avec les données entreprises
     this.internshipSearchService.getSearchesByStudentId(studentId).subscribe(searches => {
       this.searches = searches;
     });
+  }
+
+  setFilter(filter: 'all' | 'waiting' | 'validated' | 'date_asc' | 'date_desc') {
+    this.currentFilter = filter;
+  }
+
+  toggleDateSort() {
+    if (this.currentFilter === 'date_asc') {
+      this.currentFilter = 'date_desc';
+    } else if (this.currentFilter === 'date_desc') {
+      this.currentFilter = 'all';
+    } else {
+      this.currentFilter = 'date_asc';
+    }
   }
 
   getSearchCountByStatus(status: SearchStatus): number {
@@ -139,17 +112,31 @@ export class StudentLogbookComponent implements OnInit {
   }
 
   getStatusClass(status: string): string {
-    const baseClasses = 'px-2 py-1 rounded-full text-xs font-semibold';
-    const statusClasses: Record<string, string> = {
-      'RELANCE': `${baseClasses} bg-purple-100 text-purple-800`,
-      'ACCEPTE': `${baseClasses} bg-green-100 text-green-800`,
-      'EN_ATTENTE': `${baseClasses} bg-blue-100 text-blue-800`,
-      'REFUSE': `${baseClasses} bg-red-100 text-red-800`
+    const statusMap: Record<string, string> = {
+      'Relancé': 'status-badge relance',
+      'Validé': 'status-badge valide',
+      'En attente': 'status-badge en-attente',
+      'Refusé': 'status-badge refuse'
     };
-    return statusClasses[status] || baseClasses;
+    return statusMap[status] || 'status-badge';
   }
 
   viewSearchDetails(searchId: number) {
     this.navigationService.navigateToSearchView(searchId);
+  }
+
+  getSearchesThisWeek(): number {
+    const today = new Date();
+    const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    return this.searches.filter(search => new Date(search.dateCreation) >= lastWeek).length;
+  }
+
+  getCurrentDate(): Date {
+    return new Date();
+  }
+
+  getLastWeekDate(): Date {
+    const today = new Date();
+    return new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
   }
 } 

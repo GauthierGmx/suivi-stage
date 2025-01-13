@@ -1,0 +1,22 @@
+.search-view {
+  margin: 0 auto;
+  padding: 32px;
+  max-width: 1200px;
+}
+
+.content {
+  width: 100%;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #111827;
+}
+
+@media (max-width: 768px) {
+  .search-view {
+    padding: 16px;
+  }
+} 

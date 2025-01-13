@@ -59,6 +59,13 @@ export class AuthService {
       firstName: 'Enseignant',
       lastName: 'Référent',
       role: 'TEACHER'
+    },
+    'virgile.espinasse@etud.univ-pau.fr': {
+      id: '8',
+      email: 'virgile.espinasse@etud.univ-pau.fr',
+      firstName: 'Virgile',
+      lastName: 'Espinasse',
+      role: 'STUDENT'
     }
   };
 
