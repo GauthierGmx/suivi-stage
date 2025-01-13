@@ -1,0 +1,21 @@
+<div class="dashboard">
+  <div class="content">
+    <h1 class="title">Journal de bord</h1>
+    @if (currentUser) {
+      <div class="dashboard-content">
+        <div class="welcome-card">
+          <h2>Bienvenue, {{ currentUser.firstName }} {{ currentUser.lastName }}</h2>
+          <p>Vous êtes connecté en {{ getRoleName(currentUser.role) }}</p>
+        </div>
+        
+        @if (currentUser.role === 'STUDENT') {
+          <app-student-dashboard [currentUser]="currentUser" />
+        }
+        
+        @if (currentUser.role === 'INTERNSHIP_MANAGER') {
+          <app-manager-dashboard [currentUser]="currentUser" />
+        }
+      </div>
+    }
+  </div>
+</div> 

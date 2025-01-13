@@ -16,6 +16,7 @@ class EntrepriseSeeder extends Seeder
     {
         DB::table('entreprises')->insert([
             [
+                'idEntreprise' => 1,
                 'numSIRET' => '33530702100030',
                 'raisonSociale' => 'ZERO ET L\'INFINI',
                 'adresse' => '20 Rue Ernest Guillier',
@@ -26,6 +27,7 @@ class EntrepriseSeeder extends Seeder
                 'latitudeAdresse' => '45.183333'
             ],
             [
+                'idEntreprise' => 2,
                 'numSIRET' => '01020304051234',
                 'raisonSociale' => 'CGI Bordeaux',
                 'adresse' => '6 Rue des cometes',
@@ -36,6 +38,7 @@ class EntrepriseSeeder extends Seeder
                 'latitudeAdresse' => '44.833333'
             ],
             [
+                'idEntreprise' => 3,
                 'numSIRET' => '89746755100023',
                 'raisonSociale' => 'Geek Tonic',
                 'adresse' => '50 Avenue du Lac Marion',
@@ -46,6 +49,7 @@ class EntrepriseSeeder extends Seeder
                 'latitudeAdresse' => '43.483333'
             ],
             [
+                'idEntreprise' => 4,
                 'numSIRET' => '82445767500059',
                 'raisonSociale' => 'ESTIA',
                 'adresse' => '90 Allée Fausto de Elhuyar',
@@ -56,6 +60,7 @@ class EntrepriseSeeder extends Seeder
                 'latitudeAdresse' => '43.45'
             ],
             [
+                'idEntreprise' => 5,
                 'numSIRET' => '33027484600030',
                 'raisonSociale' => 'BCM Informatique',
                 'adresse' => '2 Allée Andromède',
@@ -66,6 +71,7 @@ class EntrepriseSeeder extends Seeder
                 'latitudeAdresse' => '43.5'
             ],
             [
+                'idEntreprise' => 6,
                 'numSIRET' => '09080706059876',
                 'raisonSociale' => 'CDG 33',
                 'adresse' => '25 Rue du cardinal Richaud',

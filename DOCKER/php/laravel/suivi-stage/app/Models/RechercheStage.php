@@ -15,10 +15,12 @@ class RechercheStage extends Model
         'dateModification',
         'date1erContact',
         'typeContact',
-        'nomPrenomContact',
+        'nomContact',
+        'prenomContact',
         'fonctionContact',
         'telephoneContact',
         'adresseMailContact',
+        'observations',
         'dateRelance',
         'statut'
     ];

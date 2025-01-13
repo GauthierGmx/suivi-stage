@@ -1,0 +1,9 @@
+<div class="app-container">
+  <link rel="icon" type="image/x-icon" href="/public/favicon.ico">
+  @if (isAuthenticated) {
+    <app-header />
+  }
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div> 

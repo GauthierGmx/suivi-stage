@@ -51,4 +51,10 @@ class Personnel extends Model
     {
         return $this->belongsToMany(Etudiant::class);
     }
+
+    // Relation N-N avec Role
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
 }

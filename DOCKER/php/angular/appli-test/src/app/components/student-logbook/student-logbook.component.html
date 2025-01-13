@@ -1,0 +1,129 @@
+<div class="logbook">
+  <app-breadcrumb [items]="breadcrumbs"/>
+  
+  <div class="header">
+    <h1 class="title">Journal de bord - {{ student?.nomEtudiant }} {{ student?.prenomEtudiant }}</h1>
+    <p class="subtitle">Suivi des recherches de stage</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stats-card primary">
+      <h3>Total des recherches</h3>
+      <p>{{ searches.length }}</p>
+    </div>
+    <div class="stats-card secondary">
+      <h3>Recherches cette semaine</h3>
+      <p class="date-range">Du {{ getLastWeekDate() | date:'dd/MM' }} au {{ getCurrentDate() | date:'dd/MM' }}</p>
+      <p class="count">{{ getSearchesThisWeek() }}</p>
+    </div>
+    <div class="stats-card tertiary">
+      <h3>En attente de réponse</h3>
+      <p>{{ getSearchCountByStatus('En attente') }}</p>
+    </div>
+  </div>
+
+  <div class="content-box">
+    <div class="filters">
+      <div class="search-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm"
+          placeholder="Rechercher une entreprise, une ville, un contact..." 
+          class="search-input"
+        >
+        @if (searchTerm) {
+          <button 
+            (click)="searchTerm = ''"
+            class="clear-button"
+          >
+            <svg class="icon" viewBox="0 0 20 20">
+              <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"/>
+            </svg>
+          </button>
+        }
+      </div>
+
+      <div class="filter-buttons">
+        <button 
+          class="filter-button"
+          [class.active]="currentFilter === 'all'"
+          (click)="setFilter('all')"
+        >
+          Tous les statuts
+        </button>
+        <button 
+          class="filter-button"
+          [class.active]="currentFilter === 'waiting'"
+          (click)="setFilter('waiting')"
+        >
+          En attente
+        </button>
+        <button 
+          class="filter-button"
+          [class.active]="currentFilter === 'validated'"
+          (click)="setFilter('validated')"
+        >
+          Validé
+        </button>
+        <button 
+          class="filter-button"
+          [class.active]="currentFilter.startsWith('date')"
+          (click)="toggleDateSort()"
+        >
+          Date
+          @if (currentFilter === 'date_asc') {
+            <svg class="sort-icon" viewBox="0 0 24 24">
+              <path d="M5 15l7-7 7 7"/>
+            </svg>
+          } @else if (currentFilter === 'date_desc') {
+            <svg class="sort-icon" viewBox="0 0 24 24">
+              <path d="M19 9l-7 7-7-7"/>
+            </svg>
+          }
+        </button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Entreprise</th>
+            <th>Ville</th>
+            <th>Contact</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (search of filteredSearches; track search.idRecherche) {
+            <tr>
+              <td>{{ search.dateCreation | date:'dd/MM/yyyy' }}</td>
+              <td>{{ search.entreprise?.raisonSociale }}</td>
+              <td>{{ search.entreprise?.villeEntreprise }}</td>
+              <td>{{ search.nomPrenomContact }}</td>
+              <td>
+                <span [class]="getStatusClass(search.statut)">
+                  {{ getStatusLabel(search.statut) }}
+                </span>
+              </td>
+              <td>
+                <button 
+                  class="view-button"
+                  (click)="viewSearchDetails(search.idRecherche)"
+                >
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                  <span>Voir</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 

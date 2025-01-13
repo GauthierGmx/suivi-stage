@@ -2,7 +2,7 @@ FROM php:7.4-apache
 
 RUN apt-get update -y && apt-get upgrade -y;
 RUN apt-get update && apt-get install -y \
-        libxml2-dev \
+    libxml2-dev \
 	curl \
 	libzip-dev \
 	libcurl4-openssl-dev \
@@ -14,7 +14,18 @@ RUN apt-get update && apt-get install -y \
 	libonig-dev \
     git\
     unzip\
+    # Extension pour python
+    build-essential\
+    zlib1g-dev\
+    libssl-dev\
+    libreadline-dev\
+    libsqlite3-dev\
+    wget\
     && docker-php-ext-configure gd --with-freetype --with-jpeg && a2enmod rewrite
+# Installation python et pip
+RUN apt-get install -y python3 python3-pip
+RUN pip3 install --upgrade pip
+RUN pip3 install numpy pandas matplotlib geopy mysql.connector python-dotenv typing
 RUN pecl install xdebug-3.1.5 && docker-php-ext-enable xdebug
 #RUN docker-php-ext-install -j$(nproc) xmlrpc 
 RUN docker-php-ext-install pdo_mysql && docker-php-ext-enable pdo_mysql 
@@ -31,5 +42,6 @@ RUN docker-php-ext-install zip && docker-php-ext-enable zip
 RUN docker-php-ext-install gd && docker-php-ext-enable gd 
 RUN docker-php-ext-install xml && docker-php-ext-enable xml
 COPY ./docker-smtp.ini /usr/local/etc/php/conf.d/docker-smtp.ini
+COPY ./docker-param.ini /usr/local/etc/php/conf.d/docker-param.ini
 COPY ./ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer

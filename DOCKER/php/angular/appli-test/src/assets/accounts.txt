@@ -1,0 +1,58 @@
+=== Comptes de test pour l'application ===
+
+1. Super Administrateur
+   Email: superadmin@test.com
+   Mot de passe: superadmin123
+
+2. Administrateur
+   Email: admin@test.com
+   Mot de passe: admin123
+
+3. Étudiant - Marie Lambert (4 recherches)
+   Email: marie.lambert@test.com
+   Mot de passe: etudiant123
+
+4. Étudiant - Lucas Martin (6 recherches)
+   Email: lucas.martin@test.com
+   Mot de passe: etudiant123
+
+5. Étudiant - Emma Bernard (8 recherches)
+   Email: emma.bernard@test.com
+   Mot de passe: etudiant123
+
+6. Responsable des stages
+   Email: responsable@test.com
+   Mot de passe: responsable123
+
+7. Enseignant
+   Email: enseignant@test.com
+   Mot de passe: enseignant123
+
+Note: Pour l'instant, dans l'environnement de test, n'importe quel mot de passe fonctionne avec ces emails.
+Les mots de passe suggérés ici sont pour une future implémentation de l'authentification sécurisée.
+
+=== Rôles et accès ===
+
+Super Administrateur:
+- Accès complet à toutes les fonctionnalités
+- Gestion des utilisateurs
+- Tableaux de bord administratifs
+
+Administrateur:
+- Gestion des utilisateurs
+- Tableaux de bord administratifs
+
+Responsable des stages:
+- Vue d'ensemble des recherches de tous les étudiants
+- Validation des stages
+- Statistiques globales
+
+Enseignant:
+- Suivi des étudiants assignés
+- Validation des rapports
+- Planning des visites
+
+Étudiant:
+- Gestion des recherches de stage
+- Journal de bord personnel
+- Suivi des candidatures 

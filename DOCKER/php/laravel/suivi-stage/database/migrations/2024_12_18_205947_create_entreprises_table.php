@@ -16,11 +16,12 @@ class CreateEntreprisesTable extends Migration
         Schema::create('entreprises', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             // Clé primaire
-            $table->string('numSIRET',14)->primary();
+            $table->increments('idEntreprise');
 
             // Attributs
+            $table->string('numSIRET',14)->unique();
             $table->string('raisonSociale',100);
-            $table->enum('typeEtablissement',['Administration','Association','Entreprise','Etablissement public'])->nullable();
+            $table->enum('typeEtablissement',['Administration','Association','Entreprise privé','Entreprise public','Mutuelle coopérative','Autre'])->nullable();
             $table->string('adresse',100)->nullable();
             $table->string('ville',50)->nullable();
             $table->string('codePostal',5)->nullable();

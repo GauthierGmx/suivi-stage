@@ -1,0 +1,84 @@
+<div class="dashboard">
+  <div class="stats-grid">
+    <div class="stats-card primary">
+      <h3>Étudiants avec stage validé</h3>
+      <p>{{ stats.studentsWithValidInternship }}</p>
+    </div>
+    
+    <div class="stats-card secondary">
+      <h3>Nombre d'étudiants</h3>
+      <p>{{ stats.totalStudents }}</p>
+    </div>
+    
+    <div class="stats-card tertiary">
+      <h3>Étudiants sans recherche</h3>
+      <p>{{ stats.studentsWithoutSearch }}</p>
+    </div>
+  </div>
+
+  <div class="content-box">
+    <div class="filters-section">
+      <div class="search-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm"
+          placeholder="Recherche..." 
+          class="search-input"
+        >
+        <button 
+          *ngIf="searchTerm"
+          (click)="searchTerm = ''"
+          class="clear-button"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="filter-buttons">
+        <!-- Filtres ici -->
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Étudiant</th>
+            <th>Nombre de recherches</th>
+            <th>Dernière modification</th>
+            <th>Statut le plus avancé</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (student of getFilteredStudents(); track student.id) {
+            <tr>
+              <td>{{ student.studentName }}</td>
+              <td>{{ student.searchCount }}</td>
+              <td>{{ student.lastUpdate | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span [class]="'status-badge ' + student.bestStatus">
+                  {{ getStatusLabel(student.bestStatus) }}
+                </span>
+              </td>
+              <td>
+                <button 
+                  class="action-button"
+                  (click)="viewStudentDetails(student.id)"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <span>Détails</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 

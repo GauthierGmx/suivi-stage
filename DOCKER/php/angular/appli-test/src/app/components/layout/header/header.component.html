@@ -1,0 +1,66 @@
+<header>
+    <div class="header-container">
+        <div class="header-content">
+            <!-- Logo à gauche -->
+            <div class="logo-section">
+                <a routerLink="/dashboard" class="logo-link">
+                    <img src="/logo_iutbpb_2018.png" alt="Logo de L'IUT" />
+                </a>
+            </div>
+            
+            <!-- Navigation au centre -->
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li>
+                        <a
+                            routerLink="/dashboard"
+                            routerLinkActive="active-link"
+                            class="nav-link"
+                        >
+                            Tableau de bord
+                        </a>
+                    </li>
+                    @if (currentUser?.role === 'STUDENT') {
+                        <li>
+                            <a
+                                routerLink="/factsheets"
+                                routerLinkActive="active-link"
+                                class="nav-link"
+                            >
+                                Fiche descriptive
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+
+            <!-- Avatar à droite -->
+            <div class="profile-section">
+                @if (currentUser) {
+                    <div class="profile-menu">
+                        <button 
+                            (click)="toggleProfileMenu()"
+                            class="profile-button"
+                        >
+                            {{ getInitials(currentUser) }}
+                        </button>
+
+                        @if (showProfileMenu) {
+                            <div class="dropdown-menu">
+                                <div class="user-info">
+                                    {{ currentUser.firstName }} {{ currentUser.lastName }}
+                                </div>
+                                <button
+                                    (click)="logout()"
+                                    class="logout-button"
+                                >
+                                    Se déconnecter
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</header> 
