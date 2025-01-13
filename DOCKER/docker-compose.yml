@@ -6,7 +6,7 @@ services:
     #image: rogh/sae-php74:latest
     volumes:
       - ./php/laravel:/var/www/html
-      - ./apachedefaultconf:/etc/apache2/site-enabled
+      - ./apachedefaultconf:/etc/apache2/sites-enabled
     ports:
       - "8000:80"
     depends_on:

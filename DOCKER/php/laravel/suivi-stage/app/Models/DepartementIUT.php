@@ -35,4 +35,10 @@ class DepartementIUT extends Model
     {
         return $this->belongsToMany(Personnel::class);
     }
+
+    // Relation N-N avec Role
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
 }

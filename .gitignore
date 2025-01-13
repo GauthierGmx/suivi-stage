@@ -1,3 +1,5 @@
 /DOCKER/mysql_data
 /node_modules
 /dist
+*.env
+mysql_data*
