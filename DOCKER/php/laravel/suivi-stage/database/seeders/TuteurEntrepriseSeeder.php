@@ -49,7 +49,7 @@ class TuteurEntrepriseSeeder extends Seeder
                 'nom' => 'GUIDICE',
                 'prenom' => 'Dorian',
                 'fonction' => 'Chef de projet - développeur',
-                'numSIRET' => '09080706059876',
+                'numSIRET' => '09080706059876'
             ],
             [
                 'nom' => 'DUPONT',
