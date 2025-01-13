@@ -37,7 +37,7 @@ class FicheDescriptiveSeeder extends Seeder
                 'dateFinInterruption' => null,
                 'personnelTechniqueDisponible' => 1,
                 'materielPrete' => 'Ordinateur, écrans, souris, clavier',
-                'numSIRET' => '33530702100030',
+                'idEntreprise' => 1,
                 'idTuteurEntreprise' => 1,
                 'idUPPA' => '610000',
             ],
@@ -63,7 +63,7 @@ class FicheDescriptiveSeeder extends Seeder
                 'dateFinInterruption' => null,
                 'personnelTechniqueDisponible' => 1,
                 'materielPrete' => 'Ordinateur, écrans, souris, clavier',
-                'numSIRET' => '01020304051234',
+                'idEntreprise' => 2,
                 'idTuteurEntreprise' => 2,
                 'idUPPA' => '610001',
             ],
@@ -89,7 +89,7 @@ class FicheDescriptiveSeeder extends Seeder
                 'dateFinInterruption' => null,
                 'personnelTechniqueDisponible' => 1,
                 'materielPrete' => 'Ordinateur, écrans, souris, clavier',
-                'numSIRET' => '12345678901234',
+                'idEntreprise' => 7,
                 'idTuteurEntreprise' => 7,
                 'idUPPA' => '610123'
             ],
@@ -115,7 +115,7 @@ class FicheDescriptiveSeeder extends Seeder
                 'dateFinInterruption' => null,
                 'personnelTechniqueDisponible' => 1,
                 'materielPrete' => 'Ordinateur, écrans, souris, clavier',
-                'numSIRET' => '01020304051234',
+                'idEntreprise' => 2,
                 'idTuteurEntreprise' => 2,
                 'idUPPA' => '610124'
             ]
