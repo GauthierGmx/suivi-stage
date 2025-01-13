@@ -67,7 +67,7 @@ def main_old():
     
     # Extraire les coordonnées GPS de l'étudiant
     coordonnees_gps_etud = [(row[3], row[4]) for row in donnees_etudiant]
-    numSIRETEntreprise = donnees_etudiant[0][6] if donnees_etudiant and len(donnees_etudiant[0]) > 6 else None
+    idEntrepriseEntreprise = donnees_etudiant[0][6] if donnees_etudiant and len(donnees_etudiant[0]) > 6 else None
     
     # Définir les critères et les professeurs
     criteres = ["NOM", "COMPTEUR_ETUDIANT", "DISTANCE_GPS_PROF_ENTREPRISE", "ETUDIANT_DEJA_PRESENT_VILLE", "ETUDIANT_DEJA_PRESENT_ENREPRISE", "EQUITE_DEUX_TROIS_ANNEE"]
@@ -124,7 +124,7 @@ def main_old():
             df.loc[prof_nom, "ETUDIANT_DEJA_PRESENT_VILLE"] = 1
 
             # Vérifier si un étudiant est déjà présent dans l'entreprise
-            etudiant_present = fn.est_deja_dans_entreprise(numSIRETEntreprise, idEtud, conn.cursor())
+            etudiant_present = fn.est_deja_dans_entreprise(idEntrepriseEntreprise, idEtud, conn.cursor())
             if etudiant_present == True:
                 prof_present = fn.professeur_deja_associé(idEtud, conn.cursor())
 
@@ -215,7 +215,7 @@ def main():
         # Extraction des données spécifiques à l'étudiant
         coordonnees_gps_etud = (donnees_etudiant[0][3], donnees_etudiant[0][4])  # Coordonnées GPS
         code_postal = donnees_etudiant[0][5] if len(donnees_etudiant[0]) > 5 else None  # Code postal
-        numSIRETEntreprise = donnees_etudiant[0][6] if len(donnees_etudiant[0]) > 6 else None  # Numéro SIRET
+        idEntrepriseEntreprise = donnees_etudiant[0][6] if len(donnees_etudiant[0]) > 6 else None  # Numéro SIRET
 
         # Création du DataFrame pour stocker les critères d'évaluation
         criteres = ["NOM", "COMPTEUR_ETUDIANT", "DISTANCE_GPS_PROF_ENTREPRISE", 
@@ -252,7 +252,7 @@ def main():
                 present_ville = fn.est_etudiant_deja_present_ville(code_postal, idEtud, cursor)  # Vérifier la présence dans la ville
                 if present_ville:
                     df.loc[prof_nom, "ETUDIANT_DEJA_PRESENT_VILLE"] = 1
-                    etudiant_present = fn.est_deja_dans_entreprise(numSIRETEntreprise, idEtud, cursor)  # Vérifier la présence dans l'entreprise
+                    etudiant_present = fn.est_deja_dans_entreprise(idEntrepriseEntreprise, idEtud, cursor)  # Vérifier la présence dans l'entreprise
                     if etudiant_present:
                         prof_associe = fn.trouver_prof_associe(idEtud, cursor)  # Trouver le professeur déjà associé
                         if prof_associe == prof_nom:
