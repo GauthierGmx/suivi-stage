@@ -5,17 +5,11 @@ import { HeaderComponent } from './components/layout/header/header.component';
 import { AuthService } from './services/auth.service';
 
 @Component({
-    selector: 'app-root',
-    imports: [CommonModule, RouterOutlet, HeaderComponent],
-    template: `
-    <div class="min-h-screen bg-gray-50 flex flex-col">
-      <link rel="icon" type="image/x-icon" href="/public/favicon.ico">
-      <app-header *ngIf="isAuthenticated"></app-header>
-      <main class="flex-1">
-        <router-outlet></router-outlet>
-      </main>
-    </div>
-  `
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, HeaderComponent],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   constructor(private readonly authService: AuthService) {}
