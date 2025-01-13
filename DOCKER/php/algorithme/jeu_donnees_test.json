@@ -1,0 +1,146 @@
+{
+    "anneeFormation": [
+      { "idAnneeFormation": 1, "libelle": "Licence Informatique" },
+      { "idAnneeFormation": 2, "libelle": "Master Informatique" },
+      { "idAnneeFormation": 3, "libelle": "DUT Informatique" }
+    ],
+    "Personnel": [
+      {
+        "idPersonnel": 1,
+        "roles": "Enseignant",
+        "nom": "Martin",
+        "prenom": "Jean",
+        "adresse": "10 rue des Lilas",
+        "ville": "Pau",
+        "codePostal": "64000",
+        "telephone": "0559123456",
+        "adresseMail": "jean.martin@example.com",
+        "longGPS": "-0.370797",
+        "latGPS": "43.300774",
+        "coptaEtudiant": 5
+      },
+      {
+        "idPersonnel": 2,
+        "roles": "Enseignant",
+        "nom": "Durand",
+        "prenom": "Sophie",
+        "adresse": "15 avenue des Fleurs",
+        "ville": "Bayonne",
+        "codePostal": "64100",
+        "telephone": "0559127890",
+        "adresseMail": "sophie.durand@example.com",
+        "longGPS": "-1.474841",
+        "latGPS": "43.492949",
+        "coptaEtudiant": 3
+      },
+      {
+        "idPersonnel": 3,
+        "roles": "Gestionnaire",
+        "nom": "Morel",
+        "prenom": "Paul",
+        "adresse": "20 rue du Centre",
+        "ville": "Bordeaux",
+        "codePostal": "33000",
+        "telephone": "0556012345",
+        "adresseMail": "paul.morel@example.com",
+        "longGPS": null,
+        "latGPS": null,
+        "coptaEtudiant": null
+      }
+    ],
+    "Entreprise": [
+      {
+        "idEntreprise": 1,
+        "numSIRET": "12345678901234",
+        "raisonSociale": "Tech Solutions",
+        "typeEtablissement": "SAS",
+        "adresseEntreprise": "5 avenue du Parc",
+        "villeEntreprise": "Toulouse",
+        "codePostalEntreprise": "31000",
+        "paysEntreprise": "France",
+        "telephoneEntreprise": "0561123456",
+        "codeAPE_NAF": "6202A",
+        "statutJuridique": "SASU",
+        "effectif": 50,
+        "representantLegal": "Marc Dupont",
+        "longGPS": "1.444209",
+        "latGPS": "43.604652"
+      },
+      {
+        "idEntreprise": 2,
+        "numSIRET": "56789012345678",
+        "raisonSociale": "Innovatech",
+        "typeEtablissement": "SARL",
+        "adresseEntreprise": "25 rue des Entrepreneurs",
+        "villeEntreprise": "Lyon",
+        "codePostalEntreprise": "69000",
+        "paysEntreprise": "France",
+        "telephoneEntreprise": "0478123456",
+        "codeAPE_NAF": "6202B",
+        "statutJuridique": "SARL",
+        "effectif": 100,
+        "representantLegal": "Lucie Bernard",
+        "longGPS": "4.835659",
+        "latGPS": "45.764043"
+      }
+    ],
+    "Etudiant": [
+      {
+        "idUPPA": 1,
+        "nomEtudiant": "Leclerc",
+        "prenomEtudiant": "Alice",
+        "adresseEtudiant": "1 rue de la Paix",
+        "villeEtudiant": "Pau",
+        "codePostalEtudiant": "64000",
+        "adresseMailEtudiant": "alice.leclerc@example.com",
+        "telephoneEtudiant": "0612345678",
+        "idParcours": 1,
+        "idDepartement": 1,
+        "idEntreprise": 1,
+        "idTuteur": 1
+      },
+      {
+        "idUPPA": 2,
+        "nomEtudiant": "Dupuis",
+        "prenomEtudiant": "Marc",
+        "adresseEtudiant": "10 avenue des Champs",
+        "villeEtudiant": "Bayonne",
+        "codePostalEtudiant": "64100",
+        "adresseMailEtudiant": "marc.dupuis@example.com",
+        "telephoneEtudiant": "0623456789",
+        "idParcours": 2,
+        "idDepartement": 2,
+        "idEntreprise": 2,
+        "idTuteur": 2
+      },
+      {
+        "idUPPA": 3,
+        "nomEtudiant": "Dubois",
+        "prenomEtudiant": "Emma",
+        "adresseEtudiant": "20 boulevard des Arbres",
+        "villeEtudiant": "Bordeaux",
+        "codePostalEtudiant": "33000",
+        "adresseMailEtudiant": "emma.dubois@example.com",
+        "telephoneEtudiant": "0634567890",
+        "idParcours": 3,
+        "idDepartement": 3,
+        "idEntreprise": null,
+        "idTuteur": null
+      }
+    ],
+    "Parcours": [
+      { "idParcours": 1, "libelleParcours": "Parcours A" },
+      { "idParcours": 2, "libelleParcours": "Parcours B" },
+      { "idParcours": 3, "libelleParcours": "Parcours C" }
+    ],
+    "departementIUT": [
+      { "idDepartement": 1, "nomDepartement": "Informatique" },
+      { "idDepartement": 2, "nomDepartement": "Mathématiques" },
+      { "idDepartement": 3, "nomDepartement": "Physique" }
+    ],
+    "TuteurEntreprise": [
+      { "idTuteur": 1, "nomTuteur": "Giraud", "prenomTuteur": "Jacques" },
+      { "idTuteur": 2, "nomTuteur": "Blanc", "prenomTuteur": "Claire" }
+    ]
+  }
+  
