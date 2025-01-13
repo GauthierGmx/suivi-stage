@@ -61,7 +61,13 @@ class TuteurEntrepriseSeeder extends Seeder
                 'telephone' => '0559090807',
                 'adresseMail' => 'dguidice@gmail.com',
                 'fonction' => 'Chef de projet - développeur',
-                'idEntreprise' => 6,
+                 'numSIRET' => '09080706059876'
+            ],
+            [
+                'nom' => 'DUPONT',
+                'prenom' => 'Jean',
+                'fonction' => 'Chef de projet - développeur',
+                'numSIRET' => '12345678901234'
             ]
         ]);
     }

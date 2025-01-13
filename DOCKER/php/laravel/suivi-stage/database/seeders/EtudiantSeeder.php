@@ -68,6 +68,24 @@ class EtudiantSeeder extends Seeder
                 'idDepartement' => 1,
                 'idEntreprise' => 6,
                 'idTuteur' => 6
+            ],
+            [
+                'idUPPA' => '610123',
+                'nom' => 'CRUSSIERE',
+                'prenom' => 'Lucas',
+                'adresseMail' => 'lcrussiere@iutbayonne.univ-pau.fr',
+                'idDepartement' => 1,
+                'numSIRET' => '12345678901234',
+                'idTuteur' => 7
+            ],
+            [
+                'idUPPA' => '610124',
+                'nom' => 'LAVERGNE',
+                'prenom' => 'Elsa',
+                'adresseMail' => 'elavergne@iutbayonne.univ-pau.fr',
+                'idDepartement' => 1,
+                'numSIRET' => '01020304051234',
+                'idTuteur' => 2
             ]
         ]);
     }

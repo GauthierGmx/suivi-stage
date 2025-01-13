@@ -23,6 +23,8 @@ class EntrepriseSeeder extends Seeder
                 'ville' => 'Périgueux',
                 'codePostal' => '24000',
                 'pays' => 'France',
+                'longitudeAdresse' => '0.716667',
+                'latitudeAdresse' => '45.183333'
             ],
             [
                 'idEntreprise' => 2,
@@ -32,6 +34,8 @@ class EntrepriseSeeder extends Seeder
                 'ville' => 'Le haillan',
                 'codePostal' => '33185',
                 'pays' => 'France',
+                'longitudeAdresse' => '-0.666667',
+                'latitudeAdresse' => '44.833333'
             ],
             [
                 'idEntreprise' => 3,
@@ -41,6 +45,8 @@ class EntrepriseSeeder extends Seeder
                 'ville' => 'Biarritz',
                 'codePostal' => '64200',
                 'pays' => 'France',
+                'longitudeAdresse' => '-1.55',
+                'latitudeAdresse' => '43.483333'
             ],
             [
                 'idEntreprise' => 4,
@@ -50,6 +56,8 @@ class EntrepriseSeeder extends Seeder
                 'ville' => 'Bidart',
                 'codePostal' => '64210',
                 'pays' => 'France',
+                'longitudeAdresse' => '-1.55',
+                'latitudeAdresse' => '43.45'
             ],
             [
                 'idEntreprise' => 5,
@@ -59,6 +67,8 @@ class EntrepriseSeeder extends Seeder
                 'ville' => 'Anglet',
                 'codePostal' => '64600',
                 'pays' => 'France',
+                'longitudeAdresse' => '-1.5',
+                'latitudeAdresse' => '43.5'
             ],
             [
                 'idEntreprise' => 6,
@@ -68,6 +78,18 @@ class EntrepriseSeeder extends Seeder
                 'ville' => 'Bordeaux',
                 'codePostal' => '33000',
                 'pays' => 'France',
+                'longitudeAdresse' => '-0.566667',
+                'latitudeAdresse' => '44.833333'
+            ],
+            [
+                'numSIRET' => '12345678901234',
+                'raisonSociale' => 'IUT de Bayonne',
+                'adresse' => '2 allée du parc montaury',
+                'ville' => 'Anglet',
+                'codePostal' => '64600',
+                'pays' => 'France',
+                'longitudeAdresse' => '-1.50939',
+                'latitudeAdresse' => '43.47977'
             ]
         ]);
     }

@@ -241,6 +241,10 @@ def main():
                 distance = fn.calculate_distance(coordonnees_prof, coordonnees_gps_etud)  # Calcul de la distance
                 if distance > 20 and code_postal not in ["64", "40"]:
                     df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = 1
+                    
+                elif distance > 20 and code_postal in ["64", "40"]:
+                    df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = 1
+                    
                 else:
                     df.loc[prof_nom, "DISTANCE_GPS_PROF_ENTREPRISE"] = 0
 
