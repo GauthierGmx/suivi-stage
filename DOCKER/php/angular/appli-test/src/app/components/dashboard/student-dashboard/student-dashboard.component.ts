@@ -53,7 +53,6 @@ export class StudentDashboardComponent implements OnInit {
       .subscribe(student => {
         if (student) {
           this.student = student;
-          console.log('Données étudiant:', student);
         }
       });
 
@@ -61,9 +60,7 @@ export class StudentDashboardComponent implements OnInit {
     this.internshipSearchService.getSearchesByStudentId(this.currentUser.id)
       .subscribe(searches => {
         this.searches = searches;
-        console.log('Recherches chargées:', searches);
         this.updateStats();
-        console.log('Stats mises à jour:', this.stats);
       });
   }
 
@@ -159,8 +156,6 @@ export class StudentDashboardComponent implements OnInit {
           return matches;
         })
       : this.searches;
-    
-    console.log('Recherches filtrées:', filtered);
     return filtered;
   }
 

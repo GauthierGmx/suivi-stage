@@ -35,7 +35,7 @@ export class SearchFormComponent implements OnInit {
     private readonly enterpriseService: EnterpriseService,
     private readonly internshipSearchService: InternshipSearchService,
     private readonly navigationService: NavigationService,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
   ) {
     this.form = this.fb.group({
       idEntreprise: ['', Validators.required],
@@ -45,7 +45,7 @@ export class SearchFormComponent implements OnInit {
       mailContact: ['', [Validators.email]],
       date1erContact: ['', Validators.required],
       typeContact: ['Mail', Validators.required],
-      statut: ['En cours', Validators.required],
+      statut: ['En attente', Validators.required],
       observations: ['']
     });
 
@@ -146,27 +146,22 @@ export class SearchFormComponent implements OnInit {
   async onSubmit() {
     if (this.form.valid) {
       const currentUser = JSON.parse(localStorage.getItem('currentUser') ?? '{}');
-      const searchData = {
+      
+      const searchData: Omit<InternshipSearch, 'idRecherche'> = {
         ...this.form.value,
         dateCreation: new Date(),
         dateModification: new Date(),
-        idEtudiant: currentUser.id
+        idEtudiant: currentUser.id,
+        date1erContact: new Date(this.form.value.date1erContact),
+        dateRelance: this.form.value.dateRelance ? new Date(this.form.value.dateRelance) : undefined
       };
 
       try {
-        // Attendre que la modification/création soit terminée
-        if (this.isEditMode) {
-          const updatedSearch = await this.internshipSearchService.updateSearch(parseInt(this.searchId!), searchData).toPromise();
-          console.log('Recherche modifiée:', updatedSearch);
+        if (this.isEditMode && this.searchId) {
+          await this.internshipSearchService.updateSearch(parseInt(this.searchId), searchData).toPromise();
         } else {
-          const newSearch = await this.internshipSearchService.addSearch(searchData).toPromise();
-          console.log('Nouvelle recherche:', newSearch);
+          await this.internshipSearchService.addSearch(searchData).toPromise();
         }
-
-        // Attendre que la liste soit rechargée
-        const allSearches = await this.internshipSearchService.getSearchesByStudentId(currentUser.id).toPromise();
-        console.log('Toutes les recherches après sauvegarde:', allSearches);
-
         this.navigationService.goBack();
       } catch (error) {
         console.error('Erreur lors de la sauvegarde:', error);
@@ -198,7 +193,7 @@ export class SearchFormComponent implements OnInit {
     if (isSelected) {
       switch (status) {
         case 'Refusé': return `${baseClasses} bg-red-100 text-red-800`;
-        case 'En cours': return `${baseClasses} bg-blue-100 text-blue-800`;
+        case 'En attente': return `${baseClasses} bg-blue-100 text-blue-800`;
         case 'Relancé': return `${baseClasses} bg-purple-100 text-purple-800`;
         case 'Validé': return `${baseClasses} bg-green-100 text-green-800`;
         default: return baseClasses;

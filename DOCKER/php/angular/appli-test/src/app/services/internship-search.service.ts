@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, forkJoin, BehaviorSubject } from 'rxjs';
+import { Observable, of, forkJoin, BehaviorSubject, switchMap, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { InternshipSearch, SearchStatus } from '../models/internship-search.model';
 import { EnterpriseService } from './enterprise.service';
@@ -9,11 +9,6 @@ import { StudentService } from './student.service';
   providedIn: 'root'
 })
 export class InternshipSearchService {
-  constructor(
-    private readonly enterpriseService: EnterpriseService,
-    private readonly studentService: StudentService
-  ) {}
-
   private mockSearches: InternshipSearch[] = [
     {
       idRecherche: 1,
@@ -26,7 +21,7 @@ export class InternshipSearchService {
       telContact: '0612345678',
       mailContact: 'jean.dupont@byewind.fr',
       dateRelance: new Date('2024-02-20'),
-      statut: 'Validé',
+      statut: 'En attente',
       idEntreprise: 1,
       idEtudiant: 3,
       observations: 'Premier contact très positif, en attente de réponse'
@@ -321,17 +316,27 @@ export class InternshipSearchService {
     }
   ];
 
-  private readonly searchesSubject = new BehaviorSubject<InternshipSearch[]>(this.mockSearches);
+  private searchesSubject = new BehaviorSubject<InternshipSearch[]>(this.mockSearches);
+
+  constructor(
+    private readonly enterpriseService: EnterpriseService,
+    private readonly studentService: StudentService
+  ) {}
 
   getSearchesByStudent(): Observable<InternshipSearch[]> {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') ?? '{}');
-    return of(this.mockSearches.filter(search => search.idEtudiant === currentUser.id));
+    return this.searchesSubject.asObservable().pipe(
+      map(searches => searches.filter(search => search.idEtudiant === currentUser.id))
+    );
   }
 
   getSearchesByStudentId(studentId: string): Observable<InternshipSearch[]> {
-    const searches = this.mockSearches.filter(s => s.idEtudiant === parseInt(studentId));
     
-    const enrichedSearches = searches.map(search => 
+    // Filtrer les recherches de l'étudiant directement depuis mockSearches
+    const studentSearches = this.mockSearches.filter(s => s.idEtudiant === parseInt(studentId));
+    
+    // Enrichir avec les données entreprise
+    const enrichedSearches = studentSearches.map(search => 
       this.enterpriseService.getEnterpriseById(search.idEntreprise).pipe(
         map(enterprise => ({
           ...search,
@@ -344,112 +349,89 @@ export class InternshipSearchService {
   }
 
   getStudentSearchStats() {
-    const searchesByStudent = new Map<number, InternshipSearch[]>();
-    this.mockSearches.forEach(search => {
-      if (!searchesByStudent.has(search.idEtudiant)) {
-        searchesByStudent.set(search.idEtudiant, []);
-      }
-      searchesByStudent.get(search.idEtudiant)?.push(search);
+    const students = [3, 4, 5].map(id => {
+      const studentSearches = this.mockSearches.filter(s => s.idEtudiant === id);
+      return {
+        id,
+        studentName: id === 3 ? 'Marie Lambert' : id === 4 ? 'Lucas Martin' : 'Emma Bernard',
+        searchCount: studentSearches.length,
+        lastUpdate: this.getLastUpdateDate(studentSearches),
+        bestStatus: this.getBestStatus(studentSearches)
+      };
     });
-
-    const students = [
-      {
-        id: 3,
-        studentName: 'Marie Lambert',
-        searchCount: searchesByStudent.get(3)?.length ?? 0,
-        lastUpdate: this.getLastUpdateDate(searchesByStudent.get(3)),
-        bestStatus: this.getBestStatus(searchesByStudent.get(3))
-      },
-      {
-        id: 4,
-        studentName: 'Lucas Martin',
-        searchCount: searchesByStudent.get(4)?.length ?? 0,
-        lastUpdate: this.getLastUpdateDate(searchesByStudent.get(4)),
-        bestStatus: this.getBestStatus(searchesByStudent.get(4))
-      },
-      {
-        id: 5,
-        studentName: 'Emma Bernard',
-        searchCount: searchesByStudent.get(5)?.length ?? 0,
-        lastUpdate: this.getLastUpdateDate(searchesByStudent.get(5)),
-        bestStatus: this.getBestStatus(searchesByStudent.get(5))
-      }
-    ];
-
     return of(students);
   }
 
-  private getLastUpdateDate(searches: InternshipSearch[] | undefined): Date {
-    if (!searches || searches.length === 0) return new Date();
+  addSearch(search: Omit<InternshipSearch, 'idRecherche'>): Observable<InternshipSearch> {
+    const newSearch: InternshipSearch = {
+      idRecherche: Math.max(...this.mockSearches.map(s => s.idRecherche), 0) + 1,
+      dateCreation: new Date(),
+      dateModification: new Date(),
+      date1erContact: search.date1erContact,
+      typeContact: search.typeContact,
+      nomPrenomContact: search.nomPrenomContact,
+      fonctionContact: search.fonctionContact,
+      telContact: search.telContact,
+      mailContact: search.mailContact,
+      dateRelance: search.dateRelance,
+      statut: search.statut,
+      idEntreprise: Number(search.idEntreprise),
+      idEtudiant: Number(search.idEtudiant),
+      observations: search.observations ?? ''
+    };
+
+    this.mockSearches.push(newSearch);
+    this.searchesSubject.next([...this.mockSearches]);
+    
+    return of(newSearch);
+  }
+
+  updateSearch(id: number, search: Partial<InternshipSearch>): Observable<InternshipSearch> {
+    const index = this.mockSearches.findIndex(s => s.idRecherche === id);
+    if (index === -1) throw new Error('Recherche non trouvée');
+
+    // Conversion des IDs en nombres si présents dans l'update
+    const updatedSearch = {
+      ...this.mockSearches[index],
+      ...search,
+      dateModification: new Date(),
+      idEntreprise: search.idEntreprise ? Number(search.idEntreprise) : this.mockSearches[index].idEntreprise,
+      idEtudiant: search.idEtudiant ? Number(search.idEtudiant) : this.mockSearches[index].idEtudiant
+    };
+
+    this.mockSearches[index] = updatedSearch;
+    this.searchesSubject.next([...this.mockSearches]);
+
+    return of(updatedSearch);
+  }
+
+  deleteSearch(id: number): Observable<void> {
+    this.mockSearches = this.mockSearches.filter(s => s.idRecherche !== id);
+    this.searchesSubject.next([...this.mockSearches]);
+    return of(void 0);
+  }
+
+  getSearchById(id: number): Observable<InternshipSearch | undefined> {
+    return this.searchesSubject.pipe(
+      map(searches => searches.find(s => s.idRecherche === id))
+    );
+  }
+
+  private getLastUpdateDate(searches: InternshipSearch[]): Date {
+    if (!searches.length) return new Date();
     return new Date(Math.max(...searches.map(s => s.dateModification.getTime())));
   }
 
-  private getBestStatus(searches: InternshipSearch[] | undefined): SearchStatus {
-    if (!searches || searches.length === 0) return 'En attente';
+  private getBestStatus(searches: InternshipSearch[]): SearchStatus {
+    if (!searches.length) return 'En attente';
     const statusPriority = {
       'Validé': 4,
       'En attente': 3,
       'Relancé': 2,
       'Refusé': 1
     };
-    
-    return searches.reduce((best, current) => {
-      return statusPriority[current.statut] > statusPriority[best.statut] ? current : best;
-    }, searches[0]).statut;
-  }
-
-  addSearch(search: Omit<InternshipSearch, 'idRecherche'>): Observable<InternshipSearch> {
-    const newSearch: InternshipSearch = {
-      ...search,
-      idRecherche: this.mockSearches.length + 1,
-      dateModification: new Date(),
-      observations: search.observations ?? ''
-    };
-    
-    this.mockSearches = [...this.mockSearches, newSearch];
-    this.searchesSubject.next(this.mockSearches);
-    return of(newSearch);
-  }
-
-  updateSearch(id: number, search: Partial<InternshipSearch>): Observable<InternshipSearch> {
-    const index = this.mockSearches.findIndex(s => s.idRecherche === id);
-    if (index !== -1) {
-      this.mockSearches[index] = {
-        ...this.mockSearches[index],
-        ...search,
-        dateModification: new Date(),
-        observations: search.observations ?? this.mockSearches[index].observations
-      };
-      this.searchesSubject.next(this.mockSearches);
-      return of(this.mockSearches[index]);
-    }
-    throw new Error('Search not found');
-  }
-
-  deleteSearch(id: number): Observable<void> {
-    this.mockSearches = this.mockSearches.filter(s => s.idRecherche !== id);
-    this.searchesSubject.next(this.mockSearches);
-    return of(void 0);
-  }
-
-  getSearchStats(): Observable<{
-    searchCount: number;
-    pendingCount: number;
-    refusedCount: number;
-  }> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') ?? '{}');
-    const userSearches = this.mockSearches.filter(s => s.idEtudiant === currentUser.id);
-    
-    const stats = {
-      searchCount: userSearches.length,
-      pendingCount: userSearches.filter(s => s.statut === 'En attente').length,
-      refusedCount: userSearches.filter(s => s.statut === 'Refusé').length
-    };
-    return of(stats);
-  }
-
-  getSearchById(id: number): Observable<InternshipSearch | undefined> {
-    const search = this.mockSearches.find(s => s.idRecherche === id);
-    return of(search);
+    return searches.reduce((best, current) => 
+      statusPriority[current.statut] > statusPriority[best.statut] ? current : best
+    ).statut;
   }
 } 
