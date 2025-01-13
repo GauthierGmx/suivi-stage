@@ -66,6 +66,8 @@ class TuteurEntrepriseSeeder extends Seeder
             [
                 'nom' => 'DUPONT',
                 'prenom' => 'Jean',
+                'telephone' => '0559020304',
+                'adresseMail' => 'jdupont@gmail.com',
                 'fonction' => 'Chef de projet - développeur',
                 'numSIRET' => '12345678901234'
             ]
