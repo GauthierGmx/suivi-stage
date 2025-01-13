@@ -69,8 +69,8 @@ def recup_donnees_etudiant(idEtud: int, cursor) -> List[List[Any]]:
     
     # Exécuter la requête
     cursor.execute(
-        """SELECT etudiants.idUPPA, etudiants.nom, etudiants.prenom, entreprises.longitudeAdresse, entreprises.latitudeAdresse, entreprises.codePostal, entreprises.idEntrepriseRET FROM entreprises 
-            JOIN fiche_descriptives ON entreprises.idEntrepriseRET=fiche_descriptives.idEntrepriseRET
+        """SELECT etudiants.idUPPA, etudiants.nom, etudiants.prenom, entreprises.longitudeAdresse, entreprises.latitudeAdresse, entreprises.codePostal, entreprises.idEntreprise FROM entreprises 
+            JOIN fiche_descriptives ON entreprises.idEntreprise=fiche_descriptives.idEntreprise
             JOIN etudiants ON fiche_descriptives.idUPPA=etudiants.idUPPA 
             WHERE etudiants.idUPPA = %s""",
         (idEtud,)
@@ -199,12 +199,12 @@ def est_etudiant_deja_present_ville(codePostal, idUPPA, cursor) -> bool:
     # Requête SQL pour rechercher des étudiants dans des entreprises hors des départements 64 et 40
     cursor.execute(
         """
-        SELECT entreprises.idEntrepriseRET, entreprises.raisonSociale, entreprises.codePostal, etudiants.nom, COUNT(etudiants.idUPPA) AS nbEtudiants
+        SELECT entreprises.idEntreprise, entreprises.raisonSociale, entreprises.codePostal, etudiants.nom, COUNT(etudiants.idUPPA) AS nbEtudiants
         FROM entreprises 
-        JOIN fiche_descriptives ON entreprises.idEntrepriseRET = fiche_descriptives.idEntrepriseRET
+        JOIN fiche_descriptives ON entreprises.idEntreprise = fiche_descriptives.idEntreprise
         JOIN etudiants ON fiche_descriptives.idUPPA = etudiants.idUPPA
         WHERE LEFT(entreprises.codePostal, 2) NOT IN ('64', '40') AND entreprises.codePostal = %s AND etudiants.idUPPA != %s
-        GROUP BY entreprises.idEntrepriseRET, entreprises.raisonSociale, entreprises.codePostal, etudiants.nom;
+        GROUP BY entreprises.idEntreprise, entreprises.raisonSociale, entreprises.codePostal, etudiants.nom;
         """
     ,(codePostal, idUPPA)
     )
@@ -219,12 +219,12 @@ def est_etudiant_deja_present_ville(codePostal, idUPPA, cursor) -> bool:
 
 
 
-def est_deja_dans_entreprise(idEntrepriseRETEntreprise: int, idUPPA: int, cursor) -> bool:
+def est_deja_dans_entreprise(idEntrepriseEntreprise: int, idUPPA: int, cursor) -> bool:
     """
     Cherche dans la base si un étudiant est déjà présent dans cette entreprise
     
     Paramètre:
-        - idEntrepriseRETEntreprise : l'identifiant de l'entreprise
+        - idEntrepriseEntreprise : l'identifiant de l'entreprise
     
     Retourne:
         - Un booléen pour savoir s'il existe un étudiant déjà présent dans l'entreprise
@@ -233,13 +233,13 @@ def est_deja_dans_entreprise(idEntrepriseRETEntreprise: int, idUPPA: int, cursor
     
     cursor.execute(
         """
-        SELECT entreprises.idEntrepriseRET, entreprises.raisonSociale, entreprises.codePostal, etudiants.nom, etudiants.idUPPA
+        SELECT entreprises.idEntreprise, entreprises.raisonSociale, entreprises.codePostal, etudiants.nom, etudiants.idUPPA
         FROM entreprises 
-        JOIN fiche_descriptives ON entreprises.idEntrepriseRET = fiche_descriptives.idEntrepriseRET
+        JOIN fiche_descriptives ON entreprises.idEntreprise = fiche_descriptives.idEntreprise
         JOIN etudiants ON fiche_descriptives.idUPPA = etudiants.idUPPA
-        WHERE entreprises.idEntrepriseRET = %s AND etudiants.idUPPA != %s;
+        WHERE entreprises.idEntreprise = %s AND etudiants.idUPPA != %s;
         """,
-        (idEntrepriseRETEntreprise,idUPPA)
+        (idEntrepriseEntreprise,idUPPA)
     )
     
     rows = cursor.fetchall()
