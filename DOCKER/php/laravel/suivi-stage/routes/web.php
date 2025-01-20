@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+//Exemple de route qu'on va utiliser pour notre projet
+Route::get('/fiche-descriptive', 'FicheDescriptiveController@index');
