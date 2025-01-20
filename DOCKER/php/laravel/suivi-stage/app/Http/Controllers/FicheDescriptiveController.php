@@ -10,8 +10,30 @@ class FicheDescriptiveController extends Controller
     {
         // Valider les données JSON
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'dateCreation' => 'required|date',
+            'dateDerniereModification' => 'required|date',
+            'contenuStage' => 'required|string',
+            'thematique' => 'required|string',
+            'sujet' => 'required|string',
+            'fonctions' => 'required|string',
+            'taches' => 'required|string',
+            'competences' => 'required|string',
+            'details' => 'required|string',
+            'debutStage' => 'required|date',
+            'finStage' => 'required|date',
+            'nbJourSemaine' => 'required|integer',
+            'nbHeureSemaine' => 'required|integer',
+            'clauseConfidentialite' => 'required|boolean',
+            'statut' => 'required|string',
+            'numeroConvention' => 'required|string',
+            'interruptionEntreprise' => 'required|boolean',
+            'dateDebutInterruption' => 'required|date',
+            'dateFinInterruption' => 'required|date',
+            'personnelTechniqueDisponible' => 'required|boolean',
+            'materielPrete' => 'required|string',
+            'idEntreprise' => 'required|integer',
+            'idTuteurEntreprise' => 'required|integer',
+            'idUPPA' => 'required|integer'
         ]);
 
         try {
