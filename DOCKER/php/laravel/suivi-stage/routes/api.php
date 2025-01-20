@@ -17,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Route pour recupérer les données du formulaire d'une fiche descriptive au format JSON
+Route::post('/ficheDescriptive', 'App\Http\Controllers\FicheDescriptiveController@store');
+Route::get('/ficheDescriptive/{id}', 'App\Http\Controllers\FicheDescriptiveController@showDataById');
