@@ -7,7 +7,7 @@ services:
     volumes:
       - ./php/laravel:/var/www/html
       - ./php/algorithme:/var/www/algorithme
-      - ./apachedefaultconf:/etc/apache2/site-enabled
+      - ./apachedefaultconf:/etc/apache2/sites-enabled
     ports:
       - "8000:80"
     depends_on:

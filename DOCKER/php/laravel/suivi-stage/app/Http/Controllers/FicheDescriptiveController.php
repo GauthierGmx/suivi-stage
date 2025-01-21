@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\FicheDescriptive;
 
 class FicheDescriptiveController extends Controller
 {
@@ -26,32 +27,34 @@ class FicheDescriptiveController extends Controller
             'clauseConfidentialite' => 'required|boolean',
             'statut' => 'required|string',
             'numeroConvention' => 'required|string',
-            'interruptionEntreprise' => 'required|boolean',
-            'dateDebutInterruption' => 'required|date',
-            'dateFinInterruption' => 'required|date',
+            'interruptionStage' => 'required|boolean',
+            'dateDebutInterruption' => 'nullable|date',
+            'dateFinInterruption' => 'nullable|date',
             'personnelTechniqueDisponible' => 'required|boolean',
             'materielPrete' => 'required|string',
             'idEntreprise' => 'required|integer',
             'idTuteurEntreprise' => 'required|integer',
-            'idUPPA' => 'required|integer'
+            'idUPPA' => 'required|string'
         ]);
-
+        
         try {
             // Enregistrement dans la base de données
-            Data::create($validatedData);
-
+            FicheDescriptive::create($validatedData);
+    
             // Répondre avec un message de succès
             return response()->json([
                 'message' => 'Données enregistrées avec succès.',
                 'status' => 'success'
-            ], 200);
+            ], 201);
         } catch (\Exception $e) {
-            // Gérer une erreur et répondre avec un message d'erreur
+            \Log::error('Erreur d\'enregistrement : ' . $e->getMessage());
             return response()->json([
                 'message' => 'Une erreur est survenue lors de l\'enregistrement.',
                 'error' => $e->getMessage(),
                 'status' => 'error'
             ], 500);
         }
+
     }
+    
 }
