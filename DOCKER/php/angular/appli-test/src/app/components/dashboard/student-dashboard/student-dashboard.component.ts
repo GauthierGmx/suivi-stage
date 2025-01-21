@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../../models/user.model';
@@ -35,6 +35,16 @@ export class StudentDashboardComponent implements OnInit {
   showDeleteConfirmation = false;
   searchToDelete: number | null = null;
   breadcrumbs = this.navigationService.getBreadcrumbs('Mes recherches de stage');
+  selectedCity: string = '';
+  selectedStatus: string = '';
+  selectedDateFilter: string = '';
+  cities: string[] = [];
+  selectedCities: Set<string> = new Set();
+  selectedStatuses: Set<string> = new Set();
+  dateSort: 'none' | 'asc' | 'desc' = 'none';
+  showCityFilter = false;
+  showStatusFilter = false;
+  readonly statusOptions = ['En attente', 'Relancé', 'Validé', 'Refusé'];
 
   constructor(
     private readonly internshipSearchService: InternshipSearchService,
@@ -61,6 +71,7 @@ export class StudentDashboardComponent implements OnInit {
       .subscribe(searches => {
         this.searches = searches;
         this.updateStats();
+        this.updateCitiesList();
       });
   }
 
@@ -70,6 +81,13 @@ export class StudentDashboardComponent implements OnInit {
       pendingContacts: this.searches.filter(s => s.statut === 'En attente').length,
       rejectedInternships: this.searches.filter(s => s.statut === 'Refusé').length
     };
+  }
+
+  private updateCitiesList() {
+    this.cities = [...new Set(this.searches
+      .map(s => s.entreprise?.villeEntreprise)
+      .filter((city): city is string => city !== undefined)
+    )];
   }
 
   showAddForm() {
@@ -143,19 +161,107 @@ export class StudentDashboardComponent implements OnInit {
     return statusClasses[status];
   }
 
-  getFilteredSearches(): InternshipSearch[] {
-    const filtered = this.searchTerm.trim() 
-      ? this.searches.filter(search => {
-          const matches = (
-            search.entreprise?.raisonSociale.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-            search.entreprise?.villeEntreprise.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-            search.dateCreation.toLocaleDateString().includes(this.searchTerm.toLowerCase()) ||
-            search.dateModification.toLocaleDateString().includes(this.searchTerm.toLowerCase()) ||
-            this.getStatusLabel(search.statut).toLowerCase().includes(this.searchTerm.toLowerCase())
-          );
-          return matches;
-        })
-      : this.searches;
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // Vérifie si le clic est en dehors des menus déroulants
+    const target = event.target as HTMLElement;
+    if (!target.closest('.filter-dropdown')) {
+      this.showCityFilter = false;
+      this.showStatusFilter = false;
+    }
+  }
+
+  toggleCityFilter(event: Event) {
+    event.stopPropagation(); // Empêche la propagation du clic
+    this.showCityFilter = !this.showCityFilter;
+    this.showStatusFilter = false;
+  }
+
+  toggleStatusFilter(event: Event) {
+    event.stopPropagation(); // Empêche la propagation du clic
+    this.showStatusFilter = !this.showStatusFilter;
+    this.showCityFilter = false;
+  }
+
+  toggleCitySelection(city: string) {
+    if (this.selectedCities.has(city)) {
+      this.selectedCities.delete(city);
+    } else {
+      this.selectedCities.add(city);
+    }
+  }
+
+  toggleStatusSelection(status: string) {
+    if (this.selectedStatuses.has(status)) {
+      this.selectedStatuses.delete(status);
+    } else {
+      this.selectedStatuses.add(status);
+    }
+  }
+
+  getCityFilterLabel(): string {
+    return this.selectedCities.size > 0 
+      ? `${this.selectedCities.size} ville${this.selectedCities.size > 1 ? 's' : ''} sélectionnée${this.selectedCities.size > 1 ? 's' : ''}`
+      : 'Toutes les villes';
+  }
+
+  getStatusFilterLabel(): string {
+    return this.selectedStatuses.size > 0
+      ? `${this.selectedStatuses.size} statut${this.selectedStatuses.size > 1 ? 's' : ''} sélectionné${this.selectedStatuses.size > 1 ? 's' : ''}`
+      : 'Tous les statuts';
+  }
+
+  toggleDateSort() {
+    switch (this.dateSort) {
+      case 'none':
+        this.dateSort = 'desc';
+        break;
+      case 'desc':
+        this.dateSort = 'asc';
+        break;
+      case 'asc':
+        this.dateSort = 'none';
+        break;
+    }
+  }
+
+  getDateSortLabel(): string {
+    switch (this.dateSort) {
+      case 'desc':
+        return 'Plus récent d\'abord';
+      case 'asc':
+        return 'Plus ancien d\'abord';
+      default:
+        return 'Trier par date';
+    }
+  }
+
+  getFilteredSearches() {
+    let filtered = this.searches.filter(search => {
+      const matchesSearch = (
+        search.entreprise?.raisonSociale.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        search.entreprise?.villeEntreprise.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        search.dateCreation.toLocaleDateString().includes(this.searchTerm.toLowerCase()) ||
+        search.dateModification.toLocaleDateString().includes(this.searchTerm.toLowerCase()) ||
+        this.getStatusLabel(search.statut).toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+      const matchesCities = this.selectedCities.size === 0 || 
+        (search.entreprise?.villeEntreprise && this.selectedCities.has(search.entreprise.villeEntreprise));
+      const matchesStatuses = this.selectedStatuses.size === 0 || 
+        this.selectedStatuses.has(search.statut);
+
+      return matchesSearch && matchesCities && matchesStatuses;
+    });
+
+    // Tri par date
+    if (this.dateSort !== 'none') {
+      filtered.sort((a, b) => {
+        const dateA = new Date(a.dateCreation).getTime();
+        const dateB = new Date(b.dateCreation).getTime();
+        return this.dateSort === 'desc' ? dateB - dateA : dateA - dateB;
+      });
+    }
+
     return filtered;
   }
 

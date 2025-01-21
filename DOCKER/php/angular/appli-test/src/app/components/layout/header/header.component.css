@@ -46,7 +46,8 @@ header {
 }
 
 .active-link {
-    color: #BFDBFE;
+    text-decoration: underline;
+    text-underline-offset: 5px;
 }
 
 .profile-section {
