@@ -17,15 +17,8 @@
   </div>
 
   <div class="content-box">
-    <div class="header">
-      <div class="search-container">
-        <input 
-          type="text" 
-          [(ngModel)]="searchTerm"
-          placeholder="Recherche..." 
-          class="search-input"
-        >
-      </div>
+    <div class="content-header">
+      <p class='table-title'>Recherches de Stage</p>
       <button 
         class="add-button"
         (click)="navigateToSearchForm()"
@@ -34,13 +27,95 @@
       </button>
     </div>
 
+    <div class="filters-row">
+      <div class="search-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm"
+          placeholder="Recherche..." 
+          class="search-input"
+        >
+      </div>
+
+      <div class="filters-group">
+        <div class="filter-dropdown">
+          <button 
+            class="filter-button"
+            [class.active]="selectedCities.size > 0"
+            (click)="toggleCityFilter($event)"
+          >
+            {{ getCityFilterLabel() }}
+            <svg class="chevron" [class.rotate]="showCityFilter" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+            </svg>
+          </button>
+          
+          @if (showCityFilter) {
+            <div class="filter-options">
+              @for (city of cities; track city) {
+                <label class="filter-option">
+                  <input 
+                    type="checkbox"
+                    [checked]="selectedCities.has(city)"
+                    (change)="toggleCitySelection(city)"
+                  >
+                  <span>{{ city }}</span>
+                </label>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="filter-dropdown">
+          <button 
+            class="filter-button"
+            [class.active]="selectedStatuses.size > 0"
+            (click)="toggleStatusFilter($event)"
+          >
+            {{ getStatusFilterLabel() }}
+            <svg class="chevron" [class.rotate]="showStatusFilter" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+            </svg>
+          </button>
+          
+          @if (showStatusFilter) {
+            <div class="filter-options">
+              @for (status of statusOptions; track status) {
+                <label class="filter-option">
+                  <input 
+                    type="checkbox"
+                    [checked]="selectedStatuses.has(status)"
+                    (change)="toggleStatusSelection(status)"
+                  >
+                  <span>{{ status }}</span>
+                </label>
+              }
+            </div>
+          }
+        </div>
+
+        <button 
+          class="date-sort-button"
+          [class.active]="dateSort !== 'none'"
+          (click)="toggleDateSort()"
+        >
+          {{ getDateSortLabel() }}
+          @if (dateSort !== 'none') {
+            <svg class="chevron" [class.rotate]="dateSort === 'asc'" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+            </svg>
+          }
+        </button>
+      </div>
+    </div>
+
     <div class="table-container">
       <table>
         <thead>
           <tr>
             <th>Entreprise</th>
             <th>Ville</th>
-            <th>Date de recherche</th>
+            <th>Date de modification</th>
             <th>Dernière modification</th>
             <th>Statut</th>
             <th>Actions</th>
