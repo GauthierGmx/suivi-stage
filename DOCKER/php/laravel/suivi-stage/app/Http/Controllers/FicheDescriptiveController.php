@@ -9,7 +9,6 @@ class FicheDescriptiveController extends Controller
 {
     public function storeJson(Request $request)
     {
-        // Valider les données JSON
         $validatedData = $request->validate([
             'dateCreation' => 'required|date',
             'dateDerniereModification' => 'required|date',
@@ -34,27 +33,31 @@ class FicheDescriptiveController extends Controller
             'materielPrete' => 'required|string',
             'idEntreprise' => 'required|integer',
             'idTuteurEntreprise' => 'required|integer',
-            'idUPPA' => 'required|string'
+            'idUPPA' => 'required|integer'
         ]);
-        
+
         try {
             // Enregistrement dans la base de données
             FicheDescriptive::create($validatedData);
-    
+
             // Répondre avec un message de succès
             return response()->json([
                 'message' => 'Données enregistrées avec succès.',
                 'status' => 'success'
-            ], 201);
-        } catch (\Exception $e) {
-            \Log::error('Erreur d\'enregistrement : ' . $e->getMessage());
+            ], 200);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Capturer les détails de l'erreur SQLite
+            $errorCode = $e->errorInfo[1]; // Le code d'erreur SQLite
+            $errorMessage = $e->getMessage(); // Message d'erreur complet
+
             return response()->json([
                 'message' => 'Une erreur est survenue lors de l\'enregistrement.',
-                'error' => $e->getMessage(),
-                'status' => 'error'
+                'status' => 'error',
+                'error_code' => $errorCode, // Ajout du code d'erreur
+                'error_message' => $errorMessage // Ajout du message complet
             ], 500);
         }
-
     }
-    
 }
+?>
