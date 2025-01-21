@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RechercheStageController;
+use App\Http\Controllers\EntrepriseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Route pour le Controller RechercheStage
 Route::post('/recherches-stages/create', [RechercheStageController::class, 'store'])->name('recherches-stages.store');
+
+// Route pour le Controller Entreprise
+Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
+Route::post('/entreprises/create', [EntrepriseController::class, 'store'])->name('entreprises.store');
+Route::get('/entreprises/{id}', [EntrepriseController::class, 'show'])->name('entreprises.show');
