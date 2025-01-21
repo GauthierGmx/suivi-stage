@@ -22,10 +22,12 @@ class RechercheStage extends Model
         'adresseMailContact',
         'observations',
         'dateRelance',
-        'statut'
+        'statut',
+        'idUPPA',
+        'idEntreprise'
     ];
     // Définit l'attribut de la clé primaire
-    protected $primaryKey = 'idParametre';
+    protected $primaryKey = 'idRecherche';
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
 
