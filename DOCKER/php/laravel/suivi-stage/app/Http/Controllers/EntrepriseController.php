@@ -77,6 +77,13 @@ class EntrepriseController extends Controller
                 'entreprise' => $uneEntreprise
             ],201);
         }
+        catch (\Illuminate\Validation\ValidationException $e)
+        {
+            return response()->json([
+                'message' => 'Erreur de validation',
+                'erreur' => $e->errors()
+            ],422);
+        }
         catch (\Illuminate\Database\QueryException $e)
         {
             return response()->json([

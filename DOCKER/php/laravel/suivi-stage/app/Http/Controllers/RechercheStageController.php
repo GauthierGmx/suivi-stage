@@ -81,6 +81,13 @@ class RechercheStageController extends Controller
                 'rechercheStage' => $uneRechercheStage
             ], 201);
         }
+        catch (\Illuminate\Validation\ValidationException $e)
+        {
+            return response()->json([
+                'message' => 'Erreur de validation dans les données',
+                'erreurs' => $e->errors()
+            ], 422);
+        }
         catch (\Illuminate\Database\QueryException $e)
         {
             return response()->json([
