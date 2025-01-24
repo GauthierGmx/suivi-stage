@@ -28,13 +28,15 @@ class RechercheStageController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Créer une nouvelle recherche de stage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      *  Une réponse JSON avec :
      *      - Code 201 : si l'enregistrement a été effectué avec succès
+     *      - Code 422 : en cas d'erreur de validation
      *      - Code 500 : en cas d'erreur
+     * @throws \Illuminate\Validation\ValidationException
      * @throws \Illuminate\Database\QueryException
      * @throws \Exception
      */
@@ -43,20 +45,20 @@ class RechercheStageController extends Controller
         try
         {
             $donneesValidees = $request->validate([
-                'dateCreation'          => 'bail|required|date',
-                'dateModification'      => 'bail|required|date',
-                'date1erContact'        => 'bail|required|date',
+                'dateCreation'          => 'bail|required|date|date-format:Y-m-d',
+                'dateModification'      => 'bail|required|date|date-format:Y-m-d',
+                'date1erContact'        => 'bail|required|date|date-format:Y-m-d',
                 'typeContact'           => 'bail|required|string|in:Courrier,Mail,Présentiel,Téléphone,Site de recrutement',
                 'nomContact'            => 'bail|required|string|max:50',
                 'prenomContact'         => 'bail|required|string|max:50',
                 'fonctionContact'       => 'bail|required|string|max:50',
-                'telephoneContact'      => ['nullable','string','regex:/^(\+33|0)\d{9}$/m'],
+                'telephoneContact'      => ['nullable','string','regex:/^(\+33|0)\d{9}$/m'], // Obligé de passer les paramètres dans un tableau puisque la règle "regex" est utilisée avec d'autres
                 'adresseMailContact'    => 'nullable|string|email|max:100',
                 'observations'          => 'nullable|string',
-                'dateRelance'           => 'nullable|date',
+                'dateRelance'           => 'nullable|date|date-format:Y-m-d',
                 'statut'                => 'bail|required|string|in:En cours,Validé,Refusé,Relancé',
-                'idUPPA'                => 'bail|required|string|exists:etudiants,idUPPA',
-                'idEntreprise'          => 'required|integer|exists:entreprises,idEntreprise',
+                'idUPPA'                => 'bail|required|string',
+                'idEntreprise'          => 'required|integer',
             ]);
     
             $uneRechercheStage = RechercheStage::create([
