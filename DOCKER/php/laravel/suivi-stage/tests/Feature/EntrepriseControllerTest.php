@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\Entreprise;
 
 class EntrepriseControllerTest extends TestCase
 {
@@ -117,13 +118,13 @@ class EntrepriseControllerTest extends TestCase
      */
     public function test_store_renvoie_une_erreur_de_base_de_donnees()
     {
-        /*// Mock du modèle RechercheStage pour déclencher une exception
+        // Mock du modèle RechercheStage pour déclencher une exception
         $this->mock(\App\Http\Controllers\EntrepriseController::class, function ($mock) {
             $mock->shouldReceive('store')->andThrow(new \Illuminate\Database\QueryException('Erreur simulée',
             [],
             new \Exception('Erreur simulée')
             ));
-        });*/
+        });
 
         $donnees = [
             'numSIRET' => null,
@@ -158,16 +159,16 @@ class EntrepriseControllerTest extends TestCase
      * 
      * @return void
      */
-    public function test_show_renvoie_une_confirmation_et_les_infos_de_l_entreprise()
+    public function test_show_renvoie_une_confirmation_et_les_infos_de_l_entreprise_specifiee()
     {
-        $entreprise = Entreprise::firstOrFail();
+        $entreprise = Entreprise::first();
 
-        $response = $this->get('/api/entreprises/' . $entreprise->id);
+        $response = $this->get('/api/entreprises/' . $entreprise->idEntreprise);
 
         $response->assertStatus(200)
                  ->assertJson([
                     'entreprise' => [
-                        'id' => $entreprise->id,
+                        'idEntreprise' => $entreprise->idEntreprise,
                         'raisonSociale' => $entreprise->raisonSociale,
                         'numSIRET' => $entreprise->numSIRET,
                         'typeEtablissement' => $entreprise->typeEtablissement,
@@ -193,9 +194,9 @@ class EntrepriseControllerTest extends TestCase
      */
     public function test_show_renvoie_une_erreur_si_l_entreprise_n_est_pas_trouvee()
     {
-        $entreprise = Entreprise::max('idEntreprise')+1;
+        $idEntreprise = PHP_INT_MAX;
 
-        $response = $this->get('/api/entreprises/' . $entreprise);
+        $response = $this->get('/api/entreprises/' . $idEntreprise);
 
         $response->assertStatus(404);
     }
@@ -207,11 +208,10 @@ class EntrepriseControllerTest extends TestCase
      */
     public function test_show_retourne_une_erreur_en_cas_d_exception()
     {
-        /*// Mock du modèle RechercheStage pour déclencher une exception
+        // Mock du modèle ENTREPRISE pour déclencher une exception
         $this->mock(\App\Http\Controllers\EntrepriseController::class, function ($mock) {
-            $mock->shouldReceive('show')->andThrow(new \Exception('Erreur simulée')
-            ));
-        });*/
+            $mock->shouldReceive('show')->andThrow(new \Exception('Erreur simulée'));
+        });
 
         $entreprise = Entreprise::firstOrFail();
 

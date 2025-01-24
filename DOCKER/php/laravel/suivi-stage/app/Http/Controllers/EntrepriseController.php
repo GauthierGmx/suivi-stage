@@ -122,6 +122,12 @@ class EntrepriseController extends Controller
                 'entreprise' => $uneEntreprise
             ], 200);
         }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
+        {
+            return response()->json([
+                'message' => 'Aucune entreprise trouvée'
+            ], 404);
+        }
         catch (\Exception $e)
         {
             return response()->json([
