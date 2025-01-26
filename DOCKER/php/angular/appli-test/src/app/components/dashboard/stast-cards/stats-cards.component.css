@@ -1,0 +1,36 @@
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+.stats-card {
+    padding: 24px;
+    border-radius: 12px;
+}
+
+.stats-card.primary {
+    background-color: #f8c6c6;
+}
+
+.stats-card.secondary {
+    background-color: #faffad;
+}
+
+.stats-card.tertiary {
+    background-color: #adeea7;
+}
+
+.stats-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #4B5563;
+}
+
+.stats-card p {
+    font-size: 30px;
+    font-weight: 700;
+    color: #374151;
+}

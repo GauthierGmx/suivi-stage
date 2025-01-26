@@ -20,17 +20,15 @@
                             Journal de bord
                         </a>
                     </li>
-                    @if (currentUser?.role === 'STUDENT') {
-                        <li>
-                            <a
-                                routerLink="/factsheets"
-                                routerLinkActive="active-link"
-                                class="nav-link"
-                            >
-                                Fiche descriptive
-                            </a>
-                        </li>
-                    }
+                    <li>
+                        <a
+                            routerLink="/factsheets"
+                            routerLinkActive="active-link"
+                            class="nav-link"
+                        >
+                            Fiche descriptive
+                        </a>
+                    </li>
                 </ul>
             </nav>
 
@@ -42,13 +40,13 @@
                             (click)="toggleProfileMenu()"
                             class="profile-button"
                         >
-                            {{ getInitials(currentUser) }}
+                            {{ getInitials() }}
                         </button>
 
                         @if (showProfileMenu) {
                             <div class="dropdown-menu">
                                 <div class="user-info">
-                                    {{ currentUser.firstName }} {{ currentUser.lastName }}
+                                    {{ prenomCurrentUser }} {{ nomCurrentUser }}
                                 </div>
                                 <button
                                     (click)="logout()"
