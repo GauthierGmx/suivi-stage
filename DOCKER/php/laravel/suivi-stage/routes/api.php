@@ -20,4 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Route pour récupérer les données du formulaire d'une fiche descriptive au format JSON
-Route::post('/store-json', [FicheDescriptiveController::class, 'storeJson']);
+Route::post('/store-json', [FicheDescriptiveController::class, 'store']);

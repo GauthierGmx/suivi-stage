@@ -7,7 +7,7 @@ use App\Models\FicheDescriptive;
 
 class FicheDescriptiveController extends Controller
 {
-    public function storeJson(Request $request)
+    public function store(Request $request)
     {
         $validatedData = $request->validate([
             'dateCreation' => 'required|date',
@@ -59,5 +59,6 @@ class FicheDescriptiveController extends Controller
             ], 500);
         }
     }
+
 }
 ?>
