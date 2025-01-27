@@ -7,58 +7,101 @@ use App\Models\FicheDescriptive;
 
 class FicheDescriptiveController extends Controller
 {
+
+    /**
+     * Enregistre les données du formulaire d'une fiche descriptive
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Database\QueryException
+     * @throws \Exception
+     */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'dateCreation' => 'required|date',
-            'dateDerniereModification' => 'required|date',
-            'contenuStage' => 'required|string',
-            'thematique' => 'required|string',
-            'sujet' => 'required|string',
-            'fonctions' => 'required|string',
-            'taches' => 'required|string',
-            'competences' => 'required|string',
-            'details' => 'required|string',
-            'debutStage' => 'required|date',
-            'finStage' => 'required|date',
-            'nbJourSemaine' => 'required|integer',
-            'nbHeureSemaine' => 'required|integer',
-            'clauseConfidentialite' => 'required|boolean',
-            'statut' => 'required|string',
-            'numeroConvention' => 'required|string',
-            'interruptionStage' => 'required|boolean',
-            'dateDebutInterruption' => 'nullable|date',
-            'dateFinInterruption' => 'nullable|date',
-            'personnelTechniqueDisponible' => 'required|boolean',
-            'materielPrete' => 'required|string',
-            'idEntreprise' => 'required|integer',
-            'idTuteurEntreprise' => 'required|integer',
-            'idUPPA' => 'required|integer'
-        ]);
+        try{
+            $validatedData = $request->validate([
+                'dateCreation' => 'bail|required|date',
+                'dateDerniereModification' => 'bail|required|date',
+                'contenuStage' => 'bail|required|string',
+                'thematique' => 'bail|required|string',
+                'sujet' => 'bail|required|string',
+                'fonctions' => 'bail|required|string',
+                'taches' => 'bail|required|string',
+                'competences' => 'bail|required|string',
+                'details' => 'bail|required|string',
+                'debutStage' => 'bail|required|date',
+                'finStage' => 'bail|required|date',
+                'nbJourSemaine' => 'bail|required|integer',
+                'nbHeureSemaine' => 'bail|required|integer',
+                'clauseConfidentialite' => 'bail|required|boolean',
+                'statut' => 'bail|required|string',
+                'numeroConvention' => 'bail|required|string',
+                'interruptionStage' => 'bail|required|boolean',
+                'dateDebutInterruption' => 'nullable|date',
+                'dateFinInterruption' => 'nullable|date',
+                'personnelTechniqueDisponible' => 'bail|required|boolean',
+                'materielPrete' => 'bail|required|string',
+                'idEntreprise' => 'bail|required|integer',
+                'idTuteurEntreprise' => 'bail|required|integer',
+                'idUPPA' => 'bail|required|integer'
+            ]);
 
-        try {
-            // Enregistrement dans la base de données
-            FicheDescriptive::create($validatedData);
+            $uneFicheDescriptive = FicheDescriptive::create([
+                'dateCreation' => $validatedData['dateCreation'],
+                'dateDerniereModification' => $validatedData['dateDerniereModification'],
+                'contenuStage' => $validatedData['contenuStage'],
+                'thematique' => $validatedData['thematique'],
+                'sujet' => $validatedData['sujet'],
+                'fonctions' => $validatedData['fonctions'],
+                'taches' => $validatedData['taches'],
+                'competences' => $validatedData['competences'],
+                'details' => $validatedData['details'],
+                'debutStage' => $validatedData['debutStage'],
+                'finStage' => $validatedData['finStage'],
+                'nbJourSemaine' => $validatedData['nbJourSemaine'],
+                'nbHeureSemaine' => $validatedData['nbHeureSemaine'],
+                'clauseConfidentialite' => $validatedData['clauseConfidentialite'],
+                'statut' => $validatedData['statut'],
+                'numeroConvention' => $validatedData['numeroConvention'],
+                'interruptionStage' => $validatedData['interruptionStage'],
+                'dateDebutInterruption' => $validatedData['dateDebutInterruption'],
+                'dateFinInterruption' => $validatedData['dateFinInterruption'],
+                'personnelTechniqueDisponible' => $validatedData['personnelTechniqueDisponible'],
+                'materielPrete' => $validatedData['materielPrete'],
+                'idEntreprise' => $validatedData['idEntreprise'],
+                'idTuteurEntreprise' => $validatedData['idTuteurEntreprise'],
+                'idUPPA' => $validatedData['idUPPA']
+            ]);
 
-            // Répondre avec un message de succès
             return response()->json([
                 'message' => 'Données enregistrées avec succès.',
                 'status' => 'success'
             ], 200);
 
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Capturer les détails de l'erreur SQLite
-            $errorCode = $e->errorInfo[1]; // Le code d'erreur SQLite
-            $errorMessage = $e->getMessage(); // Message d'erreur complet
-
+        }
+        catch (\Illuminate\Validation\ValidationException $e)
+        {
             return response()->json([
-                'message' => 'Une erreur est survenue lors de l\'enregistrement.',
-                'status' => 'error',
-                'error_code' => $errorCode, // Ajout du code d'erreur
-                'error_message' => $errorMessage // Ajout du message complet
+                'message' => 'Erreur de validation dans les données',
+                'erreurs' => $e->errors()
+            ], 422);
+        }
+        catch (\Illuminate\Database\QueryException $e)
+        {
+            return response()->json([
+                'message' => 'Erreur dans la base de données',
+                'erreurs' => $e->getMessage()
             ], 500);
         }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite :',
+                'erreurs' => $e->getMessage()
+            ], 500);
+        }  
     }
 
+    #public fonction show($id){}
 }
 ?>
