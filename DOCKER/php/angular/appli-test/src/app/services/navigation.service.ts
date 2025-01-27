@@ -58,4 +58,9 @@ export class NavigationService {
   navigateToStudentDashboard() {
     this.router.navigate(['/dashboard']);
   }
+
+  getCurrentPageUrl() {
+    const currentUrl = this.router.url;
+    return currentUrl;
+  }
 } 

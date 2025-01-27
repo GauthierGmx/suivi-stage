@@ -100,9 +100,9 @@
           @for (search of filteredSearches; track search.idRecherche) {
             <tr>
               <td>{{ search.dateCreation | date:'dd/MM/yyyy' }}</td>
-              <td>{{ search.entreprise?.raisonSociale }}</td>
-              <td>{{ search.entreprise?.villeEntreprise }}</td>
-              <td>{{ search.nomPrenomContact }}</td>
+              <td>{{ entreprise?.raisonSociale }}</td>
+              <td>{{ entreprise?.ville }}</td>
+              <td>{{ search.nomContact }} {{search.prenomContact}}</td>
               <td>
                 <span [class]="getStatusClass(search.statut)">
                   {{ getStatusLabel(search.statut) }}

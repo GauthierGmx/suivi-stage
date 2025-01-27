@@ -1,36 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { User, UserRole } from '../../models/user.model';
-import { StudentDashboardComponent } from './student-dashboard/student-dashboard.component';
-import { ManagerDashboardComponent } from './manager-dashboard/manager-dashboard.component';
+import { Staff } from '../../models/staff.model';
+import { Student } from '../../models/student.model';
+import { AppComponent } from '../../app.component';
+import { StatsCardsComponent } from "./stast-cards/stats-cards.component";
+import { WelcomeComponent } from "./welcome-card/welcome-card.component";
+import { SearchesStudentTabComponent } from './searches-student-tab/searches-student-tab.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, StudentDashboardComponent, ManagerDashboardComponent],
+  imports: [CommonModule, StatsCardsComponent, WelcomeComponent, SearchesStudentTabComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  currentUser: User | null = null;
+  currentUser?: Staff | Student;
+  currentUserRole?: string;
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly appComponent: AppComponent
+  ) {}
 
   ngOnInit() {
-    this.authService.getCurrentUser().subscribe(user => {
-      this.currentUser = user;
-    });
-  }
-
-  getRoleName(role: UserRole): string {
-    const roles: { [key in UserRole]: string } = {
-      'SUPERADMIN': 'Super Administrateur',
-      'ADMIN': 'Administrateur',
-      'STUDENT': 'Étudiant',
-      'TEACHER': 'Enseignant',
-      'INTERNSHIP_MANAGER': 'Responsable des stages'
-    };
-    return roles[role] || role;
+    this.currentUser = this.authService.getCurrentUser();
+    
+    if (this.appComponent.isStudent(this.currentUser)) {
+      this.currentUserRole = 'STUDENT';
+    }
+    else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+        this.currentUserRole = 'INTERNSHIP_MANAGER';
+    }
   }
 }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Student } from '../models/user.model';
+import { Student } from '../models/student.model';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +7,6 @@ import { Student } from '../models/user.model';
 export class StudentService {
   private readonly mockStudents: Student[] = [
     {
-      idEtudiant: 3,
       idUPPA: 'ETU12345',
       nomEtudiant: 'Dupont',
       prenomEtudiant: 'Jean',
@@ -23,7 +21,6 @@ export class StudentService {
       idTuteur: null
     },
     {
-      idEtudiant: 4,
       idUPPA: 'ETU12346',
       nomEtudiant: 'Martin',
       prenomEtudiant: 'Sophie',
@@ -38,7 +35,6 @@ export class StudentService {
       idTuteur: null
     },
     {
-      idEtudiant: 5,
       idUPPA: 'ETU12347',
       nomEtudiant: 'Bernard',
       prenomEtudiant: 'Lucas',
@@ -53,7 +49,6 @@ export class StudentService {
       idTuteur: null
     },
     {
-      idEtudiant: 6,
       idUPPA: 'ETU12348',
       nomEtudiant: 'Espinasse',
       prenomEtudiant: 'Virgile',
@@ -69,11 +64,11 @@ export class StudentService {
     }
   ];
 
-  getStudents(): Observable<Student[]> {
-    return of(this.mockStudents);
+  getStudents(): Student[] {
+    return this.mockStudents;
   }
 
-  getStudentById(id: number): Observable<Student | undefined> {
-    return of(this.mockStudents.find(student => student.idEtudiant === id));
+  getStudentById(id: string) {
+    return this.mockStudents.find(s => s.idUPPA === id);
   }
 }
