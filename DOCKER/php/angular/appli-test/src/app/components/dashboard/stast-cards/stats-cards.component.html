@@ -1,0 +1,98 @@
+<!-- Vue étudiant - Journal de recherche - Affichage des cartes de statistiques -->
+@if (currentPageUrl === '/dashboard' && currentUserRole === 'STUDENT') {
+    <div class="stats-grid">
+        <div class="stats-card primary">
+          <h3>Recherches de stage refusés</h3>
+          <p>{{ countSearchesByStudentIdAndStatut(currentUserId, 'Refusé') }}</p>
+        </div>
+        
+        <div class="stats-card secondary">
+          <h3>Contacts en attente</h3>
+          <p>{{ countSearchesByStudentIdAndStatut(currentUserId, 'En attente') }}</p>
+        </div>
+        
+        <div class="stats-card tertiary">
+          <h3>Recherches de stage totales</h3>
+          <p>{{ countSearchesByStudentId(currentUserId) }}</p>
+        </div>
+      </div>
+}
+
+<!-- Vue étudiant - Liste des fiches descriptives - Affichage des cartes de statistiques -->
+@if (currentPageUrl === '/factsheets' && currentUserRole === 'STUDENT') {
+  <div class="stats-grid">
+      <div class="stats-card primary">
+        <h3>Nombre de fiche descriptive refusée</h3>
+        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'REFUSE') }}</p>
+      </div>
+      
+      <div class="stats-card secondary">
+        <h3>Nombre de fiche descriptive en attente du responsable des stages</h3>
+        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'EN_REVISION') }}</p>
+      </div>
+      
+      <div class="stats-card tertiary">
+        <h3>Nombre de fiche descriptive validée</h3>
+        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'VALIDE') }}</p>
+      </div>
+    </div>
+}
+
+<!-- Vue responsable des stages - Journal de recherche - Affichage des cartes de statistiques pour la liste des étudiants -->
+@if (currentPageUrl === '/dashboard' && currentUserRole === 'INTERNSHIP_MANAGER') {
+    <div class="stats-grid">
+        <div class="stats-card primary">
+          <h3>Nombre d'étudiants sans recherche</h3>
+          <p>{{ countStudentWithoutSearch() }}</p>
+        </div>
+        
+        <div class="stats-card secondary">
+          <h3>Nombre d'étudiants</h3>
+          <p>{{ countStudents() }}</p>
+        </div>
+        
+        <div class="stats-card tertiary">
+          <h3>Nombre d'étudiants avec au moins une recherche de stage validé</h3>
+          <p>{{ countStudentsWithValidedSearch() }}</p>
+        </div>
+      </div>
+}
+
+<!-- Vue responsable des stages - Journal de recherche - Affichage des cartes de statistiques pour le journal d'un étudiant -->
+@if (currentPageUrl.includes('/student-logbook') && currentUserRole === 'INTERNSHIP_MANAGER') {
+    <div class="stats-grid">
+        <div class="stats-card primary">
+          <h3>Nombre des recherches</h3>
+          <p>{{ countSearchesByStudentId(selectedStudent?.idUPPA) }}</p>
+        </div>
+        <div class="stats-card secondary">
+          <h3>Nombre de recherches cette semaine</h3>
+          <p class="date-range">Du {{ getLastWeekDate() | date : 'dd/MM' }} au {{ getCurrentDate() | date : 'dd/MM' }}</p>
+          <p class="count">{{ countSearchesByStudentIdThisWeek(selectedStudent?.idUPPA) }}</p>
+        </div>
+        <div class="stats-card tertiary">
+          <h3>Nombre de recherches validées</h3>
+          <p>{{ countSearchesByStudentIdAndStatut(selectedStudent?.idUPPA, 'Validé') }}</p>
+        </div>
+      </div>
+}
+
+<!-- Vue responsable des stages - Liste des fiches descriptives - Affichage des cartes de statistiques pour la liste des étudiants -->
+@if (currentPageUrl === '/factsheets' && currentUserRole === 'INTERNSHIP_MANAGER') {
+  <div class="stats-grid">
+      <div class="stats-card primary">
+        <h3>Nombre d'étudiant sans fiche descriptive</h3>
+        <p>{{ countStudentWithoutSheet() }}</p>
+      </div>
+      
+      <div class="stats-card secondary">
+        <h3>Nombre de fiche descriptive en attente de validation</h3>
+        <p>{{ contSheetByStatut('EN_REVISION') }}</p>
+      </div>
+      
+      <div class="stats-card tertiary">
+        <h3>Nombre d'étudiant avec au moins une fiche validée</h3>
+        <p>{{ countStudentBySheetStatut('VALIDE') }}</p>
+      </div>
+    </div>
+}
