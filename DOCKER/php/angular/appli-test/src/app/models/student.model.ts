@@ -1,5 +1,4 @@
-export interface Student {
-  idEtudiant: number;
+export class Student {
   idUPPA: string;
   nomEtudiant: string;
   prenomEtudiant: string;
@@ -12,19 +11,32 @@ export interface Student {
   idDepartement: number;
   idEntreprise: number | null;
   idTuteur: number | null;
-}
 
-// Types supplémentaires liés aux étudiants si nécessaire
-export interface StudentStats {
-  id: number;
-  studentName: string;
-  searchCount: number;
-  lastUpdate: Date;
-  bestStatus: string;
+  constructor(
+    idUPPA: string,
+    nomEtudiant: string,
+    prenomEtudiant: string,
+    adresseEtudidant: string,
+    villeEtudiant: string,
+    codePostalEtudiant: string,
+    telephoneEtudiant: string,
+    adresseMailEtudiant: string,
+    idParcours: number,
+    idDepartement: number = 1,
+    idEntreprise: number | null,
+    idTuteur: number | null
+  ) {
+    this.idUPPA = idUPPA;
+    this.nomEtudiant = nomEtudiant;
+    this.prenomEtudiant = prenomEtudiant;
+    this.adresseEtudiant = adresseEtudidant;
+    this.villeEtudiant = villeEtudiant;
+    this.codePostalEtudiant = codePostalEtudiant;
+    this.telephoneEtudiant = telephoneEtudiant;
+    this.adresseMailEtudiant = adresseMailEtudiant;
+    this.idParcours = idParcours;
+    this.idDepartement = idDepartement;
+    this.idEntreprise = idEntreprise;
+    this.idTuteur = idTuteur;
+  }
 }
-
-export interface StudentDashboardStats {
-  searchCount: number;
-  pendingContacts: number;
-  rejectedInternships: number;
-} 

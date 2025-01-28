@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { InternshipSearchService } from '../../services/internship-search.service';
+import { Student } from '../../models/student.model';
 import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
 import { BreadcrumbComponent } from '../shared/breadcrumb/breadcrumb.component';
 import { NavigationService } from '../../services/navigation.service';
+import { InternshipSearchService } from '../../services/internship-search.service';
 import { StudentService } from '../../services/student.service';
-import { Student } from '../../models/student.model';
+import { CompanyService } from '../../services/company.service';
+import { Company } from '../../models/company.model';
 
 @Component({
   selector: 'app-student-logbook',
@@ -18,6 +20,7 @@ import { Student } from '../../models/student.model';
 })
 export class StudentLogbookComponent implements OnInit {
   student?: Student;
+  entreprise?: Company;
   searches: InternshipSearch[] = [];
   breadcrumbs: { label: string; path?: string; }[] = [];
   searchTerm: string = '';
@@ -27,7 +30,8 @@ export class StudentLogbookComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly internshipSearchService: InternshipSearchService,
     private readonly studentService: StudentService,
-    private readonly navigationService: NavigationService
+    private readonly navigationService: NavigationService,
+    private readonly companyService: CompanyService
   ) {}
 
   ngOnInit() {
@@ -37,19 +41,24 @@ export class StudentLogbookComponent implements OnInit {
 
   get filteredSearches() {
     let filtered = [...this.searches];
-
+  
     if (this.searchTerm.trim()) {
       const searchTermLower = this.searchTerm.toLowerCase().trim();
       filtered = filtered.filter(search => {
-        return (
-          search.entreprise?.raisonSociale?.toLowerCase().includes(searchTermLower) ||
-          search.entreprise?.villeEntreprise?.toLowerCase().includes(searchTermLower) ||
-          search.nomPrenomContact?.toLowerCase().includes(searchTermLower) ||
-          this.getStatusLabel(search.statut).toLowerCase().includes(searchTermLower)
-        );
+        this.entreprise = this.companyService.getCompanyById(search.idEntreprise); // Récupérer l'entreprise par idEntreprise
+        if (this.entreprise) {
+          return (
+          this.entreprise.raisonSociale?.toLowerCase().includes(searchTermLower) ||
+          this.entreprise.ville?.toLowerCase().includes(searchTermLower) ||
+          search.prenomContact?.toLowerCase().includes(searchTermLower) ||
+          search.nomContact?.toLowerCase().includes(searchTermLower) ||
+          (this.getStatusLabel(search.statut)?.toLowerCase().includes(searchTermLower) ?? false)
+          );
+        }
+        return 0;
       });
     }
-
+  
     switch (this.currentFilter) {
       case 'waiting':
         filtered = filtered.filter(s => s.statut === 'En attente');
@@ -58,30 +67,34 @@ export class StudentLogbookComponent implements OnInit {
         filtered = filtered.filter(s => s.statut === 'Validé');
         break;
       case 'date_asc':
-        filtered.sort((a, b) => a.dateCreation.getTime() - b.dateCreation.getTime());
+        filtered.sort((a, b) => {
+          const dateA = a.dateCreation instanceof Date ? a.dateCreation : new Date(a.dateCreation);
+          const dateB = b.dateCreation instanceof Date ? b.dateCreation : new Date(b.dateCreation);
+          return dateA.getTime() - dateB.getTime();
+        });
         break;
       case 'date_desc':
-        filtered.sort((a, b) => b.dateCreation.getTime() - a.dateCreation.getTime());
+        filtered.sort((a, b) => {
+          const dateA = a.dateCreation instanceof Date ? a.dateCreation : new Date(a.dateCreation);
+          const dateB = b.dateCreation instanceof Date ? b.dateCreation : new Date(b.dateCreation);
+          return dateB.getTime() - dateA.getTime();
+        });
         break;
     }
-
+  
     return filtered;
   }
+  
 
   private loadStudentData(studentId: string) {
-    this.studentService.getStudentById(parseInt(studentId)).subscribe(student => {
-      if (student) {
-        this.student = student;
-        this.breadcrumbs = this.navigationService.getBreadcrumbs(
-          `Journal de bord - ${student.nomEtudiant} ${student.prenomEtudiant}`
-        );
-      }
-    });
-
-    this.internshipSearchService.getSearchesByStudentId(studentId).subscribe(searches => {
-      this.searches = searches;
-    });
-  }
+    this.student = this.studentService.getStudentById(studentId);
+    if (this.student) {
+      this.breadcrumbs = this.navigationService.getBreadcrumbs(
+        `Journal de bord - ${this.student.nomEtudiant} ${this.student.prenomEtudiant}`
+      );
+      this.searches = this.internshipSearchService.getSearchesByStudentId(studentId);
+    };
+  };
 
   setFilter(filter: 'all' | 'waiting' | 'validated' | 'date_asc' | 'date_desc') {
     this.currentFilter = filter;

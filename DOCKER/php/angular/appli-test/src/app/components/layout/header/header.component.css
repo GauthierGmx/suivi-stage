@@ -46,7 +46,8 @@ header {
 }
 
 .active-link {
-    color: #BFDBFE;
+    text-decoration: underline;
+    text-underline-offset: 5px;
 }
 
 .profile-section {
@@ -74,9 +75,6 @@ header {
 
 .profile-button:focus {
     outline: none;
-    ring: 2px;
-    ring-offset: 2px;
-    ring-color: #93C5FD;
 }
 
 .dropdown-menu {
