@@ -22,28 +22,28 @@ class FicheDescriptiveController extends Controller
             $validatedData = $request->validate([
                 'dateCreation' => 'bail|required|date|date-format:Y-m-d',
                 'dateDerniereModification' => 'bail|required|date',
-                'contenuStage' => 'bail|required|string',
-                'thematique' => 'bail|required|string',
-                'sujet' => 'bail|required|string',
-                'fonctions' => 'bail|required|string',
-                'taches' => 'bail|required|string',
-                'competences' => 'bail|required|string',
-                'details' => 'bail|required|string',
-                'debutStage' => 'bail|required|date',
-                'finStage' => 'bail|required|date',
-                'nbJourSemaine' => 'bail|required|integer',
-                'nbHeureSemaine' => 'bail|required|integer',
-                'clauseConfidentialite' => 'bail|required|boolean',
-                'statut' => 'bail|required|string',
-                'numeroConvention' => 'bail|required|string',
-                'interruptionStage' => 'bail|required|boolean',
+                'contenuStage' => 'nullable|string',
+                'thematique' => 'nullable|string',
+                'sujet' => 'nullable|string',
+                'fonctions' => 'nullable|string',
+                'taches' => 'nullable|string',
+                'competences' => 'nullable|string',
+                'details' => 'nullable|string',
+                'debutStage' => 'nullable|date|date-format:Y-m-d',
+                'finStage' => 'nullable|date|date-format:Y-m-d',
+                'nbJourSemaine' => 'nullable|integer',
+                'nbHeureSemaine' => 'nullable|integer',
+                'clauseConfidentialite' => 'nullable|boolean',
+                'statut' => 'nullable|string|in:En cours,Validee,Refusée',
+                'numeroConvention' => 'nullable|string',
+                'interruptionStage' => 'nullable|boolean',
                 'dateDebutInterruption' => 'nullable|date|date-format:Y-m-d',
                 'dateFinInterruption' => 'nullable|date|date-format:Y-m-d',
-                'personnelTechniqueDisponible' => 'bail|required|boolean',
-                'materielPrete' => 'bail|required|string',
-                'idEntreprise' => 'bail|required|integer',
-                'idTuteurEntreprise' => 'bail|required|integer',
-                'idUPPA' => 'bail|required|integer'
+                'personnelTechniqueDisponible' => 'nullable||boolean',
+                'materielPrete' => 'nullable|string',
+                'idEntreprise' => 'nullable|integer',
+                'idTuteurEntreprise' => 'nullable|integer',
+                'idUPPA' => 'nullable|integer'
             ]);
 
             $uneFicheDescriptive = FicheDescriptive::create([
@@ -75,8 +75,8 @@ class FicheDescriptiveController extends Controller
 
             return response()->json([
                 'message' => 'Données enregistrées avec succès.',
-                'status' => 'success'
-            ], 200);
+                'ficheDescriptive' => $uneFicheDescriptive
+            ], 201);
 
         }
         catch (\Illuminate\Validation\ValidationException $e)
