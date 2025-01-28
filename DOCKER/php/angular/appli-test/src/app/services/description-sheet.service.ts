@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
+import { DescriptiveSheet, SheetStatus } from '../models/description-sheet.model';
 import { Observable, of } from 'rxjs';
-import { DescriptionSheet } from '../models/description-sheet.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DescriptionSheetService {
   // Données de test
-  private mockSheets: DescriptionSheet[] = [
+  private mockSheets: DescriptiveSheet[] = [
     {
       idFicheDescriptive: 1,
       dateCreation: new Date('2024-03-15'),
-      contenuDuStage: "Développement d'une application web moderne",
+      dateDerniereModification: new Date('2024-03-15'),
+      contenuStage: "Développement d'une application web moderne",
       thematique: "Développement Web",
       sujet: "Refonte du système de gestion des stages",
       fonction: "Développeur Full Stack",
@@ -24,14 +25,18 @@ export class DescriptionSheetService {
       nbHeureParSemaine: 35,
       clauseConfidentialite: true,
       statut: 'BROUILLON',
-      numeroConvention: 'CONV2024-001',
+      personnelTechnique: true,
+      materielPrete: true,
+      idEntreprise: 1,
       idTuteur: 1,
-      idEtudiant: 101
+      idUPPA: '101',
+      numeroConvention: 'CONV2024-001'
     },
     {
       idFicheDescriptive: 2,
       dateCreation: new Date('2024-03-10'),
-      contenuDuStage: "Analyse de données et intelligence artificielle",
+      dateDerniereModification: new Date('2024-03-10'),
+      contenuStage: "Analyse de données et intelligence artificielle",
       thematique: "Data Science",
       sujet: "Optimisation des processus par IA",
       fonction: "Data Scientist Junior",
@@ -44,14 +49,18 @@ export class DescriptionSheetService {
       nbHeureParSemaine: 32,
       clauseConfidentialite: true,
       statut: 'VALIDE',
-      numeroConvention: 'CONV2024-002',
+      personnelTechnique: true,
+      materielPrete: true,
+      idEntreprise: 2,
       idTuteur: 2,
-      idEtudiant: 101
+      idUPPA: '101',
+      numeroConvention: 'CONV2024-002'
     },
     {
       idFicheDescriptive: 3,
       dateCreation: new Date('2024-03-01'),
-      contenuDuStage: "Développement d'applications mobiles",
+      dateDerniereModification: new Date('2024-03-01'),
+      contenuStage: "Développement d'applications mobiles",
       thematique: "Mobile Development",
       sujet: "Application mobile de gestion de projet",
       fonction: "Développeur Mobile",
@@ -64,20 +73,31 @@ export class DescriptionSheetService {
       nbHeureParSemaine: 35,
       clauseConfidentialite: false,
       statut: 'EN_REVISION',
-      numeroConvention: 'CONV2024-003',
+      personnelTechnique: true,
+      materielPrete: true,
+      idEntreprise: 3,
       idTuteur: 3,
-      idEtudiant: 101
+      idUPPA: '101',
+      numeroConvention: 'CONV2024-003'
     }
   ];
 
   constructor() {}
 
-  getSheetsByStudentId(idEtudiant: number): Observable<DescriptionSheet[]> {
-    return of(this.mockSheets.filter(sheet => sheet.idEtudiant === idEtudiant));
+  getSheets() {
+    return this.mockSheets;
   }
 
-  addSheet(sheet: Omit<DescriptionSheet, 'idFicheDescriptive'>): Observable<DescriptionSheet> {
-    const newSheet: DescriptionSheet = {
+  getSheetsByStudentId(idEtudiant: string): Observable<DescriptiveSheet[]> {
+    return of(this.mockSheets.filter(sheet => sheet.idUPPA === idEtudiant));
+  }
+
+  getSheetByStudentIdAndStatus(studentId: string, statut: SheetStatus) {
+    return this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut);
+  }
+
+  addSheet(sheet: Omit<DescriptiveSheet, 'idFicheDescriptive'>): Observable<DescriptiveSheet> {
+    const newSheet: DescriptiveSheet = {
       ...sheet,
       idFicheDescriptive: Math.max(...this.mockSheets.map(s => s.idFicheDescriptive)) + 1,
       dateCreation: new Date()
@@ -86,7 +106,7 @@ export class DescriptionSheetService {
     return of(newSheet);
   }
 
-  updateSheet(id: number, sheetData: Partial<DescriptionSheet>): Observable<DescriptionSheet> {
+  updateSheet(id: number, sheetData: Partial<DescriptiveSheet>): Observable<DescriptiveSheet> {
     const index = this.mockSheets.findIndex(s => s.idFicheDescriptive === id);
     if (index !== -1) {
       this.mockSheets[index] = {

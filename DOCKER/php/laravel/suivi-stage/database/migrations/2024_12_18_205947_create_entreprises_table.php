@@ -19,7 +19,7 @@ class CreateEntreprisesTable extends Migration
             $table->increments('idEntreprise');
 
             // Attributs
-            $table->string('numSIRET',14)->unique();
+            $table->string('numSIRET',14)->unique()->nullable();
             $table->string('raisonSociale',100);
             $table->enum('typeEtablissement',['Administration','Association','Entreprise privé','Entreprise public','Mutuelle coopérative','Autre'])->nullable();
             $table->string('adresse',100)->nullable();
