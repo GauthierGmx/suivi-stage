@@ -101,7 +101,5 @@ class FicheDescriptiveController extends Controller
             ], 500);
         }  
     }
-
-    #public fonction show($id){}
 }
 ?>
