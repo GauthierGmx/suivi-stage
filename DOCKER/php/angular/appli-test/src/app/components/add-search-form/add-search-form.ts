@@ -83,17 +83,15 @@ export class AddSearchFormComponent implements OnInit {
 
     ngOnInit() {
         //Récupération des entreprises
-        this.loadCompanies();
+        this.companyService.getCompanies()
+        .subscribe(companies => {
+                this.companies = companies;
+        })
 
         //Récupération du nom de l'entreprise quand elle est sélectionner dans le formulaire
         if (this.selectedCompany) {
             this.searchControl.setValue(this.selectedCompany.raisonSociale, { emitEvent: false });
         }
-    }
-
-    //Récupération des entreprises existantes
-    private loadCompanies() {
-        this.companies = this.companyService.getCompanies();
     }
 
     @HostListener('document:click', ['$event.target'])
@@ -181,7 +179,6 @@ export class AddSearchFormComponent implements OnInit {
         try {
             const newCompany = await this.companyService.addCompany(this.companyForm.value).toPromise();
             if (newCompany) {
-            this.loadCompanies();
             this.searchForm.patchValue({ idEntreprise: newCompany.idEntreprise });
             this.selectedCompany = newCompany;
             this.searchControl.setValue(newCompany.raisonSociale, { emitEvent: false });

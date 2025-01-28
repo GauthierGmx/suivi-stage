@@ -62,19 +62,33 @@ export class SearchesStudentTabComponent implements OnInit {
         });
     }
 
-    private loadUserData(userId: string) {
-        this.studentData = this.studentService.getStudentById(userId);
+    loadUserData(studentId: string) {
+        this.studentService.getStudentById(studentId)
+        .subscribe(student => {
+            this.studentData = student
+        });
+
         if (this.studentData) {
-            this.searches = this.internshipSearchService.getSearchesByStudentId(userId);
+            this.internshipSearchService.getSearchesByStudentId(studentId)
+            .subscribe(searches => {
+                this.searches = searches
+            });
         }
     }
 
     getFilteredSearchesWithCompanies() {
         if (!this.searches) return;
 
-        const searchCompanies = this.companyService.getCompanies().filter(
-            c => this.searches!.some(s => c.idEntreprise === s.idEntreprise)
-        );
+        let searchCompanies: Company[];
+
+        this.companyService.getCompanies()
+        .subscribe(companies => {
+            searchCompanies = companies.filter(
+                c => this.searches!.some(
+                    s => c.idEntreprise === s.idEntreprise
+                )
+            )
+        });
 
         let searchesWithCompany = this.searches.map(search => {
             const company = searchCompanies.find(c => c.idEntreprise === search.idEntreprise);
@@ -88,7 +102,7 @@ export class SearchesStudentTabComponent implements OnInit {
         this.filteredSearchesWithCompany = searchesWithCompany;
     }
 
-    private applyFilters(searches: { search: InternshipSearch; company: Company }[]) {
+    applyFilters(searches: { search: InternshipSearch; company: Company }[]) {
         let filtered = [...searches];
         const searchTermLower = this.searchTerm.toLowerCase().trim();
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { InternshipSearch, SearchStatus } from '../models/internship-search.model';
-import { Observable, of, BehaviorSubject} from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, tap, of, BehaviorSubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -283,37 +284,23 @@ export class InternshipSearchService {
 
   private searchesSubject = new BehaviorSubject<InternshipSearch[]>(this.mockSearches);
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   //Sélection de recherches
-  getSearches() {
-    return this.mockSearches;
+  getSearches(): Observable<InternshipSearch[]> {
+    return of(this.mockSearches);
   }
 
-  getSearchById(id: number) {
-    return this.mockSearches.filter(s => s.idRecherche === id);
+  getSearchById(idSearch: number): Observable<InternshipSearch | undefined> {
+    return of(this.mockSearches.find(s => s.idRecherche === idSearch));
   }
 
-  getSearchesByStudentId(studentId: string) {
-    return this.mockSearches.filter(s => s.idUPPA === studentId);
+  getSearchesByStudentId(studentId: string): Observable<InternshipSearch[]> {
+    return of(this.mockSearches.filter(s => s.idUPPA === studentId));
   }
 
-  getSearchesByStudentIdAndStatut(studentId: string, statut: SearchStatus) {
-    return this.mockSearches.filter(s => s.idUPPA === studentId && s.statut === statut);
-  }
-
-  getStudentSearchStats() {
-    const students = ['3', '4', '5'].map(id => {
-      const studentSearches = this.mockSearches.filter(s => s.idUPPA === id);
-      return {
-        id,
-        studentName: id === '3' ? 'Marie Lambert' : id === '4' ? 'Lucas Martin' : 'Emma Bernard',
-        searchCount: studentSearches.length,
-        lastUpdate: this.getLastUpdateDate(studentSearches),
-        bestStatus: this.getBestStatus(studentSearches)
-      };
-    });
-    return of(students);
+  getSearchesByStudentIdAndStatut(studentId: string, statut: SearchStatus): Observable<InternshipSearch[]> {
+    return of(this.mockSearches.filter(s => s.idUPPA === studentId && s.statut === statut));
   }
 
   //Ajout d'une recherche
@@ -367,22 +354,14 @@ export class InternshipSearchService {
     return of(void 0);
   }
 
-  //Sélection autres
-  private getLastUpdateDate(searches: InternshipSearch[]): Date {
-    if (!searches.length) return new Date();
-    return new Date(Math.max(...searches.map(s => s.dateModification.getTime())));
+  //Log la réponse de l'API
+  private log(response: any) {
+    console.table(response);
   }
 
-  private getBestStatus(searches: InternshipSearch[]): SearchStatus {
-    if (!searches.length) return 'En attente';
-    const statusPriority = {
-      'Validé': 4,
-      'En attente': 3,
-      'Relancé': 2,
-      'Refusé': 1
-    };
-    return searches.reduce((best, current) => 
-      statusPriority[current.statut] > statusPriority[best.statut] ? current : best
-    ).statut;
+  //Retourne l'erreur en cas de problème avec l'API
+  private handleError(error: Error, errorValue: any) {
+    console.error(error);
+    return of(errorValue);
   }
 } 

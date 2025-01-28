@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Company } from '../models/company.model';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompanyService {
-  private readonly mockEnterprises: Company[] = [
+  private readonly mockCompanies: Company[] = [
     {
       idEntreprise: 1,
       numSiret: '12345678901234',
@@ -315,17 +316,19 @@ export class CompanyService {
     }
   ];
 
-  getCompanies() {
-    return this.mockEnterprises;
+  constructor(private http: HttpClient) {}
+
+  getCompanies(): Observable<Company[]> {
+    return of(this.mockCompanies);
   }
 
-  getCompanyById(id: number) {
-    return this.mockEnterprises.find(enterprise => enterprise.idEntreprise === id);
+  getCompanyById(idCompany: number): Observable<Company | undefined> {
+    return of(this.mockCompanies.find(enterprise => enterprise.idEntreprise === idCompany));
   }
 
   addCompany(enterprise: Partial<Company>): Observable<Company> {
     const newEnterprise: Company = {
-      idEntreprise: this.mockEnterprises.length + 1,
+      idEntreprise: this.mockCompanies.length + 1,
       numSiret: '00000000000000',
       raisonSociale: '',
       typeEtablissement: 'Siège social',
@@ -343,7 +346,18 @@ export class CompanyService {
       ...enterprise
     };
     
-    this.mockEnterprises.push(newEnterprise);
+    this.mockCompanies.push(newEnterprise);
     return of(newEnterprise);
   }
+
+  //Log la réponse de l'API
+  private log(response: any) {
+    console.table(response);
+  }
+
+  //Retourne l'erreur en cas de problème avec l'API
+  private handleError(error: Error, errorValue: any) {
+    console.error(error);
+    return of(errorValue);
+  }   
 } 
