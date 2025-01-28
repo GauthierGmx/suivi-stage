@@ -15,7 +15,12 @@ export class AuthService {
     private readonly router: Router,
     private readonly studentService: StudentService,
     private readonly staffService: StaffService
-  ) {}
+  ) {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      this.currentUser = JSON.parse(savedUser);
+    }
+  }
 
   login(email: string, password: string) {
     // Pour le test, on accepte n'importe quel mot de passe
@@ -30,6 +35,7 @@ export class AuthService {
     }
     
     if (this.currentUser) {
+      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
       this.router.navigate(['/dashboard']);
       return true;
     }
@@ -37,6 +43,7 @@ export class AuthService {
   }
 
   logout(): void {
+    localStorage.removeItem('currentUser');
     this.currentUser = undefined;
     this.router.navigate(['/login']);
   }
