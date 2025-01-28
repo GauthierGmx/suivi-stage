@@ -1,0 +1,252 @@
+<div class="container">
+    <div class="content-wrapper">
+      <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" class="form">
+        <div class="form-grid">
+          <!-- Type de contact et Date 1er contact -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="typeContact">Type de contact</label>
+              <select formControlName="typeContact">
+                <option value="Courrier">Courrier</option>
+                <option value="Mail">Mail</option>
+                <option value="Présentiel">Présentiel</option>
+                <option value="Téléphone">Téléphone</option>
+                <option value="Site de recrutement">Site de recrutement</option>
+              </select>
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="date1erContact">Date 1er contact</label>
+              <input type="date" formControlName="date1erContact">
+            </div>
+          </div>
+  
+          <!-- Nom de l'entreprise -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <div class="label-wrapper">
+                <label for="nomEntreprise">Nom de l'entreprise</label>
+                  <button type="button" (click)="openCompanyForm()" class="add-button">
+                    + Nouvelle entreprise
+                  </button>
+              </div>
+              <div class="search-wrapper">
+                <input
+                  type="text"
+                  [formControl]="searchControl"
+                  placeholder="Rechercher une entreprise..."
+                  (focus)="showDropdown = true"
+                >
+                @if (showDropdown && filteredCompanies.length > 0) {
+                  <div class="dropdown">
+                    @for (enterprise of filteredCompanies; track enterprise.idEntreprise) {
+                      <div
+                        class="dropdown-item"
+                        (click)="selectCompany(enterprise)"
+                      >
+                        {{ enterprise.raisonSociale }}
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+  
+          <!-- Adresse -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="adresse">Adresse - Numéro et Rue</label>
+              <input 
+                type="text" 
+                [value]="selectedCompany?.adresse || ''"
+                disabled
+              >
+            </div>
+          </div>
+  
+          <!-- Code Postal et Ville -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="codePostal">Code Postal</label>
+              <input 
+                type="text" 
+                [value]="selectedCompany?.codePostal || ''"
+                disabled
+              >
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="ville">Ville</label>
+              <input 
+                type="text" 
+                [value]="selectedCompany?.ville || ''"
+                disabled
+              >
+            </div>
+          </div>
+  
+          <!-- Contact -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="nomPrenomContact">Nom du contact</label>
+              <input type="text" formControlName="nomPrenomContact">
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="fonctionContact">Fonction du contact</label>
+              <input type="text" formControlName="fonctionContact">
+            </div>
+          </div>
+  
+          <!-- Téléphone et Mail -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="telContact">Téléphone</label>
+              <input type="tel" formControlName="telContact">
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="mailContact">Email</label>
+              <input type="email" formControlName="mailContact">
+            </div>
+          </div>
+        </div>
+  
+        <!-- Statut -->
+        <div class="status-section">
+          <label for="statut">Statut recherche</label>
+          <div class="status-buttons">
+            <button 
+              type="button"
+              [class]="getStatusButtonClass('Refusé', 'first')"
+              (click)="setStatus('Refusé')"
+            >
+              Refusé
+            </button>
+            <button 
+              type="button"
+              [class]="getStatusButtonClass('En attente', 'middle')"
+              (click)="setStatus('En attente')"
+            >
+              En attente
+            </button>
+            <button 
+              type="button"
+              [class]="getStatusButtonClass('Relancé', 'middle')"
+              (click)="setStatus('Relancé')"
+            >
+              Relancé
+            </button>
+            <button 
+              type="button"
+              [class]="getStatusButtonClass('Validé', 'last')"
+              (click)="setStatus('Validé')"
+            >
+              Accepté
+            </button>
+          </div>
+        </div>
+  
+        <!-- Observations -->
+        <div class="observations-section">
+          <label for="observations">Observations</label>
+          <textarea 
+            formControlName="observations"
+            rows="4"
+            placeholder="Ajoutez vos observations ici..."
+          ></textarea>
+        </div>
+  
+        <!-- Boutons d'action -->
+        <div class="action-buttons">
+          <button 
+            type="button"
+            class="cancel-button"
+            (click)="onCancel()"
+          >
+            Annuler
+          </button>
+          <button 
+            type="submit"
+            class="submit-button"
+            [disabled]="!searchForm.valid"
+          >
+            Ajouter
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Modale de création d'entreprise -->
+  @if (showCompanyModal) {
+    <div class="modal-overlay">
+      <div class="modal">
+        <h3 class="modal-title">Nouvelle entreprise</h3>
+        
+        <form [formGroup]="companyForm" (ngSubmit)="createCompany()" class="enterprise-form">
+          <div class="form-group">
+            <label class="title" for="raisonSociale">Raison sociale</label>
+            <input 
+              type="text"
+              formControlName="raisonSociale"
+              placeholder="Nom de l'entreprise"
+            >
+          </div>
+  
+          <div class="form-group">
+            <label class="title" for="adresse">Numéro et rue</label>
+            <input 
+              type="text"
+              formControlName="adresse"
+              placeholder="12 rue de l'exemple"
+            >
+          </div>
+  
+          <div class="form-group">
+            <label class="title" for="codePostal">Code postal</label>
+            <input 
+              type="text"
+              formControlName="codePostal"
+              placeholder="64000"
+            >
+          </div>
+  
+          <div class="form-group">
+            <label class="title" for="ville">Ville</label>
+            <input 
+              type="text"
+              formControlName="ville"
+              placeholder="Pau"
+            >
+          </div>
+  
+          <div class="modal-buttons">
+            <button 
+              type="button"
+              (click)="showCompanyModal = false"
+              class="cancel-button"
+            >
+              Annuler
+            </button>
+            <button 
+              type="submit"
+              class="submit-button"
+              [disabled]="!companyForm.valid"
+            >
+              Créer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  } 

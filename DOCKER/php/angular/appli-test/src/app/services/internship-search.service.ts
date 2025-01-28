@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, BehaviorSubject} from 'rxjs';
 import { InternshipSearch, SearchStatus } from '../models/internship-search.model';
-import { CompanyService } from './company.service';
-import { StudentService } from './student.service';
+import { Observable, of, BehaviorSubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -285,10 +283,7 @@ export class InternshipSearchService {
 
   private searchesSubject = new BehaviorSubject<InternshipSearch[]>(this.mockSearches);
 
-  constructor(
-    private readonly enterpriseService: CompanyService,
-    private readonly studentService: StudentService
-  ) {}
+  constructor() {}
 
   //Sélection de recherches
   getSearches() {

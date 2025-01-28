@@ -323,7 +323,7 @@ export class CompanyService {
     return this.mockEnterprises.find(enterprise => enterprise.idEntreprise === id);
   }
 
-  addEnterprise(enterprise: Partial<Company>): Observable<Company> {
+  addCompany(enterprise: Partial<Company>): Observable<Company> {
     const newEnterprise: Company = {
       idEntreprise: this.mockEnterprises.length + 1,
       numSiret: '00000000000000',
