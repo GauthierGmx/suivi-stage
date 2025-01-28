@@ -20,7 +20,7 @@ class FicheDescriptiveController extends Controller
     {
         try{
             $validatedData = $request->validate([
-                'dateCreation' => 'bail|required|date',
+                'dateCreation' => 'bail|required|date|date-format:Y-m-d',
                 'dateDerniereModification' => 'bail|required|date',
                 'contenuStage' => 'bail|required|string',
                 'thematique' => 'bail|required|string',
@@ -37,8 +37,8 @@ class FicheDescriptiveController extends Controller
                 'statut' => 'bail|required|string',
                 'numeroConvention' => 'bail|required|string',
                 'interruptionStage' => 'bail|required|boolean',
-                'dateDebutInterruption' => 'nullable|date',
-                'dateFinInterruption' => 'nullable|date',
+                'dateDebutInterruption' => 'nullable|date|date-format:Y-m-d',
+                'dateFinInterruption' => 'nullable|date|date-format:Y-m-d',
                 'personnelTechniqueDisponible' => 'bail|required|boolean',
                 'materielPrete' => 'bail|required|string',
                 'idEntreprise' => 'bail|required|integer',
