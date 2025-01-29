@@ -1,36 +1,57 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Staff } from '../models/staff.model';
-import { Student } from '../models/student.model';
+import { firstValueFrom } from 'rxjs';
 import { StudentService } from './student.service';
 import { StaffService } from './staff.service';
+import { Student } from '../models/student.model';
+import { Staff } from '../models/staff.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  currentUser?: Student | Staff;;
+  currentUser?: Student | Staff;
+  private students: Student[] = [];
+  private staffs: Staff[] = [];
+  private isInitialized = false;
 
   constructor(
     private readonly router: Router,
     private readonly studentService: StudentService,
     private readonly staffService: StaffService
-  ) {}
+  ) {
+    // Initialiser les données au démarrage du service
+    this.initializeData();
+  }
 
-  login(email: string, password: string) {
-    // Pour le test, on accepte n'importe quel mot de passe
-    this.currentUser = this.staffService.getStaffs().find(s =>
-      s.adresseMail === email
-    );
+  private async initializeData() {
+    // Charger les données de manière synchrone
+    const [students, staffs] = await Promise.all([
+      firstValueFrom(this.studentService.getStudents()),
+      firstValueFrom(this.staffService.getStaffs())
+    ]);
 
+    this.students = students || [];
+    this.staffs = staffs || [];
+    this.isInitialized = true;
+  }
+
+  async login(email: string, password: string): Promise<boolean> {
+    // Attendre que les données soient chargées
+    if (!this.isInitialized) {
+      await this.initializeData();
+    }
+
+    // Rechercher d'abord dans le personnel
+    this.currentUser = this.staffs.find(s => s.adresseMail === email);
+
+    // Si non trouvé, rechercher dans les étudiants
     if (!this.currentUser) {
-      this.currentUser = this.studentService.getStudents().find(s =>
-        s.adresseMailEtudiant === email
-      );
+      this.currentUser = this.students.find(s => s.adresseMailEtudiant === email);
     }
     
     if (this.currentUser) {
-      this.router.navigate(['/dashboard']);
+      await this.router.navigate(['/dashboard']);
       return true;
     }
     return false;
@@ -42,16 +63,10 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    if (this.currentUser) {
-      return true;
-    }
-    return false;
+    return !!this.currentUser;
   }
 
-  getCurrentUser() {
-    if (this.currentUser) {
-      return this.currentUser;
-    }
-    return undefined;
+  getCurrentUser(): Student | Staff | undefined {
+    return this.currentUser;
   }
 }
