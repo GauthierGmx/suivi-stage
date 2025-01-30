@@ -1,18 +1,19 @@
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem 1.5rem;
+    padding: 1rem;
 }
 
 .content-wrapper {
     max-width: 1024px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .form {
     background-color: white;
     border-radius: 0.5rem;
-    padding: 2rem;
+    padding: 1.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 1;
@@ -20,19 +21,24 @@
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    margin-bottom: 2rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    width: 100%;
 }
 
 .input-wrapper {
-    width: 75%;
+    width: 100%;
+}
+
+.fonction-contact-group {
+    width: 100%;
+    max-width: 100%;
 }
 
 label {
@@ -64,8 +70,14 @@ input:disabled {
 
 .label-wrapper {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Modification ici pour l'alignement du label et du bouton */
+.label-wrapper label {
+    margin-bottom: 0;
 }
 
 .add-button {
@@ -74,6 +86,8 @@ input:disabled {
     background: none;
     border: none;
     cursor: pointer;
+    padding: 0.25rem 0;
+    white-space: nowrap;
 }
 
 .search-wrapper {
@@ -89,7 +103,7 @@ input:disabled {
     margin-top: 0.25rem;
     max-height: 15rem;
     overflow-y: auto;
-    z-index: 1;
+    z-index: 10;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
@@ -103,23 +117,21 @@ input:disabled {
 }
 
 .status-section {
-    margin: 2rem 0;
+    margin: 1.5rem 0;
 }
 
 .status-buttons {
-    display: inline-flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
 }
 
 .status-buttons button {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
     font-size: 0.875rem;
     font-weight: 500;
     transition: all 0.2s;
-    width: 9rem;
-}
-
-.observations-section {
-    margin-bottom: 2rem;
+    width: 100%;
 }
 
 textarea {
@@ -129,25 +141,28 @@ textarea {
 
 .action-buttons {
     display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding-top: 2rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
+}
+
+.cancel-button, .submit-button {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
 }
 
 .cancel-button {
-    padding: 0.5rem 2rem;
     border: 2px solid #E5E7EB;
-    border-radius: 0.375rem;
     background: white;
     color: #374151;
 }
 
 .submit-button {
-    padding: 0.5rem 2rem;
     background-color: #2563EB;
     color: white;
     border: none;
-    border-radius: 0.375rem;
 }
 
 .submit-button:disabled {
@@ -163,36 +178,33 @@ textarea {
     align-items: center;
     justify-content: center;
     z-index: 50;
+    padding: 1rem;
 }
 
 .modal {
     background: white;
     border-radius: 0.5rem;
-    padding: 1.5rem;
+    padding: 1.25rem;
     width: 100%;
     max-width: 28rem;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: #111827;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
 .enterprise-form .form-group {
     margin-bottom: 1rem;
-    align-items: flex-start;
-}
-
-.enterprise-form label {
-    text-align: left;
-    width: 100%;
 }
 
 .modal-buttons {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
     gap: 0.75rem;
     margin-top: 1.5rem;
 }
@@ -215,4 +227,69 @@ textarea {
 .status-button-accepted {
     background-color: #DCFCE7;
     color: #166534;
+}
+
+@media (min-width: 0px) {
+    .label-wrapper {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+@media (min-width: 640px) {
+    .status-buttons {
+        display: inline-flex;
+        width: auto;
+    }
+
+    .status-buttons button {
+        width: 9rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .action-buttons {
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 1rem;
+        padding-top: 2rem;
+    }
+
+    .cancel-button, .submit-button {
+        width: auto;
+        padding: 0.5rem 2rem;
+    }
+
+    .modal {
+        padding: 1.5rem;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-buttons {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+}  
+
+@media (min-width: 768px) {
+    .container {
+        padding: 2rem 1.5rem;
+    }
+
+    .form {
+        padding: 2rem;
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .fonction-contact-group {
+        width: calc((100% - 2rem) / 2);
+    }
 }

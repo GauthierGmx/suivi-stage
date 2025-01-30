@@ -9,7 +9,7 @@ import { Observable, catchError, tap, of } from 'rxjs';
 export class StudentService {
   private readonly mockStudents: Student[] = [
     {
-      idUPPA: 'ETU12345',
+      idUPPA: '610123',
       nomEtudiant: 'Dupont',
       prenomEtudiant: 'Jean',
       adresseEtudiant: '12 rue des Lilas',

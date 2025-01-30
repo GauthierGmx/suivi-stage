@@ -1,3 +1,26 @@
+/* Réinitialisation des styles de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* Styles du header */
 header {
     background-color: #0A63A4;
     color: white;
@@ -24,6 +47,11 @@ header {
 
 .logo-link {
     cursor: pointer;
+}
+
+.logo-link img {
+    max-width: 150px;
+    height: auto;
 }
 
 .main-nav {
@@ -98,6 +126,27 @@ header {
     border-bottom: 1px solid #E5E7EB;
 }
 
+.mobile-nav {
+    display: none;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.mobile-nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    transition: background-color 0.2s;
+}
+
+.mobile-nav-link:hover {
+    background-color: #F3F4F6;
+}
+
+.mobile-nav-link.active-link {
+    color: #0A63A4;
+    font-weight: 500;
+}
+
 .logout-button {
     width: 100%;
     text-align: left;
@@ -108,4 +157,59 @@ header {
 
 .logout-button:hover {
     background-color: #F3F4F6;
+}
+
+/* Media Queries */
+@media screen and (max-width: 1024px) {
+    .nav-link {
+        font-size: 16px;
+    }
+    
+    .logo-link img {
+        max-width: 120px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header-content {
+        padding: 0.5rem 0;
+    }
+
+    .logo-section {
+        width: auto;
+    }
+
+    .logo-link img {
+        max-width: 100px;
+    }
+
+    .main-nav {
+        display: none;
+    }
+
+    .mobile-nav {
+        display: block;
+    }
+
+    .profile-section {
+        width: auto;
+    }
+
+    .dropdown-menu {
+        right: -1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .header-container {
+        padding: 0 0.5rem;
+    }
+
+    .logo-link img {
+        max-width: 80px;
+    }
+
+    .dropdown-menu {
+        width: 10rem;
+    }
 }

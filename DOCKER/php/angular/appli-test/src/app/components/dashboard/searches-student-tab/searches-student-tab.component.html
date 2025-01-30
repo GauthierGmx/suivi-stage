@@ -1,4 +1,5 @@
-<div class="content-box">
+<div *ngIf="!dataLoaded">Chargement en cours...</div>
+<div *ngIf="dataLoaded" class="content-box">
   
   @if (currentUserRole === 'STUDENT' && currentPageUrl === '/dashboard') {
     <div class="titleAndAddSearchButton">

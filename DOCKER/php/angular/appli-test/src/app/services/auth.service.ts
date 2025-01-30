@@ -51,6 +51,7 @@ export class AuthService {
     }
     
     if (this.currentUser) {
+      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
       await this.router.navigate(['/dashboard']);
       return true;
     }

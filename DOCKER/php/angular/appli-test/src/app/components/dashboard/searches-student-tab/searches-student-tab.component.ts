@@ -10,7 +10,7 @@ import { NavigationService } from '../../../services/navigation.service';
 import { StudentService } from '../../../services/student.service';
 import { CompanyService } from '../../../services/company.service';
 import { AppComponent } from '../../../app.component';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-searches-student-tab',
@@ -25,11 +25,13 @@ export class SearchesStudentTabComponent implements OnInit {
     currentUserRole!: string;
     currentPageUrl!: string;
     studentData?: Student;
+    companies?: Company[];
     searches?: InternshipSearch[];
     searchTerm: string = '';
     searchTermSubject = new Subject<string>();
     filteredSearchesWithCompany: { search: InternshipSearch; company: Company }[] = [];
     currentFilter: 'all' | 'waiting' | 'validated' | 'date_asc' | 'date_desc' = 'all';
+    dataLoaded: boolean = false;
 
     constructor(
         private readonly internshipSearchService: InternshipSearchService,
@@ -51,8 +53,7 @@ export class SearchesStudentTabComponent implements OnInit {
             this.currentUserRole = 'INTERNSHIP_MANAGER';
         }
 
-        this.loadUserData(this.currentUserId);
-        this.getFilteredSearchesWithCompanies();
+        this.loadData(this.currentUserId);
 
         this.searchTermSubject.pipe(
             debounceTime(800),
@@ -62,44 +63,46 @@ export class SearchesStudentTabComponent implements OnInit {
         });
     }
 
-    loadUserData(studentId: string) {
+    loadData(studentId: string) {
         this.studentService.getStudentById(studentId)
         .subscribe(student => {
-            this.studentData = student
-        });
+            this.studentData = student;
 
-        if (this.studentData) {
-            this.internshipSearchService.getSearchesByStudentId(studentId)
-            .subscribe(searches => {
-                this.searches = searches
+            // Attendre que les trois requêtes soient complètes
+            forkJoin({
+                companies: this.companyService.getCompanies(),
+                searches: this.internshipSearchService.getSearchesByStudentId(studentId)
+            }).subscribe(({ companies, searches }) => {
+                this.companies = companies;
+                this.searches = searches;
+
+                this.getFilteredSearchesWithCompanies();
+
+                this.dataLoaded = true;
             });
-        }
+        });
     }
 
     getFilteredSearchesWithCompanies() {
-        if (!this.searches) return;
-
-        let searchCompanies: Company[];
-
-        this.companyService.getCompanies()
-        .subscribe(companies => {
-            searchCompanies = companies.filter(
+        if (this.companies && this.searches) {
+    
+            let searchCompanies: Company[] = this.companies.filter(
                 c => this.searches!.some(
                     s => c.idEntreprise === s.idEntreprise
                 )
-            )
-        });
-
-        let searchesWithCompany = this.searches.map(search => {
-            const company = searchCompanies.find(c => c.idEntreprise === search.idEntreprise);
-            return company ? { search, company } : null;
-        }).filter((result): result is { search: InternshipSearch; company: Company } => result !== null);
-
-        // Appliquer les filtres
-        searchesWithCompany = this.applyFilters(searchesWithCompany);
-        
-        // Mettre à jour la propriété qui déclenche la mise à jour du template
-        this.filteredSearchesWithCompany = searchesWithCompany;
+            );
+    
+            let searchesWithCompany = this.searches.map(search => {
+                const company = searchCompanies.find(c => c.idEntreprise === search.idEntreprise);
+                return company ? { search, company } : null;
+            }).filter((result): result is { search: InternshipSearch; company: Company } => result !== null);
+    
+            // Appliquer les filtres
+            searchesWithCompany = this.applyFilters(searchesWithCompany);
+    
+            // Mettre à jour la propriété qui déclenche la mise à jour du template
+            this.filteredSearchesWithCompany = searchesWithCompany;
+        }
     }
 
     applyFilters(searches: { search: InternshipSearch; company: Company }[]) {
@@ -118,7 +121,7 @@ export class SearchesStudentTabComponent implements OnInit {
         // Appliquer les filtres de statut et de tri
         switch (this.currentFilter) {
             case 'waiting':
-                filtered = filtered.filter(s => s.search.statut === 'En attente');
+                filtered = filtered.filter(s => s.search.statut === 'En cours');
                 break;
             case 'validated':
                 filtered = filtered.filter(s => s.search.statut === 'Validé');
@@ -169,7 +172,7 @@ export class SearchesStudentTabComponent implements OnInit {
         const labels: Record<SearchStatus, string> = {
             'Relancé': 'Relancé',
             'Validé': 'Validé',
-            'En attente': 'En attente',
+            'En cours': 'En attente',
             'Refusé': 'Refusé'
         };
         return labels[status];
@@ -179,7 +182,7 @@ export class SearchesStudentTabComponent implements OnInit {
         const statusMap: Record<string, string> = {
             'Relancé': 'status-badge relance',
             'Validé': 'status-badge valide',
-            'En attente': 'status-badge en-attente',
+            'En cours': 'status-badge en-attente',
             'Refusé': 'status-badge refuse'
         };
         return statusMap[status] || 'status-badge';
