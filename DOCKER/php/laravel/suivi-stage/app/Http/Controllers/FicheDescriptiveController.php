@@ -113,7 +113,60 @@ class FicheDescriptiveController extends Controller
      */
     public function update(Request $request, $id){
         try{
-            
+            $validatedData = $request->validate([
+                'dateCreation' => 'bail|required|date|date-format:Y-m-d',
+                'dateDerniereModification' => 'bail|required|date|date-format:Y-m-d',
+                'contenuStage' => 'nullable|string',
+                'thematique' => 'nullable|string',
+                'sujet' => 'nullable|string',
+                'fonctions' => 'nullable|string',
+                'taches' => 'nullable|string',
+                'competences' => 'nullable|string',
+                'details' => 'nullable|string',
+                'debutStage' => 'nullable|date|date-format:Y-m-d',
+                'finStage' => 'nullable|date|date-format:Y-m-d',
+                'nbJourSemaine' => 'nullable|integer',
+                'nbHeureSemaine' => 'nullable|integer',
+                'clauseConfidentialite' => 'nullable|boolean',
+                'statut' => 'bail|required|string|in:En cours,Validee,Refusée',
+                'numeroConvention' => 'nullable|string',
+                'interruptionStage' => 'nullable|boolean',
+                'dateDebutInterruption' => 'nullable|date|date-format:Y-m-d',
+                'dateFinInterruption' => 'nullable|date|date-format:Y-m-d',
+                'personnelTechniqueDisponible' => 'nullable||boolean',
+                'materielPrete' => 'nullable|string',
+                'idEntreprise' => 'bail|required|integer',
+                'idTuteurEntreprise' => 'bail|required|integer',
+                'idUPPA' => 'bail|required|integer'
+            ]);
+
+            // Récupération et mise à jour en une seule ligne
+            FicheDescriptive::findOrFail($id)->update($validatedData);
+
+            reponse()->json([
+                'message' => 'Fiche Descriptive mise à jour avec succès.'
+            ], 201);
+        }
+        catch (\Illuminate\Validation\ValidationException $e)
+        {
+            return response()->json([
+                'message' => 'Erreur de validation dans les données',
+                'erreurs' => $e->errors()
+            ], 422);
+        }
+        catch (\Illuminate\Database\QueryException $e)
+        {
+            return response()->json([
+                'message' => 'Erreur dans la base de données',
+                'erreurs' => $e->getMessage()
+            ], 500);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite :',
+                'erreurs' => $e->getMessage()
+            ], 500);
         }
     }
 }
