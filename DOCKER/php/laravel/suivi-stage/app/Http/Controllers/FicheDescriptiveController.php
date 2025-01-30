@@ -41,40 +41,40 @@ class FicheDescriptiveController extends Controller
                 'dateFinInterruption' => 'nullable|date|date-format:Y-m-d',
                 'personnelTechniqueDisponible' => 'nullable||boolean',
                 'materielPrete' => 'nullable|string',
-                'idEntreprise' => 'nullable|integer',
-                'idTuteurEntreprise' => 'nullable|integer',
-                'idUPPA' => 'nullable|integer'
+                'idEntreprise' => 'bail|required|integer',
+                'idTuteurEntreprise' => 'bail|required|integer',
+                'idUPPA' => 'bail|required|integer'
             ]);
 
             $uneFicheDescriptive = FicheDescriptive::create([
                 'dateCreation' => $validatedData['dateCreation'],
                 'dateDerniereModification' => $validatedData['dateDerniereModification'],
-                'contenuStage' => $validatedData['contenuStage'],
-                'thematique' => $validatedData['thematique'],
-                'sujet' => $validatedData['sujet'],
-                'fonctions' => $validatedData['fonctions'],
-                'taches' => $validatedData['taches'],
-                'competences' => $validatedData['competences'],
-                'details' => $validatedData['details'],
-                'debutStage' => $validatedData['debutStage'],
-                'finStage' => $validatedData['finStage'],
-                'nbJourSemaine' => $validatedData['nbJourSemaine'],
-                'nbHeureSemaine' => $validatedData['nbHeureSemaine'],
-                'clauseConfidentialite' => $validatedData['clauseConfidentialite'],
+                'contenuStage' => $validatedData['contenuStage'] ?? null,
+                'thematique' => $validatedData['thematique']?? null,
+                'sujet' => $validatedData['sujet']?? null,
+                'fonctions' => $validatedData['fonctions']?? null,
+                'taches' => $validatedData['taches']?? null,
+                'competences' => $validatedData['competences']?? null,
+                'details' => $validatedData['details']?? null,
+                'debutStage' => $validatedData['debutStage']?? null,
+                'finStage' => $validatedData['finStage']?? null,
+                'nbJourSemaine' => $validatedData['nbJourSemaine']?? null,
+                'nbHeureSemaine' => $validatedData['nbHeureSemaine']?? null,
+                'clauseConfidentialite' => $validatedData['clauseConfidentialite']?? null,
                 'statut' => $validatedData['statut'],
-                'numeroConvention' => $validatedData['numeroConvention'],
-                'interruptionStage' => $validatedData['interruptionStage'],
+                'numeroConvention' => $validatedData['numeroConvention']?? null,
+                'interruptionStage' => $validatedData['interruptionStage']?? null,
                 'dateDebutInterruption' => $validatedData['dateDebutInterruption'] ?? null,
                 'dateFinInterruption' => $validatedData['dateFinInterruption'] ?? null,
-                'personnelTechniqueDisponible' => $validatedData['personnelTechniqueDisponible'],
-                'materielPrete' => $validatedData['materielPrete'],
+                'personnelTechniqueDisponible' => $validatedData['personnelTechniqueDisponible']?? null,
+                'materielPrete' => $validatedData['materielPrete']?? null,
                 'idEntreprise' => $validatedData['idEntreprise'],
                 'idTuteurEntreprise' => $validatedData['idTuteurEntreprise'],
                 'idUPPA' => $validatedData['idUPPA']
             ]);
 
             return response()->json([
-                'message' => 'Données enregistrées avec succès.',
+                'message' => 'Fiche Descriptive créée avec succès.',
                 'ficheDescriptive' => $uneFicheDescriptive
             ], 201);
 
@@ -82,7 +82,7 @@ class FicheDescriptiveController extends Controller
         catch (\Illuminate\Validation\ValidationException $e)
         {
             return response()->json([
-                'message' => 'Erreur de validation dans les données',
+                'message' => 'Erreur dans les données de la Fiche Descriptive',
                 'erreurs' => $e->errors()
             ], 422);
         }
