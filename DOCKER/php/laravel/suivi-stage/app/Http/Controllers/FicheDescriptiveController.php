@@ -101,5 +101,20 @@ class FicheDescriptiveController extends Controller
             ], 500);
         }  
     }
+
+    /**
+     * Met à jour les données d'une fiche descriptive
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Database\QueryException
+     * @throws \Exception
+     */
+    public function update(Request $request, $id){
+        try{
+            
+        }
+    }
 }
 ?>
