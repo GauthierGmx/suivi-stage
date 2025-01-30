@@ -2,8 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// Import du contrôleur
 use App\Http\Controllers\RechercheStageController;
 use App\Http\Controllers\EntrepriseController;
+use App\Http\Controllers\FicheDescriptiveController; 
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +31,8 @@ Route::post('/recherches-stages/create', [RechercheStageController::class, 'stor
 Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
 Route::post('/entreprises/create', [EntrepriseController::class, 'store'])->name('entreprises.store');
 Route::get('/entreprises/{id}', [EntrepriseController::class, 'show'])->name('entreprises.show');
+
+
+// Route pour récupérer les données du formulaire d'une fiche descriptive au format JSON
+Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.create');
+
