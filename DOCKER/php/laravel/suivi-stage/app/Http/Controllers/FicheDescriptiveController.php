@@ -21,7 +21,7 @@ class FicheDescriptiveController extends Controller
         try{
             $validatedData = $request->validate([
                 'dateCreation' => 'bail|required|date|date-format:Y-m-d',
-                'dateDerniereModification' => 'bail|required|date',
+                'dateDerniereModification' => 'bail|required|date|date-format:Y-m-d',
                 'contenuStage' => 'nullable|string',
                 'thematique' => 'nullable|string',
                 'sujet' => 'nullable|string',
@@ -34,7 +34,7 @@ class FicheDescriptiveController extends Controller
                 'nbJourSemaine' => 'nullable|integer',
                 'nbHeureSemaine' => 'nullable|integer',
                 'clauseConfidentialite' => 'nullable|boolean',
-                'statut' => 'nullable|string|in:En cours,Validee,Refusée',
+                'statut' => 'bail|required|string|in:En cours,Validee,Refusée',
                 'numeroConvention' => 'nullable|string',
                 'interruptionStage' => 'nullable|boolean',
                 'dateDebutInterruption' => 'nullable|date|date-format:Y-m-d',
@@ -82,7 +82,7 @@ class FicheDescriptiveController extends Controller
         catch (\Illuminate\Validation\ValidationException $e)
         {
             return response()->json([
-                'message' => 'Erreur dans les données de la Fiche Descriptive',
+                'message' => 'Erreur de validation dans les données',
                 'erreurs' => $e->errors()
             ], 422);
         }
