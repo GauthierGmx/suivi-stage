@@ -1,17 +1,27 @@
-<div class="content-box">
+<div *ngIf="!dataLoaded">Chargement en cours...</div>
+<div *ngIf="dataLoaded" class="content-box">
   
   @if (currentUserRole === 'STUDENT' && currentPageUrl === '/dashboard') {
+    <div class="titleAndAddSearchButton">
+      <h3><b>Recherches de stage</b></h3>
+      <button
+        (click)="goToAddSearchFormView()"
+      >
+        Ajouter une recherche
+      </button>
+    </div>
     <div class="searchBarAndfilters">
       <div class="search-container">
         <input 
-          type="text" 
-          [(ngModel)]="searchTerm"
+          type="text"
+          [(ngModel)] = 'searchTerm'
+          (input)="onSearchTermChange($event)"
           placeholder="Rechercher une entreprise, une ville, un statut..." 
           class="search-input"
-        >
+        />
         @if (searchTerm) {
           <button 
-            (click)="searchTerm = ''"
+            (click)="clearSearchTerm()"
             class="clear-button"
           >
             <svg class="icon" viewBox="0 0 20 20">
@@ -77,8 +87,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let result of searchesWithCompany">
-            <td>{{ result.company.raisonSociale }}</td>
+          <tr *ngFor="let result of filteredSearchesWithCompany">
+            <td class="firstTd">{{ result.company.raisonSociale }}</td>
             <td>{{ result.company.ville }}</td>
             <td>{{ result.search.dateCreation| date:'dd/MM/yyyy' }}</td>
             <td>{{ result.search.dateModification | date:'dd/MM/yyyy' }}</td>
@@ -87,10 +97,10 @@
                 {{ getStatusLabel(result.search.statut) }}
               </span>
             </td>
-            <td>
+            <td class="lastTd">
               <button 
                 class="view-button"
-                (click)="viewSearchDetails(result.search.idEntreprise)"
+                (click)="viewSearchDetails(result.search.idRecherche)"
               >
                 <svg class="icon" viewBox="0 0 24 24">
                   <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

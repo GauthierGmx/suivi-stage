@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Staff } from '../../../models/staff.model';
 import { Student } from '../../../models/student.model';
-import { SearchStatus } from '../../../models/internship-search.model';
-import { SheetStatus } from '../../../models/description-sheet.model';
+import { InternshipSearch, SearchStatus } from '../../../models/internship-search.model';
+import { DescriptiveSheet, SheetStatus } from '../../../models/description-sheet.model';
 import { NavigationService } from '../../../services/navigation.service';
 import { StudentService } from '../../../services/student.service';
 import { InternshipSearchService } from '../../../services/internship-search.service';
@@ -26,6 +26,9 @@ export class StatsCardsComponent implements OnInit {
   currentUserId!: string;
   currentUserRole!: string;
   currentPageUrl!: string;
+  students!: Student[];
+  searches!: InternshipSearch[];
+  descriptiveSheets!: DescriptiveSheet[];
 
   constructor(
     private navigationService: NavigationService,
@@ -47,15 +50,30 @@ export class StatsCardsComponent implements OnInit {
       this.currentUserId = `${this.currentUser.idPersonnel}`;
       this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
+
+    this.studentService.getStudents()
+    .subscribe(students => {
+      this.students = students
+    });
+
+    this.internshipSearchService.getSearches()
+    .subscribe(searches => {
+      this.searches = searches
+    });
+
+    this.descriptiveSheetService.getSheets()
+    .subscribe(sheets => {
+      this.descriptiveSheets = sheets
+    });
   }
 
   countStudents() {
-    return this.studentService.getStudents().length;
+    return this.students.length;
   }
 
   countStudentsWithValidedSearch() {
-    return this.studentService.getStudents().filter(student =>
-      this.internshipSearchService.getSearches().some(
+    return this.students.filter(student =>
+      this.searches.some(
         search =>
           search.idUPPA === student.idUPPA &&
           search.statut === VALIDED_INTERNSHIP_SEARCH_STATUT
@@ -63,22 +81,22 @@ export class StatsCardsComponent implements OnInit {
   }
 
   countStudentWithoutSearch() {
-    return this.studentService.getStudents().filter(student =>
-      !this.internshipSearchService.getSearches().some(
+    return this.students.filter(student =>
+      !this.searches.some(
         search => search.idUPPA === student.idUPPA
       )).length;
   }
 
   countStudentWithoutSheet() {
-    return this.studentService.getStudents().filter(student =>
-      !this.descriptiveSheetService.getSheets().some(
+    return this.students.filter(student =>
+      !this.descriptiveSheets.some(
         sheet => sheet.idUPPA === student.idUPPA
       )).length;
   }
 
   countStudentBySheetStatut(statut: SheetStatus) {
-    return this.studentService.getStudents().filter(student =>
-      this.descriptiveSheetService.getSheets().some(sheet =>
+    return this.students.filter(student =>
+      this.descriptiveSheets.some(sheet =>
         sheet.idUPPA === student.idUPPA &&
         sheet.statut === statut
       )).length;
@@ -88,16 +106,19 @@ export class StatsCardsComponent implements OnInit {
     if (!studentId) {
       return 0;
     }
-    return this.internshipSearchService.getSearchesByStudentId(studentId).length;
+    return this.searches.filter(search =>
+      search.idUPPA === studentId
+    ).length;
   }
 
   countSearchesByStudentIdThisWeek(studentId: string | undefined) {
     if (!studentId) {
       return 0;
     }
-    return this.internshipSearchService.getSearchesByStudentId(studentId).filter(s =>
-      s.dateCreation > this.getLastWeekDate() &&
-      s.dateCreation <= this.getCurrentDate()
+    return this.searches.filter(search =>
+      search.idUPPA === studentId &&
+      search.dateCreation > this.getLastWeekDate() &&
+      search.dateCreation <= this.getCurrentDate()
     ).length
   }
 
@@ -105,17 +126,23 @@ export class StatsCardsComponent implements OnInit {
     if (!studentId) {
       return 0;
     }
-    return this.internshipSearchService.getSearchesByStudentIdAndStatut(studentId, statut).length;
+    return this.searches.filter(search =>
+      search.idUPPA === studentId &&
+      search.statut === statut
+    ).length;
   }
 
   contSheetByStatut(statut: SheetStatus) {
-    return this.descriptiveSheetService.getSheets().filter(
+    return this.descriptiveSheets.filter(
       s => s.statut === statut
     ).length;
   }
 
   countSheetByStudentIdAndStatut(studentId: string, statut: SheetStatus) {
-    return this.descriptiveSheetService.getSheetByStudentIdAndStatus(studentId, statut).length;
+    return this.descriptiveSheets.filter(sheet =>
+      sheet.idUPPA === studentId &&
+      sheet.statut === statut
+    ).length;
   }
 
   getCurrentDate() {
