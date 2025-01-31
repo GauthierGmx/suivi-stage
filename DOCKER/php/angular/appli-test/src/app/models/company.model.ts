@@ -16,12 +16,12 @@ export class Company {
     latitudeAdresse?: string;
 
     constructor (
-        idEntreprise: number,
-        raisonSociale: string,
-        adresse: string,
-        ville: string,
-        codePostal: string,
-        pays: string,
+        idEntreprise: number = 0,
+        raisonSociale: string = '',
+        adresse: string = '',
+        ville: string = '',
+        codePostal: string = '',
+        pays: string = '',
         numSiret?: string,
         typeEtablissement?: EtablissementType,
         telephone?: string,

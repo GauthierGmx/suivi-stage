@@ -1,74 +1,39 @@
-.header {
-    margin-bottom: 24px;
-}
-
-.title {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.subtitle {
-color: #6B7280;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.stats-card {
-    padding: 16px;
-    border-radius: 8px;
-}
-
-.stats-card.primary {
-    background-color: #f8c6c6;
-}
-
-.stats-card.secondary {
-    background-color: #faffad;
-}
-
-.stats-card.tertiary {
-    background-color: #adeea7;
-}
-
-.stats-card h3 {
-    font-size: 14px;
-    font-weight: 600;
-    color: #4B5563;
-    margin-bottom: 8px;
-}
-
-.stats-card .date-range {
-    font-size: 12px;
-    color: #6B7280;
-    margin-bottom: 4px;
-}
-
-.stats-card p {
-    font-size: 24px;
-    font-weight: 700;
-    color: #111827;
-}
-
 .content-box {
-    background: white;
+    background-color: #f7f7f7;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.titleAndAddSearchButton {
+    padding: 20px 16px 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.titleAndAddSearchButton h3 {
+    color : #08A28A;
+}
+
+.titleAndAddSearchButton button {
+    padding: 5px 8px 7px;
+    border-radius: 8px;
+    background-color: #0A63A4;
+    color: white;
+    &:active {
+        background-color: #338ccd;
+        transform: translate(1px, 1px);
+    }
 }
 
 .searchBarAndfilters {
-    padding: 16px;
-    border-bottom: 1px solid #E5E7EB;
+    padding: 10px 16px 16px 16px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .search-container {
     position: relative;
     margin-bottom: 16px;
+    width: 60%;
 }
 
 .search-input {
@@ -82,7 +47,6 @@ color: #6B7280;
 
 .clear-button {
     position: absolute;
-    right: 8px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
@@ -100,8 +64,10 @@ color: #6B7280;
 
 .filter-buttons {
     display: flex;
+    justify-content: start;
     gap: 8px;
-    flex-wrap: wrap;
+    height: 50%;
+    width: 100%;
 }
 
 .filter-button {
@@ -136,7 +102,8 @@ color: #6B7280;
 
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0 5px;
     min-width: 800px;
 }
 
@@ -146,17 +113,35 @@ th {
     font-size: 12px;
     font-weight: 500;
     text-transform: uppercase;
-    color: #6B7280;
-    background-color: #F9FAFB;
 }
 
-td {
-    padding: 16px;
-    border-bottom: 1px solid #E5E7EB;
+tbody td {
+    background-clip: padding-box;
+    padding: 15px;
 }
 
-tr:hover {
-    background-color: #F9FAFB;
+.firstTd {
+    border-radius: 16px 0 0 16px;
+}
+
+.lastTd {
+    border-radius: 0 16px 16px 0;
+}
+
+tr {
+    margin: 0 5px;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #eee4ff;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #d7ebff;
+}
+
+tbody tr:hover {
+    background-color: #FFFFFF;
 }
 
 .status-badge {
@@ -213,14 +198,6 @@ tr:hover {
 }
 
 @media (max-width: 768px) {
-    .logbook {
-        padding: 16px;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
     .filter-buttons {
         flex-direction: column;
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RechercheStage;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class RechercheStageController extends Controller
 {
@@ -45,9 +46,9 @@ class RechercheStageController extends Controller
         try
         {
             $donneesValidees = $request->validate([
-                'dateCreation'          => 'bail|required|date|date-format:Y-m-d',
-                'dateModification'      => 'bail|required|date|date-format:Y-m-d',
-                'date1erContact'        => 'bail|required|date|date-format:Y-m-d',
+                'dateCreation'          => 'bail|required|date',
+                'dateModification'      => 'bail|required|date',
+                'date1erContact'        => 'bail|required|date',
                 'typeContact'           => 'bail|required|string|in:Courrier,Mail,Présentiel,Téléphone,Site de recrutement',
                 'nomContact'            => 'bail|required|string|max:50',
                 'prenomContact'         => 'bail|required|string|max:50',
@@ -55,16 +56,16 @@ class RechercheStageController extends Controller
                 'telephoneContact'      => ['nullable','string','regex:/^(\+33|0)\d{9}$/m'], // Obligé de passer les paramètres dans un tableau puisque la règle "regex" est utilisée avec d'autres
                 'adresseMailContact'    => 'nullable|string|email|max:100',
                 'observations'          => 'nullable|string',
-                'dateRelance'           => 'nullable|date|date-format:Y-m-d',
+                'dateRelance'           => 'nullable|date',
                 'statut'                => 'bail|required|string|in:En cours,Validé,Refusé,Relancé',
                 'idUPPA'                => 'bail|required|string',
                 'idEntreprise'          => 'required|integer',
             ]);
     
             $uneRechercheStage = RechercheStage::create([
-                'dateCreation' => $donneesValidees['dateCreation'],
-                'dateModification' => $donneesValidees['dateModification'],
-                'date1erContact' => $donneesValidees['date1erContact'],
+                'dateCreation' => Carbon::parse($donneesValidees['dateCreation'])->format('Y-m-d'),
+                'dateModification' => Carbon::parse($donneesValidees['dateModification'])->format('Y-m-d'),
+                'date1erContact' => Carbon::parse($donneesValidees['date1erContact'])->format('Y-m-d'),
                 'typeContact' => $donneesValidees['typeContact'],
                 'nomContact' => $donneesValidees['nomContact'],
                 'prenomContact' => $donneesValidees['prenomContact'],
@@ -72,7 +73,7 @@ class RechercheStageController extends Controller
                 'telephoneContact' => $donneesValidees['telephoneContact'] ?? null,
                 'adresseMailContact' => $donneesValidees['adresseMailContact'] ?? null,
                 'observations' => $donneesValidees['observations'] ?? null,
-                'dateRelance' => $donneesValidees['dateRelance'] ?? null,
+                'dateRelance' => isset($donneesValidees['dateRelance']) ? Carbon::parse($donneesValidees['dateRelance'])->format('Y-m-d') : null,
                 'statut' => $donneesValidees['statut'],
                 'idUPPA' => $donneesValidees['idUPPA'],
                 'idEntreprise' => $donneesValidees['idEntreprise'],
