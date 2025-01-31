@@ -20,8 +20,10 @@ export class AuthService {
     private readonly studentService: StudentService,
     private readonly staffService: StaffService
   ) {
-    // Initialiser les données au démarrage du service
-    this.initializeData();
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      this.currentUser = JSON.parse(savedUser);
+    }
   }
 
   private async initializeData() {
@@ -59,6 +61,7 @@ export class AuthService {
   }
 
   logout(): void {
+    localStorage.removeItem('currentUser');
     this.currentUser = undefined;
     this.router.navigate(['/login']);
   }

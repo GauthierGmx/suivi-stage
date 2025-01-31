@@ -31,7 +31,10 @@ class FicheDescriptive extends Model
         'dateDebutInterruption',
         'dateFinInterruption',
         'personnelTechniqueDisponible',
-        'materielPrete'
+        'materielPrete',
+        'idEntreprise',
+        'idTuteurEntreprise',
+        'idUPPA'
     ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idFicheDescriptive';
