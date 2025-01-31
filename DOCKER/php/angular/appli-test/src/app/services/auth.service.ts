@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
-import { StudentService } from './student.service';
-import { StaffService } from './staff.service';
 import { Student } from '../models/student.model';
 import { Staff } from '../models/staff.model';
+import { StudentService } from './student.service';
+import { StaffService } from './staff.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,22 +20,29 @@ export class AuthService {
     private readonly studentService: StudentService,
     private readonly staffService: StaffService
   ) {
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      this.currentUser = JSON.parse(savedUser);
-    }
+    // Initialiser les données au démarrage du service
+    this.initializeData();
   }
 
   private async initializeData() {
-    // Charger les données de manière synchrone
-    const [students, staffs] = await Promise.all([
-      firstValueFrom(this.studentService.getStudents()),
-      firstValueFrom(this.staffService.getStaffs())
-    ]);
+    // Récupération du currentUser s'il y en a un
+    const savedUser = sessionStorage.getItem('currentUser');
+    if (savedUser) {
+      this.currentUser = JSON.parse(savedUser);
+      this.isInitialized = true;
+    }
+    else {
+      // Charger les données de manière asynchrone
+      const [students, staffs] = await Promise.all([
+        firstValueFrom(this.studentService.getStudents()),
+        firstValueFrom(this.staffService.getStaffs())
+      ]);
 
-    this.students = students || [];
-    this.staffs = staffs || [];
-    this.isInitialized = true;
+      this.students = students || [];
+      this.staffs = staffs || [];
+
+      this.isInitialized = true;
+    }
   }
 
   async login(email: string, password: string): Promise<boolean> {
@@ -53,7 +60,7 @@ export class AuthService {
     }
     
     if (this.currentUser) {
-      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+      sessionStorage.setItem('currentUser', JSON.stringify(this.currentUser));
       await this.router.navigate(['/dashboard']);
       return true;
     }
@@ -61,7 +68,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
     this.currentUser = undefined;
     this.router.navigate(['/login']);
   }
