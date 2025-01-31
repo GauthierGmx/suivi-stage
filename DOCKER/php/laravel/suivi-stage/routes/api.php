@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RechercheStageController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\FicheDescriptiveController; 
+use App\Http\Controllers\EtudiantController;
 
 
 /*
@@ -25,14 +26,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Route pour le Controller RechercheStage
+Route::get('/recherches-stages', [RechercheStageController::class, 'index'])->name('recherches-stages.index');
 Route::post('/recherches-stages/create', [RechercheStageController::class, 'store'])->name('recherches-stages.store');
+Route::get('/recherches-stages/{id}', [RechercheStageController::class, 'show'])->name('recherches-stages.show');
 
 // Route pour le Controller Entreprise
 Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
 Route::post('/entreprises/create', [EntrepriseController::class, 'store'])->name('entreprises.store');
 Route::get('/entreprises/{id}', [EntrepriseController::class, 'show'])->name('entreprises.show');
 
-
 // Route pour récupérer les données du formulaire d'une fiche descriptive au format JSON
 Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.create');
 
+// Route pour le Controller Etudiant
+Route::get('/etudiants/{id}/recherches-stages', [EtudiantController::class, 'indexRechercheStage'])->name('etudiants.indexRechercheStage');
