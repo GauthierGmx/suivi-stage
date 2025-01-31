@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RechercheStage;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class RechercheStageController extends Controller
 {
@@ -60,9 +61,9 @@ class RechercheStageController extends Controller
             ]);
     
             $uneRechercheStage = RechercheStage::create([
-                'dateCreation' => $donneesValidees['dateCreation'],
-                'dateModification' => $donneesValidees['dateModification'],
-                'date1erContact' => $donneesValidees['date1erContact'],
+                'dateCreation' => Carbon::parse($donneesValidees['dateCreation'])->format('Y-m-d'),
+                'dateModification' => Carbon::parse($donneesValidees['dateModification'])->format('Y-m-d'),
+                'date1erContact' => Carbon::parse($donneesValidees['date1erContact'])->format('Y-m-d'),
                 'typeContact' => $donneesValidees['typeContact'],
                 'nomContact' => $donneesValidees['nomContact'],
                 'prenomContact' => $donneesValidees['prenomContact'],
@@ -70,7 +71,7 @@ class RechercheStageController extends Controller
                 'telephoneContact' => $donneesValidees['telephoneContact'] ?? null,
                 'adresseMailContact' => $donneesValidees['adresseMailContact'] ?? null,
                 'observations' => $donneesValidees['observations'] ?? null,
-                'dateRelance' => $donneesValidees['dateRelance'] ?? null,
+                'dateRelance' => isset($donneesValidees['dateRelance']) ? Carbon::parse($donneesValidees['dateRelance'])->format('Y-m-d') : null,
                 'statut' => $donneesValidees['statut'],
                 'idUPPA' => $donneesValidees['idUPPA'],
                 'idEntreprise' => $donneesValidees['idEntreprise'],
