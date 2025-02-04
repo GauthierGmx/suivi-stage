@@ -31,18 +31,20 @@
 .searchBarAndfilters {
     padding: 0 16px;
     display: flex;
-    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
 }
 
 .search-container {
     position: relative;
     margin-bottom: 16px;
-    width: 60%;
+    min-width: 250px;
+    flex: 1;
+    max-width: 300px;
 }
 
 .search-input {
     width: 100%;
-    max-width: 400px;
     padding: 8px 12px;
     padding-right: 40px;
     border: 1px solid #E5E7EB;
@@ -68,10 +70,9 @@
 
 .filter-buttons {
     display: flex;
-    justify-content: start;
+    flex-wrap: wrap;
     gap: 8px;
-    height: 50%;
-    width: 100%;
+    flex: 2;
 }
 
 .filter-button {
@@ -79,13 +80,12 @@
     border: 1px solid #E5E7EB;
     border-radius: 9999px;
     background: white;
+    min-width: 100px;
+    max-width: 150px;
     font-size: 14px;
     font-weight: 500;
-    color: #4B5563;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+    justify-content: center;
+    flex: 1;
 }
 
 .filter-button.active {
@@ -217,6 +217,7 @@ tbody tr:hover {
 .cards-view {
   display: none;
   padding: 0 16px;
+  margin-top: 20px;
 }
 
 .search-card {
@@ -287,30 +288,49 @@ tbody tr:hover {
 
   .searchBarAndfilters {
     flex-direction: column;
+    gap: 10px;
+    max-width: 600px;
+    margin: 0 auto;
   }
 
   .search-container {
     width: 100%;
-    margin-bottom: 16px;
+    max-width: none;
+    margin-bottom: 10px;
   }
 
   .filter-buttons {
     width: 100%;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
 
   .filter-button {
-    flex: 1;
-    min-width: calc(50% - 4px);
-    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    padding: 6px 12px;
   }
 }
 
 /* Styles spécifiques pour les très petits écrans */
 @media (max-width: 480px) {
+  .searchBarAndfilters {
+    padding: 0 8px;
+  }
+
+  .filter-buttons {
+    grid-template-columns: 1fr;
+  }
+
   .filter-button {
+    width: 100%;
     min-width: 100%;
+  }
+
+  .search-input {
+    font-size: 14px;
   }
 
   .card-content {
