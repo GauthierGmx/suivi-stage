@@ -14,7 +14,7 @@
           type="text"
           [(ngModel)] = 'searchTerm'
           (input)="onSearchTermChange($event)"
-          placeholder="Rechercher une entreprise, une ville, un statut..." 
+          placeholder="Rechercher sur un des champs..." 
           class="search-input"
         />
         @if (searchTerm) {
@@ -22,11 +22,7 @@
             (click)="clearSearchTerm()"
             class="clear-button"
           >
-            <svg class="icon" viewBox="0 0 20 20">
-              <circle cx="10" cy="10" r="10" fill="lightgray"/>
-              <line x1="6" y1="6" x2="14" y2="14" stroke="black" stroke-width="1" stroke-linecap="round"/>
-              <line x1="6" y1="14" x2="14" y2="6" stroke="black" stroke-width="1" stroke-linecap="round"/>
-            </svg>
+            X
           </button>
         }
       </div>
@@ -37,7 +33,7 @@
           [class.active]="currentFilter === 'all'"
           (click)="setFilter('all')"
         >
-          Tous les statuts
+          Tous
         </button>
         <button 
           class="filter-button"
@@ -51,65 +47,87 @@
           [class.active]="currentFilter === 'validated'"
           (click)="setFilter('validated')"
         >
-          Validé
+          Validés
         </button>
         <button 
           class="filter-button"
-          [class.active]="currentFilter.startsWith('date')"
+          [class.active]="currentFilter === 'date_asc' || currentFilter === 'date_desc'"
           (click)="toggleDateSort()"
         >
           Date
-          @if (currentFilter === 'date_asc') {
-            <svg class="sort-icon" viewBox="0 0 24 24">
-              <path d="M5 15l7-7 7 7"/>
-            </svg>
-          } @else if (currentFilter === 'date_desc') {
-            <svg class="sort-icon" viewBox="0 0 24 24">
-              <path d="M19 9l-7 7-7-7"/>
-            </svg>
-          }
         </button>
       </div>
     </div>
   
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Entreprise</th>
-            <th>Ville</th>
-            <th>Date de recherche</th>
-            <th>Date de dernière modification</th>
-            <th>Statut</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let result of filteredSearchesWithCompany">
-            <td class="firstTd">{{ result.company.raisonSociale }}</td>
-            <td>{{ result.company.ville }}</td>
-            <td>{{ result.search.dateCreation| date:'dd/MM/yyyy' }}</td>
-            <td>{{ result.search.dateModification | date:'dd/MM/yyyy' }}</td>
-            <td>
-              <span [class]="getStatusClass(result.search.statut)">
-                {{ getStatusLabel(result.search.statut) }}
-              </span>
-            </td>
-            <td class="lastTd">
-              <button 
-                class="view-button"
-                (click)="viewSearchDetails(result.search.idRecherche)"
-              >
-                <svg class="icon" viewBox="0 0 24 24">
-                  <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                  <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-                <span>Voir</span>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Vue tableau pour desktop -->
+    <div class="table-view">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Entreprise</th>
+              <th>Ville</th>
+              <th>Date</th>
+              <th>Statut</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of filteredSearchesWithCompany; track item.search.idRecherche) {
+              <tr>
+                <td class="firstTd">{{ item.company.raisonSociale }}</td>
+                <td>{{ item.company.ville }}</td>
+                <td>{{ item.search.dateCreation | date:'dd/MM/yyyy' }}</td>
+                <td>
+                  <span [class]="getStatusClass(item.search.statut)">
+                    {{ getStatusLabel(item.search.statut) }}
+                  </span>
+                </td>
+                <td class="lastTd">
+                  <button 
+                    class="view-button"
+                    (click)="viewSearchDetails(item.search.idRecherche)"
+                  >
+                    Voir
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <!-- Vue cards pour mobile -->
+    <div class="cards-view">
+      @for (item of filteredSearchesWithCompany; track item.search.idRecherche) {
+        <div class="search-card">
+          <div class="card-header">
+            <h4>{{ item.company.raisonSociale }}</h4>
+            <span [class]="getStatusClass(item.search.statut)">
+              {{ getStatusLabel(item.search.statut) }}
+            </span>
+          </div>
+          <div class="card-content">
+            <p class="location">
+              <span class="label">Ville:</span> 
+              {{ item.company.ville }}
+            </p>
+            <p class="date">
+              <span class="label">Date:</span> 
+              {{ item.search.dateCreation | date:'dd/MM/yyyy' }}
+            </p>
+          </div>
+          <div class="card-footer">
+            <button 
+              class="view-button"
+              (click)="viewSearchDetails(item.search.idRecherche)"
+            >
+              Voir
+            </button>
+          </div>
+        </div>
+      }
     </div>
   }
 </div>
