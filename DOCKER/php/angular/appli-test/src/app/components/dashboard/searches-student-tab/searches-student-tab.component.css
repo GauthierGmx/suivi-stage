@@ -8,7 +8,7 @@
 }
 
 .titleAndAddSearchButton {
-    padding: 20px 16px 10px;
+    padding: 20px 5px 10px;
     display: flex;
     justify-content: space-between;
 }
@@ -29,7 +29,7 @@
 }
 
 .searchBarAndfilters {
-    padding: 0 16px;
+    padding: 0 5px;
     display: flex;
     gap: 20px;
     align-items: flex-start;
@@ -102,7 +102,7 @@
 
 .table-container {
     overflow-x: auto;
-    margin: 0 15px;
+    margin: 0 5px;
 }
 
 table {
