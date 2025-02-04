@@ -1,0 +1,164 @@
+.container {
+  min-height: calc(100vh - 200px);
+  width: 95%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.navigation-tabs {
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: center;
+  border-bottom: 1px solid #ddd;
+  gap: 0;
+}
+
+.tab {
+  padding: 8px 15px;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 0;
+  position: relative;
+  bottom: -1px;
+}
+
+.tab:not(:last-child) {
+  border-right: none;
+}
+
+.tab.active {
+  background-color: #e6e6fa;
+  border-bottom: 1px solid #e6e6fa;
+  font-weight: bold;
+}
+
+.content {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 40px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.warning {
+  color: red;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.form-row {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 25px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.form-row:last-child {
+  justify-content: flex-start;
+}
+
+.form-row:last-child .form-group {
+  flex: 0 0 calc(50% - 20px);
+}
+
+.form-group {
+  flex: 1;
+  min-width: 0;
+  max-width: 400px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
+.btn-cancel {
+  padding: 8px 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-submit {
+  padding: 8px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    min-height: 100vh;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .content {
+    padding: 10px;
+  }
+
+  .navigation-tabs {
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-cancel, .btn-submit {
+    width: 100%;
+  }
+}
