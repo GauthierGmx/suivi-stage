@@ -162,17 +162,21 @@ header {
 /* Media Queries */
 @media screen and (max-width: 1024px) {
     .nav-link {
-        font-size: 16px;
+        font-size: 18px;
     }
     
     .logo-link img {
-        max-width: 120px;
+        max-width: 130px;
+    }
+
+    .header-content {
+        padding: 1rem 0;
     }
 }
 
 @media screen and (max-width: 768px) {
     .header-content {
-        padding: 0.5rem 0;
+        padding: 0.75rem 0;
     }
 
     .logo-section {
@@ -180,7 +184,8 @@ header {
     }
 
     .logo-link img {
-        max-width: 100px;
+        max-width: 120px;
+        min-width: 100px;
     }
 
     .main-nav {
@@ -195,21 +200,49 @@ header {
         width: auto;
     }
 
+    .profile-button {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1rem;
+    }
+
     .dropdown-menu {
-        right: -1rem;
+        right: -0.5rem;
+        min-width: 14rem;
+    }
+
+    .user-info, 
+    .mobile-nav-link, 
+    .logout-button {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
     }
 }
 
 @media screen and (max-width: 480px) {
     .header-container {
-        padding: 0 0.5rem;
+        padding: 0 1rem;
     }
 
     .logo-link img {
-        max-width: 80px;
+        max-width: 100px;
+        min-width: 80px;
+    }
+
+    .profile-button {
+        width: 2.75rem;
+        height: 2.75rem;
     }
 
     .dropdown-menu {
-        width: 10rem;
+        width: 12rem;
+        right: -0.75rem;
+    }
+
+    .user-info, 
+    .mobile-nav-link, 
+    .logout-button {
+        padding: 0.625rem 1rem;
+        font-size: 0.9375rem;
     }
 }

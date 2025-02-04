@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Staff } from '../../../models/staff.model';
 import { Student } from '../../../models/student.model';
@@ -9,13 +9,13 @@ import { StudentService } from '../../../services/student.service';
 import { InternshipSearchService } from '../../../services/internship-search.service';
 import { DescriptionSheetService } from '../../../services/description-sheet.service';
 import { AppComponent } from '../../../app.component';
-
-export type StatCardType = 'primary' | 'secondary' | 'tertiary';
+import { forkJoin } from 'rxjs';
 
 const VALIDED_INTERNSHIP_SEARCH_STATUT = 'Validé';
 
 @Component({
   selector: 'app-stats-cards',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './stats-cards.component.html',
   styleUrls: ['./stats-cards.component.css']
@@ -23,6 +23,7 @@ const VALIDED_INTERNSHIP_SEARCH_STATUT = 'Validé';
 export class StatsCardsComponent implements OnInit {
   @Input() currentUser!: Staff | Student;
   @Input() selectedStudent?: Student;
+  @Output() dataLoaded = new EventEmitter<void>();
   currentUserId!: string;
   currentUserRole!: string;
   currentPageUrl!: string;
@@ -36,8 +37,7 @@ export class StatsCardsComponent implements OnInit {
     private internshipSearchService: InternshipSearchService,
     private descriptiveSheetService: DescriptionSheetService,
     private appComponent: AppComponent
-  )
-  {}
+  ) {}
 
   ngOnInit(): void {
     this.currentPageUrl = this.navigationService.getCurrentPageUrl();
@@ -51,20 +51,18 @@ export class StatsCardsComponent implements OnInit {
       this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
 
-    this.studentService.getStudents()
-    .subscribe(students => {
-      this.students = students
-    });
-
-    this.internshipSearchService.getSearches()
-    .subscribe(searches => {
-      this.searches = searches
-    });
-
-    this.descriptiveSheetService.getSheets()
-    .subscribe(sheets => {
-      this.descriptiveSheets = sheets
-    });
+    // Utiliser forkJoin pour attendre que toutes les données soient chargées
+    forkJoin({
+      students: this.studentService.getStudents(),
+      searches: this.internshipSearchService.getSearches(),
+      sheets: this.descriptiveSheetService.getSheets()
+    }).subscribe(({students, searches, sheets}) => {
+        this.students = students;
+        this.searches = searches;
+        this.descriptiveSheets = sheets;
+        this.dataLoaded.emit();
+      }
+    );
   }
 
   countStudents() {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InternshipSearch, SearchStatus } from '../../../models/internship-search.model';
@@ -21,6 +21,7 @@ import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 })
 export class SearchesStudentTabComponent implements OnInit {
     @Input() currentUser!: Student | Staff;
+    @Output() dataLoaded = new EventEmitter<void>();
     currentUserId!: string;
     currentUserRole!: string;
     currentPageUrl!: string;
@@ -31,7 +32,6 @@ export class SearchesStudentTabComponent implements OnInit {
     searchTermSubject = new Subject<string>();
     filteredSearchesWithCompany: { search: InternshipSearch; company: Company }[] = [];
     currentFilter: 'all' | 'waiting' | 'validated' | 'date_asc' | 'date_desc' = 'all';
-    dataLoaded: boolean = false;
 
     constructor(
         private readonly internshipSearchService: InternshipSearchService,
@@ -64,23 +64,18 @@ export class SearchesStudentTabComponent implements OnInit {
     }
 
     loadData(studentId: string) {
-        this.studentService.getStudentById(studentId)
-        .subscribe(student => {
-            this.studentData = student;
-
-            // Attendre que les trois requêtes soient complètes
-            forkJoin({
-                companies: this.companyService.getCompanies(),
-                searches: this.internshipSearchService.getSearchesByStudentId(studentId)
-            }).subscribe(({ companies, searches }) => {
+        forkJoin({
+            student: this.studentService.getStudentById(studentId),
+            companies: this.companyService.getCompanies(),
+            searches: this.internshipSearchService.getSearchesByStudentId(studentId)
+        }).subscribe(({student, companies, searches}) => {
+                this.studentData = student;
                 this.companies = companies;
                 this.searches = searches;
-
                 this.getFilteredSearchesWithCompanies();
-
-                this.dataLoaded = true;
-            });
-        });
+                this.dataLoaded.emit();
+            }
+        );
     }
 
     getFilteredSearchesWithCompanies() {
