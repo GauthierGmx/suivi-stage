@@ -1,6 +1,4 @@
-<div *ngIf="!dataLoaded">Chargement en cours...</div>
-<div *ngIf="dataLoaded" class="content-box">
-  
+<div class="content-box">
   @if (currentUserRole === 'STUDENT' && currentPageUrl === '/dashboard') {
     <div class="titleAndAddSearchButton">
       <h3><b>Recherches de stage</b></h3>
@@ -32,7 +30,7 @@
           </button>
         }
       </div>
-
+  
       <div class="filter-buttons">
         <button 
           class="filter-button"
@@ -73,7 +71,7 @@
         </button>
       </div>
     </div>
-
+  
     <div class="table-container">
       <table>
         <thead>
@@ -114,5 +112,4 @@
       </table>
     </div>
   }
-
 </div>

@@ -25,7 +25,7 @@
 }
 
 .searchBarAndfilters {
-    padding: 10px 16px 16px 16px;
+    padding: 0 16px;
     display: flex;
     justify-content: space-between;
 }
@@ -98,6 +98,7 @@
 
 .table-container {
     overflow-x: auto;
+    margin: 0 15px;
 }
 
 table {
@@ -141,7 +142,7 @@ tbody tr:nth-child(even) {
 }
 
 tbody tr:hover {
-    background-color: #FFFFFF;
+    border: 1px solid #000000;
 }
 
 .status-badge {
@@ -153,23 +154,19 @@ tbody tr:hover {
 }
 
 .status-badge.relance {
-    background-color: #F3E8FF;
-    color: #6B21A8;
+    background-color: #d6b1fe;
     }
 
 .status-badge.valide {
-    background-color: #DCFCE7;
-    color: #15803D;
+    background-color: #9bfdbe;
 }
 
 .status-badge.en-attente {
-    background-color: #DBEAFE;
-    color: #1E40AF;
+    background-color: #a4ccff;
 }
 
 .status-badge.refuse {
-    background-color: #FEE2E2;
-    color: #B91C1C;
+    background-color: #fda6a6;
 }
 
 .view-button {
