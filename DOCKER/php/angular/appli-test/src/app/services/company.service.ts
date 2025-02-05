@@ -31,7 +31,7 @@ export class CompanyService {
 
     return this.http.post<Company>('http://localhost:8000/api/entreprises/create', enterprise, httpOptions).pipe(
       tap(response => this.log(response)),
-      catchError(error => this.handleError(error, null))
+      catchError(error => this.handleError(error, undefined))
     );
   }
 

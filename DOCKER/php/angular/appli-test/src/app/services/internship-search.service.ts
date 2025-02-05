@@ -296,7 +296,10 @@ export class InternshipSearchService {
   }
 
   getSearchesByStudentId(studentId: string): Observable<InternshipSearch[]> {
-    return of(this.mockSearches.filter(s => s.idUPPA === studentId));
+    return this.http.get<InternshipSearch[]>(`http://localhost:8000/api/etudiants/${studentId}/recherches-stages`).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, undefined))
+    );
   }
 
   getSearchesByStudentIdAndStatut(studentId: string, statut: SearchStatus): Observable<InternshipSearch[]> {
