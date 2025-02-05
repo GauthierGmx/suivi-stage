@@ -35,8 +35,9 @@ Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entrep
 Route::post('/entreprises/create', [EntrepriseController::class, 'store'])->name('entreprises.store');
 Route::get('/entreprises/{id}', [EntrepriseController::class, 'show'])->name('entreprises.show');
 
-// Route pour récupérer les données du formulaire d'une fiche descriptive au format JSON
+// Route pour le Controller FicheDescriptive
 Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.create');
+Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update');
 
 // Route pour le Controller Etudiant
 Route::get('/etudiants/{id}/recherches-stages', [EtudiantController::class, 'indexRechercheStage'])->name('etudiants.indexRechercheStage');
