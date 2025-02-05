@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Staff } from '../models/staff.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -67,11 +69,24 @@ export class StaffService {
     }
   ];
 
-  getStaffs() {
-    return this.staffs;
+  constructor(private http: HttpClient) {}
+
+  getStaffs(): Observable<Staff[]> {
+    return of(this.staffs);
   }
 
-  getStaffById(id: number) {
-    return this.staffs.find(s => s.idPersonnel === id);
+  getStaffById(idStaff: number): Observable<Staff | undefined> {
+    return of(this.staffs.find(s => s.idPersonnel === idStaff));
+  }
+
+  //Log la réponse de l'API
+  private log(response: any) {
+    console.table(response);
+  }
+
+  //Retourne l'erreur en cas de problème avec l'API
+  private handleError(error: Error, errorValue: any) {
+    console.error(error);
+    return of(errorValue);
   }
 }

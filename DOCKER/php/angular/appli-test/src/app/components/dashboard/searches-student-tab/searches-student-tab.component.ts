@@ -1,5 +1,4 @@
-
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InternshipSearch, SearchStatus } from '../../../models/internship-search.model';
@@ -11,6 +10,7 @@ import { NavigationService } from '../../../services/navigation.service';
 import { StudentService } from '../../../services/student.service';
 import { CompanyService } from '../../../services/company.service';
 import { AppComponent } from '../../../app.component';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-searches-student-tab',
@@ -21,13 +21,16 @@ import { AppComponent } from '../../../app.component';
 })
 export class SearchesStudentTabComponent implements OnInit {
     @Input() currentUser!: Student | Staff;
+    @Output() dataLoaded = new EventEmitter<void>();
     currentUserId!: string;
     currentUserRole!: string;
     currentPageUrl!: string;
     studentData?: Student;
+    companies?: Company[];
     searches?: InternshipSearch[];
     searchTerm: string = '';
-    searchesWithCompany: { search: InternshipSearch; company: Company }[] = [];
+    searchTermSubject = new Subject<string>();
+    filteredSearchesWithCompany: { search: InternshipSearch; company: Company }[] = [];
     currentFilter: 'all' | 'waiting' | 'validated' | 'date_asc' | 'date_desc' = 'all';
 
     constructor(
@@ -50,90 +53,101 @@ export class SearchesStudentTabComponent implements OnInit {
             this.currentUserRole = 'INTERNSHIP_MANAGER';
         }
 
-        this.loadUserData(this.currentUserId);
-        this.getFilteredSearchesWithCompanies(this.currentUserId);
+        this.loadData(this.currentUserId);
+
+        this.searchTermSubject.pipe(
+            debounceTime(800),
+            distinctUntilChanged()
+        ).subscribe(() => {
+            this.getFilteredSearchesWithCompanies();
+        });
     }
 
-    private loadUserData(userId: string) {
-        this.studentData = this.studentService.getStudentById(userId);
-        if (this.studentData) {
-            this.searches = this.internshipSearchService.getSearchesByStudentId(userId);
-        }
+    loadData(studentId: string) {
+        forkJoin({
+            student: this.studentService.getStudentById(studentId),
+            companies: this.companyService.getCompanies(),
+            searches: this.internshipSearchService.getSearchesByStudentId(studentId)
+        }).subscribe(({student, companies, searches}) => {
+                this.studentData = student;
+                this.companies = companies;
+                this.searches = searches;
+                this.getFilteredSearchesWithCompanies();
+                this.dataLoaded.emit();
+            }
+        );
     }
 
-    getFilteredSearchesWithCompanies(studentId: string) {
-        const searches = this.searches;
-        let filteredSearches: InternshipSearch[] = [];
-        let searchCompanies: Company[] = [];
+    getFilteredSearchesWithCompanies() {
+        if (this.companies && this.searches) {
     
-        if (searches && this.searchTerm.trim()) {
-            const searchTermLower = this.searchTerm.toLowerCase().trim();
-    
-            searchCompanies = this.companyService.getCompanies().filter(
-                c => (
-                    c.raisonSociale.toLowerCase().includes(searchTermLower) ||
-                    c.ville.toLowerCase().includes(searchTermLower)
-                ) && 
-                searches.some(
+            let searchCompanies: Company[] = this.companies.filter(
+                c => this.searches!.some(
                     s => c.idEntreprise === s.idEntreprise
                 )
             );
     
-            if (searchCompanies) {
-                filteredSearches = searches.filter(
-                    search => (
-                        this.getStatusLabel(search.statut).toLowerCase().includes(searchTermLower)
-                    ) &&
-                    searchCompanies.some(
-                        c => search.idEntreprise === c.idEntreprise &&
-                        search.idUPPA === studentId
-                    )
-                );
-            }
-        } else if (searches) {
-            filteredSearches = searches.filter(
-                s => s.idUPPA === studentId
-            );
-    
-            searchCompanies = this.companyService.getCompanies().filter(
-                c => filteredSearches.some(
-                    s => c.idEntreprise === s.idEntreprise
-                )
-            );
-        }
-    
-        if (filteredSearches) {
-            switch (this.currentFilter) {
-                case 'all':
-                    break;
-                case 'waiting':
-                    filteredSearches = filteredSearches.filter(s => s.statut === 'En attente');
-                    break;
-                case 'validated':
-                    filteredSearches = filteredSearches.filter(s => s.statut === 'Validé');
-                    break;
-                case 'date_asc':
-                    filteredSearches.sort((a, b) => a.dateCreation.getTime() - b.dateCreation.getTime());
-                    break;
-                case 'date_desc':
-                    filteredSearches.sort((a, b) => b.dateCreation.getTime() - a.dateCreation.getTime());
-                    break;
-            }
-        }
-    
-        this.searchesWithCompany = filteredSearches.map(search => {
+            let searchesWithCompany = this.searches.map(search => {
                 const company = searchCompanies.find(c => c.idEntreprise === search.idEntreprise);
-                if (company) {
-                    return { search, company };
-                }
-                return null;
-        }).filter((result): result is { search: InternshipSearch; company: Company } => result !== null);
-    }
+                return company ? { search, company } : null;
+            }).filter((result): result is { search: InternshipSearch; company: Company } => result !== null);
     
+            // Appliquer les filtres
+            searchesWithCompany = this.applyFilters(searchesWithCompany);
+    
+            // Mettre à jour la propriété qui déclenche la mise à jour du template
+            this.filteredSearchesWithCompany = searchesWithCompany;
+        }
+    }
+
+    applyFilters(searches: { search: InternshipSearch; company: Company }[]) {
+        let filtered = [...searches];
+        const searchTermLower = this.searchTerm.toLowerCase().trim();
+
+        // Appliquer le filtre de recherche textuelle
+        if (searchTermLower) {
+            filtered = filtered.filter(s =>
+                s.company.raisonSociale.toLowerCase().includes(searchTermLower) ||
+                s.company.ville.toLowerCase().includes(searchTermLower) ||
+                this.getStatusLabel(s.search.statut).toLowerCase().includes(searchTermLower)
+            );
+        }
+
+        // Appliquer les filtres de statut et de tri
+        switch (this.currentFilter) {
+            case 'waiting':
+                filtered = filtered.filter(s => s.search.statut === 'En cours');
+                break;
+            case 'validated':
+                filtered = filtered.filter(s => s.search.statut === 'Validé');
+                break;
+            case 'date_asc':
+                filtered.sort((a, b) => a.search.dateCreation.getTime() - b.search.dateCreation.getTime());
+                break;
+            case 'date_desc':
+                filtered.sort((a, b) => b.search.dateCreation.getTime() - a.search.dateCreation.getTime());
+                break;
+        }
+
+        return filtered;
+    }
+
+    onSearchTermChange(event: Event) {
+        const target = event.target as HTMLInputElement;
+        if (target) {
+            this.searchTerm = target.value;
+            this.searchTermSubject.next(this.searchTerm);
+        }
+    }
+
+    clearSearchTerm() {
+        this.searchTerm = '';
+        this.searchTermSubject.next(this.searchTerm);
+    }
 
     setFilter(filter: 'all' | 'waiting' | 'validated') {
         this.currentFilter = filter;
-        this.getFilteredSearchesWithCompanies(this.currentUserId);
+        this.getFilteredSearchesWithCompanies();
     }
 
     toggleDateSort() {
@@ -146,25 +160,25 @@ export class SearchesStudentTabComponent implements OnInit {
         else {
             this.currentFilter = 'date_asc';
         }
-        this.getFilteredSearchesWithCompanies(this.currentUserId);
+        this.getFilteredSearchesWithCompanies();
     }
 
     getStatusLabel(status: SearchStatus): string {
         const labels: Record<SearchStatus, string> = {
-        'Relancé': 'Relancé',
-        'Validé': 'Validé',
-        'En attente': 'En attente',
-        'Refusé': 'Refusé'
+            'Relancé': 'Relancé',
+            'Validé': 'Validé',
+            'En cours': 'En attente',
+            'Refusé': 'Refusé'
         };
         return labels[status];
     }
 
     getStatusClass(status: string): string {
         const statusMap: Record<string, string> = {
-        'Relancé': 'status-badge relance',
-        'Validé': 'status-badge valide',
-        'En attente': 'status-badge en-attente',
-        'Refusé': 'status-badge refuse'
+            'Relancé': 'status-badge relance',
+            'Validé': 'status-badge valide',
+            'En cours': 'status-badge en-attente',
+            'Refusé': 'status-badge refuse'
         };
         return statusMap[status] || 'status-badge';
     }
@@ -172,4 +186,8 @@ export class SearchesStudentTabComponent implements OnInit {
     viewSearchDetails(searchId: number) {
         this.navigationService.navigateToSearchView(searchId);
     }
-} 
+
+    goToAddSearchFormView() {
+        this.navigationService.navigateToSearchForm();
+    }
+}
