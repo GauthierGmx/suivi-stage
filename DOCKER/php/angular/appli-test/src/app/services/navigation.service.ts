@@ -37,6 +37,10 @@ export class NavigationService {
     this.router.navigate(['/dashboard/search-details/', searchId]);
   }
 
+  navigateToSearchEdit(searchId: number) {
+    this.router.navigate(['/dashboard/update-search/', searchId]);
+  }
+
   navigateToDashboard() {
     this.router.navigate(['/dashboard']);
   }

@@ -66,4 +66,10 @@ export class SearchDetailsComponent implements OnInit {
     goBack() {
         this.navigationService.goBack();
     }
+
+    goToEdit() {
+        if (this.search) {
+            this.navigationService.navigateToSearchEdit(this.search.idRecherche);
+        }
+    }
 }
