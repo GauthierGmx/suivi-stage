@@ -203,12 +203,12 @@ class FicheDescriptiveControllerTest extends TestCase
     */
 
     /**
-     * La méthode update doit retourner une confirmation 201 et les données de la fiche descriptive
+     * La méthode update doit retourner une confirmation 200 et les données de la fiche descriptive
      * 
      * @return void
      */
 
-    public function test_update_methode_doit_retourner_201_car_la_fiche_descriptive_a_ete_mise_a_jour(){
+    public function test_update_methode_doit_retourner_200_car_la_fiche_descriptive_a_ete_mise_a_jour(){
         $donnees = [
             "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
@@ -236,7 +236,7 @@ class FicheDescriptiveControllerTest extends TestCase
 
         $response = $this->put('/api/fiche-descriptive/update/'.$rechercheFirst->id, $donnees);
 
-        $response->assertStatus(201)
+        $response->assertStatus(200)
                  ->assertJson([
                         'message' => 'Fiche Descriptive mise à jour avec succès',
         ]);

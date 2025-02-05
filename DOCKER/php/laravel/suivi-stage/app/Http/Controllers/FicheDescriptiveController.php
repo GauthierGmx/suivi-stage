@@ -143,7 +143,7 @@ class FicheDescriptiveController extends Controller
 
             return response()->json([
                 'message' => 'Fiche Descriptive mise à jour avec succès.'
-            ], 201);
+            ], 200);
         }
         catch (\Illuminate\Validation\ValidationException $e)
         {
