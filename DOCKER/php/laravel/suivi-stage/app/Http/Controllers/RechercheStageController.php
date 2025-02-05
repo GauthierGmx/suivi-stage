@@ -123,9 +123,7 @@ class RechercheStageController extends Controller
         try
         {
             $uneRechercheStage = RechercheStage::findOrFail($id);
-            return response()->json([
-                'rechercheStage' => $uneRechercheStage
-            ], 200);
+            return response()->json($uneRechercheStage, 200);
         }
         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
         {
