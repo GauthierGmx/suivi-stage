@@ -33,6 +33,6 @@ Route::post('/entreprises/create', [EntrepriseController::class, 'store'])->name
 Route::get('/entreprises/{id}', [EntrepriseController::class, 'show'])->name('entreprises.show');
 
 
-// Route pour récupérer les données du formulaire d'une fiche descriptive au format JSON
+// Route pour le Controller FicheDescriptive
 Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.create');
-Route::post('/fiche-descrpitve/update', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update');
+Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update');

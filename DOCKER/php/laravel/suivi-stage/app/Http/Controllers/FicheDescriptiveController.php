@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FicheDescriptive;
+use Carbon\Carbon;
 
 class FicheDescriptiveController extends Controller
 {
@@ -139,11 +140,12 @@ class FicheDescriptiveController extends Controller
                 'idTuteurEntreprise' => 'bail|required|integer',
                 'idUPPA' => 'bail|required|integer'
             ]);
-
+            
             // Récupération et mise à jour en une seule ligne
             FicheDescriptive::findOrFail($id)->update($validatedData);
+            $validatedData['dateDerniereModification'] = Carbon::now()->format('Y-m-d');
 
-            reponse()->json([
+            return response()->json([
                 'message' => 'Fiche Descriptive mise à jour avec succès.'
             ], 201);
         }
@@ -153,6 +155,13 @@ class FicheDescriptiveController extends Controller
                 'message' => 'Erreur de validation dans les données',
                 'erreurs' => $e->errors()
             ], 422);
+        }
+
+        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
+            return response()->json([
+                'message' => 'Fiche Descriptive non trouvée',
+                'erreurs' => $e->getMessage()
+            ], 404);
         }
         catch (\Illuminate\Database\QueryException $e)
         {
