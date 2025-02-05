@@ -183,7 +183,7 @@ export class SearchesStudentTabComponent implements OnInit {
         return statusMap[status] || 'status-badge';
     }
 
-    viewSearchDetails(searchId: number) {
+    goToSearchDetails(searchId: number) {
         this.navigationService.navigateToSearchView(searchId);
     }
 

@@ -74,7 +74,9 @@
           </thead>
           <tbody>
             @for (item of filteredSearchesWithCompany; track item.search.idRecherche) {
-              <tr>
+              <tr 
+                (click)="goToSearchDetails(item.search.idRecherche)"
+              >
                 <td class="firstTd">{{ item.company.raisonSociale }}</td>
                 <td>{{ item.company.ville }}</td>
                 <td>{{ item.search.dateCreation | date:'dd/MM/yyyy' }}</td>
@@ -84,12 +86,7 @@
                   </span>
                 </td>
                 <td class="lastTd">
-                  <button 
-                    class="view-button"
-                    (click)="viewSearchDetails(item.search.idRecherche)"
-                  >
-                    Voir
-                  </button>
+                  <!-- Espace réservé pour les futurs boutons de modification et suppression -->
                 </td>
               </tr>
             }
@@ -101,7 +98,10 @@
     <!-- Vue cards pour mobile -->
     <div class="cards-view">
       @for (item of filteredSearchesWithCompany; track item.search.idRecherche) {
-        <div class="search-card">
+        <div 
+          class="search-card"
+          (click)="goToSearchDetails(item.search.idRecherche)"
+        >
           <div class="card-header">
             <h4>{{ item.company.raisonSociale }}</h4>
             <span [class]="getStatusClass(item.search.statut)">
@@ -117,14 +117,6 @@
               <span class="label">Date:</span> 
               {{ item.search.dateCreation | date:'dd/MM/yyyy' }}
             </p>
-          </div>
-          <div class="card-footer">
-            <button 
-              class="view-button"
-              (click)="viewSearchDetails(item.search.idRecherche)"
-            >
-              Voir
-            </button>
           </div>
         </div>
       }
