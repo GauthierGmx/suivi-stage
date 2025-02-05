@@ -292,11 +292,17 @@ export class InternshipSearchService {
   }
 
   getSearchById(idSearch: number): Observable<InternshipSearch | undefined> {
-    return of(this.mockSearches.find(s => s.idRecherche === idSearch));
+    return this.http.get<InternshipSearch>(`http://localhost:8000/api/recherches-stages/${idSearch}`).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, undefined))
+    );
   }
 
   getSearchesByStudentId(studentId: string): Observable<InternshipSearch[]> {
-    return of(this.mockSearches.filter(s => s.idUPPA === studentId));
+    return this.http.get<InternshipSearch[]>(`http://localhost:8000/api/etudiants/${studentId}/recherches-stages`).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, undefined))
+    );
   }
 
   getSearchesByStudentIdAndStatut(studentId: string, statut: SearchStatus): Observable<InternshipSearch[]> {
