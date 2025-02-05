@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/recherches-stages', [RechercheStageController::class, 'index'])->name('recherches-stages.index');
 Route::post('/recherches-stages/create', [RechercheStageController::class, 'store'])->name('recherches-stages.store');
 Route::get('/recherches-stages/{id}', [RechercheStageController::class, 'show'])->name('recherches-stages.show');
+Route::put('/recherches-stages/update/{id}', [RechercheStageController::class, 'update'])->name('recherches-stages.update');
 
 // Route pour le Controller Entreprise
 Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
