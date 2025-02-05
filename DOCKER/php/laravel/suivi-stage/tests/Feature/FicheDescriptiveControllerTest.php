@@ -210,7 +210,6 @@ class FicheDescriptiveControllerTest extends TestCase
 
     public function test_update_methode_doit_retourner_201_car_la_fiche_descriptive_a_ete_mise_a_jour(){
         $donnees = [
-            "dateCreation"=> "2025-01-20",
             "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
@@ -231,9 +230,6 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-            "idEntreprise"=> 1,
-            "idTuteurEntreprise"=> 2,
-            'idUPPA' => 64105202
         ]
 
         $rechercheFirst = FicheDescriptive::first();
@@ -254,7 +250,6 @@ class FicheDescriptiveControllerTest extends TestCase
      */
     public function test_update_methode_doit_retourner_une_erreur_422_car_les_donnees_sont_invalides(){
         $donnees = [
-            "dateCreation"=> "2025-01-20",
             "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
@@ -275,9 +270,6 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-            "idEntreprise"=> 1,
-            "idTuteurEntreprise"=> 2,
-            'idUPPA' => 64105202
         ]
 
         $donnees['dateCreation'] = null;
@@ -303,7 +295,6 @@ class FicheDescriptiveControllerTest extends TestCase
      */
     public function test_update_methode_doit_retourner_une_erreur_500_car_une_cle_etrangere_n_existe_pas(){
         $donnees = [
-            "dateCreation"=> "2025-01-20",
             "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
@@ -324,9 +315,6 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-            "idEntreprise"=> 1,
-            "idTuteurEntreprise"=> 2,
-            'idUPPA' => 64105202
         ]
 
         $donnees['idEntreprise'] = 0;
@@ -349,7 +337,6 @@ class FicheDescriptiveControllerTest extends TestCase
      */
     public function test_update_methode_doit_retourner_une_erreur_404_car_l_id_de_la_fiche_descriptive_n_existe_pas(){
         $donnees = [
-            "dateCreation"=> "2025-01-20",
             "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
@@ -370,9 +357,6 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-            "idEntreprise"=> 1,
-            "idTuteurEntreprise"=> 2,
-            'idUPPA' => 64105202
         ]
 
         $response = $this->put('/api/fiche-descriptive/update/0', $donnees);

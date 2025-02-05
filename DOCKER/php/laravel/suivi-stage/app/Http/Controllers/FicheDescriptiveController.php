@@ -115,7 +115,6 @@ class FicheDescriptiveController extends Controller
     public function update(Request $request, $id){
         try{
             $validatedData = $request->validate([
-                'dateCreation' => 'bail|required|date|date-format:Y-m-d',
                 'dateDerniereModification' => 'bail|required|date|date-format:Y-m-d',
                 'contenuStage' => 'nullable|string',
                 'thematique' => 'nullable|string',
@@ -136,9 +135,6 @@ class FicheDescriptiveController extends Controller
                 'dateFinInterruption' => 'nullable|date|date-format:Y-m-d',
                 'personnelTechniqueDisponible' => 'nullable||boolean',
                 'materielPrete' => 'nullable|string',
-                'idEntreprise' => 'bail|required|integer',
-                'idTuteurEntreprise' => 'bail|required|integer',
-                'idUPPA' => 'bail|required|integer'
             ]);
             
             // Récupération et mise à jour en une seule ligne
