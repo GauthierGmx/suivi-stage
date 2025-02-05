@@ -151,6 +151,46 @@ class FicheDescriptiveControllerTest extends TestCase
             'idUPPA' => 64105202
         ]
     }
+
+
+    public function test_create_methode_doit_retourner_une_erreur_500_car_un_probleme_est_survenue(){
+        $donnees = [
+            "dateCreation"=> "2025-01-20",
+            "dateDerniereModification"=> "2025-01-21",
+            "contenuStage"=>  "Développement d'une application web",
+            "thematique"=>  "Développement logiciel",
+            "sujet"=>  "Création d'un outil de gestion des tâches",
+            "fonctions"=>  "Développeur logiciel",
+            "taches"=>  "Analyser, développer et tester",
+            "competences"=>  "PHP, Laravel, JavaScript",
+            "details"=>  "Travail en collaboration avec l'équipe backend",
+            "debutStage"=>  "2025-02-01",
+            "finStage"=>  "2025-06-30",
+            "nbJourSemaine"=>  5,
+            "nbHeureSemaine"=>  35,
+            "clauseConfidentialite"=>  true,
+            "statut"=>  "En cours",
+            "numeroConvention"=>  "12345-ABCDE",
+            "interruptionStage"=>  false,
+            "dateDebutInterruption"=>  null,
+            "dateFinInterruption"=>  null,
+            "personnelTechniqueDisponible"=>  true,
+            "materielPrete"=>  "Ordinateur, logiciel de gestion",
+            "idEntreprise"=> 1,
+            "idTuteurEntreprise"=> 2,
+            'idUPPA' => 64105202
+        ]
+
+        $response = $this->store('/api/fiche-descriptive/create', $donnees);
+
+        $response->assertStatus(500)
+                 ->assertJson([
+                        'message' => 'Une erreur s\'est produite :',
+                        'erreurs' => $e->getMessage()
+        ]);
+    }
+
+
     /**
      * A basic feature test example.
      *
