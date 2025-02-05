@@ -111,9 +111,7 @@ class EtudiantController extends Controller
                 ],404);
             }
             
-            return response()->json([
-                'recherchesStage' => $desRecherches
-            ],200);
+            return response()->json($desRecherches, 200);
         }
         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
         {
