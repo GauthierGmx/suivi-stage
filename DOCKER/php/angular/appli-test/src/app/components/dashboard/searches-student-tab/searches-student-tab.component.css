@@ -331,6 +331,11 @@ tbody tr:nth-child(even):hover::after {
         width: 20px;
         height: 20px;
     }
+
+    .card-actions .edit-icon:hover, 
+    .card-actions .delete-icon:hover {
+        transform: translateY(-2px);  /* Même effet sur mobile */
+    }
 }
 
 @media (max-width: 480px) {
@@ -376,7 +381,7 @@ tbody tr:nth-child(even):hover::after {
 
 .edit-icon, .delete-icon {
     cursor: pointer;
-    transition: color 0.2s;
+    transition: all 0.2s ease;  /* Ajout de la transition pour tous les effets */
 }
 
 .edit-icon {
@@ -385,6 +390,7 @@ tbody tr:nth-child(even):hover::after {
 
 .edit-icon:hover {
     color: #338ccd;
+    transform: translateY(-3px);  /* Effet de surélévation */
 }
 
 .delete-icon {
@@ -393,4 +399,5 @@ tbody tr:nth-child(even):hover::after {
 
 .delete-icon:hover {
     color: #ef4444;
+    transform: translateY(-3px);  /* Effet de surélévation */
 }
