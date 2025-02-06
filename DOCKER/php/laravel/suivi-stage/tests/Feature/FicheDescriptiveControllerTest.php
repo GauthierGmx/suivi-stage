@@ -437,4 +437,20 @@ class FicheDescriptiveControllerTest extends TestCase
                  ->assertJson([
                         'message' => 'Fiche Descriptive non trouvée'
         ]);
+    
+    /**
+     * La méthode show doit retourner une erreur 500 si une erreur survient lors de la récupération
+     * 
+     * @return void
+     */
+    public function test_show_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
+        $rechercheFirst = FicheDescriptive::first();
+
+        $response = $this->get('/api/fiche-descriptive/'.$rechercheFirst->id);
+
+        $response->assertStatus(500)
+                 ->assertJson([
+                        'message' => 'Une erreur s\'est produite :',
+                        'erreurs' => $e->getMessage()
+        ]);
 }
