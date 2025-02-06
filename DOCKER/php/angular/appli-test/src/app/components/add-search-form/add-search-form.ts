@@ -31,6 +31,7 @@ export class AddSearchFormComponent implements OnInit {
     searchTermChanged = new Subject<string>();
     dataLoaded: boolean = false;
     isCreatingCompany: boolean = false;
+    isSubmitting: boolean = false;
 
     constructor(
         private readonly companyService: CompanyService,
@@ -91,14 +92,19 @@ export class AddSearchFormComponent implements OnInit {
         this.searchTermChanged.next(term);
     }
 
-    onSubmit() {
-        // Validation basique des champs requis
+    async onSubmit() {
         if (this.isFormValid()) {
-            this.newSearch.idUPPA = this.currentUser.idUPPA;
-            this.internshipSearchService.addSearch(this.newSearch)
-                .subscribe(() => this.router.navigateByUrl('/dashboard'));
-
-            console.table(this.newSearch);
+            try {
+                this.isSubmitting = true;
+                this.newSearch.idUPPA = this.currentUser.idUPPA;
+                
+                await firstValueFrom(this.internshipSearchService.addSearch(this.newSearch));
+                this.router.navigateByUrl('/dashboard');
+            } catch (error) {
+                console.error('Erreur lors de l\'ajout de la recherche:', error);
+            } finally {
+                this.isSubmitting = false;
+            }
         }
     }
 
