@@ -86,7 +86,39 @@
                   </span>
                 </td>
                 <td class="lastTd">
-                  <!-- Espace réservé pour les futurs boutons de modification et suppression -->
+                  <div class="action-icons">
+                    <svg 
+                      (click)="$event.stopPropagation()"
+                      class="edit-icon" 
+                      width="24" 
+                      height="24" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      stroke-width="2" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"
+                    >
+                      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                    </svg>
+
+                    <svg 
+                      (click)="$event.stopPropagation()"
+                      class="delete-icon" 
+                      width="24" 
+                      height="24" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      stroke-width="2" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"
+                    >
+                      <path d="M3 6h18"/>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    </svg>
+                  </div>
                 </td>
               </tr>
             }
@@ -117,6 +149,40 @@
               <span class="label">Date:</span> 
               {{ item.search.dateCreation | date:'dd/MM/yyyy' }}
             </p>
+          </div>
+          <hr class="card-separator">
+          <div class="card-actions">
+            <svg 
+              (click)="$event.stopPropagation()"
+              class="edit-icon" 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              stroke-width="2" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"
+            >
+              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+            </svg>
+
+            <svg 
+              (click)="$event.stopPropagation()"
+              class="delete-icon" 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              stroke-width="2" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"
+            >
+              <path d="M3 6h18"/>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+            </svg>
           </div>
         </div>
       }
