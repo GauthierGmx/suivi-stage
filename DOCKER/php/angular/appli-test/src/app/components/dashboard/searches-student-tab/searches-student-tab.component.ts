@@ -192,6 +192,6 @@ export class SearchesStudentTabComponent implements OnInit {
     }
 
     goToUpdateSearchFormView(searchId: number) {
-        this.navigationService.navigateToSearchEdit(searchId);
+        this.navigationService.navigateToSearchEditForm(searchId);
     }
 }
