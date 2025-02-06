@@ -25,7 +25,7 @@ export class DescriptionSheetService {
       nbJourParSemaine: 5,
       nbHeureParSemaine: 35,
       clauseConfidentialite: true,
-      statut: 'BROUILLON',
+      statut: 'EN_REVISION',
       personnelTechnique: true,
       materielPrete: true,
       idEntreprise: 1,

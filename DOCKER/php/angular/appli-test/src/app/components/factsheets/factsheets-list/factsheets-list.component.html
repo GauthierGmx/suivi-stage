@@ -72,6 +72,38 @@
       </table>
     </div>
   </div>
+
+
+
+
+  <!-- Vue cards pour mobile -->
+  <div class="cards-view">
+    @for (item of FilteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
+      <div class="search-card">
+        <div class="card-header">
+          <h4>{{ item.company.raisonSociale }}</h4>
+        </div>
+        <div class="card-content">
+          <p class="location">
+            <span class="label">Date création:</span> 
+            {{ item.sheet.dateCreation | date:'dd/MM/yyyy' }}
+          </p>
+          <p class="date">
+            <span class="label">Date modification:</span> 
+            {{ item.sheet.dateDerniereModification | date:'dd/MM/yyyy' }}
+          </p>
+        </div>
+        <div class="card-footer">
+          <button 
+            class="view-button"
+            (click)="viewSearchDetails(item.sheet.idFicheDescriptive)"
+          >
+            Voir
+          </button>
+        </div>
+      </div>
+    }
+  </div>
 }
 </div>
 
