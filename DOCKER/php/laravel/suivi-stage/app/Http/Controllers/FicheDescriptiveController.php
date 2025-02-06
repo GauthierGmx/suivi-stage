@@ -207,7 +207,7 @@ class FicheDescriptiveController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * 
      */
-    public function showAlls(){
+    public function index(){
         try{
             $fichesDescriptives = FicheDescriptive::all();
             return response()->json([
