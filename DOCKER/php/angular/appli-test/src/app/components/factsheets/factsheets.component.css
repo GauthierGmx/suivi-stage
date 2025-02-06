@@ -1,0 +1,42 @@
+.dashboard {
+  margin: 0 auto;
+  padding: 32px;
+  max-width: 1600px;
+}
+
+.content {
+  width: 100%;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.welcome-card {
+  padding: 16px;
+  background-color: #EFF6FF;
+  border-radius: 8px;
+}
+
+.welcome-card h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.welcome-card p {
+  color: #4B5563;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 16px;
+  }
+} 

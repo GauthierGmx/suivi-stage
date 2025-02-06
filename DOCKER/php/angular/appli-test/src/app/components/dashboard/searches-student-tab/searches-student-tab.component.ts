@@ -97,7 +97,6 @@ export class SearchesStudentTabComponent implements OnInit {
     
             // Mettre à jour la propriété qui déclenche la mise à jour du template
             this.filteredSearchesWithCompany = searchesWithCompany;
-            console.log(this.filteredSearchesWithCompany);
         }
     }
 

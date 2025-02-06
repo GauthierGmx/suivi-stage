@@ -2,8 +2,8 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
-import { FactsheetsListComponent} from './components/factsheets/factsheets-list/factsheets-list.component';
 import { AddSearchFormComponent } from './components/add-search-form/add-search-form';
+import { FactsheetsComponent } from './components/factsheets/factsheets.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -14,7 +14,7 @@ export const routes: Routes = [
   },
   {
     path: 'factsheets',
-    component: FactsheetsListComponent,
+    component: FactsheetsComponent,
     canActivate: [authGuard]
   },
   {

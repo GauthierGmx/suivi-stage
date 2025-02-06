@@ -17,7 +17,7 @@ import { AuthService } from '../../../services/auth.service';
 
 
 @Component({
-  selector: 'app-factsheets',
+  selector: 'app-factsheetsList',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './factsheets-list.component.html',
@@ -187,9 +187,6 @@ export class FactsheetsListComponent implements OnInit {
           goToAddSearchFormView() {
               this.navigationService.navigateToSearchForm();
           }
-
-
-
   
   
 }

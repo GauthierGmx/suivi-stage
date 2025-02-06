@@ -1,0 +1,18 @@
+<div class="dashboard">
+  <div class="content">
+    @if (currentUser) {      
+      @if (!allDataLoaded) {
+        <app-loading/>
+      }
+      <div [hidden]="!allDataLoaded">
+        <h1 class="title">Journal de bord</h1>
+        <app-welcome-card [currentUser]="currentUser"/>
+        <app-stats-cards [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+        
+        @if (currentUserRole === 'STUDENT') {
+          <app-factsheetsList [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+        }
+      </div>
+    }
+  </div>
+</div>
