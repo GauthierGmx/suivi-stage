@@ -118,9 +118,7 @@ class EntrepriseController extends Controller
         try
         {
             $uneEntreprise = Entreprise::findOrFail($id);
-            return response()->json([
-                'entreprise' => $uneEntreprise
-            ], 200);
+            return response()->json($uneEntreprise, 200);
         }
         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
         {

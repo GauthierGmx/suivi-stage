@@ -18,8 +18,25 @@ export class AppComponent {
 
   constructor(private readonly authService: AuthService) {}
 
-  get isAuthenticated(): boolean {
-    return this.authService.isAuthenticated();
+  getIsAuthenticated(): boolean {
+    const elements = document.querySelectorAll('.main-content');
+  
+    if (this.authService.isAuthenticated()) {
+      elements.forEach(element => {
+        if (element instanceof HTMLElement) {
+          element.style.marginTop = '80px';
+        }
+      });
+      return true;
+    }
+    else {
+      elements.forEach(element => {
+        if (element instanceof HTMLElement) {
+          element.style.marginTop = '';
+        }
+      });
+      return false;
+    }
   }
 
   isStudent(user: Student | Staff | undefined): user is Student {

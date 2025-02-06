@@ -20,10 +20,6 @@ export class NavigationService {
       });
   }
 
-  navigateToStudentLogbook(studentId: string) {
-    this.router.navigate(['/student-logbook', studentId]);
-  }
-
   goBack() {
     this.history.pop();
     if (this.history.length > 0) {
@@ -33,29 +29,19 @@ export class NavigationService {
     }
   }
 
-  getBreadcrumbs(currentLabel: string): { label: string; path?: string; }[] {
-    const basePath = [{ label: 'Tableau de bord', path: '/dashboard' }];
-    
-    if (this.router.url === '/dashboard') {
-      return basePath;
-    }
-
-    return [...basePath, { label: currentLabel }];
-  }
-
-  navigateToSearchForm(id?: number) {
-    if (id) {
-      this.router.navigate(['/search-form', id]);
-    } else {
-      this.router.navigate(['/search-form']);
-    }
+  navigateToSearchForm() {
+    this.router.navigate(['/dashboard/add-search-form']);
   }
 
   navigateToSearchView(searchId: number) {
-    this.router.navigate(['/search', searchId, 'view']);
+    this.router.navigate(['/dashboard/search-details/', searchId]);
   }
 
-  navigateToStudentDashboard() {
+  navigateToSearchEdit(searchId: number) {
+    this.router.navigate(['/dashboard/update-search/', searchId]);
+  }
+
+  navigateToDashboard() {
     this.router.navigate(['/dashboard']);
   }
 
