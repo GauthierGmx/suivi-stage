@@ -160,7 +160,54 @@ class RechercheStageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try
+        {
+            $donneesValidees = $request->validate([
+                'date1erContact'        => 'bail|required|date',
+                'typeContact'           => 'bail|required|string|in:Courrier,Mail,Présentiel,Téléphone,Site de recrutement',
+                'nomContact'            => 'bail|required|string|max:50',
+                'prenomContact'         => 'bail|required|string|max:50',
+                'fonctionContact'       => 'bail|required|string|max:50',
+                'telephoneContact'      => ['nullable','string','regex:/^(\+33|0)\d{9}$/m'], // Obligé de passer les paramètres dans un tableau puisque la règle "regex" est utilisée avec d'autres
+                'adresseMailContact'    => 'nullable|string|email|max:100',
+                'observations'          => 'nullable|string',
+                'dateRelance'           => 'nullable|date',
+                'statut'                => 'bail|required|string|in:En cours,Validé,Refusé,Relancé',
+            ]);
+            $donneesValidees['dateModification'] = Carbon::now()->format('Y-m-d'); // Ajout de la date de modification
+    
+            $uneRechercheStage = RechercheStage::findOrFail($id);
+            $uneRechercheStage->update($donneesValidees);
+
+            return response()->json($uneRechercheStage, 200);
+        }
+        catch (\Illuminate\Validation\ValidationException $e)
+        {
+            return response()->json([
+                'message' => 'Erreur de validation dans les données',
+                'erreurs' => $e->errors()
+            ],422);   
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
+        {
+            return response()->json([
+                'message' => 'Aucune recherche de stage trouvée'
+            ],404);
+        }
+        catch (\Illuminate\Database\QueryException $e)
+        {
+            return response()->json([
+                'message' => 'Erreur dans la base de données',
+                'erreurs' => $e->getMessage()
+            ],500);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite',
+                'erreurs' => $e->getMessage()
+            ],500);
+        }
     }
 
     /**
