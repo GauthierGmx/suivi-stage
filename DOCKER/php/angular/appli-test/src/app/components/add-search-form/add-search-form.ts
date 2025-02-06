@@ -9,11 +9,12 @@ import { CompanyService } from '../../services/company.service';
 import { InternshipSearchService } from '../../services/internship-search.service';
 import { NavigationService } from '../../services/navigation.service';
 import { firstValueFrom, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { LoadingComponent } from "../loading/loading.component";
 
 @Component({
     selector: 'app-add-search-form',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, LoadingComponent],
     templateUrl: './add-search-form.html',
     styleUrls: ['./add-search-form.css']
 })
@@ -29,6 +30,7 @@ export class AddSearchFormComponent implements OnInit {
     searchTerm = '';
     searchTermChanged = new Subject<string>();
     dataLoaded: boolean = false;
+    isCreatingCompany: boolean = false;
 
     constructor(
         private readonly companyService: CompanyService,
@@ -166,22 +168,28 @@ export class AddSearchFormComponent implements OnInit {
         this.showCompanyModal = true;
     }
 
-    async createCompany() {
+    //Création de l'entreprise en BD
+    async createCompany() {        
         if (this.isCompanyFormValid()) {
             try {
+                this.isCreatingCompany = true;
                 const newCompany = await firstValueFrom(this.companyService.addCompany(this.newCompany));
 
                 if (newCompany) {
-                    this.newSearch.idEntreprise = newCompany.idEntreprise;
-                    this.selectedCompany = newCompany;
-                    this.searchTerm = newCompany.raisonSociale;
+                    // Ajout à la liste des entreprises
+                    this.companies = [...this.companies, newCompany];
+                    
+                    // Utiliser la méthode selectCompany pour assurer une sélection cohérente
+                    this.selectCompany(newCompany);
+                    
+                    // Fermeture de la modale
                     this.showCompanyModal = false;
                 }
             } catch (error) {
                 console.error('Erreur lors de la création de l\'entreprise:', error);
+            } finally {
+                this.isCreatingCompany = false;
             }
-        } else {
-            console.log('Formulaire invalide');
         }
     }    
 

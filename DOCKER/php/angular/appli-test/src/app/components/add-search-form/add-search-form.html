@@ -1,4 +1,6 @@
-<div *ngIf="!dataLoaded">Chargement en cours...</div>
+<div *ngIf="!dataLoaded">
+  <app-loading/>
+</div>
 <div *ngIf="dataLoaded" class="container">
   <div class="content-wrapper">
     <!-- Début Formulaire -->
@@ -264,7 +266,7 @@
     <div class="modal">
       <h3 class="modal-title">Nouvelle entreprise</h3>
       
-      <form #companyForm="ngForm" (ngSubmit)="createCompany()" class="enterprise-form">
+      <form #companyForm="ngForm" (ngSubmit)="createCompany()" class="enterprise-form" [class.disabled-form]="isCreatingCompany">
         <div class="form-group">
           <label class="title" for="raisonSociale">Raison sociale</label>
           <input 
@@ -343,6 +345,12 @@
           </button>
         </div>
       </form>
+
+      @if (isCreatingCompany) {
+        <div class="loading-overlay">
+          <app-loading/>
+        </div>
+      }
     </div>
   </div>
 }
