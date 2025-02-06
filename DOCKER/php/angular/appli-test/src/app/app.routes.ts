@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
-import { FactsheetsComponent } from './components/factsheets/factsheets.component';
+import { FactsheetsListComponent} from './components/factsheets/factsheets-list/factsheets-list.component';
 import { AddSearchFormComponent } from './components/add-search-form/add-search-form';
 
 export const routes: Routes = [
@@ -14,7 +14,7 @@ export const routes: Routes = [
   },
   {
     path: 'factsheets',
-    component: FactsheetsComponent,
+    component: FactsheetsListComponent,
     canActivate: [authGuard]
   },
   {

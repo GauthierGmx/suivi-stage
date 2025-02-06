@@ -40,7 +40,7 @@ export class SearchesStudentTabComponent implements OnInit {
         private readonly companyService: CompanyService,
         private readonly appComponent: AppComponent
     ) {}
-
+    
     ngOnInit() {
         this.currentPageUrl = this.navigationService.getCurrentPageUrl();
 
@@ -97,6 +97,7 @@ export class SearchesStudentTabComponent implements OnInit {
     
             // Mettre à jour la propriété qui déclenche la mise à jour du template
             this.filteredSearchesWithCompany = searchesWithCompany;
+            console.log(this.filteredSearchesWithCompany);
         }
     }
 

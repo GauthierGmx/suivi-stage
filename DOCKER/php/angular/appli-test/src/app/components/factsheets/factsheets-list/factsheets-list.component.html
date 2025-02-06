@@ -1,0 +1,77 @@
+<div class="content-box">
+  @if (currentUserRole === 'STUDENT' && currentPageUrl === '/factsheets') {
+    <div class="titleAndAddSearchButton">
+      <h3><b>Vos fiches descriptives</b></h3>
+      <button
+        (click)="goToAddSearchFormView()"
+      >
+        Ajouter une fiche descriptive
+        (ne marche pas)
+      </button>
+    </div>
+    <div class="searchBarAndfilters">
+      <div class="search-container">
+        <input 
+          type="text"
+          [(ngModel)] = 'searchTerm'
+          (input)="onSearchTermChange($event)"
+          placeholder="Rechercher sur un des champs..." 
+          class="search-input"
+        />
+        @if (searchTerm) {
+          <button 
+            (click)="clearSearchTerm()"
+            class="clear-button"
+          >
+            X
+          </button>
+        }
+      </div>
+  
+      <div class="filter-buttons">
+        <button 
+          class="filter-button"
+          [class.active]="currentFilter === 'date_asc' || currentFilter === 'date_desc'"
+          (click)="toggleDateSort()"
+        >
+          Date
+        </button>
+      </div>
+    </div>
+
+
+  <!-- Vue tableau pour desktop -->
+  <div class="table-view">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Entrepriseeeee</th>
+            <th>DAte création</th>
+            <th>Date modification</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of FilteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
+            <tr>
+              <td class="firstTd">{{ item.company.raisonSociale }}</td>
+              <td>{{ item.sheet.dateCreation | date:'dd/MM/yyyy' }}</td>
+              <td>{{ item.sheet.dateDerniereModification | date:'dd/MM/yyyy' }}</td>
+              <td class="lastTd">
+                <button 
+                  class="view-button"
+                  (click)="viewSearchDetails(item.sheet.idFicheDescriptive)"
+                >
+                  Voir
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+</div>
+
