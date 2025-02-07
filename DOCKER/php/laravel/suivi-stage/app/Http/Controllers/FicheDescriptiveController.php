@@ -235,7 +235,7 @@ class FicheDescriptiveController extends Controller
         try
         {
             // Vérifie si l'étudiant existe
-            $uneFicheDescriptive = FicheDescriptive::findOrFail($id);
+            $unEtudiant = Etudiant::findOrFail($id);
 
             $desFiches = FicheDescriptive::where('idUPPA',$id)->get();
 
