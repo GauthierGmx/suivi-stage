@@ -4,6 +4,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { AddSearchFormComponent } from './components/add-search-form/add-search-form';
 import { FactsheetsComponent } from './components/factsheets/factsheets.component';
+import { SearchDetailsComponent } from './components/search-details/search-details.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,6 +21,11 @@ export const routes: Routes = [
   {
     path: 'dashboard/add-search-form',
     component: AddSearchFormComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'dashboard/search-details/:id',
+    component: SearchDetailsComponent,
     canActivate: [authGuard]
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' }

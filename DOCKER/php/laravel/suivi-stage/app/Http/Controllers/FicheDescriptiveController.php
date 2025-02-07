@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FicheDescriptive;
+use Carbon\Carbon;
 
 class FicheDescriptiveController extends Controller
 {
@@ -100,6 +101,122 @@ class FicheDescriptiveController extends Controller
                 'erreurs' => $e->getMessage()
             ], 500);
         }  
+    }
+
+    /**
+     * Met à jour les données d'une fiche descriptive
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Database\QueryException
+     * @throws \Exception
+     */
+    public function update(Request $request, $id){
+        try{
+            $validatedData = $request->validate([
+                'dateDerniereModification' => 'bail|required|date|date-format:Y-m-d',
+                'contenuStage' => 'nullable|string',
+                'thematique' => 'nullable|string',
+                'sujet' => 'nullable|string',
+                'fonctions' => 'nullable|string',
+                'taches' => 'nullable|string',
+                'competences' => 'nullable|string',
+                'details' => 'nullable|string',
+                'debutStage' => 'nullable|date|date-format:Y-m-d',
+                'finStage' => 'nullable|date|date-format:Y-m-d',
+                'nbJourSemaine' => 'nullable|integer',
+                'nbHeureSemaine' => 'nullable|integer',
+                'clauseConfidentialite' => 'nullable|boolean',
+                'statut' => 'bail|required|string|in:En cours,Validee,Refusée',
+                'numeroConvention' => 'nullable|string',
+                'interruptionStage' => 'nullable|boolean',
+                'dateDebutInterruption' => 'nullable|date|date-format:Y-m-d',
+                'dateFinInterruption' => 'nullable|date|date-format:Y-m-d',
+                'personnelTechniqueDisponible' => 'nullable||boolean',
+                'materielPrete' => 'nullable|string',
+            ]);
+            
+            // Récupération et mise à jour en une seule ligne
+            FicheDescriptive::findOrFail($id)->update($validatedData);
+            $validatedData['dateDerniereModification'] = Carbon::now()->format('Y-m-d');
+
+            return response()->json([
+                'message' => 'Fiche Descriptive mise à jour avec succès.'
+            ], 200);
+        }
+        catch (\Illuminate\Validation\ValidationException $e)
+        {
+            return response()->json([
+                'message' => 'Erreur de validation dans les données',
+                'erreurs' => $e->errors()
+            ], 422);
+        }
+
+        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
+            return response()->json([
+                'message' => 'Fiche Descriptive non trouvée',
+                'erreurs' => $e->getMessage()
+            ], 404);
+        }
+        catch (\Illuminate\Database\QueryException $e)
+        {
+            return response()->json([
+                'message' => 'Erreur dans la base de données',
+                'erreurs' => $e->getMessage()
+            ], 500);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite :',
+                'erreurs' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Récupère les données d'une fiche descriptive
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id){
+        try{
+            $ficheDescriptive = FicheDescriptive::findOrFail($id);
+            return response()->json($ficheDescriptive,200);
+        }
+        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
+            return response()->json([
+                'message' => 'Fiche Descriptive non trouvée',
+                'erreurs' => $e->getMessage()
+            ], 404);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite :',
+                'erreurs' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Récupère l'ensemble des fiches descriptives
+     * @return \Illuminate\Http\JsonResponse
+     * 
+     */
+    public function index(){
+        try{
+            $fichesDescriptives = FicheDescriptive::all();
+            return response()->json($fichesDescriptives, 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite :',
+                'erreurs' => $e->getMessage()
+            ], 500);
+        }
     }
 }
 ?>

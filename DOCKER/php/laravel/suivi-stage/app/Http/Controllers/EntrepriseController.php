@@ -79,10 +79,7 @@ class EntrepriseController extends Controller
                 'latitudeAdresse'   => $donneesValidees['latitudeAdresse'] ?? null,
             ]);
     
-            return response()->json([
-                'message' => 'Entreprise créée avec succès',
-                'entreprise' => $uneEntreprise
-            ],201);
+            return response()->json($uneEntreprise,201);
         }
         catch (\Illuminate\Validation\ValidationException $e)
         {
@@ -118,9 +115,7 @@ class EntrepriseController extends Controller
         try
         {
             $uneEntreprise = Entreprise::findOrFail($id);
-            return response()->json([
-                'entreprise' => $uneEntreprise
-            ], 200);
+            return response()->json($uneEntreprise, 200);
         }
         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
         {

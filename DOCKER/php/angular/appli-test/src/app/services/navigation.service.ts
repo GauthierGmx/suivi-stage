@@ -34,7 +34,11 @@ export class NavigationService {
   }
 
   navigateToSearchView(searchId: number) {
-    this.router.navigate(['/search', searchId, 'view']);
+    this.router.navigate(['/dashboard/search-details/', searchId]);
+  }
+
+  navigateToSearchEdit(searchId: number) {
+    this.router.navigate(['/dashboard/update-search/', searchId]);
   }
 
   navigateToDashboard() {

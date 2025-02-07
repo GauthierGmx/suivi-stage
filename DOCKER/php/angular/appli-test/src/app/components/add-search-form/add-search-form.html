@@ -1,8 +1,10 @@
-<div *ngIf="!dataLoaded">Chargement en cours...</div>
+<div *ngIf="!dataLoaded">
+  <app-loading/>
+</div>
 <div *ngIf="dataLoaded" class="container">
   <div class="content-wrapper">
     <!-- Début Formulaire -->
-    <form #searchForm="ngForm" (ngSubmit)="onSubmit()" class="form">
+    <form #searchForm="ngForm" (ngSubmit)="onSubmit()" class="form" [class.disabled-form]="isSubmitting">
       <div class="form-grid">
         <!-- Type de contact -->
         <div class="form-group">
@@ -243,18 +245,25 @@
           type="button"
           class="cancel-button"
           (click)="onCancel()"
+          [disabled]="isSubmitting"
         >
           Annuler
         </button>
         <button 
           type="submit"
           class="submit-button"
-          [disabled]="!searchForm.form.valid || !isFormValid()"
+          [disabled]="!searchForm.form.valid || !isFormValid() || isSubmitting"
         >
           Ajouter
         </button>
       </div>
     </form>
+
+    @if (isSubmitting) {
+      <div class="loading-overlay">
+        <app-loading/>
+      </div>
+    }
   </div>
 </div>
 
@@ -264,7 +273,7 @@
     <div class="modal">
       <h3 class="modal-title">Nouvelle entreprise</h3>
       
-      <form #companyForm="ngForm" (ngSubmit)="createCompany()" class="enterprise-form">
+      <form #companyForm="ngForm" (ngSubmit)="createCompany()" class="enterprise-form" [class.disabled-form]="isCreatingCompany">
         <div class="form-group">
           <label class="title" for="raisonSociale">Raison sociale</label>
           <input 
@@ -343,6 +352,12 @@
           </button>
         </div>
       </form>
+
+      @if (isCreatingCompany) {
+        <div class="loading-overlay">
+          <app-loading/>
+        </div>
+      }
     </div>
   </div>
 }
