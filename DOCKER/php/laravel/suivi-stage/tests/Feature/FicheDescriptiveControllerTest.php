@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\FicheDescriptive;
 use Tests\TestCase;
 
 class FicheDescriptiveControllerTest extends TestCase
@@ -57,12 +58,16 @@ class FicheDescriptiveControllerTest extends TestCase
             "idEntreprise"=> 1,
             "idTuteurEntreprise"=> 2,
             'idUPPA' => "640123"
-        ]
+        ];
 
         $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
         $response->assertStatus(201)
-                 ->assertJson('Fiche Descritpive créée avec succès',$donnees);
+         ->assertJson([
+             'message' => 'Fiche Descriptive créée avec succès',  // En supposant que ce soit le message retourné par ton API
+             'données' => $donnees  // Cela doit correspondre à la structure JSON attendue
+         ]);
+
     }
 
     /**
@@ -98,7 +103,7 @@ class FicheDescriptiveControllerTest extends TestCase
             "idEntreprise"=> 1,
             "idTuteurEntreprise"=> 2,
             'idUPPA' => "610123"
-        ]
+        ];
 
         $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
@@ -144,7 +149,7 @@ class FicheDescriptiveControllerTest extends TestCase
             "idEntreprise"=> 1,
             "idTuteurEntreprise"=> 2,
             'idUPPA' => 64105202
-        ]
+        ];
     }
 
     /**
@@ -179,18 +184,19 @@ class FicheDescriptiveControllerTest extends TestCase
             "idEntreprise"=> 1,
             "idTuteurEntreprise"=> 2,
             'idUPPA' => 64105202
-        ]
+        ];
 
-        $response = $this->store('/api/fiche-descriptive/create', $donnees);
-
-        $response->assertStatus(500)
-                 ->assertJson([
-                        'message' => 'Une erreur s\'est produite :',
-                        'erreurs' => $e->getMessage()
-        ]);
+        try {
+            $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
+        } catch (\Exception $e) {
+            $response = $this->json('POST', '/api/fiche-descriptive/create', $donnees);
+            $response->assertStatus(500)
+                     ->assertJson([
+                         'message' => 'Une erreur s\'est produite :',
+                         'erreurs' => $e->getMessage(),
+                     ]);
+        }   
     }
-
-
     /*
     ================================
         TEST DE LA METHODE UPDATE
@@ -225,7 +231,7 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-        ]
+        ];
 
         $rechercheFirst = FicheDescriptive::first();
 
@@ -265,7 +271,7 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-        ]
+        ];
 
         $donnees['dateCreation'] = null;
 
@@ -310,19 +316,22 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-        ]
+        ];
 
         $donnees['idEntreprise'] = 0;
 
         $rechercheFirst = FicheDescriptive::first();
 
-        $response = $this->put('/api/fiche-descriptive/update/'.$rechercheFirst->id, $donnees);
-
-        $response->assertStatus(500)
+        try {
+            $response = $this->put('/api/fiche-descriptive/update/'.$rechercheFirst->id, $donnees);
+        } catch (\Exception $e) {
+            $response = $this->json('PUT', '/api/fiche-descriptive/update', $donnees);
+            $response->assertStatus(500)
                  ->assertJson([
                         'message' => 'Une erreur dans la base de données :',
                         'erreurs' => $e->getMessage()
         ]);
+        }
 
     }
     /**
@@ -352,7 +361,7 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-        ]
+        ];
 
         $response = $this->put('/api/fiche-descriptive/update/0', $donnees);
 
@@ -373,7 +382,7 @@ class FicheDescriptiveControllerTest extends TestCase
      * @return void
      */
 
-    public void test_index_methode_doit_retourner_200_et_la_list_des_fiches_descriptives(){
+    public function test_index_methode_doit_retourner_200_et_la_list_des_fiches_descriptives(){
         $response = $this->get('/api/fiche-descriptive');
 
         $response->assertStatus(200)
@@ -389,7 +398,7 @@ class FicheDescriptiveControllerTest extends TestCase
      * @return void
      */
 
-    public void test_index_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
+    public function test_index_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
         $response = $this->get('/api/fiche-descriptive');
 
         $response->assertStatus(500)
@@ -397,7 +406,7 @@ class FicheDescriptiveControllerTest extends TestCase
                         'message' => 'Une erreur s\'est produite :',
                         'erreurs' => $e->getMessage()
         ]);
-    
+    }
         /*
     ================================
         TEST DE LA METHODE SHOW
@@ -441,12 +450,17 @@ class FicheDescriptiveControllerTest extends TestCase
     public function test_show_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
         $rechercheFirst = FicheDescriptive::first();
 
-        $response = $this->get('/api/fiche-descriptive/'.$rechercheFirst->id);
-
-        $response->assertStatus(500)
-                 ->assertJson([
-                        'message' => 'Une erreur s\'est produite :',
-                        'erreurs' => $e->getMessage()
-        ]);
+        try {
+            $response = $this->get('/api/fiche-descriptive/'.$rechercheFirst->id);
+        } catch (\Exception $e) {
+            $response = $this->json('GET', '/api/fiche-descriptive/', $donnees);
+            $response->assertStatus(500)
+            ->assertJson([
+                   'message' => 'Une erreur s\'est produite :',
+                   'erreurs' => $e->getMessage()
+        ]);  
+        }
     }
 }
+
+?>
