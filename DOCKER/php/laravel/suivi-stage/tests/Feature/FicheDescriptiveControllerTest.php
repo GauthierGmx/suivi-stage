@@ -197,16 +197,17 @@ class FicheDescriptiveControllerTest extends TestCase
             'idUPPA' => 64105202
         ];
 
-        try {
-            $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
-        } catch (\Exception $e) {
-            $response = $this->json('POST', '/api/fiche-descriptive/create', $donnees);
-            $response->assertStatus(500)
-                     ->assertJson([
-                         'message' => 'Une erreur s\'est produite :',
-                         'erreurs' => $e->getMessage(),
-                     ]);
-        }   
+        // Envoi d'une requête avec des données incorrectes
+        $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
+
+        // Vérification que l'API retourne une erreur 500
+        $response->assertStatus(500);
+    
+        // Vérification que le message d'erreur est bien celui attendu
+        $response->assertJson([
+            'message' => 'Erreur dans la base de données',
+            'erreurs' => \Illuminate\Support\Str::contains($response->json('erreurs'), 'Cannot add or update a child row') 
+        ]);
     }
     /*
     ================================
