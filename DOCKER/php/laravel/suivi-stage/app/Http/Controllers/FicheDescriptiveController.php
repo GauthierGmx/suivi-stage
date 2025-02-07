@@ -183,9 +183,7 @@ class FicheDescriptiveController extends Controller
     public function show($id){
         try{
             $ficheDescriptive = FicheDescriptive::findOrFail($id);
-            return response()->json([
-                'ficheDescriptive' => $ficheDescriptive
-            ], 200);
+            return response()->json($ficheDescriptive,200);
         }
         catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
             return response()->json([
@@ -210,9 +208,7 @@ class FicheDescriptiveController extends Controller
     public function index(){
         try{
             $fichesDescriptives = FicheDescriptive::all();
-            return response()->json([
-                'fichesDescriptives' => $fichesDescriptives
-            ], 200);
+            return response()->json($fichesDescriptives, 200);
         }
         catch (\Exception $e)
         {
