@@ -35,7 +35,6 @@ export class SearchDetailsComponent implements OnInit {
                 search => {
                     if (search) {
                         this.search = search;
-                        console.log(this.search);
                         this.loadCompanyDetails(search.idEntreprise);
                     }
                 }
@@ -63,8 +62,8 @@ export class SearchDetailsComponent implements OnInit {
         return statusMap[status] || 'status-badge';
     }
 
-    goBack() {
-        this.navigationService.goBack();
+    goToDashboard() {
+        this.navigationService.navigateToDashboard();
     }
 
     goToEdit() {
