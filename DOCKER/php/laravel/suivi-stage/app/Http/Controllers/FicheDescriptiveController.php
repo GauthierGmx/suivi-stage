@@ -138,7 +138,7 @@ class FicheDescriptiveController extends Controller
             FicheDescriptive::findOrFail($id)->update($validatedData);
             $validatedData['dateDerniereModification'] = Carbon::now()->format('Y-m-d');
 
-            return response()->json($uneFicheDescriptive, 200);
+            return response()->json($validatedData, 200);
         }
         catch (\Illuminate\Validation\ValidationException $e)
         {
