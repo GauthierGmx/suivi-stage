@@ -367,15 +367,90 @@ class FicheDescriptiveControllerTest extends TestCase
         ]);       
     }
 
+    /*
+    ================================
+        TEST DE LA METHODE INDEX
+    ================================
+    */
     /**
-     * A basic feature test example.
-     *
+     * La méthode index doit retourner une confirmation 200 et la liste de toutes les fiches descriptives
+     * 
      * @return void
      */
-    public function test_example()
-    {
-        $response = $this->get('/');
 
-        $response->assertStatus(200);
+    public void test_index_methode_doit_retourner_200_et_la_list_des_fiches_descriptives(){
+        $response = $this->get('/api/fiche-descriptive');
+
+        $response->assertStatus(200)
+                 ->assertJson([
+                        'message' => 'Liste des fiches descriptives',
+                        'fichesDescriptives' => FicheDescriptive::all()->toArray()
+        ]);
     }
+
+    /**
+     * La méthode index doit retourner une erreur 500 si une erreur survient lors de la récupération
+     * 
+     * @return void
+     */
+
+    public void test_index_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
+        $response = $this->get('/api/fiche-descriptive');
+
+        $response->assertStatus(500)
+                 ->assertJson([
+                        'message' => 'Une erreur s\'est produite :',
+                        'erreurs' => $e->getMessage()
+        ]);
+    
+        /*
+    ================================
+        TEST DE LA METHODE SHOW
+    ================================
+    */
+    
+    /**
+     * La méthode show doit retourner une confirmation 200 et les données de la fiche descriptive
+     * 
+     * @return void
+     */
+    public function test_show_methode_doit_retourner_un_code_200_car_la_fiche_descriptive_a_ete_trouvee(){
+        $rechercheFirst = FicheDescriptive::first();
+
+        $response = $this->get('/api/fiche-descriptive/'.$rechercheFirst->id);
+
+        $response->assertStatus(200)
+                 ->assertJson([
+                        'ficheDescriptive' => $rechercheFirst->toArray()
+        ]);
+    }
+
+    /**
+     * La méthode show doit retourner une erreur 404 si la fiche descriptive n'existe pas
+     * 
+     * @return void
+     */
+    public function test_show_methode_doit_retourner_une_erreur_404_car_la_fiche_descriptive_n_existe_pas(){
+        $response = $this->get('/api/fiche-descriptive/0');
+
+        $response->assertStatus(404)
+                 ->assertJson([
+                        'message' => 'Fiche Descriptive non trouvée'
+        ]);
+    
+    /**
+     * La méthode show doit retourner une erreur 500 si une erreur survient lors de la récupération
+     * 
+     * @return void
+     */
+    public function test_show_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
+        $rechercheFirst = FicheDescriptive::first();
+
+        $response = $this->get('/api/fiche-descriptive/'.$rechercheFirst->id);
+
+        $response->assertStatus(500)
+                 ->assertJson([
+                        'message' => 'Une erreur s\'est produite :',
+                        'erreurs' => $e->getMessage()
+        ]);
 }

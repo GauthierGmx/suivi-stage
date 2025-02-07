@@ -174,5 +174,49 @@ class FicheDescriptiveController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Récupère les données d'une fiche descriptive
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id){
+        try{
+            $ficheDescriptive = FicheDescriptive::findOrFail($id);
+            return response()->json($ficheDescriptive,200);
+        }
+        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
+            return response()->json([
+                'message' => 'Fiche Descriptive non trouvée',
+                'erreurs' => $e->getMessage()
+            ], 404);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite :',
+                'erreurs' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Récupère l'ensemble des fiches descriptives
+     * @return \Illuminate\Http\JsonResponse
+     * 
+     */
+    public function index(){
+        try{
+            $fichesDescriptives = FicheDescriptive::all();
+            return response()->json($fichesDescriptives, 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite :',
+                'erreurs' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
 ?>
