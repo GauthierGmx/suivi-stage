@@ -1,64 +1,56 @@
 <div class="container">
-  <div class="navigation-tabs">
-    <div class="tab active">Étudiant</div>
-    <div class="tab">Établissement</div>
-    <div class="tab">Entreprise</div>
-    <div class="tab">Représentant Entreprise</div>
-    <div class="tab">Lieux stage</div>
-    <div class="tab">Tuteur stage</div>
-    <div class="tab">Contenu stage</div>
-    <div class="tab">Déroulement stage</div>
-  </div>
-
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
 
   <h2 class="title">Informations de l'étudiant</h2>
   <p class="warning">Les informations pré-remplies sont à vérifier !</p>
   <div class="content">
-
-    <form>
+    <form (ngSubmit)="onNext()">
       <div class="form-row">
         <div class="form-group">
           <label for="nom">NOM</label>
-          <input type="text" id="nom" value="HERRMANN">
+          <input type="text" id="nom" [(ngModel)]="formData.nomEtudiant" name="nom" value="HERRMANN">
         </div>
         <div class="form-group">
           <label for="prenom">Prénom</label>
-          <input type="text" id="prenom" value="Anthony">
+          <input type="text" id="prenom" [(ngModel)]="formData.prenomEtudiant" name="prenom" value="Anthony">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label for="telephone">Téléphone</label>
-          <input type="text" id="telephone" value="0606060606">
+          <input type="text" id="telephone" [(ngModel)]="formData.telephoneEtudiant" name='telephone' value="0606060606">
         </div>
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" value="mail@gmail.com">
+          <input type="email" id="email" [(ngModel)]="formData.emailEtudiant" name='email' value="mail@gmail.com">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="adresse">Adresse - Numéro et Rue</label>
-          <input type="text" id="adresse" placeholder="Numéro Rue">
+          <label for="numeroEtRueEtudiant">Adresse - Numéro et Rue</label>
+          <input type="text" id="numeroEtRueEtudiant" [(ngModel)]="formData.numeroEtRueEtudiant" name='numeroEtRueEtudiant' placeholder="Numéro Rue">
         </div>
         <div class="form-group">
           <label for="code-postal">Adresse - Code Postal</label>
-          <input type="text" id="code-postal" placeholder="Code Postal">
+          <input type="text" id="code-postal" [(ngModel)]="formData.codePostalEtudiant" name='code-postal' placeholder="Code Postal">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label for="ville">Adresse - Ville</label>
-          <input type="text" id="ville" placeholder="Ville">
+          <input type="text" id="ville" [(ngModel)]="formData.villeEtudiant" name='ville' placeholder="Ville">
         </div>
       </div>
 
       <div class="buttons">
         <button type="button" class="btn-cancel">Annuler</button>
-        <button type="button" class="btn-submit">Suivant</button>
+        <button type="submit" class="btn-submit">Suivant</button>
       </div>
     </form>
   </div>

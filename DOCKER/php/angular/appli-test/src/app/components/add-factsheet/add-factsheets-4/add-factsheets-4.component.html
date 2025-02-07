@@ -1,1 +1,67 @@
-<p>add-factsheets-4 works!</p>
+<div class="container">
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
+  
+  <h2 class="title">Informations de l'entreprise</h2>
+  <p class="warning">Les informations pré-remplies sont à vérifier !</p>
+  <div class="content">
+    <form (ngSubmit)="onNext()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="service">Service/Division</label>
+          <input type="text" id="service" [(ngModel)]="formData.serviceEntreprise" name="service">
+        </div>
+        <div class="form-group">
+          <label for="typeEtablissement">Type d'établissement</label>
+          <select id="typeEtablissement" [(ngModel)]="formData.typeEtablissementEntreprise" name="typeEtablissement">
+            <option value="Administration">Administration</option>
+            <option value="Prive">Privé</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="activitePrincipale">Activité principale</label>
+          <input type="text" id="activitePrincipale" [(ngModel)]="formData.activitePrincipaleEntreprise" name="activitePrincipale">
+        </div>
+        <div class="form-group">
+          <label for="numSiret">Numéro SIRET</label>
+          <input type="text" id="numSiret" [(ngModel)]="formData.numSiretEntreprise" name="numSiret">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="codeApeOrNaf">Code APE/NAF</label>
+          <input type="text" id="codeApeOrNaf" [(ngModel)]="formData.codeApeOrNafEntreprise" name="codeApeOrNaf">
+        </div>
+        <div class="form-group">
+          <label for="statutJuridique">Statut juridique</label>
+          <select type="text" id="statutJuridique" [(ngModel)]="formData.statutJuridiqueEntreprise" name="statutJuridique">
+            <option value="SA">SA</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="effectif">Effectif</label>
+          <select id="effectif" [(ngModel)]="formData.effectifEntreprise" name="effectif">
+            <option value="Moins de 10">Moins de 10</option>
+            <option value="10-49">10-49</option>
+            <option value="50 et plus">50 et plus</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
+        <button type="submit" class="btn-submit">Suivant</button>
+      </div>
+    </form>
+  </div>
+</div>
+  

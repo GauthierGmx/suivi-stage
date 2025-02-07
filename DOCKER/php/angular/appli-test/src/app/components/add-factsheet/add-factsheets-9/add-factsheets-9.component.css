@@ -69,7 +69,7 @@
   .form-content {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 100px;
   }
   
   .form-row {
@@ -92,20 +92,7 @@
     font-weight: bold;
   }
   
-  .full-width {
-    max-width: 100% !important;
-  }
-  
-  textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    resize: vertical;
-    min-height: 100px;
-  }
-  
-  input, select, textarea {
+  input {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;

@@ -1,1 +1,49 @@
-<p>add-factsheets-5 works!</p>
+<div class="container">
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
+  
+  <h2 class="title">Information du représentant de l'entreprise</h2>
+  <p class="warning">Les informations pré-remplies sont à vérifier !</p>
+  <div class="content">
+    <form (ngSubmit)="onNext()">
+      <div class="form-content">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" [(ngModel)]="formData.nomRepresEntreprise" name="nom">
+        </div>
+        <div class="form-group">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" [(ngModel)]="formData.prenomRepresEntreprise" name="prenom">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="telephone">Téléphone</label>
+          <input type="text" id="telephone" [(ngModel)]="formData.telephoneRepresEntreprise" name="telephone">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" [(ngModel)]="formData.emailRepresEntreprise" name="email">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fonction">Fonction</label>
+          <input type="text" id="fonction" [(ngModel)]="formData.fonctionRepresEntreprise" name="fonction">
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
+        <button type="submit" class="btn-submit">Suivant</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+  

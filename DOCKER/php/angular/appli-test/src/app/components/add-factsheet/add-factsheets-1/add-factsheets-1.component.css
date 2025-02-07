@@ -7,6 +7,8 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding-bottom: 100px; /* Espace pour les boutons */
 }
 
 .navigation-tabs {
@@ -100,7 +102,11 @@ input {
 .buttons {
   display: flex;
   justify-content: space-around;
-  margin-top: 30px;
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  padding: 0 20px;
 }
 
 .btn-cancel {
@@ -151,11 +157,14 @@ input {
 @media (max-width: 480px) {
   .container {
     padding: 10px;
+    padding-bottom: 120px; /* Augmenter l'espace pour les boutons en version mobile */
   }
 
   .buttons {
     flex-direction: column;
     gap: 10px;
+    padding: 0 20px;
+    bottom: 20px;
   }
 
   .btn-cancel, .btn-submit {

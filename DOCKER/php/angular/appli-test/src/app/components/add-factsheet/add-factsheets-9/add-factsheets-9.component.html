@@ -1,0 +1,42 @@
+<div class="container">
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
+  
+  <h2 class="title">Informations du déroulement du stage</h2>
+  <p class="warning">Les informations pré-remplies sont à vérifier !</p>
+  <div class="content">
+    <form (ngSubmit)="onNext()">
+      <div class="form-content">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dateDebut">Date de début</label>
+            <input type="date" id="dateDebut" [(ngModel)]="formData.debutDuStageDeroulementStage" name="dateDebut">
+          </div>
+          <div class="form-group">
+            <label for="dateFin">Date de fin</label>
+            <input type="date" id="dateFin" [(ngModel)]="formData.finDuStageDeroulementStage" name="dateFin">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nbJoursTravail">Nombre de jours de travail par semaine</label>
+            <input type="number" id="nbJoursTravail" [(ngModel)]="formData.nbJourTravailHebdoDeroulementStage" name="nbJoursTravail" min="1" max="7">
+          </div>
+          <div class="form-group">
+            <label for="nbHeuresHebdo">Nombre d'heures par semaine</label>
+            <input type="number" id="nbHeuresHebdo" [(ngModel)]="formData.nbHeuresHebdoDeroulementStage" name="nbHeuresHebdo" min="1" max="40">
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
+          <button type="submit" class="btn-submit">Valider</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+  

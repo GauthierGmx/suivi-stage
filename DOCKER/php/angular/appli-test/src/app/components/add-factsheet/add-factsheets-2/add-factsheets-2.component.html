@@ -1,44 +1,41 @@
 <div class="container">
-  <div class="navigation-tabs">
-    <div class="tab">Étudiant</div>
-    <div class="tab active">Établissement</div>
-    <div class="tab">Entreprise</div>
-    <div class="tab">Représentant Entreprise</div>
-    <div class="tab">Lieux stage</div>
-    <div class="tab">Tuteur stage</div>
-    <div class="tab">Contenu stage</div>
-    <div class="tab">Déroulement stage</div>
-  </div>
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
 
   <h2 class="title">Informations de l'établissement d'enseignement</h2>
   <p class="warning">Les informations pré-remplies sont à vérifier !</p>
   <div class="content">
-    <form>
+    <form (ngSubmit)="onNext()">
+      <div class="form-content">
       <div class="form-row">
         <div class="form-group">
           <label for="composante">Composante/UFR</label>
-          <input type="text" id="composante" value="181 - IUT de Bayonne et du Pays Basque (Anglet)">
+          <input type="text" id="composante" [(ngModel)]="formData.composanteEtabEnseign" name="composante">
         </div>
         <div class="form-group">
           <label for="parcours">Parcours</label>
-          <input type="text" id="parcours" value="BBWIA2 - BUT2- Info - Intégration d'Applications et Management du S.I">
+          <input type="text" id="parcours" [(ngModel)]="formData.parcoursEtabEnseign" name="parcours">
         </div>
       </div>
 
       <div class="form-row">
+        
         <div class="form-group">
           <label for="adresse">Adresse</label>
-          <input type="text" id="adresse" value="2 allée du Parc Montaury, 64600 Anglet">
+          <input type="text" id="adresse" [(ngModel)]="formData.adresseEtabEnseign" name="adresse">
         </div>
         <div class="form-group">
           <label for="telephone">Téléphone</label>
-          <input type="text" id="telephone" value="05.59.57.43.02">
+          <input type="text" id="telephone" [(ngModel)]="formData.telephoneEtabEnseign" name="telephone">
         </div>
       </div>
+    </div>
 
       <div class="buttons">
-        <button type="button" class="btn-cancel">Précédent</button>
-        <button type="button" class="btn-submit">Suivant</button>
+        <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
+        <button type="submit" class="btn-submit">Suivant</button>
       </div>
     </form>
   </div>

@@ -1,31 +1,26 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavigationTabsComponent } from '../../navigation-tabs/navigation-tabs.component';
 import { NavigationService } from '../../../services/navigation.service';
-import { Staff } from '../../../models/staff.model';
-import { Student } from '../../../models/student.model';
 
 @Component({
-  selector: 'app-add-factsheets-1',
+  selector: 'app-add-factsheets-9',
   standalone: true,
   imports: [CommonModule, FormsModule, NavigationTabsComponent],
-  templateUrl: './add-factsheets-1.component.html',
-  styleUrl: './add-factsheets-1.component.css'
+  templateUrl: './add-factsheets-9.component.html',
+  styleUrl: './add-factsheets-9.component.css'
 })
-export class AddFactsheets1Component {
+export class AddFactsheets9Component {
   @Output() next = new EventEmitter<any>();
+  @Output() previous = new EventEmitter<void>();
   currentStep: number;
-  @Input() currentUser!: Staff | Student;
 
   formData = {
-    nomEtudiant: 'HERRMANN',
-    prenomEtudiant: 'Anthony',
-    telephoneEtudiant: '0606060606',
-    emailEtudiant: 'mail@gmail.com',
-    numeroEtRueEtudiant: '17 Rue de la paix',
-    codePostalEtudiant: '33000',
-    villeEtudiant: 'Bordeaux'
+    debutDuStageDeroulementStage: new Date(),
+    finDuStageDeroulementStage: new Date(),
+    nbJourTravailHebdoDeroulementStage: '5',
+    nbHeuresHebdoDeroulementStage: '35'
   };
 
   constructor(private readonly navigationService: NavigationService) {
@@ -39,4 +34,9 @@ export class AddFactsheets1Component {
   onNext() {
     this.next.emit(this.formData);
   }
+
+  onPrevious() {
+    this.previous.emit();
+  }
 }
+

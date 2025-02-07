@@ -1,1 +1,55 @@
-<p>add-factsheets-6 works!</p>
+<div class="container">
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
+  
+  <h2 class="title">Informations du lieu du stage</h2>
+  <p class="warning">Les informations pré-remplies sont à vérifier !</p>
+  <div class="content">
+    <form (ngSubmit)="onNext()">
+
+      <div class="form-content">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="emailLieuDuStage">Email</label>
+          <input type="email" id="emailLieuDuStage" [(ngModel)]="formData.emailLieuDuStage" name="emailLieuDuStage">
+        </div>
+        <div class="form-group">
+          <label for="telephoneLieuDuStage">Téléphone</label>
+          <input type="text" id="telephoneLieuDuStage" [(ngModel)]="formData.telephoneLieuDuStage" name="telephoneLieuDuStage">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="numeroEtRueLieuDuStage">Adresse - Numéro et Rue</label>
+          <input type="text" id="numeroEtRueLieuDuStage" [(ngModel)]="formData.numeroEtRueLieuDuStage" name="numeroEtRueLieuDuStage">
+        </div>
+        <div class="form-group">
+          <label for="codePostalLieuDuStage">Code Postal</label>
+          <input type="text" id="codePostalLieuDuStage" [(ngModel)]="formData.codePostalLieuDuStage" name="codePostalLieuDuStage">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="villeLieuDuStage">Ville</label>
+          <input type="text" id="villeLieuDuStage" [(ngModel)]="formData.villeLieuDuStage" name="villeLieuDuStage">
+        </div>
+        <div class="form-group">
+          <label for="paysLieuDuStage">Pays</label>
+          <input type="text" id="paysLieuDuStage" [(ngModel)]="formData.paysLieuDuStage" name="paysLieuDuStage">
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
+        <button type="submit" class="btn-submit">Suivant</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+  

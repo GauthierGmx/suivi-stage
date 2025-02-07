@@ -28,11 +28,11 @@ export class StatsCardsComponent implements OnInit {
   currentPageUrl!: string;
 
   constructor(
-    private navigationService: NavigationService,
-    private studentService: StudentService,
-    private internshipSearchService: InternshipSearchService,
-    private descriptiveSheetService: DescriptionSheetService,
-    private appComponent: AppComponent
+    private readonly navigationService: NavigationService,
+    private readonly studentService: StudentService,
+    private readonly internshipSearchService: InternshipSearchService,
+    private readonly descriptiveSheetService: DescriptionSheetService,
+    private readonly appComponent: AppComponent
   )
   {}
 
