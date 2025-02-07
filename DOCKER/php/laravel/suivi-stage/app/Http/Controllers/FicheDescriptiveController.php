@@ -219,48 +219,6 @@ class FicheDescriptiveController extends Controller
         }
     }
 
-    /**
-     * Retourne toutes les recherches de stage d'un étudiant donné
-     * Code HTTP retourné :
-     *      - Code 200 : si l'étudiant a été trouvé et qu'il a des recherches de stage
-     *      - Code 404 : si l'étudiant a été trouvé mais qu'il n'a pas de recherche de stage ou si l'étudiant n'a pas été trouvé
-     *      - Code 500 : s'il y a une erreur
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     * @throws \Exception
-     */
-    public function indexFicheDescriptive($id)
-    {
-        try
-        {
-            // Vérifie si l'étudiant existe
-            $unEtudiant = Etudiant::findOrFail($id);
-
-            $desFiches = FicheDescriptive::where('idUPPA',$id)->get();
-
-            if($desFiches->isEmpty())
-            {
-                return response()->json([
-                    'message' => 'Aucune fiche descriptive trouvée pour cet étudiant'
-                ],404);
-            }
-            
-            return response()->json($desFiches, 200);
-        }
-        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
-        {
-            return response()->json([
-                'message' => 'Aucun étudiant trouvé'
-            ],404);
-        }
-        catch (\Exception $e)
-        {
-            return response()->json([
-                'message' => 'Une erreur s\'est produite',
-                'erreurs' => $e->getMessage()
-            ],500);
-        }
-    }
+    
 }
 ?>

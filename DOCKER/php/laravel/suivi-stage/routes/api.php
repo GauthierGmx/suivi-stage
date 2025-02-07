@@ -40,8 +40,7 @@ Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'st
 Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update');
 Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show');
 Route::get('/fiche-descriptive', [FicheDescriptiveController::class, 'index'])->name('fiche-descriptive.index');
-Route::get('/fiche-descriptive/etudiant/{id}', [FicheDescriptiveController::class, 'indexFicheDescriptive'])->name('fiche-descriptive.indexFicheDescriptive');
-
 
 // Route pour le Controller Etudiant
 Route::get('/etudiants/{id}/recherches-stages', [EtudiantController::class, 'indexRechercheStage'])->name('etudiants.indexRechercheStage');
+Route::get('/etudiants/{id}/fiches-descriptives', [EtudiantController::class, 'indexFicheDescriptive'])->name('etudiants.indexFicheDescriptive');
