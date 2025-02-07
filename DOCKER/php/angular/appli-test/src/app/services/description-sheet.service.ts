@@ -97,14 +97,15 @@ export class DescriptionSheetService {
     return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
   }
 
-  addSheet(sheet: Omit<DescriptiveSheet, 'idFicheDescriptive'>): Observable<DescriptiveSheet> {
-    const newSheet: DescriptiveSheet = {
-      ...sheet,
-      idFicheDescriptive: Math.max(...this.mockSheets.map(s => s.idFicheDescriptive)) + 1,
-      dateCreation: new Date()
+  addSheet(sheet: DescriptiveSheet): Observable<DescriptiveSheet> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
     };
-    this.mockSheets.push(newSheet);
-    return of(newSheet);
+
+    return this.http.post<DescriptiveSheet>('http://localhost:8000/api/fiche-descriptive/create', sheet, httpOptions).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
   }
 
   updateSheet(id: number, sheetData: Partial<DescriptiveSheet>): Observable<DescriptiveSheet> {

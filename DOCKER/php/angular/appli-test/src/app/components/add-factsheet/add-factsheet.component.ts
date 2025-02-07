@@ -87,7 +87,8 @@ export class AddFactsheetComponent implements OnInit {
         sheets: this.descriptiveSheetService.getSheets()
       }).subscribe({
         next: () => {
-          console.log('Données finales envoyées:', this.formData);
+          console.log('Data envoyés');
+          this.descriptiveSheetService.addSheet(this.formData);
           this.dataSended.emit(this.formData);
         },
         error: (error) => console.error('Erreur lors de l\'envoi:', error)
