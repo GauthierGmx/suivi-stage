@@ -7,8 +7,8 @@
                     <img src="/logo_iutbpb_2018.png" alt="Logo de L'IUT" />
                 </a>
             </div>
-            
-            <!-- Navigation au centre -->
+
+            <!-- Navigation au centre (visible uniquement sur desktop) -->
             <nav class="main-nav">
                 <ul class="nav-list">
                     <li>
@@ -48,6 +48,25 @@
                                 <div class="user-info">
                                     {{ prenomCurrentUser }} {{ nomCurrentUser }}
                                 </div>
+                                <!-- Navigation mobile dans le menu profil -->
+                                <div class="mobile-nav">
+                                    <a
+                                    routerLink="/dashboard"
+                                    routerLinkActive="active-link"
+                                    class="mobile-nav-link"
+                                    (click)="toggleProfileMenu()"
+                                    >
+                                    Journal de bord
+                                    </a>
+                                    <a
+                                    routerLink="/factsheets"
+                                    routerLinkActive="active-link"
+                                    class="mobile-nav-link"
+                                    (click)="toggleProfileMenu()"
+                                    >
+                                    Fiche descriptive
+                                    </a>
+                                </div>
                                 <button
                                     (click)="logout()"
                                     class="logout-button"
@@ -61,4 +80,4 @@
             </div>
         </div>
     </div>
-</header> 
+</header>

@@ -1,0 +1,148 @@
+<div *ngIf="!dataLoaded">
+    <app-loading/>
+</div>
+<div *ngIf="dataLoaded" class="container">
+    <div class="content-wrapper">
+        <div class="form">
+            <!-- En-tête avec le statut -->
+            <div class="status-section">
+                <h3><b>Détails de la recherche</b></h3>
+                <span [class]="getStatusClass(search?.statut || '')">
+                    {{ search?.statut }}
+                </span>
+            </div>
+
+            <div class="form-grid">
+                <!-- Type de contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Type de contact</label>
+                        <p class="info-text">{{ search?.typeContact }}</p>
+                    </div>
+                </div>
+
+                <!-- Date 1er contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Date du premier contact</label>
+                        <p class="info-text">{{ search?.date1erContact | date:'dd/MM/yyyy' }}</p>
+                    </div>
+                </div>
+
+                <!-- Nom de l'entreprise -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Nom de l'entreprise</label>
+                        <p class="info-text">{{ company?.raisonSociale }}</p>
+                    </div>
+                </div>
+
+                <!-- Adresse -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Numéro et Rue</label>
+                        <p class="info-text">{{ company?.adresse }}</p>
+                    </div>
+                </div>
+
+                <!-- Code Postal -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Code Postal</label>
+                        <p class="info-text">{{ company?.codePostal }}</p>
+                    </div>
+                </div>
+
+                <!-- Ville -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Ville</label>
+                        <p class="info-text">{{ company?.ville }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="separator">
+            <h3><b>Informations contact</b></h3>
+
+            <div class="form-grid">
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Nom du contact</label>
+                        <p class="info-text">{{ search?.nomContact }}</p>
+                    </div>
+                </div>
+
+                <!-- Prénom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Prénom du contact</label>
+                        <p class="info-text">{{ search?.prenomContact }}</p>
+                    </div>
+                </div>
+
+                <!-- Téléphone contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Téléphone</label>
+                        <p class="info-text">{{ search?.telephoneContact }}</p>
+                    </div>
+                </div>
+
+                <!-- Mail contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Email</label>
+                        <p class="info-text">{{ search?.adresseMailContact }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fonction du contact -->
+            <div class="form-group fonction-contact-group">
+                <div class="input-wrapper">
+                    <label>Fonction du contact</label>
+                    <p class="info-text">{{ search?.fonctionContact }}</p>
+                </div>
+            </div>
+
+            <hr class="separator">
+
+            <!-- Dates importantes -->
+            <div class="dates-section">
+                <h3><b>Dates importantes</b></h3>
+                <div class="dates-grid">
+                    <div class="date-item">
+                        <label>Création</label>
+                        <p class="info-text">{{ search?.dateCreation | date:'dd/MM/yyyy' }}</p>
+                    </div>
+                    <div class="date-item">
+                        <label>Modification</label>
+                        <p class="info-text">{{ search?.dateModification | date:'dd/MM/yyyy' }}</p>
+                    </div>
+                    @if (search?.dateRelance) {
+                        <div class="date-item">
+                            <label>Relance</label>
+                            <p class="info-text">{{ search?.dateRelance | date:'dd/MM/yyyy' }}</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <hr class="separator">
+
+            <!-- Observations -->
+            <div class="observations-section">
+                <h3><b>Observations</b></h3>
+                <p class="observations">{{ search?.observations || 'Aucune observation' }}</p>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="action-buttons">
+                <button class="cancel-button" (click)="goBack()">Retour</button>
+                <button class="edit-button" (click)="goToEdit()">Modifier</button>
+            </div>
+        </div>
+    </div>
+</div>

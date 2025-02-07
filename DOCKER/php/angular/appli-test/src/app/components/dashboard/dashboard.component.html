@@ -1,12 +1,18 @@
 <div class="dashboard">
   <div class="content">
-    @if (currentUser) {
-      <h1 class="title">Journal de bord</h1>
-      <app-welcome-card [currentUser]="this.currentUser"></app-welcome-card>
-      <app-stats-cards [currentUser]="this.currentUser"></app-stats-cards>
-      @if (currentUserRole === 'STUDENT') {
-        <app-searches-student-tab [currentUser]="this.currentUser"></app-searches-student-tab>
+    @if (currentUser) {      
+      @if (!allDataLoaded) {
+        <app-loading/>
       }
+      <div [hidden]="!allDataLoaded">
+        <h1 class="title">Journal de bord</h1>
+        <app-welcome-card [currentUser]="currentUser"/>
+        <app-stats-cards [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+        
+        @if (currentUserRole === 'STUDENT') {
+          <app-searches-student-tab [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+        }
+      </div>
     }
   </div>
-</div> 
+</div>
