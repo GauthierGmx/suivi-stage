@@ -79,10 +79,7 @@ class EntrepriseController extends Controller
                 'latitudeAdresse'   => $donneesValidees['latitudeAdresse'] ?? null,
             ]);
     
-            return response()->json([
-                'message' => 'Entreprise créée avec succès',
-                'entreprise' => $uneEntreprise
-            ],201);
+            return response()->json($uneEntreprise,201);
         }
         catch (\Illuminate\Validation\ValidationException $e)
         {

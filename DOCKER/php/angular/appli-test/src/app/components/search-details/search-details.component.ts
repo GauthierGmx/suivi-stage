@@ -69,7 +69,7 @@ export class SearchDetailsComponent implements OnInit {
 
     goToEdit() {
         if (this.search) {
-            this.navigationService.navigateToSearchEdit(this.search.idRecherche);
+            this.navigationService.navigateToSearchEditForm(this.search.idRecherche);
         }
     }
 }
