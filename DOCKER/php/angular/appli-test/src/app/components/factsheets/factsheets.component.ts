@@ -5,7 +5,7 @@ import { Staff } from '../../models/staff.model';
 import { Student } from '../../models/student.model';
 import { AppComponent } from '../../app.component';
 import { WelcomeComponent } from '../dashboard/welcome-card/welcome-card.component';
-import { StatsCardsComponent } from '../dashboard/stast-cards/stats-cards.component';
+import { StatsCardsComponent } from '../dashboard/stats-cards/stats-cards.component';
 import { SearchesStudentTabComponent } from '../dashboard/searches-student-tab/searches-student-tab.component';
 import { LoadingComponent } from '../loading/loading.component';
 import { FactsheetsListComponent } from './factsheets-list/factsheets-list.component';
