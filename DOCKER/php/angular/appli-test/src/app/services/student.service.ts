@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Student } from '../models/student.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +9,7 @@ import { Student } from '../models/student.model';
 export class StudentService {
   private readonly mockStudents: Student[] = [
     {
-      idUPPA: 'ETU12345',
+      idUPPA: '610123',
       nomEtudiant: 'Dupont',
       prenomEtudiant: 'Jean',
       adresseEtudiant: '12 rue des Lilas',
@@ -64,11 +66,24 @@ export class StudentService {
     }
   ];
 
-  getStudents(): Student[] {
-    return this.mockStudents;
+  constructor(private http: HttpClient) {}
+
+  getStudents(): Observable<Student[]> {
+    return of(this.mockStudents);
   }
 
-  getStudentById(id: string) {
-    return this.mockStudents.find(s => s.idUPPA === id);
+  getStudentById(studentId: string): Observable<Student | undefined> {
+    return of(this.mockStudents.find(s => s.idUPPA === studentId));
+  }
+
+  //Log la réponse de l'API
+  private log(response: any) {
+    console.table(response);
+  }
+
+  //Retourne l'erreur en cas de problème avec l'API
+  private handleError(error: Error, errorValue: any) {
+    console.error(error);
+    return of(errorValue);
   }
 }

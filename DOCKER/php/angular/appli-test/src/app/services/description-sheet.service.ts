@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DescriptiveSheet, SheetStatus } from '../models/description-sheet.model';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -82,18 +83,18 @@ export class DescriptionSheetService {
     }
   ];
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  getSheets() {
-    return this.mockSheets;
+  getSheets(): Observable<DescriptiveSheet[]> {
+    return of(this.mockSheets);
   }
 
-  getSheetsByStudentId(idEtudiant: string): Observable<DescriptiveSheet[]> {
-    return of(this.mockSheets.filter(sheet => sheet.idUPPA === idEtudiant));
+  getSheetsByStudentId(studentId: string): Observable<DescriptiveSheet[]> {
+    return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId));
   }
 
-  getSheetByStudentIdAndStatus(studentId: string, statut: SheetStatus) {
-    return this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut);
+  getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus): Observable<DescriptiveSheet[]> {
+    return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
   }
 
   addSheet(sheet: Omit<DescriptiveSheet, 'idFicheDescriptive'>): Observable<DescriptiveSheet> {
@@ -126,4 +127,15 @@ export class DescriptionSheetService {
     }
     throw new Error('Fiche non trouvée');
   }
+
+  //Log la réponse de l'API
+  private log(response: any) {
+    console.table(response);
+  }
+
+  //Retourne l'erreur en cas de problème avec l'API
+  private handleError(error: Error, errorValue: any) {
+    console.error(error);
+    return of(errorValue);
+  }  
 } 

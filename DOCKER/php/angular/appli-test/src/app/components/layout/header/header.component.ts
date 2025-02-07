@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, Input } from '@angular/core'
+import { Component, OnInit, HostListener, ElementRef } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { Staff } from '../../../models/staff.model'
@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
     prenomCurrentUser?: string;
     currentUserRole?: string;
     showProfileMenu = false;
+    isMobileMenuOpen = false;
 
     constructor(
         private readonly authService: AuthService,
@@ -43,8 +44,17 @@ export class HeaderComponent implements OnInit {
 
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: MouseEvent) {
-        if (!this.elementRef.nativeElement.contains(event.target)) {
+        const target = event.target as HTMLElement;
+        
+        // Check if click is outside profile menu
+        if (!this.elementRef.nativeElement.querySelector('.profile-menu')?.contains(target)) {
             this.showProfileMenu = false;
+        }
+
+        // Check if click is outside mobile menu and not on the toggle button
+        if (!this.elementRef.nativeElement.querySelector('.main-nav')?.contains(target) &&
+            !this.elementRef.nativeElement.querySelector('.mobile-menu-button')?.contains(target)) {
+            this.isMobileMenuOpen = false;
         }
     }
 
@@ -56,8 +66,17 @@ export class HeaderComponent implements OnInit {
         this.showProfileMenu = !this.showProfileMenu;
     }
 
+    toggleMobileMenu() {
+        this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    }
+
+    closeMobileMenu() {
+        this.isMobileMenuOpen = false;
+    }
+
     logout(): void {
         this.showProfileMenu = false;
+        this.isMobileMenuOpen = false;
         this.authService.logout();
     }
 }
