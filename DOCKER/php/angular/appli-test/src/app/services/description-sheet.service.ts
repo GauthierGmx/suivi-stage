@@ -86,11 +86,17 @@ export class DescriptionSheetService {
   constructor(private http: HttpClient) {}
 
   getSheets(): Observable<DescriptiveSheet[]> {
-    return of(this.mockSheets);
+    return this.http.get<DescriptiveSheet[]>('http://localhost:8000/fiche-descriptive').pipe(
+          tap(response => this.log(response)),
+          catchError(error => this.handleError(error, undefined))
+        );
   }
 
   getSheetsByStudentId(studentId: string): Observable<DescriptiveSheet[]> {
-    return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId));
+    return this.http.get<DescriptiveSheet[]>(`http://localhost:8000/fiche-descriptive/${studentId}`).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, undefined))
+    );
   }
 
   getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus): Observable<DescriptiveSheet[]> {
