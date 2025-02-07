@@ -36,7 +36,7 @@ Route::post('/entreprises/create', [EntrepriseController::class, 'store'])->name
 Route::get('/entreprises/{id}', [EntrepriseController::class, 'show'])->name('entreprises.show');
 
 // Route pour le Controller FicheDescriptive
-Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.create');
+Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.store');
 Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update');
 Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show');
 Route::get('/fiche-descriptive', [FicheDescriptiveController::class, 'index'])->name('fiche-descriptive.index');

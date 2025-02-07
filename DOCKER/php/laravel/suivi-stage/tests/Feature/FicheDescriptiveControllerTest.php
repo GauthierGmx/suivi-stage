@@ -22,16 +22,16 @@ class FicheDescriptiveControllerTest extends TestCase
 
     /*
     ================================
-        TEST DE LA METHODE CREATE
+        TEST DE LA METHODE STORE
     ================================
     */
 
     /**
-     * La méthode index va retourner une confirmation 200 et la liste de toutes les entreprises
+     * La méthode store va retourner une confirmation 200 et la liste de toutes les entreprises
      * 
      * @return void
      */
-    public function test_create_la_methode_doit_renvoyer_201(){
+    public function test_store_la_methode_doit_renvoyer_201(){
         $donnees = [
             "dateCreation"=> "2025-01-20",
             "dateDerniereModification"=> "2025-01-21",
@@ -62,22 +62,19 @@ class FicheDescriptiveControllerTest extends TestCase
         $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
         $response->assertStatus(201)
-                 ->assertJson([
-                        'message' => 'Fiche Descritpive créée avec succès',
-                        'message' => $donnees
-        ]);
+                 ->assertJson('Fiche Descritpive créée avec succès',$donnees);
     }
 
     /**
-     * La méthode create doit retourner une erreur 422 si les données ne sont pas valides
+     * La méthode store doit retourner une erreur 422 si les données ne sont pas valides
      * car la date de création doit être obligatoire et non null
      * 
      * @return void
      */
 
-    public function test_create_doit_retourner_une_erreur_422_si_les_donnees_ne_sont_pas_valides(){
+    public function test_store_doit_retourner_une_erreur_422_si_les_donnees_ne_sont_pas_valides(){
         $donnees = [
-            "dateCreation"=> "2025-01-20",
+            "dateCreation"=> "null",
             "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
@@ -103,8 +100,6 @@ class FicheDescriptiveControllerTest extends TestCase
             'idUPPA' => "610123"
         ]
 
-        $donnees['dateCreation'] = null;
-
         $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
         $response->assertStatus(422)
@@ -117,13 +112,13 @@ class FicheDescriptiveControllerTest extends TestCase
     }
 
     /**
-     * La méthode create doit retourner une erreur 500 si une erreur survient lors de l'insertion
+     * La méthode store doit retourner une erreur 500 si une erreur survient lors de l'insertion
      * par exemple une données (clé étrangère n'existe pas)
      * 
      * @return void
      */
 
-    public function test_create_methode_doit_retourner_une_erreur_500_car_une_cle_etrangere_n_existe_pas(){
+    public function test_store_methode_doit_retourner_une_erreur_500_car_une_cle_etrangere_n_existe_pas(){
         $donnees = [
             "dateCreation"=> "2025-01-20",
             "dateDerniereModification"=> "2025-01-21",
@@ -153,12 +148,12 @@ class FicheDescriptiveControllerTest extends TestCase
     }
 
     /**
-     * La méthode create doit retourner une erreur 500 si une erreur survient lors de l'insertion
+     * La méthode store doit retourner une erreur 500 si une erreur survient lors de l'insertion
      * 
      * @return void
      */
 
-    public function test_create_methode_doit_retourner_une_erreur_500_car_un_probleme_est_survenue(){
+    public function test_store_methode_doit_retourner_une_erreur_500_car_un_probleme_est_survenue(){
         $donnees = [
             "dateCreation"=> "2025-01-20",
             "dateDerniereModification"=> "2025-01-21",
