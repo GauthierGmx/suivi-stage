@@ -294,7 +294,43 @@ class FicheDescriptiveControllerTest extends TestCase
                         ]
         ]);
     }
+    /**
+     * La méthode update doit retourner une erreur 404 car la fiche descriptive n'existe pas
+     * 
+     * @return void
+     */
+    public function test_update_methode_doit_retourner_une_erreur_404_car_l_id_de_la_fiche_descriptive_n_existe_pas(){
+        $donnees = [
+            "dateDerniereModification"=> "2025-01-21",
+            "contenuStage"=>  "Développement d'une application web",
+            "thematique"=>  "Développement logiciel",
+            "sujet"=>  "Création d'un outil de gestion des tâches",
+            "fonctions"=>  "Développeur logiciel",
+            "taches"=>  "Analyser, développer et tester",
+            "competences"=>  "PHP, Laravel, JavaScript",
+            "details"=>  "Travail en collaboration avec l'équipe backend",
+            "debutStage"=>  "2025-02-01",
+            "finStage"=>  "2025-06-30",
+            "nbJourSemaine"=>  5,
+            "nbHeureSemaine"=>  35,
+            "clauseConfidentialite"=>  true,
+            "statut"=>  "En cours",
+            "numeroConvention"=>  "12345-ABCDE",
+            "interruptionStage"=>  false,
+            "dateDebutInterruption"=>  null,
+            "dateFinInterruption"=>  null,
+            "personnelTechniqueDisponible"=>  true,
+            "materielPrete"=>  "Ordinateur, logiciel de gestion",
+        ];
 
+        $response = $this->put('/api/fiche-descriptive/update/0', $donnees);
+
+        $response->assertStatus(404)
+                 ->assertJson([
+                        'message' => 'Fiche Descriptive non trouvée'
+        ]);       
+    }
+    
     /**
      * La méthode update doit retourner une erreur 500 car une erreur survient lors de la mise à jour
      * du ici à une clé étrangère qui n'existe pas
