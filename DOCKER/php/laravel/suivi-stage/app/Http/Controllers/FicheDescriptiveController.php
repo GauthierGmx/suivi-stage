@@ -112,7 +112,6 @@ class FicheDescriptiveController extends Controller
     public function update(Request $request, $id){
         try{
             $validatedData = $request->validate([
-                'dateDerniereModification' => 'bail|required|date|date-format:Y-m-d',
                 'contenuStage' => 'nullable|string',
                 'thematique' => 'nullable|string',
                 'sujet' => 'nullable|string',
@@ -212,8 +211,6 @@ class FicheDescriptiveController extends Controller
                 'erreurs' => $e->getMessage()
             ], 500);
         }
-    }
-
-    
+    }    
 }
 ?>

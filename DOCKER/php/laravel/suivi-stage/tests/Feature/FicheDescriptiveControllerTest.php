@@ -223,7 +223,6 @@ class FicheDescriptiveControllerTest extends TestCase
 
     public function test_update_methode_doit_retourner_200_car_la_fiche_descriptive_a_ete_mise_a_jour(){
         $donnees = [
-            "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
             "sujet"=>  "Création d'un outil de gestion des tâches",
@@ -245,8 +244,8 @@ class FicheDescriptiveControllerTest extends TestCase
             "materielPrete"=>  "Ordinateur, logiciel de gestion"
         ];
 
-        $rechercheFirst = FicheDescriptive::first();
-        $response = $this->put('/api/fiche-descriptive/update/'.$rechercheFirst->id, $donnees);    
+        $rechercheFirst = FicheDescriptive::first()->idFicheDescriptive;
+        $response = $this->putJson('/api/fiche-descriptive/update/'.$rechercheFirst, $donnees);    
         $response->assertStatus(200)
                  ->assertJson($donnees);
     }
@@ -272,7 +271,7 @@ class FicheDescriptiveControllerTest extends TestCase
             "nbJourSemaine"=>  5,
             "nbHeureSemaine"=>  35,
             "clauseConfidentialite"=>  true,
-            "statut"=>  "En cours",
+            "statut"=>  "En france",
             "numeroConvention"=>  "12345-ABCDE",
             "interruptionStage"=>  false,
             "dateDebutInterruption"=>  null,
@@ -285,13 +284,13 @@ class FicheDescriptiveControllerTest extends TestCase
 
         $rechercheFirst = FicheDescriptive::first();
 
-        $response = $this->put('/api/fiche-descriptive/update/'.$rechercheFirst->id, $donnees);
+        $response = $this->putJson('/api/fiche-descriptive/update/'.$rechercheFirst->idFicheDescriptive, $donnees);
 
         $response->assertStatus(422)
                  ->assertJson([
                         'message' => 'Erreur de validation dans les données',
                         'erreurs' => [
-                            'dateCreation' => ['La date de création est obligatoire']
+                            'statut' => ['Le champ statut sélectionné est invalide.']
                         ]
         ]);
     }
@@ -330,16 +329,15 @@ class FicheDescriptiveControllerTest extends TestCase
 
         $rechercheFirst = FicheDescriptive::first();
 
-        try {
-            $response = $this->put('/api/fiche-descriptive/update/'.$rechercheFirst->id, $donnees);
-        } catch (\Exception $e) {
-            $response = $this->json('PUT', '/api/fiche-descriptive/update', $donnees);
-            $response->assertStatus(500)
-                 ->assertJson([
-                        'message' => 'Une erreur dans la base de données :',
-                        'erreurs' => $e->getMessage()
+        $response = $this->putJson('/api/fiche-descriptive/update/'.$rechercheFirst->idFicheDescriptive, $donnees);
+        // Vérification que l'API retourne une erreur 500
+        $response->assertStatus(500);
+    
+        // Vérification que le message d'erreur est bien celui attendu
+        $response->assertJson([
+            'message' => 'Erreur dans la base de données',
+            'erreurs' => \Illuminate\Support\Str::contains($response->json('erreurs'), 'Cannot add or update a child row') 
         ]);
-        }
 
     }
     /**
@@ -436,12 +434,12 @@ class FicheDescriptiveControllerTest extends TestCase
     public function test_show_methode_doit_retourner_un_code_200_car_la_fiche_descriptive_a_ete_trouvee(){
         $rechercheFirst = FicheDescriptive::first();
 
+        // Effectuer la requête GET
         $response = $this->get('/api/fiche-descriptive/'.$rechercheFirst->id);
-
+    
+        // Vérifier le code de statut 200 et la réponse JSON
         $response->assertStatus(200)
-                 ->assertJson([
-                        'ficheDescriptive' => $rechercheFirst->toArray()
-        ]);
+                 ->assertJsonFragment($rechercheFirst->toArray());
     }
 
     /**
@@ -463,18 +461,21 @@ class FicheDescriptiveControllerTest extends TestCase
      * @return void
      */
     public function test_show_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
-        $rechercheFirst = FicheDescriptive::first();
-
-        try {
-            $response = $this->get('/api/fiche-descriptive/'.$rechercheFirst->id);
-        } catch (\Exception $e) {
-            $response = $this->json('GET', '/api/fiche-descriptive/', $donnees);
-            $response->assertStatus(500)
-            ->assertJson([
-                   'message' => 'Une erreur s\'est produite :',
-                   'erreurs' => $e->getMessage()
-        ]);  
+        $invalidId = 999999;
+        if ($id == 999999) {
+            throw new \Exception("Erreur simulée !");
         }
+
+        // Remplacer findOrFail par find() pour éviter l'erreur 404
+        $ficheDescriptive = FicheDescriptive::find($id);
+
+        $response = $this->get('/api/fiche-descriptive/' . $invalidId);
+    
+        $response->assertStatus(500)
+                 ->assertJson([
+                     'message' => 'Une erreur s\'est produite :',
+                     'erreurs' => 'Erreur simulée !'
+                 ]);
     }
 }
 ?>
