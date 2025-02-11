@@ -56,6 +56,7 @@
 
 .clear-button {
     position: absolute;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
@@ -83,10 +84,38 @@
     font-weight: 500;
     justify-content: center;
     flex: 1;
+    appearance: none;
+    -webkit-appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 1em;
+    padding-right: 32px;
+}
+
+/* Styles spécifiques pour le bouton de tri par date */
+.filter-button.date_asc {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.filter-button.date_desc {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='18 15 12 9 6 15'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.filter-button.default {
+    background-image: none;
 }
 
 .filter-button.active {
     background-color: #F3F4F6;
+}
+
+select.filter-button {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+select.filter-button:not(:focus) {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='9 18 15 12 9 6'%3e%3c/polyline%3e%3c/svg%3e");
 }
 
 /* Tableau */
@@ -131,16 +160,16 @@ tbody tr {
 
 /* Couleurs de base */
 tbody tr:nth-child(odd) td {
-    background-color: #eee4ff;  /* Couleur violette claire */
+    background-color: #eee4ff;
 }
 
 tbody tr:nth-child(even) td {
-    background-color: #d7ebff;  /* Couleur bleue claire */
+    background-color: #d7ebff;
 }
 
 /* Couleurs au survol pour les lignes impaires */
 tbody tr:nth-child(odd):hover td {
-    background-color: #dcc6ff !important;  /* Version plus vive du violet */
+    background-color: #dcc6ff !important;
 }
 
 tbody tr:nth-child(odd):hover::after {
@@ -150,14 +179,14 @@ tbody tr:nth-child(odd):hover::after {
     left: 0;
     right: 0;
     bottom: 0;
-    border: 2px solid #c094ff;  /* Violet intermédiaire */
+    border: 2px solid #c094ff;
     border-radius: 16px;
     pointer-events: none;
 }
 
 /* Couleurs au survol pour les lignes paires */
 tbody tr:nth-child(even):hover td {
-    background-color: #b8dcff !important;  /* Version plus vive du bleu */
+    background-color: #b8dcff !important;
 }
 
 tbody tr:nth-child(even):hover::after {
@@ -167,7 +196,7 @@ tbody tr:nth-child(even):hover::after {
     left: 0;
     right: 0;
     bottom: 0;
-    border: 2px solid #4a8fd0;  /* Bleu intermédiaire */
+    border: 2px solid #4a8fd0;
     border-radius: 16px;
     pointer-events: none;
 }
@@ -223,7 +252,7 @@ tbody tr:nth-child(even):hover::after {
 }
 
 .search-card:hover {
-    border: 3px solid #4a8fd0;  /* Même bleu intermédiaire */
+    border: 3px solid #4a8fd0;
     background-color: #b8dcff;
 }
 
@@ -333,4 +362,4 @@ tbody tr:nth-child(even):hover::after {
     .status-badge {
         align-self: flex-start;
     }
-} 
+}
