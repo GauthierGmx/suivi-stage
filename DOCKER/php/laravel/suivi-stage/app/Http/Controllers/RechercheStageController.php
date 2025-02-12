@@ -79,10 +79,7 @@ class RechercheStageController extends Controller
                 'idEntreprise' => $donneesValidees['idEntreprise'],
             ]);
     
-            return response()->json([
-                'message' => 'Recherche de stage créée avec succès',
-                'rechercheStage' => $uneRechercheStage
-            ], 201);
+            return response()->json($uneRechercheStage, 201);
         }
         catch (\Illuminate\Validation\ValidationException $e)
         {
