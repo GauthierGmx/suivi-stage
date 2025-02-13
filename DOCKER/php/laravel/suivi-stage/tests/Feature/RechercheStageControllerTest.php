@@ -91,10 +91,7 @@ class RechercheStageControllerTest extends TestCase
         $response = $this->postJson('/api/recherches-stages/create', $donnees);
 
         $response->assertStatus(201)
-                 ->assertJson([
-                        'message' => 'Recherche de stage créée avec succès',
-                        'rechercheStage' => $donnees
-        ]);
+                 ->assertJson($donnees);
     }
 
     /**
@@ -211,7 +208,7 @@ class RechercheStageControllerTest extends TestCase
         $response = $this->get('/api/recherches-stages/'.$uneRecherche->idRecherche);
 
         $response->assertStatus(200)
-                 ->assertJson(['rechercheStage' => [
+                 ->assertJson([
                     'idRecherche' => $uneRecherche->idRecherche,
                     'dateCreation' => $uneRecherche->dateCreation,
                     'dateModification' => $uneRecherche->dateModification,
@@ -227,8 +224,7 @@ class RechercheStageControllerTest extends TestCase
                     'statut' => $uneRecherche->statut,
                     'idUPPA' => $uneRecherche->idUPPA,
                     'idEntreprise' => $uneRecherche->idEntreprise,
-                 ]
-                 ]);
+                ]);
     }
 
     /**
@@ -236,7 +232,7 @@ class RechercheStageControllerTest extends TestCase
      * 
      * @return void
      */
-    public function test_show_renvoie_une_erreur_non_trouvee()
+    public function test_show_renvoie_une_erreur_non_trouvee_en_cas_de_recherche_non_trouvee()
     {
         $idRecherche = PHP_INT_MAX;
 
@@ -251,7 +247,7 @@ class RechercheStageControllerTest extends TestCase
      * 
      * @return void
      */
-    public function test_show_renvoie_une_erreur_generique()
+    public function test_show_renvoie_une_erreur_generique_en_cas_d_exception()
     {
         // Mock du modèle RechercheStage pour déclencher une exception
         $this->mock(\App\Http\Controllers\RechercheStageController::class, function ($mock) {
@@ -271,6 +267,139 @@ class RechercheStageControllerTest extends TestCase
         TEST DE LA METHODE UPDATE
     =================================
     */
+
+    /**
+     * La méthode update va retourner une confirmation 200 et les informations de la recherche de stage modifiée
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_confirmation_et_les_informations_de_la_recherche_de_stage_modifiee()
+    {
+        $donnees = [
+            'date1erContact' => '2025-01-17',
+            'typeContact' => 'Mail',
+            'nomContact' => 'Dupont',
+            'prenomContact' => 'Micheline',
+            'fonctionContact' => 'Responsable RH',
+            'telephoneContact' => '0123456789',
+            'adresseMailContact' => 'contact@entreprise.com',
+            'observations' => 'Profil pas assez intéréssant pour eux',
+            'dateRelance' => null,
+            'statut' => 'Refusé'
+        ];
+
+        $uneRecherche = RechercheStage::first();
+
+        $response = $this->putJson('/api/recherches-stages/update/'.$uneRecherche->idRecherche, $donnees);
+
+        $response->assertStatus(200)
+                ->assertJson([
+                    'idRecherche' => 1,
+                    'dateCreation' => '2025-01-10',
+                    'dateModification' => now()->toDateString(),
+                    'date1erContact' => '2025-01-17',
+                    'typeContact' => 'Mail',
+                    'nomContact' => 'Dupont',
+                    'prenomContact' => 'Micheline',
+                    'fonctionContact' => 'Responsable RH',
+                    'telephoneContact' => '0123456789',
+                    'adresseMailContact' => 'contact@entreprise.com',
+                    'observations' => 'Profil pas assez intéréssant pour eux',
+                    'dateRelance' => null,
+                    'statut' => 'Refusé',
+                    'idUPPA' => '611082',
+                    'idEntreprise' => 1
+                ]);
+    }
+
+    /**
+     * La méthode update va retourner une erreur 422 si une donnée n'est pas validée
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_erreur_de_validation_en_cas_de_donnees_invalides()
+    {
+        $donnees = [
+            'date1erContact' => '2025-01-17',
+            'typeContact' => 'Mail',
+            'nomContact' => 'Dupont',
+            'prenomContact' => 'Micheline',
+            'fonctionContact' => 'Responsable RH',
+            'telephoneContact' => '0123456789',
+            'adresseMailContact' => 'contact@entreprise.com',
+            'observations' => 'Profil pas assez intéréssant pour eux',
+            'dateRelance' => null,
+            'statut' => 'TEST'
+        ];
+
+        $uneRecherche = RechercheStage::first();
+
+        $response = $this->putJson('/api/recherches-stages/update/'.$uneRecherche->idRecherche, $donnees);
+
+        $response->assertStatus(422)
+                ->assertJson(['message' => 'Erreur de validation dans les données']);
+    }
+
+    /**
+     * La méthode update va retourner une erreur 404 si la recherche de stage n'a pas été trouvée
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_erreur_non_trouvee_en_cas_de_recherche_non_trouvee()
+    {
+        $idRecherche = PHP_INT_MAX;
+
+        $donnees = [
+            'date1erContact' => '2025-01-17',
+            'typeContact' => 'Mail',
+            'nomContact' => 'Dupont',
+            'prenomContact' => 'Micheline',
+            'fonctionContact' => 'Responsable RH',
+            'telephoneContact' => '0123456789',
+            'adresseMailContact' => 'contact@entreprise.com',
+            'observations' => 'Profil pas assez intéréssant pour eux',
+            'dateRelance' => null,
+            'statut' => 'Refusé'
+        ];
+
+        $response = $this->putJson('/api/recherches-stages/update/'.$idRecherche, $donnees);   
+        
+        $response->assertStatus(404)
+                ->assertJson(['message' => 'Aucune recherche de stage trouvée']);
+    }
+
+    /**
+     * La méthode update va retourner une erreur 500 en cas d'exception
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_erreur_generique_en_cas_d_exception()
+    {
+        // Mock du modèle RechercheStage pour déclencher une exception
+        $this->mock(\App\Http\Controllers\RechercheStageController::class, function ($mock) {
+            $mock->shouldReceive('update')->andThrow(new \Exception('Erreur simulée'));
+        });
+
+        $donnees = [
+            'date1erContact' => '2025-01-17',
+            'typeContact' => 'Mail',
+            'nomContact' => 'Dupont',
+            'prenomContact' => 'Micheline',
+            'fonctionContact' => 'Responsable RH',
+            'telephoneContact' => '0123456789',
+            'adresseMailContact' => 'contact@entreprise.com',
+            'observations' => 'Profil pas assez intéréssant pour eux',
+            'dateRelance' => null,
+            'statut' => 'Refusé'
+        ];
+
+        $uneRecherhe = RechercheStage::first();
+
+        $response = $this->putJson('/api/recherches-stages/update/'.$uneRecherhe->idRecherche,$donnees);
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite']);
+    }
 
     /*
     ==================================
