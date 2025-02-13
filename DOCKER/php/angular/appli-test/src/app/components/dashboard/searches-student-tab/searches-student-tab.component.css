@@ -149,6 +149,8 @@ tbody td {
 }
 
 .lastTd {
+    padding-left: 1rem !important;
+    text-align: left;
     border-radius: 0 16px 16px 0;
 }
 
@@ -328,6 +330,40 @@ tbody tr:nth-child(even):hover::after {
         min-width: 135px;
         padding: 6px 12px;
     }
+
+    .search-card {
+        position: relative;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-separator {
+        margin: 1rem 0;
+        border: none;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .card-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 1rem;
+        gap: 1rem;
+    }
+
+    .card-actions .edit-icon, 
+    .card-actions .delete-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .card-actions .edit-icon:hover, 
+    .card-actions .delete-icon:hover {
+        transform: translateY(-2px);  /* Même effet sur mobile */
+    }
 }
 
 @media (max-width: 480px) {
@@ -361,4 +397,35 @@ tbody tr:nth-child(even):hover::after {
     .status-badge {
         align-self: flex-start;
     }
+}
+
+/* Style pour les icônes d'action */
+.action-icons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 40%;
+    width: 100%;
+}
+
+.edit-icon, .delete-icon {
+    cursor: pointer;
+    transition: all 0.2s ease;  /* Ajout de la transition pour tous les effets */
+}
+
+.edit-icon {
+    color: #0A63A4;
+}
+
+.edit-icon:hover {
+    color: #338ccd;
+    transform: translateY(-3px);  /* Effet de surélévation */
+}
+
+.delete-icon {
+    color: #dc2626;
+}
+
+.delete-icon:hover {
+    color: #ef4444;
+    transform: translateY(-3px);  /* Effet de surélévation */
 }

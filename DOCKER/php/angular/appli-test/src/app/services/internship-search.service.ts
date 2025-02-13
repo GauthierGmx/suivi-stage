@@ -286,11 +286,12 @@ export class InternshipSearchService {
 
   constructor(private http: HttpClient) {}
 
-  //Sélection de recherches
+  //Sélection de toutes les recherches de stages
   getSearches(): Observable<InternshipSearch[]> {
     return of(this.mockSearches);
   }
 
+  //Sélection de la recherche de stage correspondant à l'identifiant passé en paramètre
   getSearchById(idSearch: number): Observable<InternshipSearch | undefined> {
     return this.http.get<InternshipSearch>(`http://localhost:8000/api/recherches-stages/${idSearch}`).pipe(
       tap(response => this.log(response)),
@@ -298,6 +299,7 @@ export class InternshipSearchService {
     );
   }
 
+  //Sélection des recherches de stages d'un étudiant dont l'identifiant est passé en paramètre
   getSearchesByStudentId(studentId: string): Observable<InternshipSearch[]> {
     return this.http.get<InternshipSearch[]>(`http://localhost:8000/api/etudiants/${studentId}/recherches-stages`).pipe(
       tap(response => this.log(response)),
@@ -305,11 +307,15 @@ export class InternshipSearchService {
     );
   }
 
+  /*
+    Sélection des recherches de stages filtrer sur le statut passé en second paramètre,
+    pour un étudiant dont l'identifiant est passé en premier paramètre
+  */
   getSearchesByStudentIdAndStatut(studentId: string, statut: SearchStatus): Observable<InternshipSearch[]> {
     return of(this.mockSearches.filter(s => s.idUPPA === studentId && s.statut === statut));
   }
 
-  //Ajout d'une recherche
+  //Ajout d'une recherche de stage
   addSearch(search: InternshipSearch): Observable<InternshipSearch> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-type': 'application/json'})
@@ -323,25 +329,19 @@ export class InternshipSearchService {
     );
   }
 
-  //Mise à jour d'une recherche
-  updateSearch(id: number, search: Partial<InternshipSearch>): Observable<InternshipSearch> {
-    const index = this.mockSearches.findIndex(s => s.idRecherche === id);
-    if (index === -1) throw new Error('Recherche non trouvée');
-
-    // Conversion des IDs en nombres si présents dans l'update
-    const updatedSearch = {
-      ...this.mockSearches[index],
-      ...search,
-      dateModification: new Date(),
+  //Mise à jour d'une recherche de stage
+  updateSearch(search: InternshipSearch): Observable<null> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
     };
 
-    this.mockSearches[index] = updatedSearch;
-    this.searchesSubject.next([...this.mockSearches]);
-
-    return of(updatedSearch);
+    return this.http.put(`http://localhost:8000/api/recherches-stages/update/${search.idRecherche}`, search, httpOptions).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
   }
 
-  //Supression d'une recherche
+  //Supression d'une recherche de stage
   deleteSearch(id: number): Observable<void> {
     this.mockSearches = this.mockSearches.filter(s => s.idRecherche !== id);
     this.searchesSubject.next([...this.mockSearches]);
