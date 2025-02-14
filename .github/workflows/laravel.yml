@@ -35,6 +35,9 @@ jobs:
           extensions: mbstring, pdo, pdo_mysql, xdebug
           tools: composer:v2
 
+      - name: Move into the project directory
+        run: cd ../../DOCKER/php/laravel/suivi-stage
+
       - name: Install dependencies
         run: |
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
@@ -51,21 +54,18 @@ jobs:
 
       - name: Generate key
         run: |
-          cd ../../DOCKER/php/laravel/suivi-stage
           php artisan key:generate
 
       - name: Run migrations
         run: |
-          cd ../../DOCKER/php/laravel/suivi-stage
           php artisan migrate:fresh --seed
 
       - name: Run tests
         run: |
-          cd ../../DOCKER/php/laravel/suivi-stage
           ./vendor/bin/phpunit --coverage-html ./tests/coverage
 
       - name: Upload coverage as artifacts
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: ../../DOCKER/php/laravel/suivi-stage/tests/coverage
+          path: tests/coverage
