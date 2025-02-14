@@ -51,11 +51,6 @@ jobs:
           echo "DB_USERNAME=test_user" >> .env.ci
           echo "DB_PASSWORD=test_password" >> .env.ci
 
-      - name: Generate key
-        run: |
-          cd DOCKER/php/laravel/suivi-stage
-          php artisan key:generate
-
       - name: Run migrations
         run: |
           cd DOCKER/php/laravel/suivi-stage
