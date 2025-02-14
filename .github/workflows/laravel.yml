@@ -42,11 +42,12 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd DOCKER/php/laravel/suivi-stage
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Copy .env.example to .env.ci
         run: |
-          cd ../../DOCKER/php/laravel/suivi-stage
+          cd DOCKER/php/laravel/suivi-stage
           cp .env.example .env.ci
           echo "DB_CONNECTION=mysql" >> .env
           echo "DB_HOST=mysql" >> .env
@@ -57,17 +58,17 @@ jobs:
 
       - name: Generate key
         run: |
-          cd ../../DOCKER/php/laravel/suivi-stage
+          cd DOCKER/php/laravel/suivi-stage
           php artisan key:generate
 
       - name: Run migrations
         run: |
-          cd ../../DOCKER/php/laravel/suivi-stage
+          cd DOCKER/php/laravel/suivi-stage
           php artisan migrate:fresh --seed
 
       - name: Run tests
         run: |
-          cd ../../DOCKER/php/laravel/suivi-stage
+          cd DOCKER/php/laravel/suivi-stage
           ./vendor/bin/phpunit --coverage-html ./tests/coverage
 
       - name: Upload coverage as artifacts
