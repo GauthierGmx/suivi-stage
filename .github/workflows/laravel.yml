@@ -35,8 +35,10 @@ jobs:
           extensions: mbstring, pdo, pdo_mysql, xdebug
           tools: composer:v2
 
-      - name: Move into the project directory
-        run: cd ../../DOCKER/php/laravel/suivi-stage
+      - name: Debug path
+        run: |
+          pwd
+          ls -la
 
       - name: Install dependencies
         run: |
@@ -44,6 +46,7 @@ jobs:
 
       - name: Copy .env.example to .env.ci
         run: |
+          cd ../../DOCKER/php/laravel/suivi-stage
           cp .env.example .env.ci
           echo "DB_CONNECTION=mysql" >> .env
           echo "DB_HOST=mysql" >> .env
@@ -54,14 +57,17 @@ jobs:
 
       - name: Generate key
         run: |
+          cd ../../DOCKER/php/laravel/suivi-stage
           php artisan key:generate
 
       - name: Run migrations
         run: |
+          cd ../../DOCKER/php/laravel/suivi-stage
           php artisan migrate:fresh --seed
 
       - name: Run tests
         run: |
+          cd ../../DOCKER/php/laravel/suivi-stage
           ./vendor/bin/phpunit --coverage-html ./tests/coverage
 
       - name: Upload coverage as artifacts
