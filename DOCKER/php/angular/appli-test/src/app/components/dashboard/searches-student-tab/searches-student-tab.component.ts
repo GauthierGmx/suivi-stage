@@ -31,7 +31,11 @@ export class SearchesStudentTabComponent implements OnInit {
     searchTerm: string = '';
     searchTermSubject = new Subject<string>();
     filteredSearchesWithCompany: { search: InternshipSearch; company: Company }[] = [];
-    currentFilter: 'all' | 'waiting' | 'validated' | 'date_asc' | 'date_desc' = 'all';
+    originalSearchesWithCompany: { search: InternshipSearch; company: Company }[] = [];
+    currentStatutFilter: 'all' | 'Refusé' | 'En cours' | 'Relancé' | 'Validé' = 'all';
+    currentDateFilter: 'default' | 'date_asc' | 'date_desc' = 'default';
+    currentCityFilter: string = 'all';
+    availableCities: string[] = [];
 
     constructor(
         private readonly internshipSearchService: InternshipSearchService,
@@ -59,7 +63,7 @@ export class SearchesStudentTabComponent implements OnInit {
             debounceTime(800),
             distinctUntilChanged()
         ).subscribe(() => {
-            this.getFilteredSearchesWithCompanies();
+            this.applyFilters();
         });
     }
 
@@ -80,7 +84,6 @@ export class SearchesStudentTabComponent implements OnInit {
 
     getFilteredSearchesWithCompanies() {
         if (this.companies && this.searches) {
-    
             let searchCompanies: Company[] = this.companies.filter(
                 c => this.searches!.some(
                     s => c.idEntreprise === s.idEntreprise
@@ -92,44 +95,56 @@ export class SearchesStudentTabComponent implements OnInit {
                 return company ? { search, company } : null;
             }).filter((result): result is { search: InternshipSearch; company: Company } => result !== null);
     
-            // Appliquer les filtres
-            searchesWithCompany = this.applyFilters(searchesWithCompany);
-    
-            // Mettre à jour la propriété qui déclenche la mise à jour du template
-            this.filteredSearchesWithCompany = searchesWithCompany;
+            this.originalSearchesWithCompany = [...searchesWithCompany];
+            this.filteredSearchesWithCompany = [...searchesWithCompany];
+            
+            // Extraire les villes uniques
+            this.availableCities = [...new Set(searchesWithCompany.map(item => item.company.ville))].sort();
+            
+            this.applyFilters();
         }
     }
 
-    applyFilters(searches: { search: InternshipSearch; company: Company }[]) {
-        let filtered = [...searches];
-        const searchTermLower = this.searchTerm.toLowerCase().trim();
+    applyFilters() {
+        if (!this.originalSearchesWithCompany) return;
 
+        let filteredSearches = [...this.originalSearchesWithCompany];
+        const searchTermLower = this.searchTerm.toLowerCase().trim();
+    
+        filteredSearches.forEach(s => {
+            if (!(s.search.dateCreation instanceof Date)) {
+                s.search.dateCreation = new Date(s.search.dateCreation);
+            }
+        });
+    
         // Appliquer le filtre de recherche textuelle
         if (searchTermLower) {
-            filtered = filtered.filter(s =>
+            filteredSearches = filteredSearches.filter(s =>
                 s.company.raisonSociale.toLowerCase().includes(searchTermLower) ||
                 s.company.ville.toLowerCase().includes(searchTermLower) ||
                 this.getStatusLabel(s.search.statut).toLowerCase().includes(searchTermLower)
             );
         }
-
-        // Appliquer les filtres de statut et de tri
-        switch (this.currentFilter) {
-            case 'waiting':
-                filtered = filtered.filter(s => s.search.statut === 'En cours');
-                break;
-            case 'validated':
-                filtered = filtered.filter(s => s.search.statut === 'Validé');
-                break;
-            case 'date_asc':
-                filtered.sort((a, b) => a.search.dateCreation.getTime() - b.search.dateCreation.getTime());
-                break;
-            case 'date_desc':
-                filtered.sort((a, b) => b.search.dateCreation.getTime() - a.search.dateCreation.getTime());
-                break;
+    
+        // Appliquer les filtres de statut
+        if (this.currentStatutFilter !== 'all') {
+            filteredSearches = filteredSearches.filter(s => s.search.statut === this.currentStatutFilter);
         }
 
-        return filtered;
+        // Appliquer le filtre de ville
+        if (this.currentCityFilter !== 'all') {
+            filteredSearches = filteredSearches.filter(s => s.company.ville === this.currentCityFilter);
+        }
+    
+        // Appliquer le tri par date
+        if (this.currentDateFilter === 'date_asc') {
+            filteredSearches.sort((a, b) => a.search.dateCreation.getTime() - b.search.dateCreation.getTime());
+        }
+        else if (this.currentDateFilter === 'date_desc') {
+            filteredSearches.sort((a, b) => b.search.dateCreation.getTime() - a.search.dateCreation.getTime());
+        }
+    
+        this.filteredSearchesWithCompany = filteredSearches;
     }
 
     onSearchTermChange(event: Event) {
@@ -145,22 +160,31 @@ export class SearchesStudentTabComponent implements OnInit {
         this.searchTermSubject.next(this.searchTerm);
     }
 
-    setFilter(filter: 'all' | 'waiting' | 'validated') {
-        this.currentFilter = filter;
-        this.getFilteredSearchesWithCompanies();
+    setStatutFilter(filter: 'all' | 'Refusé' | 'En cours' | 'Relancé' | 'Validé', selectElement: HTMLSelectElement) {
+        this.currentStatutFilter = filter;
+        this.applyFilters();
+        selectElement.blur(); // Retirer le focus après sélection
+    }
+    
+    setCityFilter(city: string, selectElement: HTMLSelectElement) {
+        this.currentCityFilter = city;
+        this.applyFilters();
+        selectElement.blur(); // Retirer le focus après sélection
     }
 
     toggleDateSort() {
-        if (this.currentFilter === 'date_asc') {
-            this.currentFilter = 'date_desc';
+        switch (this.currentDateFilter) {
+            case 'default':
+                this.currentDateFilter = 'date_asc';
+                break;
+            case 'date_asc':
+                this.currentDateFilter = 'date_desc';
+                break;
+            case 'date_desc':
+                this.currentDateFilter = 'default';
+                break;
         }
-        else if (this.currentFilter === 'date_desc') {
-            this.currentFilter = 'all';
-        }
-        else {
-            this.currentFilter = 'date_asc';
-        }
-        this.getFilteredSearchesWithCompanies();
+        this.applyFilters();
     }
 
     getStatusLabel(status: SearchStatus): string {
