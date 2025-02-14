@@ -65,7 +65,7 @@ jobs:
           ./vendor/bin/phpunit --coverage-html ./tests/coverage
 
       - name: Upload coverage as artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: ../../DOCKER/php/laravel/suivi-stage/tests/coverage
