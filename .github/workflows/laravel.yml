@@ -40,6 +40,11 @@ jobs:
           pwd
           ls -la
 
+      - name: Update dependencies
+        run: |
+          cd DOCKER/php/laravel/suivi-stage
+          composer update --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
       - name: Copy .env.example to .env.ci
         run: |
           cd DOCKER/php/laravel/suivi-stage
