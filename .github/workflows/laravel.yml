@@ -35,7 +35,7 @@ jobs:
           echo "APP_NAME=Laravel" >> .env
           echo "APP_ENV=development" >> .env
           echo "DB_CONNECTION=mysql" >> .env
-          echo "DB_HOST=mysql" >> .env
+          echo "DB_HOST=localhost" >> .env
           echo "DB_PORT=3306" >> .env
           echo "DB_DATABASE=test_db" >> .env
           echo "DB_USERNAME=test_user" >> .env
