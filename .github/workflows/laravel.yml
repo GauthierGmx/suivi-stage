@@ -48,11 +48,6 @@ jobs:
           extensions: mbstring, pdo, pdo_mysql, xdebug
           tools: composer:v2
 
-      - name: Debug path
-        run: |
-          pwd
-          ls -la
-
       - name: Update dependencies
         run: |
           cd DOCKER/php/laravel/suivi-stage
