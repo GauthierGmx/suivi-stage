@@ -134,9 +134,9 @@ class FicheDescriptiveController extends Controller
             ]);
             
             // Récupération et mise à jour en une seule ligne
-            FicheDescriptive::findOrFail($id)->update($validatedData);
             $validatedData['dateDerniereModification'] = Carbon::now()->format('Y-m-d');
-
+            FicheDescriptive::findOrFail($id)->update($validatedData);
+           
             return response()->json($validatedData, 200);
         }
         catch (\Illuminate\Validation\ValidationException $e)
