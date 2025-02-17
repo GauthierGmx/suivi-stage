@@ -1,0 +1,38 @@
+<div class="modal-overlay">
+    <div class="modal">
+        <h3 class="modal-title">Confirmation de suppression</h3>
+        
+        <div class="confirmation-content">
+            <p class="confirmation-message">
+                Êtes-vous sûr de vouloir supprimer cette recherche de stage ?
+            </p>
+            <p class="warning-message">
+                <b>Cette action est irréversible !</b>
+            </p>
+        </div>
+
+        <div class="modal-buttons">
+            <button 
+                type="button"
+                (click)="onCancel()"
+                class="cancel-button"
+            >
+                Annuler
+            </button>
+            <button 
+                type="button"
+                (click)="onConfirm()"
+                class="delete-button"
+                [disabled]="isDeleting"
+            >
+                Supprimer
+            </button>
+        </div>
+
+        @if (isDeleting) {
+            <div class="loading-overlay">
+                <app-loading/>
+            </div>
+        }
+    </div>
+</div>
