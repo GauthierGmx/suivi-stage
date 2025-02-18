@@ -215,6 +215,27 @@ class RechercheStageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try
+        {
+            $uneRechercheStage = RechercheStage::findOrFail($id);
+            $uneRechercheStage->delete();
+            
+            return response()->json([
+                'message' => 'La recherche de stage a bien été supprimée'
+            ], 200);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
+        {
+            return response()->json([
+                'message' => 'Aucune recherche de stage trouvée'
+            ],404);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite',
+                'erreurs' => $e->getMessage()
+            ],500);
+        }
     }
 }
