@@ -11,7 +11,7 @@ import { StudentService } from '../../../services/student.service';
 import { CompanyService } from '../../../services/company.service';
 import { AppComponent } from '../../../app.component';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
-import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
 
 @Component({
     selector: 'app-searches-student-tab',
@@ -73,18 +73,19 @@ export class SearchesStudentTabComponent implements OnInit {
 
     //Chargement des données de l'étudiant, de ses recherches de stages et des entreprises liées
     loadData(studentId: string) {
-        forkJoin({
+        return firstValueFrom(forkJoin({
             student: this.studentService.getStudentById(studentId),
             companies: this.companyService.getCompanies(),
             searches: this.internshipSearchService.getSearchesByStudentId(studentId)
-        }).subscribe(({student, companies, searches}) => {
+        }).pipe(
+            tap(({ student, companies, searches }) => {
                 this.studentData = student;
                 this.companies = companies;
                 this.searches = searches;
                 this.getFilteredSearchesWithCompanies();
                 this.dataLoaded.emit();
-            }
-        );
+            })
+        ));
     }
 
     //Récupération des recherches, et des entreprises associées, d'un étudiant avec l'application des filtres
@@ -243,8 +244,7 @@ export class SearchesStudentTabComponent implements OnInit {
             try {
                 this.isDeleting = true;
                 await firstValueFrom(this.internshipSearchService.deleteSearch(this.searchToDelete));
-                
-                this.loadData(this.currentUserId);
+                await this.loadData(this.currentUserId);
             }
             catch (error) {
                 console.error('Erreur lors de la suppression de la recherche:', error);
