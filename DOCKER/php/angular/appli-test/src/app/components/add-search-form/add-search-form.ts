@@ -65,7 +65,7 @@ export class AddSearchFormComponent implements OnInit {
         this.newSearch.statut = 'En cours';
 
         // Récupération du currentUser
-        const user = localStorage.getItem('currentUser');
+        const user = sessionStorage.getItem('currentUser');
         if (user) {
             this.currentUser = JSON.parse(user);
         }
