@@ -209,7 +209,10 @@ class RechercheStageController extends Controller
 
     /**
      * Supprime une recherche de stage particulière
-     *
+     * Code HTTP retourné :
+     *      - Code 200 : si la recherche de stage a été supprimée
+     *      - Code 404 : si la recherche de stage n'a pas été trouvée
+     *      - Code 500 : s'il y a une erreur
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -219,7 +222,7 @@ class RechercheStageController extends Controller
         {
             $uneRechercheStage = RechercheStage::findOrFail($id);
             $uneRechercheStage->delete();
-            
+
             return response()->json([
                 'message' => 'La recherche de stage a bien été supprimée'
             ], 200);
