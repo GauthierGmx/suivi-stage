@@ -416,7 +416,7 @@ class RechercheStageControllerTest extends TestCase
     {
         $uneRecherche = RechercheStage::first();
 
-        $response = $this->postJson('/api/recherches-stages/delete/'.$uneRecherche->idRecherche);
+        $response = $this->deleteJson('/api/recherches-stages/delete/'.$uneRecherche->idRecherche);
 
         $response->assertStatus(200)
                  ->assertJson(['message' => 'La recherche de stage a bien été supprimée']);
@@ -431,7 +431,7 @@ class RechercheStageControllerTest extends TestCase
     {
         $idRecherche = PHP_INT_MAX;
 
-        $response = $this->postJson('/api/recherches-stages/delete/'.$idRecherche);
+        $response = $this->deleteJson('/api/recherches-stages/delete/'.$idRecherche);
 
         $response->assertStatus(404)
                  ->assertJson(['message' => 'Aucune recherche de stage trouvée']);
@@ -451,7 +451,7 @@ class RechercheStageControllerTest extends TestCase
 
         $uneRecherhe = RechercheStage::first();
 
-        $response = $this->postJson('/api/recherches-stages/delete/'.$uneRecherhe->idRecherche);
+        $response = $this->deleteJson('/api/recherches-stages/delete/'.$uneRecherhe->idRecherche);
 
         $response->assertStatus(500)
                  ->assertJson(['message' => 'Une erreur s\'est produite']);

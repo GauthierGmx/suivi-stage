@@ -30,7 +30,7 @@ Route::get('/recherches-stages', [RechercheStageController::class, 'index'])->na
 Route::post('/recherches-stages/create', [RechercheStageController::class, 'store'])->name('recherches-stages.store');
 Route::get('/recherches-stages/{id}', [RechercheStageController::class, 'show'])->name('recherches-stages.show');
 Route::put('/recherches-stages/update/{id}', [RechercheStageController::class, 'update'])->name('recherches-stages.update');
-Route::post('/recherches-stages/delete/{id}', [RechercheStageController::class, 'destroy'])->name('recherches-stages.destroy');
+Route::delete('/recherches-stages/delete/{id}', [RechercheStageController::class, 'destroy'])->name('recherches-stages.destroy');
 
 // Route pour le Controller Entreprise
 Route::get('/entreprises', [EntrepriseController::class, 'index'])->name('entreprises.index');
