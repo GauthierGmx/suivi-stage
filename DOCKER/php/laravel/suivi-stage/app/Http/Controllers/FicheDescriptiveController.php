@@ -74,10 +74,7 @@ class FicheDescriptiveController extends Controller
                 'idUPPA' => $validatedData['idUPPA']
             ]);
 
-            return response()->json([
-                'message' => 'Fiche Descriptive créée avec succès.',
-                'ficheDescriptive' => $uneFicheDescriptive
-            ], 201);
+            return response()->json($uneFicheDescriptive,201);
 
         }
         catch (\Illuminate\Validation\ValidationException $e)
@@ -115,7 +112,6 @@ class FicheDescriptiveController extends Controller
     public function update(Request $request, $id){
         try{
             $validatedData = $request->validate([
-                'dateDerniereModification' => 'bail|required|date|date-format:Y-m-d',
                 'contenuStage' => 'nullable|string',
                 'thematique' => 'nullable|string',
                 'sujet' => 'nullable|string',
@@ -138,12 +134,10 @@ class FicheDescriptiveController extends Controller
             ]);
             
             // Récupération et mise à jour en une seule ligne
-            FicheDescriptive::findOrFail($id)->update($validatedData);
             $validatedData['dateDerniereModification'] = Carbon::now()->format('Y-m-d');
-
-            return response()->json([
-                'message' => 'Fiche Descriptive mise à jour avec succès.'
-            ], 200);
+            FicheDescriptive::findOrFail($id)->update($validatedData);
+           
+            return response()->json($validatedData, 200);
         }
         catch (\Illuminate\Validation\ValidationException $e)
         {
@@ -217,6 +211,6 @@ class FicheDescriptiveController extends Controller
                 'erreurs' => $e->getMessage()
             ], 500);
         }
-    }
+    }    
 }
 ?>
