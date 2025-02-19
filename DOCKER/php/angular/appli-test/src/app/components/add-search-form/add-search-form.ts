@@ -10,11 +10,12 @@ import { InternshipSearchService } from '../../services/internship-search.servic
 import { NavigationService } from '../../services/navigation.service';
 import { firstValueFrom, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { LoadingComponent } from "../loading/loading.component";
+import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 
 @Component({
     selector: 'app-add-search-form',
     standalone: true,
-    imports: [CommonModule, FormsModule, LoadingComponent],
+    imports: [CommonModule, FormsModule, LoadingComponent, BreadcrumbComponent],
     templateUrl: './add-search-form.html',
     styleUrls: ['./add-search-form.css']
 })
