@@ -75,7 +75,6 @@ input:disabled {
     margin-bottom: 0.5rem;
 }
 
-/* Modification ici pour l'alignement du label et du bouton */
 .label-wrapper label {
     margin-bottom: 0;
 }

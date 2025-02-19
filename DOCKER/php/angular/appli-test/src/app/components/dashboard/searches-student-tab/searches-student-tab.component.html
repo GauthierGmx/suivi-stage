@@ -107,7 +107,7 @@
                     </svg>
 
                     <svg 
-                      (click)="$event.stopPropagation()"
+                      (click)="$event.stopPropagation(); openDeleteModal(item.search)"
                       class="delete-icon" 
                       width="24" 
                       height="24" 
@@ -172,7 +172,7 @@
             </svg>
 
             <svg 
-              (click)="$event.stopPropagation()"
+              (click)="$event.stopPropagation(); openDeleteModal(item.search)"
               class="delete-icon" 
               width="20" 
               height="20" 
@@ -191,5 +191,13 @@
         </div>
       }
     </div>
+
+    @if (showDeleteModal) {
+      <app-delete-confirmation-modal
+        [isDeleting]="isDeleting"
+        (confirm)="onConfirmDelete()"
+        (cancel)="onCancelDelete()"
+      />
+    }
   }
 </div>

@@ -270,94 +270,94 @@
 <!-- Modale de création d'entreprise -->
 @if (showCompanyModal) {
     <div class="modal-overlay">
-    <div class="modal">
-        <h3 class="modal-title">Nouvelle entreprise</h3>
-        
-        <form #companyForm="ngForm" (ngSubmit)="createCompany()" class="enterprise-form" [class.disabled-form]="isCreatingCompany">
-        <div class="form-group">
-            <label class="title" for="raisonSociale">Raison sociale</label>
-            <input 
-            type="text"
-            id="raisonSociale"
-            name="raisonSociale"
-            [(ngModel)]="newCompany.raisonSociale"
-            required
-            placeholder="Entrer le nom de l'entreprise"
-            >
-        </div>
+        <div class="modal">
+            <h3 class="modal-title">Nouvelle entreprise</h3>
+            
+            <form #companyForm="ngForm" (ngSubmit)="createCompany()" class="enterprise-form" [class.disabled-form]="isCreatingCompany">
+            <div class="form-group">
+                <label class="title" for="raisonSociale">Raison sociale</label>
+                <input 
+                type="text"
+                id="raisonSociale"
+                name="raisonSociale"
+                [(ngModel)]="newCompany.raisonSociale"
+                required
+                placeholder="Entrer le nom de l'entreprise"
+                >
+            </div>
 
-        <div class="form-group">
-            <label class="title" for="adresse">Numéro et rue</label>
-            <input 
-            type="text"
-            id="adresse"
-            name="adresse"
-            [(ngModel)]="newCompany.adresse"
-            required
-            placeholder="Entrer l'adresse de l'entreprise..."
-            >
-        </div>
+            <div class="form-group">
+                <label class="title" for="adresse">Numéro et rue</label>
+                <input 
+                type="text"
+                id="adresse"
+                name="adresse"
+                [(ngModel)]="newCompany.adresse"
+                required
+                placeholder="Entrer l'adresse de l'entreprise..."
+                >
+            </div>
 
-        <div class="form-group">
-            <label class="title" for="codePostal">Code postal</label>
-            <input 
-            type="text"
-            id="codePostal"
-            name="codePostal"
-            [(ngModel)]="newCompany.codePostal"
-            required
-            pattern="^\d{5}$"
-            placeholder="Entrer le code postal de l'entreprise..."
-            >
-        </div>
+            <div class="form-group">
+                <label class="title" for="codePostal">Code postal</label>
+                <input 
+                type="text"
+                id="codePostal"
+                name="codePostal"
+                [(ngModel)]="newCompany.codePostal"
+                required
+                pattern="^\d{5}$"
+                placeholder="Entrer le code postal de l'entreprise..."
+                >
+            </div>
 
-        <div class="form-group">
-            <label class="title" for="ville">Ville</label>
-            <input 
-            type="text"
-            id="ville"
-            name="ville"
-            [(ngModel)]="newCompany.ville"
-            required
-            placeholder="Entrer la ville de l'entreprise..."
-            >
-        </div>
+            <div class="form-group">
+                <label class="title" for="ville">Ville</label>
+                <input 
+                type="text"
+                id="ville"
+                name="ville"
+                [(ngModel)]="newCompany.ville"
+                required
+                placeholder="Entrer la ville de l'entreprise..."
+                >
+            </div>
 
-        <div class="form-group">
-            <label class="title" for="pays">Pays</label>
-            <input 
-            type="text"
-            id="pays"
-            name="pays"
-            [(ngModel)]="newCompany.pays"
-            required
-            placeholder="Entrer le pays de l'entreprise..."
-            >
-        </div>
+            <div class="form-group">
+                <label class="title" for="pays">Pays</label>
+                <input 
+                type="text"
+                id="pays"
+                name="pays"
+                [(ngModel)]="newCompany.pays"
+                required
+                placeholder="Entrer le pays de l'entreprise..."
+                >
+            </div>
 
-        <div class="modal-buttons">
-            <button 
-            type="button"
-            (click)="showCompanyModal = false"
-            class="cancel-button"
-            >
-            Annuler
-            </button>
-            <button 
-            type="submit"
-            class="submit-button"
-            [disabled]="!companyForm.form.valid || !isCompanyFormValid()"
-            >
-            Valider
-            </button>
-        </div>
-        </form>
+            <div class="modal-buttons">
+                <button 
+                type="button"
+                (click)="showCompanyModal = false"
+                class="cancel-button"
+                >
+                Annuler
+                </button>
+                <button 
+                type="submit"
+                class="submit-button"
+                [disabled]="!companyForm.form.valid || !isCompanyFormValid()"
+                >
+                Valider
+                </button>
+            </div>
+            </form>
 
-        @if (isCreatingCompany) {
-        <div class="loading-overlay">
-            <app-loading/>
+            @if (isCreatingCompany) {
+            <div class="loading-overlay">
+                <app-loading/>
+            </div>
+            }
         </div>
-        }
-    </div>
     </div>
 }

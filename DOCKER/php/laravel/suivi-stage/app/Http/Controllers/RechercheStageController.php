@@ -209,12 +209,36 @@ class RechercheStageController extends Controller
 
     /**
      * Supprime une recherche de stage particulière
-     *
+     * Code HTTP retourné :
+     *      - Code 200 : si la recherche de stage a été supprimée
+     *      - Code 404 : si la recherche de stage n'a pas été trouvée
+     *      - Code 500 : s'il y a une erreur
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        try
+        {
+            $uneRechercheStage = RechercheStage::findOrFail($id);
+            $uneRechercheStage->delete();
+
+            return response()->json([
+                'message' => 'La recherche de stage a bien été supprimée'
+            ], 200);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
+        {
+            return response()->json([
+                'message' => 'Aucune recherche de stage trouvée'
+            ],404);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite',
+                'erreurs' => $e->getMessage()
+            ],500);
+        }
     }
 }

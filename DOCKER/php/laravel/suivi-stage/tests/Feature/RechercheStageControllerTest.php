@@ -285,7 +285,7 @@ class RechercheStageControllerTest extends TestCase
             'adresseMailContact' => 'contact@entreprise.com',
             'observations' => 'Profil pas assez intéréssant pour eux',
             'dateRelance' => null,
-            'statut' => 'Refusé'
+            'statut' => 'Refusé',
         ];
 
         $uneRecherche = RechercheStage::first();
@@ -308,7 +308,7 @@ class RechercheStageControllerTest extends TestCase
                     'dateRelance' => null,
                     'statut' => 'Refusé',
                     'idUPPA' => '611082',
-                    'idEntreprise' => 1
+                    'idEntreprise' => 1,
                 ]);
     }
 
@@ -329,7 +329,7 @@ class RechercheStageControllerTest extends TestCase
             'adresseMailContact' => 'contact@entreprise.com',
             'observations' => 'Profil pas assez intéréssant pour eux',
             'dateRelance' => null,
-            'statut' => 'TEST'
+            'statut' => 'TEST',
         ];
 
         $uneRecherche = RechercheStage::first();
@@ -337,7 +337,7 @@ class RechercheStageControllerTest extends TestCase
         $response = $this->putJson('/api/recherches-stages/update/'.$uneRecherche->idRecherche, $donnees);
 
         $response->assertStatus(422)
-                ->assertJson(['message' => 'Erreur de validation dans les données']);
+                 ->assertJson(['message' => 'Erreur de validation dans les données']);
     }
 
     /**
@@ -359,13 +359,13 @@ class RechercheStageControllerTest extends TestCase
             'adresseMailContact' => 'contact@entreprise.com',
             'observations' => 'Profil pas assez intéréssant pour eux',
             'dateRelance' => null,
-            'statut' => 'Refusé'
+            'statut' => 'Refusé',
         ];
 
         $response = $this->putJson('/api/recherches-stages/update/'.$idRecherche, $donnees);   
         
         $response->assertStatus(404)
-                ->assertJson(['message' => 'Aucune recherche de stage trouvée']);
+                 ->assertJson(['message' => 'Aucune recherche de stage trouvée']);
     }
 
     /**
@@ -390,7 +390,7 @@ class RechercheStageControllerTest extends TestCase
             'adresseMailContact' => 'contact@entreprise.com',
             'observations' => 'Profil pas assez intéréssant pour eux',
             'dateRelance' => null,
-            'statut' => 'Refusé'
+            'statut' => 'Refusé',
         ];
 
         $uneRecherhe = RechercheStage::first();
@@ -407,6 +407,55 @@ class RechercheStageControllerTest extends TestCase
     ==================================
     */
 
+    /**
+     * La méthode destroy va retourner une confirmation 200 si la recherche de stage a été supprimée
+     * 
+     * @return void
+     */
+    public function test_destroy_renvoie_une_confirmation_de_la_suppression_de_la_recherche_de_stage()
+    {
+        $uneRecherche = RechercheStage::first();
+
+        $response = $this->deleteJson('/api/recherches-stages/delete/'.$uneRecherche->idRecherche);
+
+        $response->assertStatus(200)
+                 ->assertJson(['message' => 'La recherche de stage a bien été supprimée']);
+    }
+
+    /**
+     * La méthode destroy va retourner une erreur 404 si la recherche de stage n'a pas été trouvée
+     * 
+     * @return void
+     */
+    public function test_destroy_renvoie_une_erreur_non_trouvee_en_cas_de_recherche_non_trouvee()
+    {
+        $idRecherche = PHP_INT_MAX;
+
+        $response = $this->deleteJson('/api/recherches-stages/delete/'.$idRecherche);
+
+        $response->assertStatus(404)
+                 ->assertJson(['message' => 'Aucune recherche de stage trouvée']);
+    }
+
+    /**
+     * La méthode destroy va retourner une erreur 500 en cas d'exception
+     * 
+     * @return void
+     */
+    public function test_destroy_renvoie_une_erreur_generique_en_cas_d_exception()
+    {
+        // Mock du modèle RechercheStage pour déclencher une exception
+        $this->mock(\App\Http\Controllers\RechercheStageController::class, function ($mock) {
+            $mock->shouldReceive('delete')->andThrow(new \Exception('Erreur simulée'));
+        });
+
+        $uneRecherhe = RechercheStage::first();
+
+        $response = $this->deleteJson('/api/recherches-stages/delete/'.$uneRecherhe->idRecherche);
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite']);
+    }
 
     public function tearDown(): void
     {
