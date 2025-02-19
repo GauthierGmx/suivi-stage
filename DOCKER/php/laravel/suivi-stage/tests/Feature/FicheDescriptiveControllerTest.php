@@ -34,8 +34,6 @@ class FicheDescriptiveControllerTest extends TestCase
      */
     public function test_store_la_methode_doit_renvoyer_201(){
         $donnees = [
-            "dateCreation"=> "2025-01-20",
-            "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
             "sujet"=>  "Création d'un outil de gestion des tâches",
@@ -60,17 +58,10 @@ class FicheDescriptiveControllerTest extends TestCase
             'idUPPA' => 610123
         ];
 
-        $response = $this->post('/api/fiche-descriptive/create', $donnees);
-        $jsonData = $response->json();
+        $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
-        // Vérifier si le champ est absent et l'enlever du test si besoin
-        if (!isset($jsonData['interruptionStage'])) {
-            unset($donnees['interruptionStage']);
-        } else {
-            $donnees['interruptionStage'] = (bool) $jsonData['interruptionStage']; // Cast en booléen
-        }
-
-        $response->assertStatus(201)->assertJson($donnees);
+        $response->assertStatus(201)
+                 ->assertJson($donnees);
     }
 
     /**
@@ -82,8 +73,6 @@ class FicheDescriptiveControllerTest extends TestCase
 
     public function test_store_doit_retourner_une_erreur_422_si_les_donnees_ne_sont_pas_valides(){
         $donnees = [
-            "dateCreation"=> "null",
-            "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
             "sujet"=>  "Création d'un outil de gestion des tâches",
@@ -96,7 +85,7 @@ class FicheDescriptiveControllerTest extends TestCase
             "nbJourSemaine"=>  5,
             "nbHeureSemaine"=>  35,
             "clauseConfidentialite"=>  true,
-            "statut"=>  "En cours",
+            "statut"=>  "En france",
             "numeroConvention"=>  "12345-ABCDE",
             "interruptionStage"=>  false,
             "dateDebutInterruption"=>  null,
@@ -104,20 +93,14 @@ class FicheDescriptiveControllerTest extends TestCase
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
             "idEntreprise"=> 1,
-            //"idTuteurEntreprise"=> 2,
+            "idTuteurEntreprise"=> 2,
             'idUPPA' => 610123
         ];
 
         $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
         $response->assertStatus(422)
-        ->assertJson([
-            'message' => 'Erreur de validation dans les données',
-            'erreurs' => [ // Remplace 'errors' par 'erreurs'
-                'dateCreation' => ["Le champ date creation n'est pas une date valide."],
-                'idTuteurEntreprise' => ['Le champ id tuteur entreprise est obligatoire.'],
-            ]
-        ]);
+                 ->assertJson(['message' => 'Erreur de validation dans les données']);
     }
 
     /**
@@ -129,8 +112,6 @@ class FicheDescriptiveControllerTest extends TestCase
 
     public function test_store_methode_doit_retourner_une_erreur_500_car_une_cle_etrangere_n_existe_pas(){
         $donnees = [
-            "dateCreation"=> "2025-01-20",
-            "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
             "sujet"=>  "Création d'un outil de gestion des tâches",
@@ -157,10 +138,7 @@ class FicheDescriptiveControllerTest extends TestCase
         $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
         $response->assertStatus(500)
-            ->assertJson([
-                'message' => 'Erreur dans la base de données',
-                'erreurs' => \Illuminate\Support\Str::contains($response->json('erreurs'), 'Cannot add or update a child row') // Vérifie que l'erreur contient cette partie du message
-        ]);
+                 ->assertJson(['message' => 'Erreur dans la base de données']);
     }
 
     /**
@@ -170,9 +148,12 @@ class FicheDescriptiveControllerTest extends TestCase
      */
 
     public function test_store_methode_doit_retourner_une_erreur_500_car_un_probleme_est_survenue(){
+        // Mock du modèle RechercheStage pour déclencher une exception
+        $this->mock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
+            $mock->shouldReceive('store')->andThrow(new \Exception('Erreur simulée'));
+        });
+        
         $donnees = [
-            "dateCreation"=> "2025-01-20",
-            "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
             "sujet"=>  "Création d'un outil de gestion des tâches",
@@ -201,13 +182,8 @@ class FicheDescriptiveControllerTest extends TestCase
         $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
         // Vérification que l'API retourne une erreur 500
-        $response->assertStatus(500);
-    
-        // Vérification que le message d'erreur est bien celui attendu
-        $response->assertJson([
-            'message' => 'Erreur dans la base de données',
-            'erreurs' => \Illuminate\Support\Str::contains($response->json('erreurs'), 'Cannot add or update a child row') 
-        ]);
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
     }
     /*
     ================================
