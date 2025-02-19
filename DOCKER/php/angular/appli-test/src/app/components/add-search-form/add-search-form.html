@@ -3,6 +3,7 @@
 </div>
 <div *ngIf="dataLoaded" class="container">
   <div class="content-wrapper">
+    <app-breadcrumb/>
     <!-- Début Formulaire -->
     <form #searchForm="ngForm" (ngSubmit)="onSubmit()" class="form" [class.disabled-form]="isSubmitting">
       <div class="form-grid">

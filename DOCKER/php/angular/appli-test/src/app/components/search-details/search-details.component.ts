@@ -7,11 +7,12 @@ import { InternshipSearchService } from '../../services/internship-search.servic
 import { CompanyService } from '../../services/company.service';
 import { NavigationService } from '../../services/navigation.service';
 import { LoadingComponent } from '../loading/loading.component';
+import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 
 @Component({
     selector: 'app-search-details',
     standalone: true,
-    imports: [CommonModule, LoadingComponent],
+    imports: [CommonModule, LoadingComponent, BreadcrumbComponent],
     templateUrl: './search-details.component.html',
     styleUrl: './search-details.component.css'
 })

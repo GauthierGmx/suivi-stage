@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UnderDevelopmentComponent } from '../shared/under-development/under-development.component';
+import { UnderDevelopmentComponent } from '../under-development/under-development.component';
 
 @Component({
   selector: 'app-factsheets',

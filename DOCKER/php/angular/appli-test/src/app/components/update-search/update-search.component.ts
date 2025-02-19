@@ -10,11 +10,12 @@ import { NavigationService } from '../../services/navigation.service';
 import { debounceTime, distinctUntilChanged, firstValueFrom, Subject } from 'rxjs';
 import { LoadingComponent } from '../loading/loading.component';
 import { FormsModule } from '@angular/forms';
+import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 
 @Component({
     selector: 'app-update-search',
     standalone: true,
-    imports: [CommonModule, FormsModule, LoadingComponent],
+    imports: [CommonModule, FormsModule, LoadingComponent, BreadcrumbComponent],
     templateUrl: './update-search.component.html',
     styleUrl: './update-search.component.css'
 })

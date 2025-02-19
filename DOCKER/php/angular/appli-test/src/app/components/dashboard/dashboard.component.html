@@ -5,7 +5,7 @@
         <app-loading/>
       }
       <div [hidden]="!allDataLoaded">
-        <h1 class="title">Journal de bord</h1>
+        <app-breadcrumb/>
         <app-welcome-card [currentUser]="currentUser"/>
         <app-stats-cards [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
         
