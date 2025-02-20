@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Student } from '../models/student.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, tap, of } from 'rxjs';
+import { Observable, catchError, tap, of, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +66,8 @@ export class StudentService {
     }
   ];
 
+  private selectedStudent = new BehaviorSubject<Student | null>(null);
+
   constructor(private http: HttpClient) {}
 
   getStudents(): Observable<Student[]> {
@@ -74,6 +76,19 @@ export class StudentService {
 
   getStudentById(studentId: string): Observable<Student | undefined> {
     return of(this.mockStudents.find(s => s.idUPPA === studentId));
+  }
+
+  // Nouvelles méthodes pour gérer l'étudiant sélectionné
+  setSelectedStudent(student: Student) {
+    this.selectedStudent.next(student);
+  }
+
+  getSelectedStudent(): Observable<Student | null> {
+    return this.selectedStudent.asObservable();
+  }
+
+  clearSelectedStudent() {
+    this.selectedStudent.next(null);
   }
 
   //Log la réponse de l'API

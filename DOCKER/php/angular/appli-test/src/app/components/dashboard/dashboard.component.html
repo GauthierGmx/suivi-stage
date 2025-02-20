@@ -5,7 +5,7 @@
         <app-loading/>
       }
       <div [hidden]="!allDataLoaded">
-        <app-breadcrumb/>
+        <app-breadcrumb [currentUserRole]="currentUserRole"/>
         <app-welcome-card [currentUser]="currentUser"/>
         <app-stats-cards [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
         
