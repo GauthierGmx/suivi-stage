@@ -4,9 +4,9 @@ import { AuthService } from '../../services/auth.service';
 import { Staff } from '../../models/staff.model';
 import { Student } from '../../models/student.model';
 import { AppComponent } from '../../app.component';
-import { WelcomeComponent } from "./welcome-card/welcome-card.component";
-import { StatsCardsComponent } from "./stats-cards/stats-cards.component";
-import { SearchesStudentTabComponent } from './searches-student-tab/searches-student-tab.component';
+import { WelcomeComponent } from "../welcome-card/welcome-card.component";
+import { StatsCardsComponent } from "../stats-cards/stats-cards.component";
+import { SearchesStudentTabComponent } from '../searches-student-tab/searches-student-tab.component';
 import { LoadingComponent } from '../loading/loading.component';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 

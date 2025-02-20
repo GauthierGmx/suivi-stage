@@ -1,14 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Staff } from '../../../models/staff.model';
-import { Student } from '../../../models/student.model';
-import { InternshipSearch, SearchStatus } from '../../../models/internship-search.model';
-import { DescriptiveSheet, SheetStatus } from '../../../models/description-sheet.model';
-import { NavigationService } from '../../../services/navigation.service';
-import { StudentService } from '../../../services/student.service';
-import { InternshipSearchService } from '../../../services/internship-search.service';
-import { DescriptionSheetService } from '../../../services/description-sheet.service';
-import { AppComponent } from '../../../app.component';
+import { Staff } from '../../models/staff.model';
+import { Student } from '../../models/student.model';
+import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
+import { DescriptiveSheet, SheetStatus } from '../../models/description-sheet.model';
+import { NavigationService } from '../../services/navigation.service';
+import { StudentService } from '../../services/student.service';
+import { InternshipSearchService } from '../../services/internship-search.service';
+import { DescriptionSheetService } from '../../services/description-sheet.service';
+import { AppComponent } from '../../app.component';
 import { forkJoin } from 'rxjs';
 
 const VALIDED_INTERNSHIP_SEARCH_STATUT = 'Validé';

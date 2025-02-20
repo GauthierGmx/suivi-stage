@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Student } from '../../../models/student.model';
-import { Staff } from '../../../models/staff.model';
-import { AppComponent } from '../../../app.component';
+import { Student } from '../../models/student.model';
+import { Staff } from '../../models/staff.model';
+import { AppComponent } from '../../app.component';
 
 @Component({
   selector: 'app-welcome-card',

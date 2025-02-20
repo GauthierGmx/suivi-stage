@@ -1,10 +1,10 @@
 import { Component, OnInit, HostListener, ElementRef } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { Staff } from '../../../models/staff.model'
-import { Student } from '../../../models/student.model'
-import { AuthService } from '../../../services/auth.service'
-import { AppComponent } from '../../../app.component'
+import { Staff } from '../../models/staff.model'
+import { Student } from '../../models/student.model'
+import { AuthService } from '../../services/auth.service'
+import { AppComponent } from '../../app.component'
 
 @Component({
     selector: 'app-header',

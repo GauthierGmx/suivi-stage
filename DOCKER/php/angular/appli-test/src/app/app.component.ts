@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Staff } from './models/staff.model';
 import { Student } from './models/student.model';
-import { HeaderComponent } from './components/layout/header/header.component';
+import { HeaderComponent } from './components/header/header.component';
 import { AuthService } from './services/auth.service';
 
 @Component({
