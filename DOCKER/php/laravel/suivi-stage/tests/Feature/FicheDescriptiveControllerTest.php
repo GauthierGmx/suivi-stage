@@ -393,10 +393,12 @@ class FicheDescriptiveControllerTest extends TestCase
      */
 
     public function test_index_methode_doit_retourner_200_et_la_list_des_fiches_descriptives(){
+        $fiches = FicheDescriptive::all();
+        
         $response = $this->get('/api/fiche-descriptive');
 
         $response->assertStatus(200)
-                 ->assertJson(FicheDescriptive::all()->toArray());
+                 ->assertJson($fiches->toArray());
     }
 
     /**
@@ -436,14 +438,14 @@ class FicheDescriptiveControllerTest extends TestCase
      * @return void
      */
     public function test_show_methode_doit_retourner_un_code_200_car_la_fiche_descriptive_a_ete_trouvee(){
-        $rechercheFirst = FicheDescriptive::first();
+        $ficheFirst = FicheDescriptive::first();
 
         // Effectuer la requête GET
-        $response = $this->get('/api/fiche-descriptive/'.$rechercheFirst->id);
+        $response = $this->get('/api/fiche-descriptive/'.$ficheFirst->idFicheDescriptive);
     
         // Vérifier le code de statut 200 et la réponse JSON
         $response->assertStatus(200)
-                 ->assertJsonFragment($rechercheFirst->toArray());
+                 ->assertJson($ficheFirst->toArray());
     }
 
     /**
@@ -452,34 +454,31 @@ class FicheDescriptiveControllerTest extends TestCase
      * @return void
      */
     public function test_show_methode_doit_retourner_une_erreur_404_car_la_fiche_descriptive_n_existe_pas(){
-        $response = $this->get('/api/fiche-descriptive/0');
+        $idFiche = PHP_INT_MAX;
+        
+        $response = $this->get('/api/fiche-descriptive/'.$idFiche);
 
         $response->assertStatus(404)
-                 ->assertJson([
-                        'message' => 'Fiche Descriptive non trouvée'
-        ]);
+                 ->assertJson(['message' => 'Fiche Descriptive non trouvée']);
     }
+
     /**
      * La méthode show doit retourner une erreur 500 si une erreur survient lors de la récupération
      * 
      * @return void
      */
     public function test_show_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
-        $invalidId = 999999;
-        if ($id == 999999) {
-            throw new \Exception("Erreur simulée !");
-        }
+        // Mock du modèle FicheDescriptive pour déclencher une exception
+        $this->partialMock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
+            $mock->shouldReceive('show')->andThrow(new Exception);
+        });
 
-        // Remplacer findOrFail par find() pour éviter l'erreur 404
-        $ficheDescriptive = FicheDescriptive::find($id);
+        $ficheDescriptive = FicheDescriptive::first();
 
-        $response = $this->get('/api/fiche-descriptive/' . $invalidId);
+        $response = $this->get('/api/fiche-descriptive/'.$ficheDescriptive->idFicheDescriptive);
     
         $response->assertStatus(500)
-                 ->assertJson([
-                     'message' => 'Une erreur s\'est produite :',
-                     'erreurs' => 'Erreur simulée !'
-                 ]);
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
     }
 }
 ?>
