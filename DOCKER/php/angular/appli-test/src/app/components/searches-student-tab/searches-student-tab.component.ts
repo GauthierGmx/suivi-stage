@@ -2,14 +2,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
-import { Staff } from '../../models/staff.model';
 import { Student } from '../../models/student.model';
 import { Company } from '../../models/company.model';
 import { InternshipSearchService } from '../../services/internship-search.service';
 import { NavigationService } from '../../services/navigation.service';
-import { StudentService } from '../../services/student.service';
 import { CompanyService } from '../../services/company.service';
-import { AppComponent } from '../../app.component';
 import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
 import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
 
@@ -21,12 +18,8 @@ import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, 
     styleUrls: ['./searches-student-tab.component.css']
 })
 export class SearchesStudentTabComponent implements OnInit {
-    @Input() currentUser!: Student | Staff;
+    @Input() currentUser!: Student;
     @Output() dataLoaded = new EventEmitter<void>();
-    currentUserId!: string;
-    currentUserRole!: string;
-    currentPageUrl!: string;
-    studentData?: Student;
     companies?: Company[];
     searches?: InternshipSearch[];
     searchTerm: string = '';
@@ -43,10 +36,8 @@ export class SearchesStudentTabComponent implements OnInit {
 
     constructor(
         private readonly internshipSearchService: InternshipSearchService,
-        private readonly studentService: StudentService,
         private readonly navigationService: NavigationService,
-        private readonly companyService: CompanyService,
-        private readonly appComponent: AppComponent
+        private readonly companyService: CompanyService
     ) {
         this.searchTermSubject.pipe(
             debounceTime(800),
@@ -57,29 +48,16 @@ export class SearchesStudentTabComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentPageUrl = this.navigationService.getCurrentPageUrl();
-
-        if (this.appComponent.isStudent(this.currentUser)) {
-            this.currentUserId = this.currentUser.idUPPA;
-            this.currentUserRole = 'STUDENT';
-        }
-        else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-            this.currentUserId = `${this.currentUser.idPersonnel}`;
-            this.currentUserRole = 'INTERNSHIP_MANAGER';
-        }
-
-        this.loadData(this.currentUserId);
+        this.loadData();
     }
 
     //Chargement des données de l'étudiant, de ses recherches de stages et des entreprises liées
-    loadData(studentId: string) {
+    loadData() {
         return firstValueFrom(forkJoin({
-            student: this.studentService.getStudentById(studentId),
             companies: this.companyService.getCompanies(),
-            searches: this.internshipSearchService.getSearchesByStudentId(studentId)
+            searches: this.internshipSearchService.getSearchesByStudentId(this.currentUser.idUPPA)
         }).pipe(
-            tap(({ student, companies, searches }) => {
-                this.studentData = student;
+            tap(({ companies, searches }) => {
                 this.companies = companies;
                 this.searches = searches;
                 this.getFilteredSearchesWithCompanies();
@@ -244,7 +222,7 @@ export class SearchesStudentTabComponent implements OnInit {
             try {
                 this.isDeleting = true;
                 await firstValueFrom(this.internshipSearchService.deleteSearch(this.searchToDelete));
-                await this.loadData(this.currentUserId);
+                await this.loadData();
             }
             catch (error) {
                 console.error('Erreur lors de la suppression de la recherche:', error);

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Student } from '../models/student.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, tap, of, BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -9,56 +9,56 @@ import { Observable, catchError, tap, of, BehaviorSubject } from 'rxjs';
 export class StudentService {
   private readonly mockStudents: Student[] = [
     {
+      idUPPA: '610000',
+      nomEtudiant: 'Montouro',
+      prenomEtudiant: 'Maxime',
+      adresseEtudiant: null,
+      villeEtudiant: null,
+      codePostalEtudiant: null,
+      telephoneEtudiant: null,
+      adresseMailEtudiant: 'mmontour@iutbayonne.univ-pau.fr',
+      idParcours: 1,
+      idDepartement: 1,
+      idEntreprise: null,
+      idTuteur: null
+    },
+    {
+      idUPPA: '610001',
+      nomEtudiant: 'Conguisti',
+      prenomEtudiant: 'Nicolas',
+      adresseEtudiant: null,
+      villeEtudiant: null,
+      codePostalEtudiant: null,
+      telephoneEtudiant: null,
+      adresseMailEtudiant: 'nconguisti@iutbayonne.univ-pau.fr',
+      idParcours: 1,
+      idDepartement: 1,
+      idEntreprise: null,
+      idTuteur: null
+    },
+    {
       idUPPA: '610123',
-      nomEtudiant: 'Dupont',
-      prenomEtudiant: 'Jean',
-      adresseEtudiant: '12 rue des Lilas',
-      villeEtudiant: 'Pau',
-      codePostalEtudiant: '64000',
-      telephoneEtudiant: '0612345678',
-      adresseMailEtudiant: 'jean.dupont@etud.univ-pau.fr',
-      idParcours: 1,
-      idDepartement: 1,
-      idEntreprise: null,
-      idTuteur: null
-    },
-    {
-      idUPPA: 'ETU12346',
-      nomEtudiant: 'Martin',
-      prenomEtudiant: 'Sophie',
-      adresseEtudiant: '12 rue des Lilas',
-      villeEtudiant: 'Pau',
-      codePostalEtudiant: '64000',
-      telephoneEtudiant: '0612345678',
-      adresseMailEtudiant: 'sophie.martin@etud.univ-pau.fr',
-      idParcours: 1,
-      idDepartement: 1,
-      idEntreprise: null,
-      idTuteur: null
-    },
-    {
-      idUPPA: 'ETU12347',
-      nomEtudiant: 'Bernard',
+      nomEtudiant: 'Crussière',
       prenomEtudiant: 'Lucas',
-      adresseEtudiant: '12 rue des Lilas',
-      villeEtudiant: 'Pau',
-      codePostalEtudiant: '64000',
-      telephoneEtudiant: '0612345678',
-      adresseMailEtudiant: 'lucas.bernard@etud.univ-pau.fr',
+      adresseEtudiant: null,
+      villeEtudiant: null,
+      codePostalEtudiant: null,
+      telephoneEtudiant: null,
+      adresseMailEtudiant: 'lcrussiere@iutbayonne.univ-pau.fr',
       idParcours: 1,
       idDepartement: 1,
       idEntreprise: null,
       idTuteur: null
     },
     {
-      idUPPA: 'ETU12348',
-      nomEtudiant: 'Espinasse',
-      prenomEtudiant: 'Virgile',
-      adresseEtudiant: '17 rue de la paix',
-      villeEtudiant: 'Paris',
-      codePostalEtudiant: '75000',
-      telephoneEtudiant: '0612345678',
-      adresseMailEtudiant: 'virgile.espinasse@etud.univ-pau.fr',
+      idUPPA: '610459',
+      nomEtudiant: 'Vernis',
+      prenomEtudiant: 'Gabriel',
+      adresseEtudiant: null,
+      villeEtudiant: null,
+      codePostalEtudiant: null,
+      telephoneEtudiant: null,
+      adresseMailEtudiant: 'gvernis@iutbayonne.univ-pau.fr',
       idParcours: 1,
       idDepartement: 1,
       idEntreprise: null,
@@ -70,11 +70,35 @@ export class StudentService {
 
   constructor(private http: HttpClient) {}
 
-  getStudents(): Observable<Student[]> {
+  getStudents(fields?: string[]): Observable<Student[]> {
+    let params = new HttpParams();
+
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    /*
+    return this.http.get<Student[]>('http://localhost:8000/api/etudiants', {params}).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    */
     return of(this.mockStudents);
   }
 
-  getStudentById(studentId: string): Observable<Student | undefined> {
+  getStudentById(studentId: string, fields?: string[]): Observable<Student | undefined> {
+    let params = new HttpParams();
+
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    /*
+    return this.http.get(`http://localhost:8000/api/etudiants/${studentId}`, {params}).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    */
     return of(this.mockStudents.find(s => s.idUPPA === studentId));
   }
 

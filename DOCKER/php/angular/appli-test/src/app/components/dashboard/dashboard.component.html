@@ -12,6 +12,9 @@
         @if (currentUserRole === 'STUDENT') {
           <app-searches-student-tab [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
         }
+        @else if (currentUserRole === 'INTERNSHIP_MANAGER') {
+          <app-list-student-tab (dataLoaded)="onChildDataLoaded()"/>
+        }
       </div>
     }
   </div>
