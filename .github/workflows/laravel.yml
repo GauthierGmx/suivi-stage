@@ -33,7 +33,7 @@ jobs:
           cd DOCKER/php/laravel/suivi-stage
           touch .env.testing
           echo "APP_NAME=Laravel" >> .env.testing
-          echo "APP_ENV=testing" >> .env.testing
+          echo "APP_ENV=development" >> .env.testing
           echo "DB_CONNECTION=mysql" >> .env.testing
           echo "DB_HOST=127.0.0.1" >> .env.testing
           echo "DB_PORT=3306" >> .env.testing
