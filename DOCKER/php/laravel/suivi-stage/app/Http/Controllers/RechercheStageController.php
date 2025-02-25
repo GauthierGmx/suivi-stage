@@ -13,9 +13,22 @@ class RechercheStageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return RechercheStage::all();
+    public function index(Request $request) {
+        // Récupère les champs demandés dans la requête (ou "*" par défaut)
+        $fields = explode(',', $request->query('fields', '*'));
+    
+        // Vérifie si les champs demandés existent dans la table
+        $allowedFields = ['idRecherche', 'dateCreation', 'dateModification',
+                          'date1erContact', 'typeContact', 'nomContact',
+                          'prenomContact', 'fonctionContact', 'telephoneContact',
+                          'adresseMailContact', 'observations', 'dateRelance',
+                          'statut', 'idUPPA', 'idEntreprise']; // Liste des champs autorisés
+        $fields = array_intersect($fields, $allowedFields);
+    
+        // Si aucun champ valide n'est fourni, on récupère tout par défaut
+        $recherchesStages = RechercheStage::select(empty($fields) ? '*' : $fields)->get();
+    
+        return response()->json($recherchesStages);
     }
 
     /**

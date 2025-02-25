@@ -102,18 +102,18 @@ export class StudentService {
     return of(this.mockStudents.find(s => s.idUPPA === studentId));
   }
 
-  // Nouvelles méthodes pour gérer l'étudiant sélectionné
-  setSelectedStudent(student: Student) {
-    this.selectedStudent.next(student);
-  }
-
-  getSelectedStudent(): Observable<Student | null> {
-    return this.selectedStudent.asObservable();
-  }
-
-  clearSelectedStudent() {
-    this.selectedStudent.next(null);
-  }
+    // Nouvelles méthodes pour gérer l'étudiant sélectionné
+    getSelectedStudent(): Observable<Student | null> {
+      return this.selectedStudent.asObservable();
+    }
+    
+    setSelectedStudent(student: Student) {
+      this.selectedStudent.next(student);
+    }
+  
+    clearSelectedStudent() {
+      this.selectedStudent.next(null);
+    }
 
   //Log la réponse de l'API
   private log(response: any) {

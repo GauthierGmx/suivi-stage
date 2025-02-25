@@ -70,7 +70,7 @@
           <tr>
             <th>Entreprise</th>
             <th>Ville</th>
-            <th>Date</th>
+            <th>Date de création</th>
             <th>Statut</th>
             <th>Action</th>
           </tr>
@@ -84,8 +84,8 @@
               <td>{{ item.company.ville }}</td>
               <td>{{ item.search.dateCreation | date:'dd/MM/yyyy' }}</td>
               <td>
-                <span [class]="getStatusClass(item.search.statut)">
-                  {{ getStatusLabel(item.search.statut) }}
+                <span [class]="getStatusClass(item.search.statut!)">
+                  {{ getStatusLabel(item.search.statut!) }}
                 </span>
               </td>
               <td class="lastTd">
@@ -139,8 +139,8 @@
       >
         <div class="card-header">
           <h4>{{ item.company.raisonSociale }}</h4>
-          <span [class]="getStatusClass(item.search.statut)">
-            {{ getStatusLabel(item.search.statut) }}
+          <span [class]="getStatusClass(item.search.statut!)">
+            {{ getStatusLabel(item.search.statut!) }}
           </span>
         </div>
         <div class="card-content">
@@ -149,7 +149,7 @@
             {{ item.company.ville }}
           </p>
           <p class="date">
-            <span class="label">Date:</span> 
+            <span class="label">Date de création :</span> 
             {{ item.search.dateCreation | date:'dd/MM/yyyy' }}
           </p>
         </div>

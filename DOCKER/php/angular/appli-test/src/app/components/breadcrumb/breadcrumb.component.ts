@@ -28,7 +28,6 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly router: Router,
-    private readonly appComponent: AppComponent,
     private readonly studentService: StudentService
   ) {}
 

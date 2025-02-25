@@ -49,7 +49,7 @@ export class ListStudentTabComponent implements OnInit{
     async loadData() {
         return firstValueFrom(forkJoin({
                     students: this.studentService.getStudents(['idUPPA','nom', 'prenom']),
-                    searches: this.internshipSearchService.getSearches(['idRecherche', 'dateCreation']),
+                    searches: this.internshipSearchService.getSearches(['idRecherche', 'dateCreation', 'idUPPA']),
                 }).pipe(
                     tap(({ students, searches }) => {
                         this.studentsData = students;
@@ -69,7 +69,7 @@ export class ListStudentTabComponent implements OnInit{
                 return {
                     student,
                     countSearches: studentSearches.length,
-                    lastSearchDate: studentSearches.length > 0 ? new Date(Math.max(...studentSearches.map(s => new Date(s.dateCreation).getTime()))) : null,
+                    lastSearchDate: studentSearches.length > 0 ? new Date(Math.max(...studentSearches.map(s => new Date(s.dateCreation!).getTime()))) : null,
                     studyYear: '',
                     TdGroup: ''
                 };
@@ -88,8 +88,8 @@ export class ListStudentTabComponent implements OnInit{
     
         if (searchTermLower) {
             filteredDatas = filteredDatas.filter(data =>
-                data.student.nomEtudiant.toLowerCase().includes(searchTermLower) ||
-                data.student.prenomEtudiant.toLowerCase().includes(searchTermLower) ||
+                data.student.nomEtudiant!.toLowerCase().includes(searchTermLower) ||
+                data.student.prenomEtudiant!.toLowerCase().includes(searchTermLower) ||
                 data.studyYear.toLowerCase().includes(searchTermLower) ||
                 data.TdGroup.toLowerCase().includes(searchTermLower)
             );

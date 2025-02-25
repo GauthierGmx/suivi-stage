@@ -54,8 +54,8 @@ export class SearchesStudentTabComponent implements OnInit {
     //Chargement des données de l'étudiant, de ses recherches de stages et des entreprises liées
     loadData() {
         return firstValueFrom(forkJoin({
-            companies: this.companyService.getCompanies(),
-            searches: this.internshipSearchService.getSearchesByStudentId(this.currentUser.idUPPA)
+            companies: this.companyService.getCompanies(['idEntreprise', 'raisonSociale', 'ville']),
+            searches: this.internshipSearchService.getSearchesByStudentId(this.currentUser.idUPPA, ['idRecherche', 'dateCreation', 'statut', 'idEntreprise'])
         }).pipe(
             tap(({ companies, searches }) => {
                 this.companies = companies;
@@ -83,7 +83,7 @@ export class SearchesStudentTabComponent implements OnInit {
             this.originalSearchesWithCompany = [...searchesWithCompany];
             this.filteredSearchesWithCompany = [...searchesWithCompany];
             
-            this.availableCities = [...new Set(searchesWithCompany.map(item => item.company.ville))].sort();
+            this.availableCities = searchesWithCompany ? [...new Set(searchesWithCompany.map(item => item.company.ville).filter(ville => ville !== null))].sort() : [];
             
             this.applyFilters();
         }
@@ -98,15 +98,15 @@ export class SearchesStudentTabComponent implements OnInit {
     
         filteredSearches.forEach(s => {
             if (!(s.search.dateCreation instanceof Date)) {
-                s.search.dateCreation = new Date(s.search.dateCreation);
+                s.search.dateCreation = new Date(s.search.dateCreation!);
             }
         });
     
         if (searchTermLower) {
             filteredSearches = filteredSearches.filter(s =>
-                s.company.raisonSociale.toLowerCase().includes(searchTermLower) ||
-                s.company.ville.toLowerCase().includes(searchTermLower) ||
-                this.getStatusLabel(s.search.statut).toLowerCase().includes(searchTermLower)
+                s.company.raisonSociale!.toLowerCase().includes(searchTermLower) ||
+                s.company.ville!.toLowerCase().includes(searchTermLower) ||
+                this.getStatusLabel(s.search.statut!).toLowerCase().includes(searchTermLower)
             );
         }
     
@@ -119,10 +119,10 @@ export class SearchesStudentTabComponent implements OnInit {
         }
     
         if (this.currentDateFilter === 'date_asc') {
-            filteredSearches.sort((a, b) => a.search.dateCreation.getTime() - b.search.dateCreation.getTime());
+            filteredSearches.sort((a, b) => a.search.dateCreation!.getTime() - b.search.dateCreation!.getTime());
         }
         else if (this.currentDateFilter === 'date_desc') {
-            filteredSearches.sort((a, b) => b.search.dateCreation.getTime() - a.search.dateCreation.getTime());
+            filteredSearches.sort((a, b) => b.search.dateCreation!.getTime() - a.search.dateCreation!.getTime());
         }
     
         this.filteredSearchesWithCompany = filteredSearches;

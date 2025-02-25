@@ -31,13 +31,13 @@ export class HeaderComponent implements OnInit {
         this.currentUser = this.authService.getCurrentUser();
 
         if (this.appComponent.isStudent(this.currentUser)) {
-            this.nomCurrentUser = this.currentUser.nomEtudiant;
-            this.prenomCurrentUser = this.currentUser.prenomEtudiant;
+            this.nomCurrentUser = this.currentUser.nomEtudiant ? this.currentUser.nomEtudiant : '';
+            this.prenomCurrentUser = this.currentUser.prenomEtudiant ? this.currentUser.prenomEtudiant : '';
             this.currentUserRole = 'STUDENT';
         }
         else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-            this.nomCurrentUser = this.currentUser.nom;
-            this.prenomCurrentUser = this.currentUser.prenom;
+            this.nomCurrentUser = this.currentUser.nom ? this.currentUser.nom : '';
+            this.prenomCurrentUser = this.currentUser.prenom ? this.currentUser.prenom : '';
             this.currentUserRole = 'INTERNSHIP_MANAGER';
         }
     }

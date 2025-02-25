@@ -53,9 +53,9 @@ export class StatsCardsComponent implements OnInit {
 
     // Utiliser forkJoin pour attendre que toutes les données soient chargées
     forkJoin({
-      students: this.studentService.getStudents(),
-      searches: this.internshipSearchService.getSearches(),
-      sheets: this.descriptiveSheetService.getSheets()
+      students: this.studentService.getStudents(['idUPPA']),
+      searches: this.internshipSearchService.getSearches(['idRecherche', 'statut', 'idUPPA']),
+      sheets: this.descriptiveSheetService.getSheets(['idFicheDescriptive', 'statut', 'idUPPA'])
     }).subscribe(({students, searches, sheets}) => {
         this.students = students;
         this.searches = searches;
@@ -130,8 +130,8 @@ export class StatsCardsComponent implements OnInit {
     }
     return this.searches.filter(search =>
       search.idUPPA === studentId &&
-      search.dateCreation > this.getLastWeekDate() &&
-      search.dateCreation <= this.getCurrentDate()
+      search.dateCreation! > this.getLastWeekDate() &&
+      search.dateCreation! <= this.getCurrentDate()
     ).length
   }
 

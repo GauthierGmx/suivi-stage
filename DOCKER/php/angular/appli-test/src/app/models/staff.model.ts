@@ -3,17 +3,17 @@
 //d'implémenter la classe d'entité Role et la classe d'association Posseder_Role
 export class Staff {
   idPersonnel: number;
-  role: StaffRole;
-  nom: string;
-  prenom: string;
-  adresse: string;
-  ville: string;
-  codePostal: string;
-  telephone: string;
-  adresseMail: string;
-  longitudeAdresse: string;
-  latitudeAdresse: string;
-  quotaEtudiant: number;
+  role: StaffRole | null;
+  nom: string | null;
+  prenom: string | null;
+  adresse: string | null;
+  ville: string | null;
+  codePostal: string | null;
+  telephone: string | null;
+  adresseMail: string | null;
+  longitudeAdresse: string | null;
+  latitudeAdresse: string | null;
+  quotaEtudiant: number | null;
 
   constructor(
     idPersonnel: number,

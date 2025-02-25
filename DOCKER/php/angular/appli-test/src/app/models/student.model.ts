@@ -1,7 +1,7 @@
 export class Student {
   idUPPA: string;
-  nomEtudiant: string;
-  prenomEtudiant: string;
+  nomEtudiant: string | null;
+  prenomEtudiant: string | null;
   adresseEtudiant: string | null;
   villeEtudiant: string | null;
   codePostalEtudiant: string | null;
