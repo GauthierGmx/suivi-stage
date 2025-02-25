@@ -32,14 +32,14 @@ jobs:
         run: |
           cd DOCKER/php/laravel/suivi-stage
           touch .env.testing
-          echo "APP_NAME=Laravel" >> .env
-          echo "APP_ENV=testing" >> .env
-          echo "DB_CONNECTION=mysql" >> .env
-          echo "DB_HOST=127.0.0.1" >> .env
-          echo "DB_PORT=3306" >> .env
-          echo "DB_DATABASE=db_test" >> .env
-          echo "DB_USERNAME=test_github" >> .env
-          echo "DB_PASSWORD=test_github" >> .env
+          echo "APP_NAME=Laravel" >> .env.testing
+          echo "APP_ENV=testing" >> .env.testing
+          echo "DB_CONNECTION=mysql" >> .env.testing
+          echo "DB_HOST=127.0.0.1" >> .env.testing
+          echo "DB_PORT=3306" >> .env.testing
+          echo "DB_DATABASE=db_test" >> .env.testing
+          echo "DB_USERNAME=test_github" >> .env.testing
+          echo "DB_PASSWORD=test_github" >> .env.testing
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
