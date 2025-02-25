@@ -13,9 +13,9 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: db_test
-          MYSQL_USER: test_github
-          MYSQL_PASSWORD: test_github
+          MYSQL_DATABASE: db_suivi_stage
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
         ports:
           - 3306:3306
         options: >-
@@ -28,18 +28,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Create .env file for testing
+      - name: Create .env file
         run: |
           cd DOCKER/php/laravel/suivi-stage
-          touch .env.testing
-          echo "APP_NAME=Laravel" >> .env.testing
-          echo "APP_ENV=testing" >> .env.testing
-          echo "DB_CONNECTION=mysql" >> .env.testing
-          echo "DB_HOST=127.0.0.1" >> .env.testing
-          echo "DB_PORT=3306" >> .env.testing
-          echo "DB_DATABASE=db_test" >> .env.testing
-          echo "DB_USERNAME=test_github" >> .env.testing
-          echo "DB_PASSWORD=test_github" >> .env.testing
+          touch .env
+          echo "APP_NAME=Laravel" >> .env
+          echo "APP_ENV=development" >> .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=db_suivi_stage" >> .env
+          echo "DB_USERNAME=admin" >> .env
+          echo "DB_PASSWORD=admin" >> .env
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -56,7 +56,7 @@ jobs:
       - name: Run migrations
         run: |
           cd DOCKER/php/laravel/suivi-stage
-          php artisan --env=testing migrate:fresh --seed
+          php artisan migrate:fresh --seed
 
       - name: Run tests
         run: |
