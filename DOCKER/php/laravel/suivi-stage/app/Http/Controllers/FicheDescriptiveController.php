@@ -21,8 +21,6 @@ class FicheDescriptiveController extends Controller
     {
         try{
             $validatedData = $request->validate([
-                'dateCreation' => 'bail|required|date|date-format:Y-m-d',
-                'dateDerniereModification' => 'bail|required|date|date-format:Y-m-d',
                 'contenuStage' => 'nullable|string',
                 'thematique' => 'nullable|string',
                 'sujet' => 'nullable|string',
@@ -30,16 +28,16 @@ class FicheDescriptiveController extends Controller
                 'taches' => 'nullable|string',
                 'competences' => 'nullable|string',
                 'details' => 'nullable|string',
-                'debutStage' => 'nullable|date|date-format:Y-m-d',
-                'finStage' => 'nullable|date|date-format:Y-m-d',
+                'debutStage' => 'nullable|date',
+                'finStage' => 'nullable|date',
                 'nbJourSemaine' => 'nullable|integer',
                 'nbHeureSemaine' => 'nullable|integer',
                 'clauseConfidentialite' => 'nullable|boolean',
                 'statut' => 'bail|required|string|in:En cours,Validee,Refusée',
                 'numeroConvention' => 'nullable|string',
                 'interruptionStage' => 'nullable|boolean',
-                'dateDebutInterruption' => 'nullable|date|date-format:Y-m-d',
-                'dateFinInterruption' => 'nullable|date|date-format:Y-m-d',
+                'dateDebutInterruption' => 'nullable|date',
+                'dateFinInterruption' => 'nullable|date',
                 'personnelTechniqueDisponible' => 'nullable||boolean',
                 'materielPrete' => 'nullable|string',
                 'idEntreprise' => 'bail|required|integer',
@@ -48,8 +46,8 @@ class FicheDescriptiveController extends Controller
             ]);
 
             $uneFicheDescriptive = FicheDescriptive::create([
-                'dateCreation' => $validatedData['dateCreation'],
-                'dateDerniereModification' => $validatedData['dateDerniereModification'],
+                'dateCreation' => Carbon::now()->format('Y-m-d'),
+                'dateDerniereModification' => Carbon::now()->format('Y-m-d'),
                 'contenuStage' => $validatedData['contenuStage'] ?? null,
                 'thematique' => $validatedData['thematique']?? null,
                 'sujet' => $validatedData['sujet']?? null,
@@ -57,16 +55,16 @@ class FicheDescriptiveController extends Controller
                 'taches' => $validatedData['taches']?? null,
                 'competences' => $validatedData['competences']?? null,
                 'details' => $validatedData['details']?? null,
-                'debutStage' => $validatedData['debutStage']?? null,
-                'finStage' => $validatedData['finStage']?? null,
+                'debutStage' => isset($validatedData['debutStage']) ? Carbon::parse($validatedData['debutStage'])->format('Y-m-d') : null,
+                'finStage' => isset($validatedData['finStage']) ? Carbon::parse($validatedData['finStage'])->format('Y-m-d') : null,
                 'nbJourSemaine' => $validatedData['nbJourSemaine']?? null,
                 'nbHeureSemaine' => $validatedData['nbHeureSemaine']?? null,
                 'clauseConfidentialite' => $validatedData['clauseConfidentialite']?? null,
                 'statut' => $validatedData['statut'],
                 'numeroConvention' => $validatedData['numeroConvention']?? null,
                 'interruptionStage' => $validatedData['interruptionStage']?? null,
-                'dateDebutInterruption' => $validatedData['dateDebutInterruption'] ?? null,
-                'dateFinInterruption' => $validatedData['dateFinInterruption'] ?? null,
+                'dateDebutInterruption' => isset($validatedData['dateDebutInterruption']) ? Carbon::parse($validatedData['dateDebutInterruption'])->format('Y-m-d') : null,
+                'dateFinInterruption' => isset($validatedData['dateFinInterruption']) ? Carbon::parse($validatedData['dateFinInterruption'])->format('Y-m-d') : null,
                 'personnelTechniqueDisponible' => $validatedData['personnelTechniqueDisponible']?? null,
                 'materielPrete' => $validatedData['materielPrete']?? null,
                 'idEntreprise' => $validatedData['idEntreprise'],
@@ -74,10 +72,7 @@ class FicheDescriptiveController extends Controller
                 'idUPPA' => $validatedData['idUPPA']
             ]);
 
-            return response()->json([
-                'message' => 'Fiche Descriptive créée avec succès.',
-                'ficheDescriptive' => $uneFicheDescriptive
-            ], 201);
+            return response()->json($uneFicheDescriptive,201);
 
         }
         catch (\Illuminate\Validation\ValidationException $e)
@@ -115,7 +110,6 @@ class FicheDescriptiveController extends Controller
     public function update(Request $request, $id){
         try{
             $validatedData = $request->validate([
-                'dateDerniereModification' => 'bail|required|date|date-format:Y-m-d',
                 'contenuStage' => 'nullable|string',
                 'thematique' => 'nullable|string',
                 'sujet' => 'nullable|string',
@@ -138,12 +132,10 @@ class FicheDescriptiveController extends Controller
             ]);
             
             // Récupération et mise à jour en une seule ligne
-            FicheDescriptive::findOrFail($id)->update($validatedData);
             $validatedData['dateDerniereModification'] = Carbon::now()->format('Y-m-d');
-
-            return response()->json([
-                'message' => 'Fiche Descriptive mise à jour avec succès.'
-            ], 200);
+            FicheDescriptive::findOrFail($id)->update($validatedData);
+           
+            return response()->json($validatedData, 200);
         }
         catch (\Illuminate\Validation\ValidationException $e)
         {
@@ -217,6 +209,6 @@ class FicheDescriptiveController extends Controller
                 'erreurs' => $e->getMessage()
             ], 500);
         }
-    }
+    }    
 }
 ?>
