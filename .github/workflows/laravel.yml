@@ -73,16 +73,3 @@ jobs:
         with:
           name: coverage-report
           path: DOCKER/php/laravel/suivi-stage/tests/coverage
-
-      - name: Deploy coverage to GitHub Pages
-        if: success()
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git fetch origin gh-pages || git checkout --orphan gh-pages
-          git checkout gh-pages
-          rm -rf *
-          cp -r DOCKER/php/laravel/suivi-stage/tests/coverage/* .
-          git add .
-          git commit -m "Update coverage report"
-          git push origin gh-pages --force
