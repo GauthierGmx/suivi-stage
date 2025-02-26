@@ -58,6 +58,11 @@ jobs:
           cd DOCKER/php/laravel/suivi-stage
           php artisan migrate:fresh --seed
 
+      - name: Create coverage directory
+        run: |
+          cd DOCKER/php/laravel/suivi-stage/tests
+          mkdir coverage
+
       - name: Run tests
         run: |
           cd DOCKER/php/laravel/suivi-stage
