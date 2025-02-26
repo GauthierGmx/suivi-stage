@@ -67,15 +67,9 @@ jobs:
         run: |
           cd DOCKER/php/laravel/suivi-stage
           ./vendor/bin/phpunit --coverage-html ./tests/coverage || exit 0
-      - name: Show coverage
-        run: |
-          cd DOCKER/php/laravel/suivi-stage/tests
-          ls
-          cd coverage
-          ls
 
       - name: Upload coverage as artifacts
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: tests/coverage
+          path: tests/coverage/**
