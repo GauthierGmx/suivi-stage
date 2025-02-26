@@ -94,7 +94,7 @@ export class StudentService {
     }
 
     /*
-    return this.http.get(`http://localhost:8000/api/etudiants/${studentId}`, {params}).pipe(
+    return this.http.get<Student>(`http://localhost:8000/api/etudiants/${studentId}`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );

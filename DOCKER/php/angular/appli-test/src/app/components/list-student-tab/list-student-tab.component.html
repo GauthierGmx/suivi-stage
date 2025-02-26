@@ -84,7 +84,7 @@
               >
                 <td class="firstTd">{{ item.student.prenomEtudiant }} {{ item.student.nomEtudiant }}</td>
                 <td>{{ item.countSearches }}</td>
-                <td>{{ item.lastSearchDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ item.lastSearchDate ? (item.lastSearchDate | date:'dd/MM/yyyy') : 'Aucune recherche' }}</td>
                 <td>{{ item.studyYear }}</td>
                 <td class="lastTd">{{ item.TdGroup }}</td>
               </tr>

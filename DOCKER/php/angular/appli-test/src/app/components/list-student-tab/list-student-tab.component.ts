@@ -1,11 +1,17 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
+import { InternshipSearch } from '../../models/internship-search.model';
 import { Student } from '../../models/student.model';
+import { TD } from '../../models/td.model';
+import { Student_TD_AcademicYear } from '../../models/student-td-academicYear.model';
+import { AcademicYear } from '../../models/academic-year.model';
 import { NavigationService } from '../../services/navigation.service';
 import { InternshipSearchService } from '../../services/internship-search.service';
 import { StudentService } from '../../services/student.service';
+import { TDService } from '../../services/td.service';
+import { StudentTdAcademinYearService } from '../../services/student-td-academicYear.service';
+import { AcademicYearService } from '../../services/academic-year.service';
 import { Subject, debounceTime, distinctUntilChanged, firstValueFrom, forkJoin, tap } from 'rxjs';
 
 @Component({
@@ -19,6 +25,9 @@ export class ListStudentTabComponent implements OnInit{
     @Output() dataLoaded = new EventEmitter<void>();
     studentsData?: Student[];
     searches?: InternshipSearch[];
+    tds?: TD[];
+    academicYear?: AcademicYear;
+    datasStudentTdAcademicYear?: Student_TD_AcademicYear[];
     searchTerm: string = '';
     searchTermSubject = new Subject<string>();
     filteredStudentsDatas: { student: Student; countSearches: number; lastSearchDate: Date; studyYear: string; TdGroup: string}[] = [];
@@ -31,6 +40,9 @@ export class ListStudentTabComponent implements OnInit{
     constructor(
         private readonly studentService: StudentService,
         private readonly internshipSearchService: InternshipSearchService,
+        private readonly tdService: TDService,
+        private readonly studentTdAcademicYearService: StudentTdAcademinYearService,
+        private readonly academicYearService: AcademicYearService,
         private readonly navigationService: NavigationService
     ) {
         this.searchTermSubject.pipe(
@@ -50,10 +62,16 @@ export class ListStudentTabComponent implements OnInit{
         return firstValueFrom(forkJoin({
                     students: this.studentService.getStudents(['idUPPA','nom', 'prenom']),
                     searches: this.internshipSearchService.getSearches(['idRecherche', 'dateCreation', 'idUPPA']),
+                    tds: this.tdService.getTDs(),
+                    academicYear: this.academicYearService.getCurrentAcademicYear(),
+                    datasStudentTdAcademicYear: this.studentTdAcademicYearService.getStudentsTDsAcademicYears()
                 }).pipe(
-                    tap(({ students, searches }) => {
+                    tap(({ students, searches, tds, academicYear, datasStudentTdAcademicYear }) => {
                         this.studentsData = students;
                         this.searches = searches;
+                        this.tds = tds;
+                        this.academicYear = academicYear;
+                        this.datasStudentTdAcademicYear = datasStudentTdAcademicYear;
                         this.getFilteredStudentsWithTdAndStudyYear();
                         this.dataLoaded.emit();
                     })
@@ -62,16 +80,23 @@ export class ListStudentTabComponent implements OnInit{
 
     //Récupération des informations des étudiants
     getFilteredStudentsWithTdAndStudyYear() {
-        if (this.studentsData && this.searches) {
+        if (this.studentsData && this.searches && this.tds) {
             this.originalStudentsDatas = this.studentsData.map(student => {
                 const studentSearches = this.searches!.filter(search => search.idUPPA === student.idUPPA);
+                const studentTD = this.tds!.find( td =>
+                    this.datasStudentTdAcademicYear!.some( data =>
+                        data.idUPPA === student.idUPPA &&
+                        data.idAcademicYear === this.academicYear?.idAnneeUniversitaire &&
+                        data.idTD === td.idTD
+                    )
+                )
                 
                 return {
                     student,
                     countSearches: studentSearches.length,
                     lastSearchDate: studentSearches.length > 0 ? new Date(Math.max(...studentSearches.map(s => new Date(s.dateCreation!).getTime()))) : null,
                     studyYear: '',
-                    TdGroup: ''
+                    TdGroup: studentTD?.libelle
                 };
             }).filter((result): result is { student: Student; countSearches: number; lastSearchDate: Date; studyYear: string; TdGroup: string } => result !== null);
     
