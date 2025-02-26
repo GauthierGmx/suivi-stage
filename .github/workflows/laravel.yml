@@ -66,18 +66,23 @@ jobs:
       - name: Run tests
         run: |
           cd DOCKER/php/laravel/suivi-stage
-          ./vendor/bin/phpunit --coverage-clover ./tests/coverage/coverage.xml || exit 0
-          
-      - name: Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: DOCKER/php/laravel/suivi-stage/tests/coverage/coverage.xml
-          badge: true
-          format: markdown
-          output: both
+          ./vendor/bin/phpunit --coverage-html ./tests/coverage || exit 0
 
       - name: Upload coverage as artifacts
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: DOCKER/php/laravel/suivi-stage/tests/coverage
+
+      - name: Deploy coverage to GitHub Pages
+        if: success()
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git fetch origin gh-pages || git checkout --orphan gh-pages
+          git checkout gh-pages
+          rm -rf *
+          cp -r DOCKER/php/laravel/suivi-stage/tests/coverage/* .
+          git add .
+          git commit -m "Update coverage report"
+          git push origin gh-pages --force
