@@ -66,7 +66,15 @@ jobs:
       - name: Run tests
         run: |
           cd DOCKER/php/laravel/suivi-stage
-          ./vendor/bin/phpunit --coverage-html ./tests/coverage || exit 0
+          ./vendor/bin/phpunit --coverage-clover ./tests/coverage/coverage.xml || exit 0
+          
+      - name: Code Coverage Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: DOCKER/php/laravel/suivi-stage/tests/coverage/coverage.xml
+          badge: true
+          format: markdown
+          output: both
 
       - name: Upload coverage as artifacts
         uses: actions/upload-artifact@v4
