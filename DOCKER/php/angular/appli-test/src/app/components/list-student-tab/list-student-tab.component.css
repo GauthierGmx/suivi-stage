@@ -5,6 +5,8 @@
     display: block;
     padding: 20px;
     margin-top: 15px;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* En-tête avec titre et bouton */
@@ -13,6 +15,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
+    max-width: 600px;
 }
 
 .title h3 {
@@ -35,14 +38,16 @@
 .searchBarAndfilters {
     padding: 0 5px;
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
     align-items: flex-start;
+    width: 100%;
 }
 
 .search-container {
     position: relative;
     margin-bottom: 16px;
-    min-width: 250px;
+    min-width: 200px;
     flex: 1;
     max-width: 300px;
 }
@@ -83,7 +88,7 @@
     max-width: 210px;
     font-size: 14px;
     font-weight: 500;
-    justify-content: center;
+    text-align: left;
     flex: 1;
     appearance: none;
     -webkit-appearance: none;
@@ -91,6 +96,9 @@
     background-position: right 8px center;
     background-size: 1em;
     padding-right: 32px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Styles spécifiques pour le bouton de tri par date */
@@ -128,6 +136,7 @@ select.filter-button:not(:focus) {
 .table-container {
     overflow-x: auto;
     margin: 0 5px;
+    width: 100%;
 }
 
 table {
@@ -237,19 +246,21 @@ tbody tr:nth-child(even):hover::after {
 /* Vue cards */
 .table-view {
     display: block;
+    width: 100%;
 }
 
 .cards-view {
     display: none;
     padding: 0 16px;
     margin-top: 20px;
+    width: 100%;
 }
 
 .search-card {
     background: white;
     border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     max-width: 600px;
     margin-left: auto;
@@ -268,8 +279,8 @@ tbody tr:nth-child(even):hover::after {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
-    padding-bottom: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
     border-bottom: 1px solid #e5e7eb;
 }
 
@@ -284,25 +295,52 @@ tbody tr:nth-child(even):hover::after {
     margin-bottom: 12px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 12px;
 }
 
 .card-content p {
     margin: 0;
     font-size: 14px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
 }
 
 .card-content .label {
     font-weight: 500;
     color: #4a5568;
-    margin-right: 8px;
-    min-width: 45px;
+    margin-bottom: 4px;
 }
 
 /* Media Queries */
+@media (max-width: 1265px) {
+    .filter-button {
+        padding: 8px 12px;
+        font-size: 13px;
+        min-width: 90px;
+    }
+}
+
+@media (max-width: 1130px) {
+    .filter-buttons {
+        flex-wrap: wrap;
+    }
+    
+    .filter-button {
+        flex-basis: calc(50% - 8px);
+        max-width: none;
+        min-width: 120px;
+        font-size: 12px;
+        padding: 6px 10px;
+        padding-right: 28px;
+    }
+}
+
 @media (max-width: 950px) {
+    .title {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .table-view {
         display: none;
     }
@@ -326,15 +364,19 @@ tbody tr:nth-child(even):hover::after {
 
     .filter-buttons {
         width: 100%;
-        display: flex;
-        align-items: start;
-        justify-content: start;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 
     .filter-button {
         width: 100%;
-        min-width: 135px;
-        padding: 6px 12px;
+        min-width: 0;
+        max-width: none;
+        padding: 8px 12px;
+        font-size: 13px;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     .search-card {
@@ -368,40 +410,79 @@ tbody tr:nth-child(even):hover::after {
 
     .card-actions .edit-icon:hover, 
     .card-actions .delete-icon:hover {
-        transform: translateY(-2px);  /* Même effet sur mobile */
+        transform: translateY(-2px);
+    }
+}
+
+@media (max-width: 700px) {
+    .filter-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filter-button {
+        font-size: 12px;
+        padding: 6px 10px;
+        padding-right: 26px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 600px) {
+    .content-box {
+        padding: 15px 10px;
+    }
+    
+    .filter-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-button {
+        width: 100%;
+        font-size: 14px;
+        padding: 8px 12px;
+        padding-right: 30px;
+        white-space: normal;
+        height: auto;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .card-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-content p {
+        margin-bottom: 8px;
     }
 }
 
 @media (max-width: 480px) {
     .searchBarAndfilters {
-        padding: 0 8px;
-    }
-
-    .filter-buttons {
-        grid-template-columns: 1fr;
-    }
-
-    .filter-button {
-        max-width: 150px;
-        min-width: 135px;
+        padding: 0;
     }
 
     .search-input {
         font-size: 14px;
     }
 
-    .card-content {
-        grid-template-columns: 1fr;
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
 
-    .card-header {
-        flex-direction: flex;
-        justify-content: space-between;
-        gap: 8px;
+    .search-card {
+        padding: 12px;
     }
 
     .status-badge {
         align-self: flex-start;
+    }
+    
+    .title h3 {
+        font-size: 1.2rem;
     }
 }
 
@@ -415,7 +496,7 @@ tbody tr:nth-child(even):hover::after {
 
 .edit-icon, .delete-icon {
     cursor: pointer;
-    transition: all 0.2s ease;  /* Ajout de la transition pour tous les effets */
+    transition: all 0.2s ease;
 }
 
 .edit-icon {
@@ -424,7 +505,7 @@ tbody tr:nth-child(even):hover::after {
 
 .edit-icon:hover {
     color: #338ccd;
-    transform: translateY(-3px);  /* Effet de surélévation */
+    transform: translateY(-3px);
 }
 
 .delete-icon {
@@ -433,5 +514,5 @@ tbody tr:nth-child(even):hover::after {
 
 .delete-icon:hover {
     color: #ef4444;
-    transform: translateY(-3px);  /* Effet de surélévation */
+    transform: translateY(-3px);
 }
