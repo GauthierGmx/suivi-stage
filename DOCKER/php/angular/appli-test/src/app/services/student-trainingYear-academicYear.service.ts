@@ -1,78 +1,78 @@
 import { Injectable } from '@angular/core';
-import { Student_TD_AcademicYear } from '../models/student-td-academicYear.model';
+import { Student_TrainingYear_AcademicYear } from '../models/student-trainingYear-academicYear.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class StudentTdAcademicYearService {
-    private readonly mockStudentTdAcademicYear: Student_TD_AcademicYear[] = [
-        {
-            idUPPA: '610123',
-            idTD: 1,
-            idAcademicYear: 1
-        },
-        {
-            idUPPA: '610123',
-            idTD: 1,
-            idAcademicYear: 2
-        },
+export class StudentTrainingYearAcademicYearService {
+    private readonly mockStudentTdAcademicYear: Student_TrainingYear_AcademicYear[] = [
         {
             idUPPA: '610000',
-            idTD: 2,
-            idAcademicYear: 1
-        },
-        {
-            idUPPA: '610000',
-            idTD: 2,
-            idAcademicYear: 2
-        },
-        {
-            idUPPA: '610001',
-            idTD: 2,
+            idTrainingYear: 2,
             idAcademicYear: 1
         },
         {
             idUPPA: '610001',
-            idTD: 2,
-            idAcademicYear: 2
-        },
-        {
-            idUPPA: '610459',
-            idTD: 2,
+            idTrainingYear: 2,
             idAcademicYear: 1
         },
         {
             idUPPA: '610459',
-            idTD: 2,
-            idAcademicYear: 2
+            idTrainingYear: 2,
+            idAcademicYear: 1
         },
         {
-            idUPPA: '611082',
-            idTD: 2,
+            idUPPA: '610123',
+            idTrainingYear: 2,
             idAcademicYear: 1
         },
         {
             idUPPA: '611082',
-            idTD: 2,
-            idAcademicYear: 2
-        },
-        {
-            idUPPA: '613453',
-            idTD: 2,
+            idTrainingYear: 2,
             idAcademicYear: 1
         },
         {
             idUPPA: '613453',
-            idTD: 2,
+            idTrainingYear: 2,
+            idAcademicYear: 1
+        },
+        {
+            idUPPA: '610000',
+            idTrainingYear: 3,
+            idAcademicYear: 2
+        },
+        {
+            idUPPA: '610001',
+            idTrainingYear: 3,
+            idAcademicYear: 2
+        },
+        {
+            idUPPA: '610459',
+            idTrainingYear: 3,
+            idAcademicYear: 2
+        },
+        {
+            idUPPA: '610123',
+            idTrainingYear: 3,
+            idAcademicYear: 2
+        },
+        {
+            idUPPA: '611082',
+            idTrainingYear: 3,
+            idAcademicYear: 2
+        },
+        {
+            idUPPA: '613453',
+            idTrainingYear: 3,
             idAcademicYear: 2
         }
     ];
 
     constructor(private http: HttpClient) {}
 
-    getStudentsTDsAcademicYears(fields?: string[]): Observable<Student_TD_AcademicYear[]> {
+    getStudentsTDsAcademicYears(fields?: string[]): Observable<Student_TrainingYear_AcademicYear[]> {
         let params = new HttpParams();
 
         if (fields && fields.length > 0) {
@@ -80,7 +80,7 @@ export class StudentTdAcademicYearService {
         }
 
         /*
-        return this.http.get<Student_TD_AcademicYear[]>('http://localhost:8000/api/', {params}).pipe(
+        return this.http.get<Student_TrainingYear_AcademicYear[]>('http://localhost:8000/api/', {params}).pipe(
         tap(response => this.log(response)),
         catchError(error => this.handleError(error, null))
         );
