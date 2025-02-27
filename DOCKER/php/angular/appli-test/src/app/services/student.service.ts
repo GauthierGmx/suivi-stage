@@ -1,70 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Student } from '../models/student.model';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
-  private readonly mockStudents: Student[] = [
-    {
-      idUPPA: '610000',
-      nomEtudiant: 'Montouro',
-      prenomEtudiant: 'Maxime',
-      adresseEtudiant: null,
-      villeEtudiant: null,
-      codePostalEtudiant: null,
-      telephoneEtudiant: null,
-      adresseMailEtudiant: 'mmontour@iutbayonne.univ-pau.fr',
-      idParcours: 1,
-      idDepartement: 1,
-      idEntreprise: null,
-      idTuteur: null
-    },
-    {
-      idUPPA: '610001',
-      nomEtudiant: 'Conguisti',
-      prenomEtudiant: 'Nicolas',
-      adresseEtudiant: null,
-      villeEtudiant: null,
-      codePostalEtudiant: null,
-      telephoneEtudiant: null,
-      adresseMailEtudiant: 'nconguisti@iutbayonne.univ-pau.fr',
-      idParcours: 1,
-      idDepartement: 1,
-      idEntreprise: null,
-      idTuteur: null
-    },
-    {
-      idUPPA: '610123',
-      nomEtudiant: 'Crussière',
-      prenomEtudiant: 'Lucas',
-      adresseEtudiant: null,
-      villeEtudiant: null,
-      codePostalEtudiant: null,
-      telephoneEtudiant: null,
-      adresseMailEtudiant: 'lcrussiere@iutbayonne.univ-pau.fr',
-      idParcours: 1,
-      idDepartement: 1,
-      idEntreprise: null,
-      idTuteur: null
-    },
-    {
-      idUPPA: '610459',
-      nomEtudiant: 'Vernis',
-      prenomEtudiant: 'Gabriel',
-      adresseEtudiant: null,
-      villeEtudiant: null,
-      codePostalEtudiant: null,
-      telephoneEtudiant: null,
-      adresseMailEtudiant: 'gvernis@iutbayonne.univ-pau.fr',
-      idParcours: 1,
-      idDepartement: 1,
-      idEntreprise: null,
-      idTuteur: null
-    }
-  ];
 
   private selectedStudent = new BehaviorSubject<Student | null>(null);
 
@@ -77,13 +19,10 @@ export class StudentService {
       params = params.set('fields', fields.join(','));
     }
 
-    /*
     return this.http.get<Student[]>('http://localhost:8000/api/etudiants', {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
-    */
-    return of(this.mockStudents);
   }
 
   getStudentById(studentId: string, fields?: string[]): Observable<Student | undefined> {
@@ -93,13 +32,10 @@ export class StudentService {
       params = params.set('fields', fields.join(','));
     }
 
-    /*
     return this.http.get<Student>(`http://localhost:8000/api/etudiants/${studentId}`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
-    */
-    return of(this.mockStudents.find(s => s.idUPPA === studentId));
   }
 
     // Nouvelles méthodes pour gérer l'étudiant sélectionné

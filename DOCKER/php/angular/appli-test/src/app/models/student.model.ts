@@ -1,7 +1,7 @@
 export class Student {
   idUPPA: string;
-  nomEtudiant: string | null;
-  prenomEtudiant: string | null;
+  nom: string | null;
+  prenom: string | null;
   adresseEtudiant: string | null;
   villeEtudiant: string | null;
   codePostalEtudiant: string | null;
@@ -27,8 +27,8 @@ export class Student {
     idTuteur: number | null
   ) {
     this.idUPPA = idUPPA;
-    this.nomEtudiant = nomEtudiant;
-    this.prenomEtudiant = prenomEtudiant;
+    this.nom = nomEtudiant;
+    this.prenom = prenomEtudiant;
     this.adresseEtudiant = adresseEtudidant;
     this.villeEtudiant = villeEtudiant;
     this.codePostalEtudiant = codePostalEtudiant;

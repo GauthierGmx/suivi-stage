@@ -82,7 +82,7 @@
             <tr 
               (click)="goToStudentSearchesView(item.student.idUPPA)"
             >
-              <td class="firstTd">{{ item.student.prenomEtudiant }} {{ item.student.nomEtudiant }}</td>
+              <td class="firstTd">{{ item.student.prenom }} {{ item.student.nom }}</td>
               <td>{{ item.countSearches }}</td>
               <td>{{ item.lastSearchDate ? (item.lastSearchDate | date:'dd/MM/yyyy') : 'Aucune recherche' }}</td>
               <td>{{ item.studyYear }}</td>
@@ -102,7 +102,7 @@
         (click)="goToStudentSearchesView(item.student.idUPPA)"
       >
         <div class="card-header">
-          <h4>{{ item.student.prenomEtudiant }} {{ item.student.nomEtudiant }}</h4>
+          <h4>{{ item.student.prenom }} {{ item.student.nom }}</h4>
           <span>{{ item.studyYear }}</span>
         </div>
         <div class="card-content">

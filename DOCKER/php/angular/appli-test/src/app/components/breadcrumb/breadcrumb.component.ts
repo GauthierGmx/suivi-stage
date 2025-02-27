@@ -93,8 +93,8 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
         'add-search-form': 'ajout recherche',
         'update-search': 'modification recherche',
         'search-details': 'détails recherche',
-        'search-student-tab': this.selectedStudent?.prenomEtudiant && this.selectedStudent?.nomEtudiant
-          ? `Journal de ${this.selectedStudent.prenomEtudiant} ${this.selectedStudent.nomEtudiant}`
+        'search-student-tab': this.selectedStudent?.prenom && this.selectedStudent?.nom
+          ? `Journal de ${this.selectedStudent.prenom} ${this.selectedStudent.nom}`
           : 'Journal de l\'étudiant'
       }
     };

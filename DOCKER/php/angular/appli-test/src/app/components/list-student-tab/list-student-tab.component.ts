@@ -92,7 +92,7 @@ export class ListStudentTabComponent implements OnInit{
 
     //Récupération des informations des étudiants
     getFilteredStudentsWithTdAndStudyYear() {
-        if (this.studentsData && this.searches && this.tds) {
+        if (this.studentsData && this.searches && this.tds && this.trainingYears && this.academicYear && this.datasStudentTrainingYearAcademicYear && this.datasStudentTdAcademicYear) {
             this.originalStudentsDatas = this.studentsData.map(student => {
                 const studentSearches = this.searches!.filter(search => search.idUPPA === student.idUPPA);
                 const studentTD = this.tds!.find(td =>
@@ -132,8 +132,8 @@ export class ListStudentTabComponent implements OnInit{
     
         if (searchTermLower) {
             filteredDatas = filteredDatas.filter(data =>
-                data.student.nomEtudiant!.toLowerCase().includes(searchTermLower) ||
-                data.student.prenomEtudiant!.toLowerCase().includes(searchTermLower) ||
+                data.student.nom!.toLowerCase().includes(searchTermLower) ||
+                data.student.prenom!.toLowerCase().includes(searchTermLower) ||
                 data.studyYear.toLowerCase().includes(searchTermLower) ||
                 data.TdGroup.toLowerCase().includes(searchTermLower)
             );
