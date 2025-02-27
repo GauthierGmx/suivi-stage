@@ -11,6 +11,7 @@ class RechercheStageController extends Controller
     /**
      * Retourne toutes les recherches de stage
      *
+     * @param \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
@@ -28,7 +29,7 @@ class RechercheStageController extends Controller
         // Si aucun champ valide n'est fourni, on récupère tout par défaut
         $recherchesStages = RechercheStage::select(empty($fields) ? '*' : $fields)->get();
     
-        return response()->json($recherchesStages);
+        return response()->json($recherchesStages,200);
     }
 
     /**
