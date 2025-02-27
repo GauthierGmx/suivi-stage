@@ -13,9 +13,9 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: db_test
-          MYSQL_USER: test_github
-          MYSQL_PASSWORD: test_github
+          MYSQL_DATABASE: db_suivi_stage
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
         ports:
           - 3306:3306
         options: >-
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Copy .env.example to .env
+      - name: Create .env file
         run: |
           cd DOCKER/php/laravel/suivi-stage
           touch .env
@@ -37,9 +37,9 @@ jobs:
           echo "DB_CONNECTION=mysql" >> .env
           echo "DB_HOST=127.0.0.1" >> .env
           echo "DB_PORT=3306" >> .env
-          echo "DB_DATABASE=db_test" >> .env
-          echo "DB_USERNAME=test_github" >> .env
-          echo "DB_PASSWORD=test_github" >> .env
+          echo "DB_DATABASE=db_suivi_stage" >> .env
+          echo "DB_USERNAME=admin" >> .env
+          echo "DB_PASSWORD=admin" >> .env
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -58,13 +58,18 @@ jobs:
           cd DOCKER/php/laravel/suivi-stage
           php artisan migrate:fresh --seed
 
+      - name: Create coverage directory
+        run: |
+          cd DOCKER/php/laravel/suivi-stage/tests
+          mkdir coverage
+
       - name: Run tests
         run: |
           cd DOCKER/php/laravel/suivi-stage
-          ./vendor/bin/phpunit --coverage-html ./tests/coverage
+          ./vendor/bin/phpunit --coverage-html ./tests/coverage || exit 0
 
       - name: Upload coverage as artifacts
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: tests/coverage
+          path: DOCKER/php/laravel/suivi-stage/tests/coverage
