@@ -28,6 +28,21 @@ class EtudiantControllerTest extends TestCase
     ================================
     */
 
+    /**
+     * La méthode index va retourner une confirmation 200 et la liste de tous les étudiants
+     * 
+     * @return void
+     */
+    public function test_index_renvoie_une_confirmation_et_la_liste_de_tous_les_etudiants()
+    {
+        $etudiants = Etudiant::all();
+
+        $response = $this->get('/api/etudiants');
+
+        $response->assertStatus(200)
+                 ->assertJson($etudiants->toArray());
+    }
+
     /*
     ================================
         TEST DE LA METHODE STORE
