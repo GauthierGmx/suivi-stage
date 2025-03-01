@@ -67,10 +67,16 @@ export class StatsCardsComponent implements OnInit {
   }
 
   countStudents() {
+    if (!this.students) {
+      return 0;
+    }
     return this.students.length;
   }
 
   countStudentsWithValidedSearch() {
+    if (!this.students || !this.searches) {
+      return 0;
+    }
     return this.students.filter(student =>
       this.searches.some(
         search =>
@@ -80,6 +86,9 @@ export class StatsCardsComponent implements OnInit {
   }
 
   countStudentWithoutSearch() {
+    if (!this.students || !this.searches) {
+      return 0;
+    }
     return this.students.filter(student =>
       !this.searches.some(
         search => search.idUPPA === student.idUPPA
@@ -87,6 +96,9 @@ export class StatsCardsComponent implements OnInit {
   }
 
   countStudentWithoutSheet() {
+    if (!this.students) {
+      return 0;
+    }
     return this.students.filter(student =>
       !this.descriptiveSheets.some(
         sheet => sheet.idUPPA === student.idUPPA
@@ -94,6 +106,9 @@ export class StatsCardsComponent implements OnInit {
   }
 
   countStudentBySheetStatut(statut: SheetStatus) {
+    if (!this.students || !this.descriptiveSheetService) {
+      return 0;
+    }
     return this.students.filter(student =>
       this.descriptiveSheets.some(sheet =>
         sheet.idUPPA === student.idUPPA &&
@@ -102,7 +117,7 @@ export class StatsCardsComponent implements OnInit {
   }
 
   countSearchesByStudentId(studentId: string | undefined) {
-    if (!studentId) {
+    if (!studentId || !this.searches) {
       return 0;
     }
     return this.searches.filter(search =>
@@ -111,7 +126,7 @@ export class StatsCardsComponent implements OnInit {
   }
 
   countSearchesByStudentIdThisWeek(studentId: string | undefined) {
-    if (!studentId) {
+    if (!studentId || !this.searches) {
       return 0;
     }
     return this.searches.filter(search =>
@@ -122,7 +137,7 @@ export class StatsCardsComponent implements OnInit {
   }
 
   countSearchesByStudentIdAndStatut(studentId: string | undefined, statut: SearchStatus) {
-    if (!studentId) {
+    if (!studentId || !this.searches) {
       return 0;
     }
     return this.searches.filter(search =>
@@ -132,12 +147,18 @@ export class StatsCardsComponent implements OnInit {
   }
 
   contSheetByStatut(statut: SheetStatus) {
+    if (!this.descriptiveSheets) {
+      return 0;
+    }
     return this.descriptiveSheets.filter(
       s => s.statut === statut
     ).length;
   }
 
   countSheetByStudentIdAndStatut(studentId: string, statut: SheetStatus) {
+    if (!this.descriptiveSheets) {
+      return 0;
+    }
     return this.descriptiveSheets.filter(sheet =>
       sheet.idUPPA === studentId &&
       sheet.statut === statut

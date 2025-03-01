@@ -1,0 +1,364 @@
+<div *ngIf="!dataLoaded">
+    <app-loading/>
+</div>
+<div *ngIf="dataLoaded" class="container">
+    <div class="content-wrapper">
+        <app-breadcrumb/>
+        <!-- Début Formulaire -->
+        <form #searchForm="ngForm" (ngSubmit)="onSubmit()" class="form" [class.disabled-form]="isSubmitting">
+            <div class="form-grid">
+                <!-- Type de contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label for="typeContact">Type de contact</label>
+                        <select 
+                            id="typeContact" 
+                            name="typeContact"
+                            [(ngModel)]="updatedSearch.typeContact" 
+                            required
+                        >
+                            <option value="Courrier">Courrier</option>
+                            <option value="Mail">Mail</option>
+                            <option value="Présentiel">Présentiel</option>
+                            <option value="Téléphone">Téléphone</option>
+                            <option value="Site de recrutement">Site de recrutement</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Date 1er contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label for="date1erContact">Date 1er contact</label>
+                        <input 
+                            type="date" 
+                            id="date1erContact" 
+                            name="date1erContact"
+                            [(ngModel)]="updatedSearch.date1erContact" 
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Nom de l'entreprise -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <div class="label-wrapper">
+                            <label for="nomEntreprise">Nom de l'entreprise</label>
+                            <button type="button" (click)="openCompanyForm()" class="add-button">
+                            + Nouvelle entreprise
+                            </button>
+                        </div>
+                        <div class="search-wrapper">
+                            <input
+                            type="text"
+                            id="nomEntreprise"
+                            name="searchTerm"
+                            [(ngModel)]="searchTerm"
+                            (ngModelChange)="onSearchChange($event)"
+                            placeholder="Rechercher une entreprise..."
+                            required
+                            (focus)="showDropdown = true"
+                            >
+                            @if (showDropdown && filteredCompanies.length > 0) {
+                            <div class="dropdown">
+                                @for (enterprise of filteredCompanies; track enterprise.idEntreprise) {
+                                <div
+                                    class="dropdown-item"
+                                    (click)="selectCompany(enterprise)"
+                                >
+                                    {{ enterprise.raisonSociale }}
+                                </div>
+                                }
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adresse -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label for="adresse">Adresse - Numéro et Rue</label>
+                        <input 
+                            type="text"
+                            id="adresse"
+                            [value]="selectedCompany?.adresse || ''"
+                            disabled
+                        >
+                    </div>
+                </div>
+
+                <!-- Code Postal -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label for="codePostal">Code Postal</label>
+                        <input 
+                            type="text"
+                            id="codePostal"
+                            [value]="selectedCompany?.codePostal || ''"
+                            disabled
+                        >
+                    </div>
+                </div>
+
+                <!-- Ville -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label for="ville">Ville</label>
+                        <input 
+                            type="text"
+                            id="ville"
+                            [value]="selectedCompany?.ville || ''"
+                            disabled
+                        >
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label for="nomContact">Nom du contact</label>
+                        <input 
+                            type="text" 
+                            id="nomContact" 
+                            name="nomContact"
+                            placeholder="Entrer le nom du contact..."
+                            [(ngModel)]="updatedSearch.nomContact" 
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Prénom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label for="prenomContact">Prénom du contact</label>
+                        <input 
+                            type="text" 
+                            id="prenomContact" 
+                            name="prenomContact"
+                            placeholder="Entrer le prénom du contact..."
+                            [(ngModel)]="updatedSearch.prenomContact" 
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Téléphone contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label for="telContact">Téléphone</label>
+                        <input 
+                            type="tel" 
+                            id="telContact" 
+                            name="telContact"
+                            placeholder="Entrer le téléphone du contact..."
+                            [(ngModel)]="updatedSearch.telephoneContact" 
+                            required
+                            pattern="^[0-9]{10}$"
+                        >
+                    </div>
+                </div>
+
+                <!-- Mail contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label for="mailContact">Email</label>
+                        <input 
+                            type="email" 
+                            id="mailContact" 
+                            name="mailContact"
+                            placeholder="Entrer l'adresse mail du contact..."
+                            [(ngModel)]="updatedSearch.adresseMailContact" 
+                            required
+                            pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fonction du contact -->
+            <div class="form-group fonction-contact-group">
+                <div class="input-wrapper">
+                    <label for="fonctionContact">Fonction du contact</label>
+                    <input 
+                    type="text" 
+                    id="fonctionContact" 
+                    name="fonctionContact"
+                    placeholder="Entrer la fonction du contact..."
+                    [(ngModel)]="updatedSearch.fonctionContact" 
+                    required
+                    >
+                </div>
+            </div>
+
+            <!-- Statut recherche -->
+            <div class="status-section">
+                <label for="statut">Statut recherche</label>
+                <div class="status-buttons">
+                    <button 
+                    type="button"
+                    [class]="getStatusButtonClass('Refusé', 'first')"
+                    (click)="setStatus('Refusé')"
+                    >
+                    Refusé
+                    </button>
+                    <button 
+                    type="button"
+                    [class]="getStatusButtonClass('En cours', 'middle')"
+                    (click)="setStatus('En cours')"
+                    >
+                    En cours
+                    </button>
+                    <button 
+                    type="button"
+                    [class]="getStatusButtonClass('Relancé', 'middle')"
+                    (click)="setStatus('Relancé')"
+                    >
+                    Relancé
+                    </button>
+                    <button 
+                    type="button"
+                    [class]="getStatusButtonClass('Validé', 'last')"
+                    (click)="setStatus('Validé')"
+                    >
+                    Accepté
+                    </button>
+                </div>
+            </div>
+
+            <!-- Observations -->
+            <div class="observations-section">
+                <label for="observations">Observations</label>
+                <textarea 
+                    id="observations"
+                    name="observations"
+                    rows="4"
+                    placeholder="Ajoutez vos observations ici..."
+                    [(ngModel)]="updatedSearch.observations"
+                ></textarea>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="action-buttons">
+                <button 
+                    type="button"
+                    class="cancel-button"
+                    (click)="onCancel()"
+                    [disabled]="isSubmitting"
+                >
+                    Annuler
+                </button>
+                <button 
+                    type="submit"
+                    class="submit-button"
+                    [disabled]="!searchForm.form.valid || !isFormValid() || isSubmitting"
+                >
+                    Valider
+                </button>
+            </div>
+        </form>
+
+        @if (isSubmitting) {
+            <div class="loading-overlay">
+                <app-loading/>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modale de création d'entreprise -->
+@if (showCompanyModal) {
+    <div class="modal-overlay">
+        <div class="modal">
+            <h3 class="modal-title">Nouvelle entreprise</h3>
+            
+            <form #companyForm="ngForm" (ngSubmit)="createCompany()" class="enterprise-form" [class.disabled-form]="isCreatingCompany">
+            <div class="form-group">
+                <label class="title" for="raisonSociale">Raison sociale</label>
+                <input 
+                type="text"
+                id="raisonSociale"
+                name="raisonSociale"
+                [(ngModel)]="newCompany.raisonSociale"
+                required
+                placeholder="Entrer le nom de l'entreprise"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="title" for="adresse">Numéro et rue</label>
+                <input 
+                type="text"
+                id="adresse"
+                name="adresse"
+                [(ngModel)]="newCompany.adresse"
+                required
+                placeholder="Entrer l'adresse de l'entreprise..."
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="title" for="codePostal">Code postal</label>
+                <input 
+                type="text"
+                id="codePostal"
+                name="codePostal"
+                [(ngModel)]="newCompany.codePostal"
+                required
+                pattern="^\d{5}$"
+                placeholder="Entrer le code postal de l'entreprise..."
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="title" for="ville">Ville</label>
+                <input 
+                type="text"
+                id="ville"
+                name="ville"
+                [(ngModel)]="newCompany.ville"
+                required
+                placeholder="Entrer la ville de l'entreprise..."
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="title" for="pays">Pays</label>
+                <input 
+                type="text"
+                id="pays"
+                name="pays"
+                [(ngModel)]="newCompany.pays"
+                required
+                placeholder="Entrer le pays de l'entreprise..."
+                >
+            </div>
+
+            <div class="modal-buttons">
+                <button 
+                type="button"
+                (click)="showCompanyModal = false"
+                class="cancel-button"
+                >
+                Annuler
+                </button>
+                <button 
+                type="submit"
+                class="submit-button"
+                [disabled]="!companyForm.form.valid || !isCompanyFormValid()"
+                >
+                Valider
+                </button>
+            </div>
+            </form>
+
+            @if (isCreatingCompany) {
+            <div class="loading-overlay">
+                <app-loading/>
+            </div>
+            }
+        </div>
+    </div>
+}

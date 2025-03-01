@@ -125,6 +125,78 @@ class EtudiantControllerTest extends TestCase
                  ->assertJson(['message' => 'Une erreur s\'est produite']);
     }
 
+     /*
+    ======================================
+    TEST DE LA METHODE INDEXRECHERCHESTAGE
+    ======================================
+    */
+
+    /**
+     * La méthode indexRechercheStage doit retourner une confirmation 200 et la liste des fiches descriptives
+     * 
+     * @return void
+     */
+    public function test_indexRechercheStage_methode_doit_retourner_200_et_la_liste_des_fiches_descriptives(){
+        $etudiantFirst = Etudiant::first();
+
+        $response = $this->get('/api/fiche-descriptive/etudiant/'.$etudiantFirst->id);
+
+        $response->assertStatus(200)
+                 ->assertJson(
+                        'Liste des fiches descriptives de l\'étudiant',
+                        FicheDescriptive::where('idUPPA', $etudiantFirst->idUPPA)->get()->toArray()
+        );
+    }
+
+    /**
+     * La méthode indexRechercheStage doit retourner une erreur 404 si l'étudiant n'a pas de fiche descriptive
+     * 
+     * 
+     * @return void
+     */
+    public function test_indexRechercheStage_methode_doit_retourner_une_erreur_404_si_l_etudiant_n_a_pas_de_fiche_descriptive(){
+        $idEtudiant ='610123';
+
+        $response = $this->get('/api/fiche-descriptive/etudiant/'.$etudiantFirst->id);
+
+        $response->assertStatus(404)
+                 ->assertJson([
+                        'message' => 'Aucune fiche descriptive trouvée pour cet étudiant'
+        ]);
+    }
+    /**
+     * LA méthode indexRechercheStage doit retourner une erreur 500 si une erreur survient lors de la récupération
+     * 
+     * @return void
+     */
+    public function test_indexRechercheStage_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
+        $etudiantFirst = Etudiant::first();
+
+        $response = $this->get('/api/fiche-descriptive/etudiant/'.$etudiantFirst->id);
+
+        $response->assertStatus(500)
+                 ->assertJson([
+                        'message' => 'Une erreur s\'est produite :',
+                        'erreurs' => $e->getMessage()
+        ]);
+    }
+    /**
+     * LA méthode indexRechercheStage doit retourner une erreur 404 si un étudiant n'existe pas
+     * 
+     * @return void
+     */
+
+    public function test_indexRechercheStage_methode_doit_retourner_une_erreur_404_si_l_etudiant_n_existe_pas(){
+        $idEtudiant ='611082';
+        $response = $this->get('/api/fiche-descriptive/etudiant/'.$idEtudiant);
+
+        $response->assertStatus(404)
+                 ->assertJson([
+                        'message' => 'Etudiant non trouvé'
+        ]);
+    }
+
+
     public function tearDown(): void
     {
         parent::tearDown();

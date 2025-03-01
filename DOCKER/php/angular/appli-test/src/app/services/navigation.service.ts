@@ -40,7 +40,7 @@ export class NavigationService {
     this.router.navigate(['/dashboard/search-details/', searchId]);
   }
 
-  navigateToSearchEdit(searchId: number) {
+  navigateToSearchEditForm(searchId: number) {
     this.router.navigate(['/dashboard/update-search/', searchId]);
   }
 

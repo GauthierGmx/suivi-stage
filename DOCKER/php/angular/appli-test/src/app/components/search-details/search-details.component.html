@@ -3,6 +3,7 @@
 </div>
 <div *ngIf="dataLoaded" class="container">
     <div class="content-wrapper">
+        <app-breadcrumb/>
         <div class="form">
             <!-- En-tête avec le statut -->
             <div class="status-section">
@@ -140,7 +141,7 @@
 
             <!-- Boutons d'action -->
             <div class="action-buttons">
-                <button class="cancel-button" (click)="goBack()">Retour</button>
+                <button class="cancel-button" (click)="goToDashboard()">Retour</button>
                 <button class="edit-button" (click)="goToEdit()">Modifier</button>
             </div>
         </div>

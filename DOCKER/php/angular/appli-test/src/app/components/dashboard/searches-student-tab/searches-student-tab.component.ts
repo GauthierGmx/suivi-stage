@@ -10,12 +10,13 @@ import { NavigationService } from '../../../services/navigation.service';
 import { StudentService } from '../../../services/student.service';
 import { CompanyService } from '../../../services/company.service';
 import { AppComponent } from '../../../app.component';
-import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
+import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
 
 @Component({
     selector: 'app-searches-student-tab',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, DeleteConfirmationModalComponent],
     templateUrl: './searches-student-tab.component.html',
     styleUrls: ['./searches-student-tab.component.css']
 })
@@ -31,7 +32,14 @@ export class SearchesStudentTabComponent implements OnInit {
     searchTerm: string = '';
     searchTermSubject = new Subject<string>();
     filteredSearchesWithCompany: { search: InternshipSearch; company: Company }[] = [];
-    currentFilter: 'all' | 'waiting' | 'validated' | 'date_asc' | 'date_desc' = 'all';
+    originalSearchesWithCompany: { search: InternshipSearch; company: Company }[] = [];
+    currentStatutFilter: 'all' | 'Refusé' | 'En cours' | 'Relancé' | 'Validé' = 'all';
+    currentDateFilter: 'default' | 'date_asc' | 'date_desc' = 'default';
+    currentCityFilter: string = 'all';
+    availableCities: string[] = [];
+    showDeleteModal = false;
+    isDeleting = false;
+    searchToDelete?: InternshipSearch;
 
     constructor(
         private readonly internshipSearchService: InternshipSearchService,
@@ -39,7 +47,14 @@ export class SearchesStudentTabComponent implements OnInit {
         private readonly navigationService: NavigationService,
         private readonly companyService: CompanyService,
         private readonly appComponent: AppComponent
-    ) {}
+    ) {
+        this.searchTermSubject.pipe(
+            debounceTime(800),
+            distinctUntilChanged()
+        ).subscribe(() => {
+            this.applyFilters();
+        });
+    }
 
     ngOnInit() {
         this.currentPageUrl = this.navigationService.getCurrentPageUrl();
@@ -54,33 +69,28 @@ export class SearchesStudentTabComponent implements OnInit {
         }
 
         this.loadData(this.currentUserId);
-
-        this.searchTermSubject.pipe(
-            debounceTime(800),
-            distinctUntilChanged()
-        ).subscribe(() => {
-            this.getFilteredSearchesWithCompanies();
-        });
     }
 
+    //Chargement des données de l'étudiant, de ses recherches de stages et des entreprises liées
     loadData(studentId: string) {
-        forkJoin({
+        return firstValueFrom(forkJoin({
             student: this.studentService.getStudentById(studentId),
             companies: this.companyService.getCompanies(),
             searches: this.internshipSearchService.getSearchesByStudentId(studentId)
-        }).subscribe(({student, companies, searches}) => {
+        }).pipe(
+            tap(({ student, companies, searches }) => {
                 this.studentData = student;
                 this.companies = companies;
                 this.searches = searches;
                 this.getFilteredSearchesWithCompanies();
                 this.dataLoaded.emit();
-            }
-        );
+            })
+        ));
     }
 
+    //Récupération des recherches, et des entreprises associées, d'un étudiant avec l'application des filtres
     getFilteredSearchesWithCompanies() {
         if (this.companies && this.searches) {
-    
             let searchCompanies: Company[] = this.companies.filter(
                 c => this.searches!.some(
                     s => c.idEntreprise === s.idEntreprise
@@ -92,46 +102,55 @@ export class SearchesStudentTabComponent implements OnInit {
                 return company ? { search, company } : null;
             }).filter((result): result is { search: InternshipSearch; company: Company } => result !== null);
     
-            // Appliquer les filtres
-            searchesWithCompany = this.applyFilters(searchesWithCompany);
-    
-            // Mettre à jour la propriété qui déclenche la mise à jour du template
-            this.filteredSearchesWithCompany = searchesWithCompany;
+            this.originalSearchesWithCompany = [...searchesWithCompany];
+            this.filteredSearchesWithCompany = [...searchesWithCompany];
+            
+            this.availableCities = [...new Set(searchesWithCompany.map(item => item.company.ville))].sort();
+            
+            this.applyFilters();
         }
     }
 
-    applyFilters(searches: { search: InternshipSearch; company: Company }[]) {
-        let filtered = [...searches];
-        const searchTermLower = this.searchTerm.toLowerCase().trim();
+    //Application des filtres et de la barre de recherche
+    applyFilters() {
+        if (!this.originalSearchesWithCompany) return;
 
-        // Appliquer le filtre de recherche textuelle
+        let filteredSearches = [...this.originalSearchesWithCompany];
+        const searchTermLower = this.searchTerm.toLowerCase().trim();
+    
+        filteredSearches.forEach(s => {
+            if (!(s.search.dateCreation instanceof Date)) {
+                s.search.dateCreation = new Date(s.search.dateCreation);
+            }
+        });
+    
         if (searchTermLower) {
-            filtered = filtered.filter(s =>
+            filteredSearches = filteredSearches.filter(s =>
                 s.company.raisonSociale.toLowerCase().includes(searchTermLower) ||
                 s.company.ville.toLowerCase().includes(searchTermLower) ||
                 this.getStatusLabel(s.search.statut).toLowerCase().includes(searchTermLower)
             );
         }
-
-        // Appliquer les filtres de statut et de tri
-        switch (this.currentFilter) {
-            case 'waiting':
-                filtered = filtered.filter(s => s.search.statut === 'En cours');
-                break;
-            case 'validated':
-                filtered = filtered.filter(s => s.search.statut === 'Validé');
-                break;
-            case 'date_asc':
-                filtered.sort((a, b) => a.search.dateCreation.getTime() - b.search.dateCreation.getTime());
-                break;
-            case 'date_desc':
-                filtered.sort((a, b) => b.search.dateCreation.getTime() - a.search.dateCreation.getTime());
-                break;
+    
+        if (this.currentStatutFilter !== 'all') {
+            filteredSearches = filteredSearches.filter(s => s.search.statut === this.currentStatutFilter);
         }
 
-        return filtered;
+        if (this.currentCityFilter !== 'all') {
+            filteredSearches = filteredSearches.filter(s => s.company.ville === this.currentCityFilter);
+        }
+    
+        if (this.currentDateFilter === 'date_asc') {
+            filteredSearches.sort((a, b) => a.search.dateCreation.getTime() - b.search.dateCreation.getTime());
+        }
+        else if (this.currentDateFilter === 'date_desc') {
+            filteredSearches.sort((a, b) => b.search.dateCreation.getTime() - a.search.dateCreation.getTime());
+        }
+    
+        this.filteredSearchesWithCompany = filteredSearches;
     }
 
+    //Récupération de la valeur de la barre de recherche à rechercher
     onSearchTermChange(event: Event) {
         const target = event.target as HTMLInputElement;
         if (target) {
@@ -140,29 +159,43 @@ export class SearchesStudentTabComponent implements OnInit {
         }
     }
 
+    //Réinitialisation à vide du contenu de la barre de recherche
     clearSearchTerm() {
         this.searchTerm = '';
         this.searchTermSubject.next(this.searchTerm);
     }
 
-    setFilter(filter: 'all' | 'waiting' | 'validated') {
-        this.currentFilter = filter;
-        this.getFilteredSearchesWithCompanies();
+    //Mise à jour de la valeur du filtre de statut d'une recherche de stage
+    setStatutFilter(filter: 'all' | 'Refusé' | 'En cours' | 'Relancé' | 'Validé', selectElement: HTMLSelectElement) {
+        this.currentStatutFilter = filter;
+        this.applyFilters();
+        selectElement.blur();
+    }
+    
+    //Mise à jour de la valeur du filtre lié à la ville d'une recherche de stage
+    setCityFilter(city: string, selectElement: HTMLSelectElement) {
+        this.currentCityFilter = city;
+        this.applyFilters();
+        selectElement.blur();
     }
 
+    //Changement de l'ordre de filtrage des recherches
     toggleDateSort() {
-        if (this.currentFilter === 'date_asc') {
-            this.currentFilter = 'date_desc';
+        switch (this.currentDateFilter) {
+            case 'default':
+                this.currentDateFilter = 'date_asc';
+                break;
+            case 'date_asc':
+                this.currentDateFilter = 'date_desc';
+                break;
+            case 'date_desc':
+                this.currentDateFilter = 'default';
+                break;
         }
-        else if (this.currentFilter === 'date_desc') {
-            this.currentFilter = 'all';
-        }
-        else {
-            this.currentFilter = 'date_asc';
-        }
-        this.getFilteredSearchesWithCompanies();
+        this.applyFilters();
     }
 
+    //Récupération du label lié à un statut
     getStatusLabel(status: SearchStatus): string {
         const labels: Record<SearchStatus, string> = {
             'Relancé': 'Relancé',
@@ -173,6 +206,7 @@ export class SearchesStudentTabComponent implements OnInit {
         return labels[status];
     }
 
+    //Récupération de la classe lié à un statut
     getStatusClass(status: string): string {
         const statusMap: Record<string, string> = {
             'Relancé': 'status-badge relance',
@@ -183,11 +217,49 @@ export class SearchesStudentTabComponent implements OnInit {
         return statusMap[status] || 'status-badge';
     }
 
+    //Redirection vers la vue de consultation d'une recherche de stage
     goToSearchDetails(searchId: number) {
         this.navigationService.navigateToSearchView(searchId);
     }
 
+    //Redirection vers la vu d'ajout d'une recherche de stage
     goToAddSearchFormView() {
         this.navigationService.navigateToSearchForm();
+    }
+
+    //Redirection vers la vue de mise à jour d'une recherche de stage
+    goToUpdateSearchFormView(searchId: number) {
+        this.navigationService.navigateToSearchEditForm(searchId);
+    }
+
+    //Affiche la fenêtre modale de confirmation de la supression d'une recherche de stage
+    openDeleteModal(search: InternshipSearch) {
+        this.searchToDelete = search;
+        this.showDeleteModal = true;
+    }
+
+    //Suppression de la recherche de stage sélectionnée
+    async onConfirmDelete() {
+        if (this.searchToDelete) {
+            try {
+                this.isDeleting = true;
+                await firstValueFrom(this.internshipSearchService.deleteSearch(this.searchToDelete));
+                await this.loadData(this.currentUserId);
+            }
+            catch (error) {
+                console.error('Erreur lors de la suppression de la recherche:', error);
+            }
+            finally {
+                this.isDeleting = false;
+                this.showDeleteModal = false;
+                this.searchToDelete = undefined;
+            }
+        }
+    }
+
+    //Annulation de la suppression d'une recherche de stage
+    onCancelDelete() {
+        this.showDeleteModal = false;
+        this.searchToDelete = undefined;
     }
 }

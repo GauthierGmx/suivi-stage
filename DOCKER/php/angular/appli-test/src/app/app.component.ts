@@ -24,7 +24,7 @@ export class AppComponent {
     if (this.authService.isAuthenticated()) {
       elements.forEach(element => {
         if (element instanceof HTMLElement) {
-          element.style.marginTop = '80px';
+          element.style.marginTop = '65px';
         }
       });
       return true;
