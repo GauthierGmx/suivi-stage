@@ -79,11 +79,23 @@
     width: 100%;
     justify-content: space-between;
   }
+
+  .form-row-large {
+    width: 100%;
+    max-width: 100%; /* Évite que d'autres styles limitent la largeur */
+    display: block; /* S'assure qu'il ne soit pas limité par un display inline */
+  }  
   
   .form-group {
     flex: 1;
     min-width: 0;
     max-width: 400px;
+  }
+
+  form-group-full {
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
   }
   
   label {

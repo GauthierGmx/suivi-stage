@@ -31,6 +31,30 @@
           </div>
         </div>
 
+        <div class="form-row">
+          <div class="form-group-slider">
+            <label for="persoTechnique">Personnel technique disponible</label>
+              <label class="toggle-switch">
+                  <input type="checkbox" id="persoTechnique" [(ngModel)]="formData.persoTechniqueDeroulementStage">
+                  <span class="slider"></span>
+              </label>
+          </div>          
+           <div class="form-group-slider">
+            <label for="materielPrete">Matériel prêté</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="materielPrete" [(ngModel)]="formData.materielPreteDeroulementStage">
+              <span class="slider"></span>
+            </label>
+          </div> 
+          <div class="form-group-slider">
+            <label for="clauseConfidentialite">Clause de confidentialité</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="clauseConfidentialite" [(ngModel)]="formData.clauseConfidentialiteDeroulementStage">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
         <div class="buttons">
           <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
           <button type="submit" class="btn-submit">Valider</button>

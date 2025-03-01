@@ -20,7 +20,10 @@ export class AddFactsheets9Component {
     debutDuStageDeroulementStage: new Date(),
     finDuStageDeroulementStage: new Date(),
     nbJourTravailHebdoDeroulementStage: '5',
-    nbHeuresHebdoDeroulementStage: '35'
+    nbHeuresHebdoDeroulementStage: '35',
+    persoTechniqueDeroulementStage: false,
+    materielPreteDeroulementStage: false,
+    clauseConfidentialiteDeroulementStage: false,
   };
 
   constructor(private readonly navigationService: NavigationService) {

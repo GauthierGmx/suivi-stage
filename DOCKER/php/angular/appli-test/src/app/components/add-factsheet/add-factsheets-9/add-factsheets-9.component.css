@@ -85,6 +85,12 @@
     min-width: 0;
     max-width: 400px;
   }
+
+  .form-group-slider {
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+  }
   
   label {
     display: block;
@@ -172,3 +178,53 @@
     }
   }
   
+  /* Conteneur du toggle */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+  margin-left: 10px;
+}
+
+/* Cache l'input */
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Style du slider (fond du switch) */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc; /* Couleur par défaut */
+  border-radius: 25px;
+  transition: background-color 0.4s;
+}
+
+/* Indicateur du bouton (cercle mobile) */
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 3.5px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.4s;
+}
+
+/* Changement de couleur et déplacement quand coché */
+.toggle-switch input:checked + .slider {
+  background-color: #4CAF50; /* Couleur quand activé */
+}
+
+.toggle-switch input:checked + .slider::before {
+  transform: translateX(25px); /* Déplacement vers la droite */
+}
