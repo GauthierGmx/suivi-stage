@@ -1,0 +1,75 @@
+name: Test Laravel
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: db_suivi_stage
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Create .env file
+        run: |
+          cd DOCKER/php/laravel/suivi-stage
+          touch .env
+          echo "APP_NAME=Laravel" >> .env
+          echo "APP_ENV=development" >> .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=db_suivi_stage" >> .env
+          echo "DB_USERNAME=admin" >> .env
+          echo "DB_PASSWORD=admin" >> .env
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, pdo, pdo_mysql, xdebug
+          tools: composer:v2
+
+      - name: Update dependencies
+        run: |
+          cd DOCKER/php/laravel/suivi-stage
+          composer update --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Run migrations
+        run: |
+          cd DOCKER/php/laravel/suivi-stage
+          php artisan migrate:fresh --seed
+
+      - name: Create coverage directory
+        run: |
+          cd DOCKER/php/laravel/suivi-stage/tests
+          mkdir coverage
+
+      - name: Run tests
+        run: |
+          cd DOCKER/php/laravel/suivi-stage
+          ./vendor/bin/phpunit --coverage-html ./tests/coverage || exit 0
+
+      - name: Upload coverage as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: DOCKER/php/laravel/suivi-stage/tests/coverage

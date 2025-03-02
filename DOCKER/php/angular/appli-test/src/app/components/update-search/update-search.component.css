@@ -75,7 +75,6 @@ input:disabled {
     margin-bottom: 0.5rem;
 }
 
-/* Modification ici pour l'alignement du label et du bouton */
 .label-wrapper label {
     margin-bottom: 0;
 }
@@ -309,5 +308,5 @@ textarea {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1100;
+    z-index: 100;
 }

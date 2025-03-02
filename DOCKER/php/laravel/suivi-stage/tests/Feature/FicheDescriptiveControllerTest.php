@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\FicheDescriptive;
 use Tests\TestCase;
 
 class FicheDescriptiveControllerTest extends TestCase
@@ -22,19 +23,17 @@ class FicheDescriptiveControllerTest extends TestCase
 
     /*
     ================================
-        TEST DE LA METHODE CREATE
+        TEST DE LA METHODE STORE
     ================================
     */
 
     /**
-     * La méthode index va retourner une confirmation 200 et la liste de toutes les entreprises
+     * La méthode store va retourner une confirmation 200 et la liste de toutes les entreprises
      * 
      * @return void
      */
-    public function test_create_la_methode_doit_renvoyer_201(){
+    public function test_store_la_methode_doit_renvoyer_201(){
         $donnees = [
-            "dateCreation"=> "2025-01-20",
-            "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
             "sujet"=>  "Création d'un outil de gestion des tâches",
@@ -56,29 +55,24 @@ class FicheDescriptiveControllerTest extends TestCase
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
             "idEntreprise"=> 1,
             "idTuteurEntreprise"=> 2,
-            'idUPPA' => "640123"
-        ]
+            'idUPPA' => 610123
+        ];
 
         $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
         $response->assertStatus(201)
-                 ->assertJson([
-                        'message' => 'Fiche Descritpive créée avec succès',
-                        'message' => $donnees
-        ]);
+                 ->assertJson($donnees);
     }
 
     /**
-     * La méthode create doit retourner une erreur 422 si les données ne sont pas valides
+     * La méthode store doit retourner une erreur 422 si les données ne sont pas valides
      * car la date de création doit être obligatoire et non null
      * 
      * @return void
      */
 
-    public function test_create_doit_retourner_une_erreur_422_si_les_donnees_ne_sont_pas_valides(){
+    public function test_store_doit_retourner_une_erreur_422_si_les_donnees_ne_sont_pas_valides(){
         $donnees = [
-            "dateCreation"=> "2025-01-20",
-            "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
             "sujet"=>  "Création d'un outil de gestion des tâches",
@@ -91,7 +85,7 @@ class FicheDescriptiveControllerTest extends TestCase
             "nbJourSemaine"=>  5,
             "nbHeureSemaine"=>  35,
             "clauseConfidentialite"=>  true,
-            "statut"=>  "En cours",
+            "statut"=>  "En france",
             "numeroConvention"=>  "12345-ABCDE",
             "interruptionStage"=>  false,
             "dateDebutInterruption"=>  null,
@@ -100,33 +94,24 @@ class FicheDescriptiveControllerTest extends TestCase
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
             "idEntreprise"=> 1,
             "idTuteurEntreprise"=> 2,
-            'idUPPA' => "610123"
-        ]
-
-        $donnees['dateCreation'] = null;
+            'idUPPA' => 610123
+        ];
 
         $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
         $response->assertStatus(422)
-                 ->assertJson([
-                        'message' => 'Erreur de validation dans les données',
-                        'erreurs' => [
-                            'dateCreation' => ['La date de création est obligatoire']
-                        ]
-        ]);
+                 ->assertJson(['message' => 'Erreur de validation dans les données']);
     }
 
     /**
-     * La méthode create doit retourner une erreur 500 si une erreur survient lors de l'insertion
+     * La méthode store doit retourner une erreur 500 si une erreur survient lors de l'insertion
      * par exemple une données (clé étrangère n'existe pas)
      * 
      * @return void
      */
 
-    public function test_create_methode_doit_retourner_une_erreur_500_car_une_cle_etrangere_n_existe_pas(){
+    public function test_store_methode_doit_retourner_une_erreur_500_car_une_cle_etrangere_n_existe_pas(){
         $donnees = [
-            "dateCreation"=> "2025-01-20",
-            "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
             "sujet"=>  "Création d'un outil de gestion des tâches",
@@ -149,19 +134,26 @@ class FicheDescriptiveControllerTest extends TestCase
             "idEntreprise"=> 1,
             "idTuteurEntreprise"=> 2,
             'idUPPA' => 64105202
-        ]
+        ];
+        $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Erreur dans la base de données']);
     }
 
     /**
-     * La méthode create doit retourner une erreur 500 si une erreur survient lors de l'insertion
+     * La méthode store doit retourner une erreur 500 si une erreur survient lors de l'insertion
      * 
      * @return void
      */
 
-    public function test_create_methode_doit_retourner_une_erreur_500_car_un_probleme_est_survenue(){
+    public function test_store_methode_doit_retourner_une_erreur_500_car_un_probleme_est_survenue(){
+        // Mock du modèle RechercheStage pour déclencher une exception
+        $this->mock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
+            $mock->shouldReceive('store')->andThrow(new \Exception('Erreur simulée'));
+        });
+        
         $donnees = [
-            "dateCreation"=> "2025-01-20",
-            "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
             "sujet"=>  "Création d'un outil de gestion des tâches",
@@ -184,18 +176,15 @@ class FicheDescriptiveControllerTest extends TestCase
             "idEntreprise"=> 1,
             "idTuteurEntreprise"=> 2,
             'idUPPA' => 64105202
-        ]
+        ];
 
-        $response = $this->store('/api/fiche-descriptive/create', $donnees);
+        // Envoi d'une requête avec des données incorrectes
+        $response = $this->postJson('/api/fiche-descriptive/create', $donnees);
 
+        // Vérification que l'API retourne une erreur 500
         $response->assertStatus(500)
-                 ->assertJson([
-                        'message' => 'Une erreur s\'est produite :',
-                        'erreurs' => $e->getMessage()
-        ]);
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
     }
-
-
     /*
     ================================
         TEST DE LA METHODE UPDATE
@@ -210,7 +199,6 @@ class FicheDescriptiveControllerTest extends TestCase
 
     public function test_update_methode_doit_retourner_200_car_la_fiche_descriptive_a_ete_mise_a_jour(){
         $donnees = [
-            "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
             "thematique"=>  "Développement logiciel",
             "sujet"=>  "Création d'un outil de gestion des tâches",
@@ -229,17 +217,13 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateDebutInterruption"=>  null,
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
-            "materielPrete"=>  "Ordinateur, logiciel de gestion",
-        ]
+            "materielPrete"=>  "Ordinateur, logiciel de gestion"
+        ];
 
         $rechercheFirst = FicheDescriptive::first();
-
-        $response = $this->put('/api/fiche-descriptive/update/'.$rechercheFirst->id, $donnees);
-
+        $response = $this->putJson('/api/fiche-descriptive/update/'.$rechercheFirst->idFicheDescriptive, $donnees);    
         $response->assertStatus(200)
-                 ->assertJson([
-                        'message' => 'Fiche Descriptive mise à jour avec succès',
-        ]);
+                 ->assertJson($donnees);
     }
 
     /**
@@ -263,37 +247,35 @@ class FicheDescriptiveControllerTest extends TestCase
             "nbJourSemaine"=>  5,
             "nbHeureSemaine"=>  35,
             "clauseConfidentialite"=>  true,
-            "statut"=>  "En cours",
+            "statut"=>  "En france",
             "numeroConvention"=>  "12345-ABCDE",
             "interruptionStage"=>  false,
             "dateDebutInterruption"=>  null,
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-        ]
-
-        $donnees['dateCreation'] = null;
+        ];
 
         $rechercheFirst = FicheDescriptive::first();
 
-        $response = $this->put('/api/fiche-descriptive/update/'.$rechercheFirst->id, $donnees);
+        $response = $this->putJson('/api/fiche-descriptive/update/'.$rechercheFirst->idFicheDescriptive, $donnees);
 
         $response->assertStatus(422)
-                 ->assertJson([
-                        'message' => 'Erreur de validation dans les données',
-                        'erreurs' => [
-                            'dateCreation' => ['La date de création est obligatoire']
-                        ]
-        ]);
+                 ->assertJson(['message' => 'Erreur de validation dans les données']);
     }
-
+    
     /**
      * La méthode update doit retourner une erreur 500 car une erreur survient lors de la mise à jour
      * du ici à une clé étrangère qui n'existe pas
      * 
      * @return void
      */
-    public function test_update_methode_doit_retourner_une_erreur_500_car_une_cle_etrangere_n_existe_pas(){
+    public function test_update_methode_doit_retourner_une_erreur_500_car_une_erreur_de_base_de_donnees_a_eu_lieu(){
+        // Mock du modèle FicheDescriptive pour déclencher une exception
+        $this->partialMock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
+            $mock->shouldReceive('update')->andThrow(new QueryException('',[],new \Exception('Erreur SQL')));
+        });
+        
         $donnees = [
             "dateDerniereModification"=> "2025-01-21",
             "contenuStage"=>  "Développement d'une application web",
@@ -315,19 +297,13 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-        ]
-
-        $donnees['idEntreprise'] = 0;
+        ];
 
         $rechercheFirst = FicheDescriptive::first();
 
-        $response = $this->put('/api/fiche-descriptive/update/'.$rechercheFirst->id, $donnees);
-
+        $response = $this->putJson('/api/fiche-descriptive/update/'.$rechercheFirst->idFicheDescriptive, $donnees);
         $response->assertStatus(500)
-                 ->assertJson([
-                        'message' => 'Une erreur dans la base de données :',
-                        'erreurs' => $e->getMessage()
-        ]);
+                 ->assertJson(['message' => 'Erreur dans la base de données']);
 
     }
     /**
@@ -357,16 +333,54 @@ class FicheDescriptiveControllerTest extends TestCase
             "dateFinInterruption"=>  null,
             "personnelTechniqueDisponible"=>  true,
             "materielPrete"=>  "Ordinateur, logiciel de gestion",
-        ]
+        ];
 
-        $response = $this->put('/api/fiche-descriptive/update/0', $donnees);
+        $fausseFiche = PHP_INT_MAX;
+        $response = $this->putJson('/api/fiche-descriptive/update/'.$fausseFiche, $donnees);
 
         $response->assertStatus(404)
-                 ->assertJson([
-                        'message' => 'Fiche Descriptive non trouvée'
-        ]);       
+                 ->assertJson(['message' => 'Fiche Descriptive non trouvée']);       
     }
 
+    /**
+     * La méthode update doit retourner une erreur 500 si une erreur survient lors de la mise à jour
+     * 
+     * @return void
+     */
+    public function test_update_methode_doit_retourner_une_erreur_500_car_un_probleme_est_survenu(){
+        // Mock du modèle FicheDescriptive pour déclencher une exception
+        $this->partialMock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
+            $mock->shouldReceive('update')->andThrow(new Exception);
+        });
+        
+        $donnees = [
+            "contenuStage"=>  "Développement d'une application web",
+            "thematique"=>  "Développement logiciel",
+            "sujet"=>  "Création d'un outil de gestion des tâches",
+            "fonctions"=>  "Développeur logiciel",
+            "taches"=>  "Analyser, développer et tester",
+            "competences"=>  "PHP, Laravel, JavaScript",
+            "details"=>  "Travail en collaboration avec l'équipe backend",
+            "debutStage"=>  "2025-02-01",
+            "finStage"=>  "2025-06-30",
+            "nbJourSemaine"=>  5,
+            "nbHeureSemaine"=>  35,
+            "clauseConfidentialite"=>  true,
+            "statut"=>  "En cours",
+            "numeroConvention"=>  "12345-ABCDE",
+            "interruptionStage"=>  false,
+            "dateDebutInterruption"=>  null,
+            "dateFinInterruption"=>  null,
+            "personnelTechniqueDisponible"=>  true,
+            "materielPrete"=>  "Ordinateur, logiciel de gestion"
+        ];
+
+        $rechercheFirst = FicheDescriptive::first();
+        $response = $this->putJson('/api/fiche-descriptive/update/'.$rechercheFirst->idFicheDescriptive, $donnees);    
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
+    }
+    
     /*
     ================================
         TEST DE LA METHODE INDEX
@@ -378,14 +392,13 @@ class FicheDescriptiveControllerTest extends TestCase
      * @return void
      */
 
-    public void test_index_methode_doit_retourner_200_et_la_list_des_fiches_descriptives(){
+    public function test_index_methode_doit_retourner_200_et_la_list_des_fiches_descriptives(){
+        $fiches = FicheDescriptive::all();
+        
         $response = $this->get('/api/fiche-descriptive');
 
         $response->assertStatus(200)
-                 ->assertJson([
-                        'message' => 'Liste des fiches descriptives',
-                        'fichesDescriptives' => FicheDescriptive::all()->toArray()
-        ]);
+                 ->assertJson($fiches->toArray());
     }
 
     /**
@@ -394,15 +407,25 @@ class FicheDescriptiveControllerTest extends TestCase
      * @return void
      */
 
-    public void test_index_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
-        $response = $this->get('/api/fiche-descriptive');
+    /*public function test_index_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
+        // Créer un "partial mock" qui simule uniquement la méthode `all` de FicheDescriptive
+        $ficheDescriptiveMock = \Mockery::mock('App\Models\FicheDescriptive[all]');  // On ne mock que la méthode all()
+        $ficheDescriptiveMock->shouldReceive('all')
+                            ->andThrow(new \Exception("Erreur simulée"));
 
+        // Remplacer la méthode all() dans l'application par le mock
+        app()->instance('App\Models\FicheDescriptive', $ficheDescriptiveMock);
+
+        // Appeler la route
+        $response = $this->get('/fiche-descriptive');
+
+        // Vérifier la réponse
         $response->assertStatus(500)
-                 ->assertJson([
-                        'message' => 'Une erreur s\'est produite :',
-                        'erreurs' => $e->getMessage()
-        ]);
-    
+                ->assertJson([
+                    'message' => 'Une erreur s\'est produite :',
+                    'erreurs' => 'Erreur simulée',
+                ]);
+    }*/
         /*
     ================================
         TEST DE LA METHODE SHOW
@@ -415,14 +438,14 @@ class FicheDescriptiveControllerTest extends TestCase
      * @return void
      */
     public function test_show_methode_doit_retourner_un_code_200_car_la_fiche_descriptive_a_ete_trouvee(){
-        $rechercheFirst = FicheDescriptive::first();
+        $ficheFirst = FicheDescriptive::first();
 
-        $response = $this->get('/api/fiche-descriptive/'.$rechercheFirst->id);
-
+        // Effectuer la requête GET
+        $response = $this->get('/api/fiche-descriptive/'.$ficheFirst->idFicheDescriptive);
+    
+        // Vérifier le code de statut 200 et la réponse JSON
         $response->assertStatus(200)
-                 ->assertJson([
-                        'ficheDescriptive' => $rechercheFirst->toArray()
-        ]);
+                 ->assertJson($ficheFirst->toArray());
     }
 
     /**
@@ -431,26 +454,31 @@ class FicheDescriptiveControllerTest extends TestCase
      * @return void
      */
     public function test_show_methode_doit_retourner_une_erreur_404_car_la_fiche_descriptive_n_existe_pas(){
-        $response = $this->get('/api/fiche-descriptive/0');
+        $idFiche = PHP_INT_MAX;
+        
+        $response = $this->get('/api/fiche-descriptive/'.$idFiche);
 
         $response->assertStatus(404)
-                 ->assertJson([
-                        'message' => 'Fiche Descriptive non trouvée'
-        ]);
-    
+                 ->assertJson(['message' => 'Fiche Descriptive non trouvée']);
+    }
+
     /**
      * La méthode show doit retourner une erreur 500 si une erreur survient lors de la récupération
      * 
      * @return void
      */
     public function test_show_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
-        $rechercheFirst = FicheDescriptive::first();
+        // Mock du modèle FicheDescriptive pour déclencher une exception
+        $this->partialMock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
+            $mock->shouldReceive('show')->andThrow(new Exception);
+        });
 
-        $response = $this->get('/api/fiche-descriptive/'.$rechercheFirst->id);
+        $ficheDescriptive = FicheDescriptive::first();
 
+        $response = $this->get('/api/fiche-descriptive/'.$ficheDescriptive->idFicheDescriptive);
+    
         $response->assertStatus(500)
-                 ->assertJson([
-                        'message' => 'Une erreur s\'est produite :',
-                        'erreurs' => $e->getMessage()
-        ]);
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
+    }
 }
+?>

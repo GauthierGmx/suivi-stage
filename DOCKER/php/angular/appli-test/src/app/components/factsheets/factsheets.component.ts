@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UnderDevelopmentComponent } from '../under-development/under-development.component';
 import { AuthService } from '../../services/auth.service';
 import { Staff } from '../../models/staff.model';
 import { Student } from '../../models/student.model';

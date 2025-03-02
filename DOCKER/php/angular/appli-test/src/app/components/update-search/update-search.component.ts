@@ -1,27 +1,27 @@
-import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, HostListener } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Student } from '../../models/student.model';
 import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
 import { Company } from '../../models/company.model';
 import { CompanyService } from '../../services/company.service';
 import { InternshipSearchService } from '../../services/internship-search.service';
 import { NavigationService } from '../../services/navigation.service';
-import { firstValueFrom, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
-import { LoadingComponent } from "../loading/loading.component";
+import { debounceTime, distinctUntilChanged, firstValueFrom, Subject } from 'rxjs';
+import { LoadingComponent } from '../loading/loading.component';
+import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 
 @Component({
-    selector: 'app-add-search-form',
+    selector: 'app-update-search',
     standalone: true,
     imports: [CommonModule, FormsModule, LoadingComponent, BreadcrumbComponent],
-    templateUrl: './add-search-form.html',
-    styleUrls: ['./add-search-form.css']
+    templateUrl: './update-search.component.html',
+    styleUrl: './update-search.component.css'
 })
-export class AddSearchFormComponent implements OnInit {
+export class UpdateSearchComponent {
     currentUser!: Student;
-    newSearch: InternshipSearch = new InternshipSearch();
+    updatedSearch!: InternshipSearch;
     companies: Company[] = [];
     filteredCompanies: Company[] = [];
     selectedCompany?: Company;
@@ -38,9 +38,10 @@ export class AddSearchFormComponent implements OnInit {
         private readonly companyService: CompanyService,
         private readonly internshipSearchService: InternshipSearchService,
         private readonly navigationService: NavigationService,
-        private readonly router: Router
+        private readonly router: ActivatedRoute,
+        private readonly route: Router
     ) {
-        // Configuration du filtrage des entreprises
+        //Configuration du filtrage des entreprises
         this.searchTermChanged.pipe(
             debounceTime(800),
             distinctUntilChanged()
@@ -60,25 +61,34 @@ export class AddSearchFormComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
-        // Initialisation des valeurs par défaut
-        this.newSearch.typeContact = 'Mail';
-        this.newSearch.statut = 'En cours';
+    async ngOnInit() {
+        //Récupération de la recherche de stage et de son entreprise concernée
+        const searchId = Number(this.router.snapshot.paramMap.get('id'));
+        const search = await firstValueFrom(this.internshipSearchService.getSearchById(searchId));
+        if (search) {
+            this.updatedSearch = search
+        };
 
-        // Récupération du currentUser
-        const user = sessionStorage.getItem('currentUser');
+        const company = await firstValueFrom(this.companyService.getCompanyById(this.updatedSearch.idEntreprise));
+        if (company) {
+            this.selectCompany(company)
+        };
+
+        //Récupération du currentUser
+        const user = localStorage.getItem('currentUser');
         if (user) {
             this.currentUser = JSON.parse(user);
         }
 
-        // Récupération des entreprises
+        //Récupération de toutes les entreprises
         this.companyService.getCompanies()
-            .subscribe(companies => {
-                this.companies = companies;
-                this.dataLoaded = true;
-            });
+        .subscribe(companies => {
+            this.companies = companies;
+            this.dataLoaded = true;
+        });
     }
 
+    //Fermeture de la liste des résultats de la recherche si l'utilisateur clique en dehors de cette dernière
     @HostListener('document:click', ['$event.target'])
     onClick(targetElement: HTMLElement) {
         if (this.showDropdown) {
@@ -89,40 +99,44 @@ export class AddSearchFormComponent implements OnInit {
         }
     }
 
+    //Mise à jour du terme à rechercher
     onSearchChange(term: string) {
         this.searchTermChanged.next(term);
     }
 
+    //Mise à jour de la recherche de stage lors de la validation du formulaire
     async onSubmit() {
         if (this.isFormValid()) {
             try {
                 this.isSubmitting = true;
-                this.newSearch.idUPPA = this.currentUser.idUPPA;
+                this.updatedSearch.idUPPA = this.currentUser.idUPPA;
                 
-                await firstValueFrom(this.internshipSearchService.addSearch(this.newSearch));
-                this.router.navigateByUrl('/dashboard');
+                await firstValueFrom(this.internshipSearchService.updateSearch(this.updatedSearch));
+                this.route.navigateByUrl(`dashboard/search-details/${this.updatedSearch.idRecherche}`);
             } catch (error) {
-                console.error('Erreur lors de l\'ajout de la recherche:', error);
+                console.error('Erreur lors de la mise à jour de la recherche:', error);
             } finally {
                 this.isSubmitting = false;
             }
         }
     }
 
+    //Vérification si le formulaire de la recherche de stage est valide
     isFormValid(): boolean {
         return !!(
-            this.newSearch.idEntreprise &&
-            this.newSearch.nomContact.trim() &&
-            this.newSearch.prenomContact.trim() &&
-            this.newSearch.fonctionContact.trim() &&
-            this.newSearch.telephoneContact?.match(/^[0-9]{10}$/) &&
-            this.newSearch.adresseMailContact?.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) &&
-            this.newSearch.date1erContact &&
-            this.newSearch.typeContact.trim() &&
-            this.newSearch.statut.trim()
+            this.updatedSearch.idEntreprise &&
+            this.updatedSearch.nomContact.trim() &&
+            this.updatedSearch.prenomContact.trim() &&
+            this.updatedSearch.fonctionContact.trim() &&
+            this.updatedSearch.telephoneContact?.match(/^[0-9]{10}$/) &&
+            this.updatedSearch.adresseMailContact?.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) &&
+            this.updatedSearch.date1erContact &&
+            this.updatedSearch.typeContact.trim() &&
+            this.updatedSearch.statut.trim()
         );
     }
 
+    //Vérification si le formulaire de l'entreprise est valide
     isCompanyFormValid(): boolean {
         return !!(
             this.newCompany.raisonSociale.trim() &&
@@ -133,12 +147,14 @@ export class AddSearchFormComponent implements OnInit {
         );
     }
 
+    //Retour en arrière si la modification est annulée
     onCancel() {
         this.navigationService.goBack();
     }
 
+    //Récupération de la classe du bouton de statut sélectionné
     getStatusButtonClass(status: string, position: 'first' | 'middle' | 'last'): string {
-        const isSelected = this.newSearch.statut === status;
+        const isSelected = this.updatedSearch.statut === status;
         let roundedClasses = '';
         
         switch (position) {
@@ -167,10 +183,12 @@ export class AddSearchFormComponent implements OnInit {
         return `${baseClasses} bg-gray-100 text-gray-600 hover:bg-gray-200`;
     }
 
+    //Mise à jour du statut de la recherche de stage
     setStatus(statut: SearchStatus) {
-        this.newSearch.statut = statut;
+        this.updatedSearch.statut = statut;
     }
 
+    //Ouverture du formulaire de création d'une entreprise
     openCompanyForm() {
         this.showCompanyModal = true;
     }
@@ -200,9 +218,10 @@ export class AddSearchFormComponent implements OnInit {
         }
     }    
 
+    //Association de l'entreprise à la recherche créée/sélectionnée
     selectCompany(company: Company) {
         this.selectedCompany = company;
-        this.newSearch.idEntreprise = company.idEntreprise;
+        this.updatedSearch.idEntreprise = company.idEntreprise;
         this.searchTerm = company.raisonSociale;
         this.showDropdown = false;
     }

@@ -7,11 +7,12 @@ import { InternshipSearchService } from '../../services/internship-search.servic
 import { CompanyService } from '../../services/company.service';
 import { NavigationService } from '../../services/navigation.service';
 import { LoadingComponent } from '../loading/loading.component';
+import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 
 @Component({
     selector: 'app-search-details',
     standalone: true,
-    imports: [CommonModule, LoadingComponent],
+    imports: [CommonModule, LoadingComponent, BreadcrumbComponent],
     templateUrl: './search-details.component.html',
     styleUrl: './search-details.component.css'
 })
@@ -35,7 +36,6 @@ export class SearchDetailsComponent implements OnInit {
                 search => {
                     if (search) {
                         this.search = search;
-                        console.log(this.search);
                         this.loadCompanyDetails(search.idEntreprise);
                     }
                 }
@@ -63,13 +63,13 @@ export class SearchDetailsComponent implements OnInit {
         return statusMap[status] || 'status-badge';
     }
 
-    goBack() {
-        this.navigationService.goBack();
+    goToDashboard() {
+        this.navigationService.navigateToDashboard();
     }
 
     goToEdit() {
         if (this.search) {
-            this.navigationService.navigateToSearchEdit(this.search.idRecherche);
+            this.navigationService.navigateToSearchEditForm(this.search.idRecherche);
         }
     }
 }

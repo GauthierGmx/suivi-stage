@@ -27,7 +27,7 @@ class FicheDescriptive extends Model
         'clauseConfidentialite',
         'statut',
         'numeroConvention',
-        'interruptionEntreprise',
+        'interruptionStage',
         'dateDebutInterruption',
         'dateFinInterruption',
         'personnelTechniqueDisponible',
