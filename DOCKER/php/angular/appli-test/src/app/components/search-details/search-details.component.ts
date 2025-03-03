@@ -36,7 +36,7 @@ export class SearchDetailsComponent implements OnInit {
                 search => {
                     if (search) {
                         this.search = search;
-                        this.loadCompanyDetails(search.idEntreprise);
+                        this.loadCompanyDetails(search.idEntreprise!);
                     }
                 }
             );
@@ -44,7 +44,7 @@ export class SearchDetailsComponent implements OnInit {
     }
 
     private loadCompanyDetails(companyId: number) {
-        this.companyService.getCompanyById(companyId).subscribe(
+        this.companyService.getCompanyById(companyId, ['idEntreprise', 'raisonSociale', 'adresse', 'codePostal', 'ville']).subscribe(
             company => {
                 console.log(company);
                 this.company = company;

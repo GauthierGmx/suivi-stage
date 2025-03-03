@@ -1,19 +1,19 @@
 export class InternshipSearch {
   idRecherche: number;
-  idEntreprise: number;
-  idUPPA: string;
-  dateCreation: Date;
-  date1erContact: Date;
-  typeContact: ContactType;
-  nomContact: string;
-  prenomContact: string;
-  fonctionContact: string;
-  telephoneContact: string;
-  adresseMailContact: string;
-  statut: SearchStatus;
-  dateModification?: Date;
-  observations?: string;
-  dateRelance?: Date;
+  idEntreprise: number | null;
+  idUPPA: string | null;
+  dateCreation: Date | null;
+  date1erContact: Date | null;
+  typeContact: ContactType | null;
+  nomContact: string | null;
+  prenomContact: string | null;
+  fonctionContact: string | null;
+  telephoneContact: string | null;
+  adresseMailContact: string | null;
+  statut: SearchStatus | null;
+  dateModification?: Date | null;
+  observations?: string | null;
+  dateRelance?: Date | null;
 
   constructor(
     idRecherche: number = 0,

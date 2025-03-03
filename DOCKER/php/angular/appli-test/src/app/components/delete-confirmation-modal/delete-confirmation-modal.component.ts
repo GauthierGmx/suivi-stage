@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { LoadingComponent } from '../../../loading/loading.component';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
     selector: 'app-delete-confirmation-modal',
