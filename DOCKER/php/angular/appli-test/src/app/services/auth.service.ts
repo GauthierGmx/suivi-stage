@@ -56,7 +56,7 @@ export class AuthService {
 
     // Si non trouvé, rechercher dans les étudiants
     if (!this.currentUser) {
-      this.currentUser = this.students.find(s => s.adresseMailEtudiant === email);
+      this.currentUser = this.students.find(s => s.adresseMail === email);
     }
     
     if (this.currentUser) {

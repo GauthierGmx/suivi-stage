@@ -6,7 +6,7 @@ export class Student {
   villeEtudiant: string | null;
   codePostalEtudiant: string | null;
   telephoneEtudiant: string | null;
-  adresseMailEtudiant: string | null;
+  adresseMail: string | null;
   idParcours: number | null;
   idDepartement: number | null;
   idEntreprise: number | null;
@@ -33,7 +33,7 @@ export class Student {
     this.villeEtudiant = villeEtudiant;
     this.codePostalEtudiant = codePostalEtudiant;
     this.telephoneEtudiant = telephoneEtudiant;
-    this.adresseMailEtudiant = adresseMailEtudiant;
+    this.adresseMail = adresseMailEtudiant;
     this.idParcours = idParcours;
     this.idDepartement = idDepartement;
     this.idEntreprise = idEntreprise;
