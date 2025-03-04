@@ -75,7 +75,7 @@ export class UpdateSearchComponent {
         };
 
         //Récupération du currentUser
-        const user = localStorage.getItem('currentUser');
+        const user = sessionStorage.getItem('currentUser');
         if (user) {
             this.currentUser = JSON.parse(user);
         }

@@ -7,4 +7,9 @@
 
 .main-content {
   flex: 1;
-} 
+  margin-top: 0;
+}
+
+.with-margin {
+  margin-top: 4rem;
+}

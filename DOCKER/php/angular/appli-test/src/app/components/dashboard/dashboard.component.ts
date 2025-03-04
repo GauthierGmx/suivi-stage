@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Staff } from '../../models/staff.model';
 import { Student } from '../../models/student.model';
-import { AppComponent } from '../../app.component';
 import { WelcomeComponent } from "../welcome-card/welcome-card.component";
 import { StatsCardsComponent } from "../stats-cards/stats-cards.component";
 import { SearchesStudentTabComponent } from '../searches-student-tab/searches-student-tab.component';
@@ -27,19 +26,17 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly appComponent: AppComponent,
     private readonly cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
     
-    if (this.appComponent.isStudent(this.currentUser)) {
+    if (this.authService.isStudent(this.currentUser)) {
       this.currentUser as Student;
       this.currentUserRole = 'STUDENT';
-
     }
-    else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
       this.currentUser as Staff;
       this.currentUserRole = 'INTERNSHIP_MANAGER';
     }

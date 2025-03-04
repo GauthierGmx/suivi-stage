@@ -4,80 +4,84 @@ import { Student } from '../models/student.model';
 import { Staff } from '../models/staff.model';
 import { StudentService } from './student.service';
 import { StaffService } from './staff.service';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  currentUser?: Student | Staff;
-  private students: Student[] = [];
-  private staffs: Staff[] = [];
-  private isInitialized = false;
+  currentUserSubject = new BehaviorSubject<Student | Staff | undefined>(undefined);
+  currentUser$ = this.currentUserSubject.asObservable();
+  currentUser: Student | Staff | undefined;
+  students: Student[] = [];
+  staffs: Staff[] = [];
 
   constructor(
     private readonly router: Router,
     private readonly studentService: StudentService,
     private readonly staffService: StaffService
-  ) {
-    // Initialiser les données au démarrage du service
-    this.initializeData();
-  }
+  ) {}
 
-  private async initializeData() {
-    // Récupération du currentUser s'il y en a un
+  async initializeData() {
     const savedUser = sessionStorage.getItem('currentUser');
-    if (savedUser) {
-      this.currentUser = JSON.parse(savedUser);
-      this.isInitialized = true;
-    }
-    else {
-      // Charger les données de manière asynchrone
+    if (savedUser && savedUser != "undefined") {
+      this.currentUserSubject.next(JSON.parse(savedUser));
+    } else {
       const [students, staffs] = await Promise.all([
-        firstValueFrom(this.studentService.getStudents()),
+        firstValueFrom(this.studentService.getStudents(['idUPPA', 'adresseMail'])),
         firstValueFrom(this.staffService.getStaffs())
       ]);
 
       this.students = students || [];
       this.staffs = staffs || [];
-
-      this.isInitialized = true;
     }
   }
+  
+  async login(email: string): Promise<boolean> {
+    let user: Student | Staff | undefined = this.students.find(s => s.adresseMail === email) || this.staffs.find(s => s.adresseMail === email);
 
-  async login(email: string, password: string): Promise<boolean> {
-    // Attendre que les données soient chargées
-    if (!this.isInitialized) {
-      await this.initializeData();
+    if (!user) {
+      return false;
     }
 
-    // Rechercher d'abord dans le personnel
-    this.currentUser = this.staffs.find(s => s.adresseMail === email);
-
-    // Si non trouvé, rechercher dans les étudiants
-    if (!this.currentUser) {
-      this.currentUser = this.students.find(s => s.adresseMail === email);
-    }
-    
-    if (this.currentUser) {
+    try {
+      if (this.isStudent(user)) {
+        this.currentUser = await firstValueFrom(this.studentService.getStudentById(user.idUPPA));
+      }
+      else if (this.isStaff(user)) {
+        this.currentUser = await firstValueFrom(this.staffService.getStaffById(user.idPersonnel));
+      }
+      
+      this.currentUserSubject.next(this.currentUser);
       sessionStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-      await this.router.navigate(['/dashboard']);
+  
+      this.router.navigate(['/dashboard']);
       return true;
     }
-    return false;
-  }
+    catch (error) {
+      return false;
+    }
+  }    
 
   logout(): void {
     sessionStorage.removeItem('currentUser');
-    this.currentUser = undefined;
+    this.currentUserSubject.next(undefined);
     this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
-    return !!this.currentUser;
+    return !!this.currentUserSubject.value;
   }
 
   getCurrentUser(): Student | Staff | undefined {
-    return this.currentUser;
+    return this.currentUserSubject.value;
+  }
+
+  isStudent(user: Student | Staff | undefined): user is Student {
+    return !!user && 'idUPPA' in user;
+  }
+
+  isStaff(user: Student | Staff | undefined): user is Staff {
+    return !!user && 'idPersonnel' in user;
   }
 }
