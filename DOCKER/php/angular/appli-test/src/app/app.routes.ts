@@ -5,10 +5,7 @@ import { authGuard } from './guards/auth.guard';
 import { AddSearchFormComponent } from './components/add-search-form/add-search-form';
 import { FactsheetsComponent } from './components/factsheets/factsheets.component';
 import { SearchDetailsComponent } from './components/search-details/search-details.component';
-<<<<<<< HEAD
-=======
 import { UpdateSearchComponent } from './components/update-search/update-search.component';
->>>>>>> origin/main
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },

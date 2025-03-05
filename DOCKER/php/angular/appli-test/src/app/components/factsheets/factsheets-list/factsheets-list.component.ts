@@ -13,9 +13,6 @@ import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 import { DescriptionSheetService } from '../../../services/description-sheet.service';
 import { AuthService } from '../../../services/auth.service';
 
-
-
-
 @Component({
   selector: 'app-factsheetsList',
   standalone: true,
@@ -51,142 +48,139 @@ export class FactsheetsListComponent implements OnInit {
     private readonly DescriptionSheetService: DescriptionSheetService
   ) {}
 
-  ngOnInit() {
-      const currentUser = this.authService.getCurrentUser();
-      if (currentUser) {
-          this.currentUser = currentUser;
-        } else {
-            // Gérer le cas où currentUser est undefined
-            console.error('Current user is undefined');
-            return;
+    ngOnInit() {
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser) {
+            this.currentUser = currentUser;
+            } else {
+                // Gérer le cas où currentUser est undefined
+                console.error('Current user is undefined');
+                return;
+            }
+            
+            if (this.appComponent.isStudent(this.currentUser)) {
+                this.currentUserRole = 'STUDENT';
+                this.totalChildren = 2;
+            } else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+                this.currentUserRole = 'INTERNSHIP_MANAGER';
+                this.totalChildren = 1;
+            }
+            
+            this.loadedChildrenCount = 0;
+            this.currentPageUrl = this.navigationService.getCurrentPageUrl();
+            
+            if (this.appComponent.isStudent(this.currentUser)) {
+                this.currentUserId = this.currentUser.idUPPA;
+                this.currentUserRole = 'STUDENT';
+            } else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+                this.currentUserId = `${this.currentUser.idPersonnel}`;
+                this.currentUserRole = 'INTERNSHIP_MANAGER';
+            }
+            
+            this.loadData(this.currentUserId);
+            
+            this.searchTermSubject.pipe(
+                debounceTime(800),
+                distinctUntilChanged()
+            ).subscribe(() => {
+                this.getFilteredSheetsWithCompanies();
+            });
         }
-        
-        if (this.appComponent.isStudent(this.currentUser)) {
-            this.currentUserRole = 'STUDENT';
-            this.totalChildren = 2;
-        } else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-            this.currentUserRole = 'INTERNSHIP_MANAGER';
-            this.totalChildren = 1;
-        }
-        
-        this.loadedChildrenCount = 0;
-        this.currentPageUrl = this.navigationService.getCurrentPageUrl();
-        
-        if (this.appComponent.isStudent(this.currentUser)) {
-            this.currentUserId = this.currentUser.idUPPA;
-            this.currentUserRole = 'STUDENT';
-        } else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-            this.currentUserId = `${this.currentUser.idPersonnel}`;
-            this.currentUserRole = 'INTERNSHIP_MANAGER';
-        }
-        
-        this.loadData(this.currentUserId);
-        
-        this.searchTermSubject.pipe(
-            debounceTime(800),
-            distinctUntilChanged()
-        ).subscribe(() => {
-            this.getFilteredSheetsWithCompanies();
-        });
-        console.log(this.currentUserRole)
-    }
     
     loadData(studentId: string) {
-          forkJoin({
-              student: this.studentService.getStudentById(studentId),
-              companies: this.companyService.getCompanies(),
-              sheets: this.DescriptionSheetService.getSheetsByStudentId(studentId)
-          }).subscribe(({student, companies, sheets}) => {
-                  this.studentData = student;
-                  this.companies = companies;
-                  this.sheets = sheets;
-                  this.getFilteredSheetsWithCompanies();
-                  this.dataLoaded.emit();
-              }
-          );
-      }
+        forkJoin({
+            student: this.studentService.getStudentById(studentId),
+            companies: this.companyService.getCompanies(),
+            sheets: this.DescriptionSheetService.getSheetsByStudentId(studentId)
+        }).subscribe(({student, companies, sheets}) => {
+                this.studentData = student;
+                this.companies = companies;
+                this.sheets = sheets;
+                this.getFilteredSheetsWithCompanies();
+                this.dataLoaded.emit();
+            }
+        );
+    }
 
-      getFilteredSheetsWithCompanies() {
-              if (this.companies && this.sheets) {
-                  let searchCompanies: Company[] = this.companies.filter(
-                      c => this.sheets!.some(
-                          s => c.idEntreprise === s.idEntreprise
-                      )
-                  );
-          
-                  let searchesWithCompany = this.sheets.map(sheet => {
-                      const company = searchCompanies.find(c => c.idEntreprise === sheet.idEntreprise);
-                      return company ? { sheet, company } : null;
-                  }).filter((result): result is { sheet: DescriptiveSheet; company: Company } => result !== null);
-                  
-                  // Appliquer les filtres
-                    searchesWithCompany = this.applyFilters(searchesWithCompany);
+    getFilteredSheetsWithCompanies() {
+        if (this.companies && this.sheets) {
+            let searchCompanies: Company[] = this.companies.filter(
+                c => this.sheets!.some(
+                    s => c.idEntreprise === s.idEntreprise
+                )
+            );
+    
+            let searchesWithCompany = this.sheets.map(sheet => {
+                const company = searchCompanies.find(c => c.idEntreprise === sheet.idEntreprise);
+                return company ? { sheet, company } : null;
+            }).filter((result): result is { sheet: DescriptiveSheet; company: Company } => result !== null);
             
-                    // Mettre à jour la propriété qui déclenche la mise à jour du template
-                    this.FilteredSheetsWithCompanies = searchesWithCompany;
-                    console.log(this.FilteredSheetsWithCompanies);
-              }
-          }
-      
-          applyFilters(sheets: { sheet: DescriptiveSheet; company: Company }[]) {
-              let filtered = [...sheets];
-              const searchTermLower = this.searchTerm.toLowerCase().trim();
-      
-              // Appliquer le filtre de recherche textuelle
-              if (searchTermLower) {
-                  filtered = filtered.filter(s =>
-                      s.company.raisonSociale.toLowerCase().includes(searchTermLower) ||
-                      s.company.ville.toLowerCase().includes(searchTermLower)
-                  );
-              }
-      
-              // Appliquer les filtres de statut et de tri
-              switch (this.currentFilter) {
-                  case 'date_asc':
-                      filtered.sort((a, b) => a.sheet.dateCreation.getTime() - b.sheet.dateCreation.getTime());
-                      break;
-                  case 'date_desc':
-                      filtered.sort((a, b) => b.sheet.dateCreation.getTime() - a.sheet.dateCreation.getTime());
-                      break;
-              }
-      
-              return filtered;
-          }
-      
-          onSearchTermChange(event: Event) {
-              const target = event.target as HTMLInputElement;
-              if (target) {
-                  this.searchTerm = target.value;
-                  this.searchTermSubject.next(this.searchTerm);
-              }
-          }
-      
-          clearSearchTerm() {
-              this.searchTerm = '';
-              this.searchTermSubject.next(this.searchTerm);
-          }
+            // Appliquer les filtres
+            searchesWithCompany = this.applyFilters(searchesWithCompany);
     
-      
-          toggleDateSort() {
-              if (this.currentFilter === 'date_asc') {
-                  this.currentFilter = 'date_desc';
-              }
-              else if (this.currentFilter === 'date_desc') {
-                  this.currentFilter = 'all';
-              }
-              else {
-                  this.currentFilter = 'date_asc';
-              }
-              this.getFilteredSheetsWithCompanies();
-          }
+            // Mettre à jour la propriété qui déclenche la mise à jour du template
+            this.FilteredSheetsWithCompanies = searchesWithCompany;
+            console.log(this.FilteredSheetsWithCompanies);
+        }
+    }
     
-          viewSearchDetails(searchId: number) {
-              this.navigationService.navigateToSearchView(searchId);
-          }
-      
-          goToAddSearchFormView() {
-              this.navigationService.navigateToSearchForm();
-          }
-  
-  
+    applyFilters(sheets: { sheet: DescriptiveSheet; company: Company }[]) {
+        let filtered = [...sheets];
+        const searchTermLower = this.searchTerm.toLowerCase().trim();
+
+        // Appliquer le filtre de recherche textuelle
+        if (searchTermLower) {
+            filtered = sheets.filter(s =>
+                s.company.raisonSociale!.toLowerCase().includes(searchTermLower) ||
+                s.company.ville!.toLowerCase().includes(searchTermLower)
+            );
+        }
+
+        // Appliquer les filtres de statut et de tri
+        switch (this.currentFilter) {
+            case 'date_asc':
+                filtered.sort((a, b) => a.sheet.dateCreation!.getTime() - b.sheet.dateCreation!.getTime());
+                break;
+            case 'date_desc':
+                filtered.sort((a, b) => b.sheet.dateCreation!.getTime() - a.sheet.dateCreation!.getTime());
+                break;
+        }
+
+        return filtered;
+    }
+
+    onSearchTermChange(event: Event) {
+        const target = event.target as HTMLInputElement;
+        if (target) {
+            this.searchTerm = target.value;
+            this.searchTermSubject.next(this.searchTerm);
+        }
+    }
+
+    clearSearchTerm() {
+        this.searchTerm = '';
+        this.searchTermSubject.next(this.searchTerm);
+    }
+
+
+    toggleDateSort() {
+        if (this.currentFilter === 'date_asc') {
+            this.currentFilter = 'date_desc';
+        }
+        else if (this.currentFilter === 'date_desc') {
+            this.currentFilter = 'all';
+        }
+        else {
+            this.currentFilter = 'date_asc';
+        }
+        this.getFilteredSheetsWithCompanies();
+    }
+
+    viewSearchDetails(searchId: number) {
+        this.navigationService.navigateToSearchView(searchId);
+    }
+
+    goToAddSearchFormView() {
+        this.navigationService.navigateToSearchForm();
+    }
 }
