@@ -1,16 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { InternshipSearch, SearchStatus } from '../../../models/internship-search.model';
-import { Staff } from '../../../models/staff.model';
-import { Student } from '../../../models/student.model';
-import { Company } from '../../../models/company.model';
-import { InternshipSearchService } from '../../../services/internship-search.service';
-import { NavigationService } from '../../../services/navigation.service';
-import { StudentService } from '../../../services/student.service';
-import { CompanyService } from '../../../services/company.service';
-import { AppComponent } from '../../../app.component';
-import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
+import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
+import { Student } from '../../models/student.model';
+import { Company } from '../../models/company.model';
+import { InternshipSearchService } from '../../services/internship-search.service';
+import { NavigationService } from '../../services/navigation.service';
+import { CompanyService } from '../../services/company.service';
+import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
 import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
 
 @Component({
@@ -21,12 +18,8 @@ import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, 
     styleUrls: ['./searches-student-tab.component.css']
 })
 export class SearchesStudentTabComponent implements OnInit {
-    @Input() currentUser!: Student | Staff;
+    @Input() currentUser!: Student;
     @Output() dataLoaded = new EventEmitter<void>();
-    currentUserId!: string;
-    currentUserRole!: string;
-    currentPageUrl!: string;
-    studentData?: Student;
     companies?: Company[];
     searches?: InternshipSearch[];
     searchTerm: string = '';
@@ -43,14 +36,8 @@ export class SearchesStudentTabComponent implements OnInit {
 
     constructor(
         private readonly internshipSearchService: InternshipSearchService,
-        private readonly studentService: StudentService,
         private readonly navigationService: NavigationService,
-        private readonly companyService: CompanyService,
-        private readonly appComponent: AppComponent
-<<<<<<< HEAD
-    ) {}
-    
-=======
+        private readonly companyService: CompanyService
     ) {
         this.searchTermSubject.pipe(
             debounceTime(800),
@@ -60,31 +47,17 @@ export class SearchesStudentTabComponent implements OnInit {
         });
     }
 
->>>>>>> origin/main
     ngOnInit() {
-        this.currentPageUrl = this.navigationService.getCurrentPageUrl();
-
-        if (this.appComponent.isStudent(this.currentUser)) {
-            this.currentUserId = this.currentUser.idUPPA;
-            this.currentUserRole = 'STUDENT';
-        }
-        else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-            this.currentUserId = `${this.currentUser.idPersonnel}`;
-            this.currentUserRole = 'INTERNSHIP_MANAGER';
-        }
-
-        this.loadData(this.currentUserId);
+        this.loadData();
     }
 
     //Chargement des données de l'étudiant, de ses recherches de stages et des entreprises liées
-    loadData(studentId: string) {
+    loadData() {
         return firstValueFrom(forkJoin({
-            student: this.studentService.getStudentById(studentId),
-            companies: this.companyService.getCompanies(),
-            searches: this.internshipSearchService.getSearchesByStudentId(studentId)
+            companies: this.companyService.getCompanies(['idEntreprise', 'raisonSociale', 'ville']),
+            searches: this.internshipSearchService.getSearchesByStudentId(this.currentUser.idUPPA, ['idRecherche', 'dateCreation', 'statut', 'idEntreprise'])
         }).pipe(
-            tap(({ student, companies, searches }) => {
-                this.studentData = student;
+            tap(({ companies, searches }) => {
                 this.companies = companies;
                 this.searches = searches;
                 this.getFilteredSearchesWithCompanies();
@@ -110,7 +83,7 @@ export class SearchesStudentTabComponent implements OnInit {
             this.originalSearchesWithCompany = [...searchesWithCompany];
             this.filteredSearchesWithCompany = [...searchesWithCompany];
             
-            this.availableCities = [...new Set(searchesWithCompany.map(item => item.company.ville))].sort();
+            this.availableCities = searchesWithCompany ? [...new Set(searchesWithCompany.map(item => item.company.ville).filter(ville => ville !== null))].sort() : [];
             
             this.applyFilters();
         }
@@ -125,15 +98,15 @@ export class SearchesStudentTabComponent implements OnInit {
     
         filteredSearches.forEach(s => {
             if (!(s.search.dateCreation instanceof Date)) {
-                s.search.dateCreation = new Date(s.search.dateCreation);
+                s.search.dateCreation = new Date(s.search.dateCreation!);
             }
         });
     
         if (searchTermLower) {
             filteredSearches = filteredSearches.filter(s =>
-                s.company.raisonSociale.toLowerCase().includes(searchTermLower) ||
-                s.company.ville.toLowerCase().includes(searchTermLower) ||
-                this.getStatusLabel(s.search.statut).toLowerCase().includes(searchTermLower)
+                s.company.raisonSociale!.toLowerCase().includes(searchTermLower) ||
+                s.company.ville!.toLowerCase().includes(searchTermLower) ||
+                this.getStatusLabel(s.search.statut!).toLowerCase().includes(searchTermLower)
             );
         }
     
@@ -146,10 +119,10 @@ export class SearchesStudentTabComponent implements OnInit {
         }
     
         if (this.currentDateFilter === 'date_asc') {
-            filteredSearches.sort((a, b) => a.search.dateCreation.getTime() - b.search.dateCreation.getTime());
+            filteredSearches.sort((a, b) => a.search.dateCreation!.getTime() - b.search.dateCreation!.getTime());
         }
         else if (this.currentDateFilter === 'date_desc') {
-            filteredSearches.sort((a, b) => b.search.dateCreation.getTime() - a.search.dateCreation.getTime());
+            filteredSearches.sort((a, b) => b.search.dateCreation!.getTime() - a.search.dateCreation!.getTime());
         }
     
         this.filteredSearchesWithCompany = filteredSearches;
@@ -249,7 +222,7 @@ export class SearchesStudentTabComponent implements OnInit {
             try {
                 this.isDeleting = true;
                 await firstValueFrom(this.internshipSearchService.deleteSearch(this.searchToDelete));
-                await this.loadData(this.currentUserId);
+                await this.loadData();
             }
             catch (error) {
                 console.error('Erreur lors de la suppression de la recherche:', error);

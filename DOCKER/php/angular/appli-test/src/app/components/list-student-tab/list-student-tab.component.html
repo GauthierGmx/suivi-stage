@@ -1,0 +1,125 @@
+<div class="content-box">
+  <div class="title">
+    <h3><b>Liste des élèves</b></h3>
+  </div>
+  <div class="searchBarAndfilters">
+    <div class="search-container">
+      <input 
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearchTermChange($event)"
+        placeholder="Rechercher sur un des champs..." 
+        class="search-input"
+      />
+      @if (searchTerm) {
+        <button 
+          (click)="clearSearchTerm()"
+          class="clear-button"
+        >
+          X
+        </button>
+      }
+    </div>
+
+    <div class="filter-buttons">
+      <button 
+        class="filter-button"
+        [class]="currentNbSearchesFilter"
+        (click)="toggleNbSearchesSort()"
+      >
+        Nombre de recherches
+      </button>
+
+      <button 
+        class="filter-button"
+        [class]="currentDateFilter"
+        (click)="toggleDateSort()"
+      >
+        Date dernière recherche
+      </button>
+
+      <select 
+        #statutSelect
+        [(ngModel)]="currentStudyYearFilter"
+        (change)="setStudyYearFilter(currentStudyYearFilter, statutSelect)"
+        class="filter-button"
+      >
+        <option value="all">Toutes les promos</option>
+        <option value="BUT 1">BUT 1</option>
+        <option value="BUT 2">BUT 2</option>
+        <option value="BUT 3">BUT 3</option>
+      </select>
+
+      <select 
+        #citySelect
+        [(ngModel)]="currentTdGroupFilter"
+        (change)="setTdGroupFilter(currentTdGroupFilter, citySelect)"
+        class="filter-button"
+      >
+        <option value="all">Tous les TDs</option>
+        <option value="TD 1">TD 1</option>
+        <option value="TD 2">TD 2</option>
+        <option value="TD 3">TD 3</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Vue tableau pour desktop -->
+  <div class="table-view">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Étudiant</th>
+            <th>Nombre de recherches</th>
+            <th>Date de dernière recherche</th>
+            <th>Année formation</th>
+            <th>Groupe de TD</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filteredStudentsDatas; track item.student.idUPPA) {
+            <tr 
+              (click)="goToStudentSearchesView(item.student.idUPPA)"
+            >
+              <td class="firstTd">{{ item.student.prenom }} {{ item.student.nom }}</td>
+              <td>{{ item.countSearches }}</td>
+              <td>{{ item.lastSearchDate ? (item.lastSearchDate | date:'dd/MM/yyyy') : 'Aucune recherche' }}</td>
+              <td>{{ item.studyYear }}</td>
+              <td class="lastTd">{{ item.TdGroup }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Vue cards pour mobile -->
+  <div class="cards-view">
+    @for (item of filteredStudentsDatas; track item.student.idUPPA) {
+      <div 
+        class="search-card"
+        (click)="goToStudentSearchesView(item.student.idUPPA)"
+      >
+        <div class="card-header">
+          <h4>{{ item.student.prenom }} {{ item.student.nom }}</h4>
+          <span>{{ item.studyYear }}</span>
+        </div>
+        <div class="card-content">
+          <p class="nbSearches">
+            <span class="label">Nombre de recherche :</span> 
+            <span>{{ item.countSearches }}</span>
+          </p>
+          <p class="dateLastSearch">
+            <span class="label">Date de dernière recherche :</span> 
+            <span>{{ item.lastSearchDate ? (item.lastSearchDate | date:'dd/MM/yyyy') : 'Aucune recherche' }}</span>
+          </p>
+          <p class="tdGroup">
+            <span class="label">Groupe de TD :</span> 
+            <span>{{ item.TdGroup }}</span>
+          </p>
+        </div>
+      </div>
+    }
+  </div>
+</div>

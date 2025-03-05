@@ -1,14 +1,14 @@
 export class Student {
   idUPPA: string;
-  nomEtudiant: string;
-  prenomEtudiant: string;
-  adresseEtudiant: string;
-  villeEtudiant: string;
-  codePostalEtudiant: string;
-  telephoneEtudiant: string;
-  adresseMailEtudiant: string;
-  idParcours: number;
-  idDepartement: number;
+  nom: string | null;
+  prenom: string | null;
+  adresseEtudiant: string | null;
+  villeEtudiant: string | null;
+  codePostalEtudiant: string | null;
+  telephoneEtudiant: string | null;
+  adresseMailEtudiant: string | null;
+  idParcours: number | null;
+  idDepartement: number | null;
   idEntreprise: number | null;
   idTuteur: number | null;
 
@@ -16,19 +16,19 @@ export class Student {
     idUPPA: string,
     nomEtudiant: string,
     prenomEtudiant: string,
-    adresseEtudidant: string,
-    villeEtudiant: string,
-    codePostalEtudiant: string,
-    telephoneEtudiant: string,
-    adresseMailEtudiant: string,
-    idParcours: number,
-    idDepartement: number = 1,
+    adresseEtudidant: string | null,
+    villeEtudiant: string | null,
+    codePostalEtudiant: string | null,
+    telephoneEtudiant: string | null,
+    adresseMailEtudiant: string | null,
+    idParcours: number | null,
+    idDepartement: number | null,
     idEntreprise: number | null,
     idTuteur: number | null
   ) {
     this.idUPPA = idUPPA;
-    this.nomEtudiant = nomEtudiant;
-    this.prenomEtudiant = prenomEtudiant;
+    this.nom = nomEtudiant;
+    this.prenom = prenomEtudiant;
     this.adresseEtudiant = adresseEtudidant;
     this.villeEtudiant = villeEtudiant;
     this.codePostalEtudiant = codePostalEtudiant;

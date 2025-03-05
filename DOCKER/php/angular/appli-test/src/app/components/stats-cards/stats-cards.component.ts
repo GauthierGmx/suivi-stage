@@ -1,14 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Staff } from '../../../models/staff.model';
-import { Student } from '../../../models/student.model';
-import { InternshipSearch, SearchStatus } from '../../../models/internship-search.model';
-import { DescriptiveSheet, SheetStatus } from '../../../models/description-sheet.model';
-import { NavigationService } from '../../../services/navigation.service';
-import { StudentService } from '../../../services/student.service';
-import { InternshipSearchService } from '../../../services/internship-search.service';
-import { DescriptionSheetService } from '../../../services/description-sheet.service';
-import { AppComponent } from '../../../app.component';
+import { Staff } from '../../models/staff.model';
+import { Student } from '../../models/student.model';
+import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
+import { DescriptiveSheet, SheetStatus } from '../../models/description-sheet.model';
+import { NavigationService } from '../../services/navigation.service';
+import { StudentService } from '../../services/student.service';
+import { InternshipSearchService } from '../../services/internship-search.service';
+import { DescriptionSheetService } from '../../services/description-sheet.service';
+import { AppComponent } from '../../app.component';
 import { forkJoin } from 'rxjs';
 
 const VALIDED_INTERNSHIP_SEARCH_STATUT = 'Validé';
@@ -53,9 +53,9 @@ export class StatsCardsComponent implements OnInit {
 
     // Utiliser forkJoin pour attendre que toutes les données soient chargées
     forkJoin({
-      students: this.studentService.getStudents(),
-      searches: this.internshipSearchService.getSearches(),
-      sheets: this.descriptiveSheetService.getSheets()
+      students: this.studentService.getStudents(['idUPPA']),
+      searches: this.internshipSearchService.getSearches(['idRecherche', 'statut', 'idUPPA']),
+      sheets: this.descriptiveSheetService.getSheets(['idFicheDescriptive', 'statut', 'idUPPA'])
     }).subscribe(({students, searches, sheets}) => {
         this.students = students;
         this.searches = searches;
@@ -130,8 +130,8 @@ export class StatsCardsComponent implements OnInit {
     }
     return this.searches.filter(search =>
       search.idUPPA === studentId &&
-      search.dateCreation > this.getLastWeekDate() &&
-      search.dateCreation <= this.getCurrentDate()
+      search.dateCreation! > this.getLastWeekDate() &&
+      search.dateCreation! <= this.getCurrentDate()
     ).length
   }
 

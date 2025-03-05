@@ -1,29 +1,29 @@
 export class DescriptiveSheet {
   idFicheDescriptive: number;
-  dateCreation: Date;
-  dateDerniereModification: Date;
-  contenuStage: string;
-  thematique: string;
-  sujet: string;
-  fonction: string;
-  taches: string;
-  competences: string;
-  details: string;
-  debutStage: Date;
-  finStage: Date;
-  nbJourParSemaine: number;
-  nbHeureParSemaine: number;
-  clauseConfidentialite: Boolean;
-  statut: SheetStatus;
-  personnelTechnique: Boolean;
-  materielPrete: Boolean;
-  idEntreprise: number;
-  idTuteur: number;
-  idUPPA: string;
-  numeroConvention?: string;
-  interruptionStage?: Boolean;
-  dateDebutInterruption?: Date;
-  dateFinInterruption?: Date;
+  dateCreation: Date | null;
+  dateDerniereModification: Date | null;
+  contenuStage: string | null;
+  thematique: string | null;
+  sujet: string | null;
+  fonction: string | null;
+  taches: string | null;
+  competences: string | null;
+  details: string | null;
+  debutStage: Date | null;
+  finStage: Date | null;
+  nbJourParSemaine: number | null;
+  nbHeureParSemaine: number | null;
+  clauseConfidentialite: Boolean | null;
+  statut: SheetStatus | null;
+  personnelTechnique: Boolean | null;
+  materielPrete: Boolean | null;
+  idEntreprise: number | null;
+  idTuteur: number | null;
+  idUPPA: string | null;
+  numeroConvention?: string | null;
+  interruptionStage?: Boolean | null;
+  dateDebutInterruption?: Date | null;
+  dateFinInterruption?: Date | null;
 
   constructor(
     idFicheDescriptive: number,

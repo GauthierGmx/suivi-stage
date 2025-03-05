@@ -5,12 +5,15 @@
         <app-loading/>
       }
       <div [hidden]="!allDataLoaded">
-        <app-breadcrumb/>
+        <app-breadcrumb [currentUserRole]="currentUserRole"/>
         <app-welcome-card [currentUser]="currentUser"/>
         <app-stats-cards [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
         
         @if (currentUserRole === 'STUDENT') {
           <app-searches-student-tab [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+        }
+        @else if (currentUserRole === 'INTERNSHIP_MANAGER') {
+          <app-list-student-tab (dataLoaded)="onChildDataLoaded()"/>
         }
       </div>
     }

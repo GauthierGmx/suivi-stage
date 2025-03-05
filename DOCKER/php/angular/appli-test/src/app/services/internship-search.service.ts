@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { InternshipSearch } from '../models/internship-search.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of} from 'rxjs';
 
 @Injectable({
@@ -11,24 +11,42 @@ export class InternshipSearchService {
   constructor(private http: HttpClient) {}
 
   //Sélection de toutes les recherches de stages
-  getSearches(): Observable<InternshipSearch[]> {
-    return this.http.get<InternshipSearch[]>('http://localhost:8000/api/recherches-stages').pipe(
+  getSearches(fields?: string[]): Observable<InternshipSearch[]> {
+    let params = new HttpParams();
+    
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    return this.http.get<InternshipSearch[]>('http://localhost:8000/api/recherches-stages', {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, undefined))
     );
   }
 
   //Sélection de la recherche de stage correspondant à l'identifiant passé en paramètre
-  getSearchById(idSearch: number): Observable<InternshipSearch | undefined> {
-    return this.http.get<InternshipSearch>(`http://localhost:8000/api/recherches-stages/${idSearch}`).pipe(
+  getSearchById(idSearch: number, fields?: string[]): Observable<InternshipSearch | undefined> {
+    let params = new HttpParams();
+    
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    return this.http.get<InternshipSearch>(`http://localhost:8000/api/recherches-stages/${idSearch}`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, undefined))
     );
   }
 
   //Sélection des recherches de stages d'un étudiant dont l'identifiant est passé en paramètre
-  getSearchesByStudentId(studentId: string): Observable<InternshipSearch[]> {
-    return this.http.get<InternshipSearch[]>(`http://localhost:8000/api/etudiants/${studentId}/recherches-stages`).pipe(
+  getSearchesByStudentId(studentId: string, fields?: string[]): Observable<InternshipSearch[]> {
+    let params = new HttpParams();
+    
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    return this.http.get<InternshipSearch[]>(`http://localhost:8000/api/etudiants/${studentId}/recherches-stages`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, undefined))
     );
