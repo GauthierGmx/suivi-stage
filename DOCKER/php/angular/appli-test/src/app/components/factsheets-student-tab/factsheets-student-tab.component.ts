@@ -1,26 +1,26 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NavigationService } from '../../../services/navigation.service';
-import { StudentService } from '../../../services/student.service';
-import { DescriptiveSheet } from '../../../models/description-sheet.model';
-import { Student } from '../../../models/student.model';
-import { Company } from '../../../models/company.model';
-import { CompanyService } from '../../../services/company.service';
-import { AppComponent } from '../../../app.component';
-import { Staff } from '../../../models/staff.model';
+import { NavigationService } from '../../services/navigation.service';
+import { StudentService } from '../../services/student.service';
+import { DescriptiveSheet } from '../../models/description-sheet.model';
+import { Student } from '../../models/student.model';
+import { Company } from '../../models/company.model';
+import { CompanyService } from '../../services/company.service';
+import { AppComponent } from '../../app.component';
+import { Staff } from '../../models/staff.model';
 import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
-import { DescriptionSheetService } from '../../../services/description-sheet.service';
-import { AuthService } from '../../../services/auth.service';
+import { DescriptionSheetService } from '../../services/description-sheet.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-factsheetsList',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './factsheets-list.component.html',
-  styleUrls: ['./factsheets-list.component.css'],
+  templateUrl: './factsheets-student-tab.component.html',
+  styleUrls: ['./factsheets-student-tab.component.css'],
 })
-export class FactsheetsListComponent implements OnInit {
+export class FactsheetsStudentTabComponent implements OnInit {
   @Input() currentUser!: Student | Staff;
   @Output() dataLoaded = new EventEmitter<void>();
   currentUserId!: string;

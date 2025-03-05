@@ -7,12 +7,12 @@ import { AppComponent } from '../../app.component';
 import { WelcomeComponent } from '../welcome-card/welcome-card.component';
 import { StatsCardsComponent } from '../stats-cards/stats-cards.component';
 import { LoadingComponent } from '../loading/loading.component';
-import { FactsheetsListComponent } from './factsheets-list/factsheets-list.component';
+import { FactsheetsStudentTabComponent } from '../factsheets-student-tab/factsheets-student-tab.component';
 
 @Component({
   selector: 'app-factsheets',
   standalone: true,
-  imports: [CommonModule, WelcomeComponent, StatsCardsComponent, FactsheetsListComponent, LoadingComponent],
+  imports: [CommonModule, WelcomeComponent, StatsCardsComponent, FactsheetsStudentTabComponent, LoadingComponent],
   templateUrl: './factsheets.component.html',
   styleUrls: ['./factsheets.component.css']
 })
