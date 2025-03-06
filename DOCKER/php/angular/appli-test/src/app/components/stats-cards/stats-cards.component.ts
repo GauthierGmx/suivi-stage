@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { Staff } from '../../models/staff.model';
 import { Student } from '../../models/student.model';
 import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
-import { DescriptiveSheet, SheetStatus } from '../../models/description-sheet.model';
+import { Factsheets, SheetStatus } from '../../models/description-sheet.model';
 import { NavigationService } from '../../services/navigation.service';
 import { StudentService } from '../../services/student.service';
 import { InternshipSearchService } from '../../services/internship-search.service';
-import { DescriptionSheetService } from '../../services/description-sheet.service';
+import { FactsheetsService } from '../../services/description-sheet.service';
 import { AuthService } from '../../services/auth.service';
 import { forkJoin } from 'rxjs';
 
@@ -29,13 +29,13 @@ export class StatsCardsComponent implements OnInit {
   currentPageUrl!: string;
   students!: Student[];
   searches!: InternshipSearch[];
-  descriptiveSheets!: DescriptiveSheet[];
+  factsheets!: Factsheets[];
 
   constructor(
     private navigationService: NavigationService,
     private studentService: StudentService,
     private internshipSearchService: InternshipSearchService,
-    private descriptiveSheetService: DescriptionSheetService,
+    private factsheetsService: FactsheetsService,
     private authService: AuthService
   ) {}
 
@@ -55,11 +55,11 @@ export class StatsCardsComponent implements OnInit {
     forkJoin({
       students: this.studentService.getStudents(['idUPPA']),
       searches: this.internshipSearchService.getSearches(['idRecherche', 'statut', 'idUPPA']),
-      sheets: this.descriptiveSheetService.getSheets(['idFicheDescriptive', 'statut', 'idUPPA'])
+      sheets: this.factsheetsService.getSheets(['idFicheDescriptive', 'statut', 'idUPPA'])
     }).subscribe(({students, searches, sheets}) => {
         this.students = students;
         this.searches = searches;
-        this.descriptiveSheets = sheets;
+        this.factsheets = sheets;
         this.dataLoaded.emit();
       }
     );
@@ -99,17 +99,17 @@ export class StatsCardsComponent implements OnInit {
       return 0;
     }
     return this.students.filter(student =>
-      !this.descriptiveSheets.some(
+      !this.factsheets.some(
         sheet => sheet.idUPPA === student.idUPPA
       )).length;
   }
 
   countStudentBySheetStatut(statut: SheetStatus) {
-    if (!this.students || !this.descriptiveSheetService) {
+    if (!this.students || !this.factsheets) {
       return 0;
     }
     return this.students.filter(student =>
-      this.descriptiveSheets.some(sheet =>
+      this.factsheets.some(sheet =>
         sheet.idUPPA === student.idUPPA &&
         sheet.statut === statut
       )).length;
@@ -146,19 +146,19 @@ export class StatsCardsComponent implements OnInit {
   }
 
   contSheetByStatut(statut: SheetStatus) {
-    if (!this.descriptiveSheets) {
+    if (!this.factsheets) {
       return 0;
     }
-    return this.descriptiveSheets.filter(
+    return this.factsheets.filter(
       s => s.statut === statut
     ).length;
   }
 
   countSheetByStudentIdAndStatut(studentId: string, statut: SheetStatus) {
-    if (!this.descriptiveSheets) {
+    if (!this.factsheets) {
       return 0;
     }
-    return this.descriptiveSheets.filter(sheet =>
+    return this.factsheets.filter(sheet =>
       sheet.idUPPA === studentId &&
       sheet.statut === statut
     ).length;
