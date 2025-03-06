@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Staff } from '../../models/staff.model';
 import { Student } from '../../models/student.model';
-import { AppComponent } from '../../app.component';
-import { WelcomeComponent } from '../welcome-card/welcome-card.component';
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { StatsCardsComponent } from '../stats-cards/stats-cards.component';
 import { LoadingComponent } from '../loading/loading.component';
 import { FactsheetsStudentTabComponent } from '../factsheets-student-tab/factsheets-student-tab.component';
@@ -12,7 +11,7 @@ import { FactsheetsStudentTabComponent } from '../factsheets-student-tab/factshe
 @Component({
   selector: 'app-factsheets',
   standalone: true,
-  imports: [CommonModule, WelcomeComponent, StatsCardsComponent, FactsheetsStudentTabComponent, LoadingComponent],
+  imports: [CommonModule, BreadcrumbComponent, StatsCardsComponent, FactsheetsStudentTabComponent, LoadingComponent],
   templateUrl: './factsheets.component.html',
   styleUrls: ['./factsheets.component.css']
 })
@@ -24,18 +23,17 @@ export class FactsheetsComponent implements OnInit {
   totalChildren: number = 2;
 
   constructor(
-    private readonly authService: AuthService,
-    private readonly appComponent: AppComponent
+    private readonly authService: AuthService
   ) {}
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
     
-    if (this.appComponent.isStudent(this.currentUser)) {
+    if (this.authService.isStudent(this.currentUser)) {
       this.currentUserRole = 'STUDENT';
       this.totalChildren = 2;
     }
-    else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
       this.currentUserRole = 'INTERNSHIP_MANAGER';
       this.totalChildren = 1;
     }

@@ -1,20 +1,19 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Student } from '../../models/student.model';
+import { Staff } from '../../models/staff.model';
+import { Company } from '../../models/company.model';
+import { DescriptiveSheet } from '../../models/description-sheet.model';
+import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
 import { StudentService } from '../../services/student.service';
-import { DescriptiveSheet } from '../../models/description-sheet.model';
-import { Student } from '../../models/student.model';
-import { Company } from '../../models/company.model';
 import { CompanyService } from '../../services/company.service';
-import { AppComponent } from '../../app.component';
-import { Staff } from '../../models/staff.model';
-import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 import { DescriptionSheetService } from '../../services/description-sheet.service';
-import { AuthService } from '../../services/auth.service';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'app-factsheetsList',
+  selector: 'app-factsheets-student-tab',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './factsheets-student-tab.component.html',
@@ -37,31 +36,21 @@ export class FactsheetsStudentTabComponent implements OnInit {
   loadedChildrenCount: number = 0;
   totalChildren: number = 2;
 
-
-
   constructor(
     private readonly studentService: StudentService,
     private readonly authService: AuthService,
     private readonly navigationService: NavigationService,
     private readonly companyService: CompanyService,
-    private readonly appComponent: AppComponent,
     private readonly DescriptionSheetService: DescriptionSheetService
   ) {}
 
     ngOnInit() {
-        const currentUser = this.authService.getCurrentUser();
-        if (currentUser) {
-            this.currentUser = currentUser;
-            } else {
-                // Gérer le cas où currentUser est undefined
-                console.error('Current user is undefined');
-                return;
-            }
-            
-            if (this.appComponent.isStudent(this.currentUser)) {
+        if (this.currentUser) {          
+            if (this.authService.isStudent(this.currentUser)) {
                 this.currentUserRole = 'STUDENT';
                 this.totalChildren = 2;
-            } else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+            }
+            else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
                 this.currentUserRole = 'INTERNSHIP_MANAGER';
                 this.totalChildren = 1;
             }
@@ -69,10 +58,10 @@ export class FactsheetsStudentTabComponent implements OnInit {
             this.loadedChildrenCount = 0;
             this.currentPageUrl = this.navigationService.getCurrentPageUrl();
             
-            if (this.appComponent.isStudent(this.currentUser)) {
+            if (this.authService.isStudent(this.currentUser)) {
                 this.currentUserId = this.currentUser.idUPPA;
                 this.currentUserRole = 'STUDENT';
-            } else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+            } else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
                 this.currentUserId = `${this.currentUser.idPersonnel}`;
                 this.currentUserRole = 'INTERNSHIP_MANAGER';
             }
@@ -86,6 +75,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
                 this.getFilteredSheetsWithCompanies();
             });
         }
+    }
     
     loadData(studentId: string) {
         forkJoin({

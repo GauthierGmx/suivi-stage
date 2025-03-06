@@ -5,12 +5,11 @@
         <app-loading/>
       }
       <div [hidden]="!allDataLoaded">
-        <h1 class="title">Journal de bord</h1>
-        <app-welcome-card [currentUser]="currentUser"/>
+        <app-breadcrumb [currentUserRole]="currentUserRole"/>
         <app-stats-cards [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
         
         @if (currentUserRole === 'STUDENT') {
-          <app-factsheetsList [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+          <app-factsheets-student-tab [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
         }
       </div>
     }
