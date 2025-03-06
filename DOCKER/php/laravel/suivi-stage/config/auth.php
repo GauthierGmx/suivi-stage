@@ -108,4 +108,28 @@ return [
 
     'password_timeout' => 10800,
 
+    /*
+    |--------------------------------------------------------------------------
+    | UPPA CAS properties
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the UPPA CAS authentification system used
+    | to log in a different way the users.
+    |
+    | This code is originally from a INSA CAS documentation that you can find here:
+    | https://wiki.etud.insa-toulouse.fr/books/utiliser-le-serveur/page/utiliser-le-cas-(recommand%C3%A9) 
+    | However, it has been modified, specifically the 'basename' argument required for the 1.6 version of apereo/phpCAS
+    |
+    | Also, to simplify changes of the arguments, you have to do it in your .env file 
+    |
+    */
+    'cas' => [
+        'debug'  => env('UPPA_CAS_DEBUG', false),
+        'server' => [
+            'hostname' => env('UPPA_CAS_HOSTNAME'),
+            'port'     => (int) env('UPPA_CAS_PORT'),
+            'uri'      => env('UPPA_CAS_URI'),
+            'basename' => env('UPPA_CAS_BASENAME'),
+        ],
+    ],
 ];
