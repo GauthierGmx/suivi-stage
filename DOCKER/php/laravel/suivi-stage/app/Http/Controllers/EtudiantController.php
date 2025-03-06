@@ -59,7 +59,24 @@ class EtudiantController extends Controller
      */
     public function show($id)
     {
-        //
+        try
+        {
+            $unEtudiant = Etudiant::findOrFail($id);
+            return response()->json($unEtudiant, 200);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
+        {
+            return response()->json([
+                'message' => 'Aucun étudiant trouvé'
+            ],404);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite',
+                'erreurs' => $e->getMessage()
+            ],500);
+        }
     }
 
     /**

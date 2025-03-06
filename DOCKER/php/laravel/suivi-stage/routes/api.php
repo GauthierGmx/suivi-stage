@@ -47,3 +47,4 @@ Route::get('/fiche-descriptive', [FicheDescriptiveController::class, 'index'])->
 Route::get('/etudiants/{id}/recherches-stages', [EtudiantController::class, 'indexRechercheStage'])->name('etudiants.indexRechercheStage');
 Route::get('/etudiants/{id}/fiches-descriptives', [EtudiantController::class, 'indexFicheDescriptive'])->name('etudiants.indexFicheDescriptive');
 Route::get('/etudiants', [EtudiantController::class, 'index'])->name('etudiants.index');
+Route::get('/etudiants/{id}', [EtudiantController::class, 'show'])->name('etudiants.show');

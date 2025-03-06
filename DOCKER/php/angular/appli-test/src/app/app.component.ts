@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { Staff } from './models/staff.model';
-import { Student } from './models/student.model';
 import { HeaderComponent } from './components/header/header.component';
 import { AuthService } from './services/auth.service';
+import { Observable } from 'rxjs';
+import { Student } from './models/student.model';
+import { Staff } from './models/staff.model';
 
 @Component({
   selector: 'app-root',
@@ -13,37 +14,21 @@ import { AuthService } from './services/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  currentUser?: Staff | Student;
+export class AppComponent implements OnInit {
+  currentUser$: Observable<Student | Staff | undefined>;
+  hasMarginTop = false;
 
-  constructor(private readonly authService: AuthService) {}
-
-  getIsAuthenticated(): boolean {
-    const elements = document.querySelectorAll('.main-content');
-  
-    if (this.authService.isAuthenticated()) {
-      elements.forEach(element => {
-        if (element instanceof HTMLElement) {
-          element.style.marginTop = '65px';
-        }
-      });
-      return true;
-    }
-    else {
-      elements.forEach(element => {
-        if (element instanceof HTMLElement) {
-          element.style.marginTop = '';
-        }
-      });
-      return false;
-    }
+  constructor(
+    private readonly authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.currentUser$ = this.authService.currentUser$;
   }
 
-  isStudent(user: Student | Staff | undefined): user is Student {
-    return !!user && 'idUPPA' in user && 'nomEtudiant' in user && 'prenomEtudiant' in user;
-  }
-      
-  isStaff(user: Student | Staff | undefined): user is Staff {
-    return !!user && 'idPersonnel' in user && 'nom' in user && 'prenom' in user && 'role' in user;
+  ngOnInit() {
+    this.authService.currentUser$.subscribe(user => {
+      this.hasMarginTop = !!user;
+      this.cdr.detectChanges();
+    });
   }
 }
