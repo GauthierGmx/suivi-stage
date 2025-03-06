@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use App\Models\Etudiant;
+use App\Models\Personnel;
 
 class CasAuthMiddleware
 {
@@ -23,10 +25,10 @@ class CasAuthMiddleware
         // CAS client configuration
         \phpCAS::client(
             CAS_VERSION_2_0,
-            env('auth.cas.server.hostname'),
-            env('auth.cas.server.port'),
-            env('auth.cas.server.uri'),
-            env('auth.cas.server.basename')
+            config('auth.cas.server.hostname'),
+            config('auth.cas.server.port'),
+            config('auth.cas.server.uri'),
+            config('auth.cas.server.basename'),
         );
 
         // TO BE REMOVED IN PRODUCTION (This methode deactivate the SSL verification)
@@ -63,7 +65,7 @@ class CasAuthMiddleware
                 'id' => $userType === "Etudiant" ? $user->idUPPA : $user->idPersonnel,
                 'user' => $user,
                 'user_type' => $userType
-            ])
+            ]);
         }
         return $next($request);
     }
