@@ -27,7 +27,7 @@ class EtudiantSeeder extends Seeder
             ],
             [
                 'idUPPA' => '610001',
-                'login' => 'mmontouro',
+                'login' => 'nconguisti',
                 'nom' => 'CONGUISTI',
                 'prenom' => 'Nicolas',
                 'adresseMail' => 'nconguisti@iutbayonne.univ-pau.fr',
