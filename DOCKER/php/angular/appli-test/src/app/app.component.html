@@ -1,9 +1,9 @@
 <div class="app-container">
   <link rel="icon" type="image/x-icon" href="/public/favicon.ico">
-  @if (getIsAuthenticated()) {
+  @if (currentUser$ | async) {
     <app-header/>
   }
-  <main class="main-content">
+  <main class="main-content" [ngClass]="{ 'with-margin': hasMarginTop }">
     <router-outlet/>
   </main>
-</div> 
+</div>

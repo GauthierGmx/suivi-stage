@@ -56,6 +56,56 @@ class EtudiantControllerTest extends TestCase
     ================================
     */
 
+    /**
+     * La méthode show va retourner une confirmation 200 et les détails de l'étudiant
+     * 
+     * @return void
+     */
+    public function test_show_renvoie_une_confirmation_et_les_informations_de_l_etudiant()
+    {
+        $unEtudiant = Etudiant::first();
+
+        $response = $this->get('/api/etudiants/'.$unEtudiant->idUPPA);
+
+        $response->assertStatus(200)
+                 ->assertJson($unEtudiant->toArray());
+    }
+
+    /**
+     * La méthode show va retourner une confirmation 404 si l'étudiant n'a pas été trouvée
+     * 
+     * @return void
+     */
+    public function test_show_renvoie_une_erreur_non_trouvee_en_cas_d_etudiant_non_trouvee()
+    {
+        $idEtudiant = PHP_INT_MAX;
+
+        $response = $this->get('/api/etudiants/'.$idEtudiant);
+
+        $response->assertStatus(404)
+                 ->assertJson(['message' => 'Aucun étudiant trouvé']);
+    }
+
+    /**
+     * La méthode show va retourner une erreur 500 en cas d'exception
+     * 
+     * @return void
+     */
+    public function test_show_renvoie_une_erreur_generique_en_cas_d_exception()
+    {
+        // Mock du modèle Etudiant pour déclencher une exception
+        $this->mock(\App\Http\Controllers\EtudiantController::class, function ($mock) {
+            $mock->shouldReceive('show')->andThrow(new \Exception('Erreur simulée'));
+        });
+
+        $unEtudiant = Etudiant::first();
+
+        $response = $this->get('/api/etudiants/'.$unEtudiant->idUPPA);
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite']);
+    }
+
     /*
     =================================
         TEST DE LA METHODE UPDATE

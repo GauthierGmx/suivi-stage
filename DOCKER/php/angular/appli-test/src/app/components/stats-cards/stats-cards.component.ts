@@ -8,7 +8,7 @@ import { NavigationService } from '../../services/navigation.service';
 import { StudentService } from '../../services/student.service';
 import { InternshipSearchService } from '../../services/internship-search.service';
 import { DescriptionSheetService } from '../../services/description-sheet.service';
-import { AppComponent } from '../../app.component';
+import { AuthService } from '../../services/auth.service';
 import { forkJoin } from 'rxjs';
 
 const VALIDED_INTERNSHIP_SEARCH_STATUT = 'Validé';
@@ -36,17 +36,17 @@ export class StatsCardsComponent implements OnInit {
     private studentService: StudentService,
     private internshipSearchService: InternshipSearchService,
     private descriptiveSheetService: DescriptionSheetService,
-    private appComponent: AppComponent
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.currentPageUrl = this.navigationService.getCurrentPageUrl();
 
-    if (this.appComponent.isStudent(this.currentUser)) {
+    if (this.authService.isStudent(this.currentUser)) {
       this.currentUserId = this.currentUser.idUPPA;
       this.currentUserRole = 'STUDENT';
     }
-    else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
       this.currentUserId = `${this.currentUser.idPersonnel}`;
       this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
