@@ -234,7 +234,7 @@ export class ListStudentTabComponent implements OnInit{
     }
 
     //Redirection vers la vue de consultation d'une recherche de stage
-    goToStudentSearchesView(studentId: string) {
-        this.navigationService.navigateToStudentSearchesView(studentId);
+    goToStudentDashboardManagerView(studentId: string) {
+        this.navigationService.navigateToStudentDashboardManagerView(studentId);
     }
 }

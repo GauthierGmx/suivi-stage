@@ -1,12 +1,9 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AppComponent } from '../../app.component';
-import { StudentService } from '../../services/student.service';
 import { Student } from '../../models/student.model';
-import { Subscription } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 
 interface BreadcrumbItem {
   label: string;
@@ -22,25 +19,16 @@ interface BreadcrumbItem {
 })
 export class BreadcrumbComponent implements OnInit, OnDestroy {
   @Input() currentUserRole?: string;
+  @Input() selectedStudent?: Student;
   breadcrumbs: BreadcrumbItem[] = [];
-  private selectedStudent?: Student | null = null;
   private subscription: Subscription = new Subscription();
 
   constructor(
-    private readonly router: Router,
-    private readonly studentService: StudentService
+    private readonly router: Router
   ) {}
 
   ngOnInit() {
-    // S'abonner aux changements de l'étudiant sélectionné
-    this.subscription.add(
-      this.studentService.getSelectedStudent().subscribe(student => {
-        this.selectedStudent = student;
-        this.generateBreadcrumbs();
-      })
-    );
-
-    // S'abonner aux changements de route
+// S'abonner aux changements de route
     this.subscription.add(
       this.router.events
         .pipe(filter(event => event instanceof NavigationEnd))
@@ -90,10 +78,8 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
       'INTERNSHIP_MANAGER': {
         'dashboard': 'suivi des étudiants',
         'factsheets': 'fiche descriptive',
-        'add-search-form': 'ajout recherche',
-        'update-search': 'modification recherche',
         'search-details': 'détails recherche',
-        'search-student-tab': this.selectedStudent?.prenom && this.selectedStudent?.nom
+        'student-dashboard': this.selectedStudent?.prenom && this.selectedStudent?.nom
           ? `Journal de ${this.selectedStudent.prenom} ${this.selectedStudent.nom}`
           : 'Journal de l\'étudiant'
       }
@@ -107,6 +93,10 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
       roleTranslations[word.toLowerCase()] || word
     );
     
+    if (path.toLowerCase() === 'student-dashboard' && this.currentUserRole === 'INTERNSHIP_MANAGER') {
+      return roleTranslations['student-dashboard'];
+    }
+
     // Met une majuscule uniquement au premier mot
     return translatedWords
       .map((word, index) => {

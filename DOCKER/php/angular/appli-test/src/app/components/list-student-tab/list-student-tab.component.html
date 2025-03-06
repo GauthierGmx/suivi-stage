@@ -80,7 +80,7 @@
         <tbody>
           @for (item of filteredStudentsDatas; track item.student.idUPPA) {
             <tr 
-              (click)="goToStudentSearchesView(item.student.idUPPA)"
+              (click)="goToStudentDashboardManagerView(item.student.idUPPA)"
             >
               <td class="firstTd">{{ item.student.prenom }} {{ item.student.nom }}</td>
               <td>{{ item.countSearches }}</td>
@@ -99,7 +99,7 @@
     @for (item of filteredStudentsDatas; track item.student.idUPPA) {
       <div 
         class="search-card"
-        (click)="goToStudentSearchesView(item.student.idUPPA)"
+        (click)="goToStudentDashboardManagerView(item.student.idUPPA)"
       >
         <div class="card-header">
           <h4>{{ item.student.prenom }} {{ item.student.nom }}</h4>

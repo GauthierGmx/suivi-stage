@@ -1,7 +1,7 @@
 <div class="content-box">
   <div class="titleAndAddSearchButton">
     <h3><b>Recherches de stage</b></h3>
-    <button
+    <button *ngIf="userRole != 'INTERNSHIP_MANAGER'"
       (click)="goToAddSearchFormView()"
     >
       Ajouter une recherche
@@ -72,7 +72,7 @@
             <th>Ville</th>
             <th>Date de création</th>
             <th>Statut</th>
-            <th>Action</th>
+            <th *ngIf="userRole != 'INTERNSHIP_MANAGER'">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -83,12 +83,12 @@
               <td class="firstTd">{{ item.company.raisonSociale }}</td>
               <td>{{ item.company.ville }}</td>
               <td>{{ item.search.dateCreation | date:'dd/MM/yyyy' }}</td>
-              <td>
+              <td [class.lastTd]="userRole === 'INTERNSHIP_MANAGER'">
                 <span [class]="getStatusClass(item.search.statut!)">
                   {{ getStatusLabel(item.search.statut!) }}
                 </span>
               </td>
-              <td class="lastTd">
+              <td *ngIf="userRole != 'INTERNSHIP_MANAGER'" class="lastTd">
                 <div class="action-icons">
                   <svg 
                     (click)="$event.stopPropagation(); goToUpdateSearchFormView(item.search.idRecherche)"
@@ -153,8 +153,8 @@
             {{ item.search.dateCreation | date:'dd/MM/yyyy' }}
           </p>
         </div>
-        <hr class="card-separator">
-        <div class="card-actions">
+        <hr *ngIf="userRole != 'INTERNSHIP_MANAGER'" class="card-separator">
+        <div *ngIf="userRole != 'INTERNSHIP_MANAGER'" class="card-actions">
           <svg 
             (click)="$event.stopPropagation(); goToUpdateSearchFormView(item.search.idRecherche)"
             class="edit-icon" 

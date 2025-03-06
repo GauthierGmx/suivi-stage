@@ -19,6 +19,7 @@ import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, 
 })
 export class SearchesStudentTabComponent implements OnInit {
     @Input() currentUser!: Student;
+    @Input() userRole?: string;
     @Output() dataLoaded = new EventEmitter<void>();
     companies?: Company[];
     searches?: InternshipSearch[];

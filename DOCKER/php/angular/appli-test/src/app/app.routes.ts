@@ -6,6 +6,7 @@ import { FactsheetsComponent } from './components/factsheets/factsheets.componen
 import { AddSearchFormComponent } from './components/add-search-form/add-search-form';
 import { SearchDetailsComponent } from './components/search-details/search-details.component';
 import { UpdateSearchComponent } from './components/update-search/update-search.component';
+import { StudentDashboardManagerComponent } from './components/student-dashboard-manager/student-dashboard-manager.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -32,6 +33,11 @@ export const routes: Routes = [
   {
     path: 'dashboard/update-search/:id',
     component: UpdateSearchComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'dashboard/student-dashboard/:id',
+    component: StudentDashboardManagerComponent,
     canActivate: [authGuard]
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' }
