@@ -17,6 +17,7 @@ class EtudiantSeeder extends Seeder
         DB::table('etudiants')->insert([
             [
                 'idUPPA' => '610000',
+                'login' => 'mmontouro',
                 'nom' => 'MONTOURO',
                 'prenom' => 'Maxime',
                 'adresseMail' => 'mmontour@iutbayonne.univ-pau.fr',
@@ -26,6 +27,7 @@ class EtudiantSeeder extends Seeder
             ],
             [
                 'idUPPA' => '610001',
+                'login' => 'mmontouro',
                 'nom' => 'CONGUISTI',
                 'prenom' => 'Nicolas',
                 'adresseMail' => 'nconguisti@iutbayonne.univ-pau.fr',
@@ -35,6 +37,7 @@ class EtudiantSeeder extends Seeder
             ],
             [
                 'idUPPA' => '611000',
+                'login' => 'fconstans',
                 'nom' => 'CONSTANS',
                 'prenom' => 'Fanny',
                 'adresseMail' => 'fconstant@iutbayonne.univ-pau.fr',
@@ -44,6 +47,7 @@ class EtudiantSeeder extends Seeder
             ],
             [
                 'idUPPA' => '611082',
+                'login' => 'smartin016',
                 'nom' => 'MARTIN',
                 'prenom' => 'Solène',
                 'adresseMail' => 'smartin@iutbayonne.univ-pau.fr',
@@ -53,6 +57,7 @@ class EtudiantSeeder extends Seeder
             ],
             [
                 'idUPPA' => '610459',
+                'login' => 'gvernis',
                 'nom' => 'VERNIS',
                 'prenom' => 'Gabriel',
                 'adresseMail' => 'gvernis@iutbayonne.univ-pau.fr',
@@ -62,6 +67,7 @@ class EtudiantSeeder extends Seeder
             ],
             [
                 'idUPPA' => '613453',
+                'login' => 'jloridant',
                 'nom' => 'LORIDANT',
                 'prenom' => 'Julien',
                 'adresseMail' => 'jloridant@iutbayonne.univ-pau.fr',
@@ -71,6 +77,7 @@ class EtudiantSeeder extends Seeder
             ],
             [
                 'idUPPA' => '610123',
+                'login' => 'lcrussiere',
                 'nom' => 'CRUSSIERE',
                 'prenom' => 'Lucas',
                 'adresseMail' => 'lcrussiere@iutbayonne.univ-pau.fr',
@@ -80,12 +87,23 @@ class EtudiantSeeder extends Seeder
             ],
             [
                 'idUPPA' => '610124',
+                'login' => 'elavergne001',
                 'nom' => 'LAVERGNE',
                 'prenom' => 'Elsa',
                 'adresseMail' => 'elavergne@iutbayonne.univ-pau.fr',
                 'idDepartement' => 1,
                 'idEntreprise' => 2,
                 'idTuteur' => 2
+            ],
+            [
+                'idUPPA' => '583303',
+                'login' => 'ggoumeaux001',
+                'nom' => 'GOUMEAUX',
+                'prenom' => 'Gauthier',
+                'adresseMail' => 'ggoumeaux001@iutbayonne.univ-pau.fr',
+                'idDepartement' => 1,
+                'idEntreprise' => 3,
+                'idTuteur' => 4
             ]
         ]);
     }
