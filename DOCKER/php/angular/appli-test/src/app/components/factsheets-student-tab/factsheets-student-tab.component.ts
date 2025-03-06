@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Student } from '../../models/student.model';
 import { Staff } from '../../models/staff.model';
 import { Company } from '../../models/company.model';
-import { DescriptiveSheet } from '../../models/description-sheet.model';
+import { Factsheets } from '../../models/description-sheet.model';
 import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
 import { StudentService } from '../../services/student.service';
 import { CompanyService } from '../../services/company.service';
-import { DescriptionSheetService } from '../../services/description-sheet.service';
+import { FactsheetsService } from '../../services/description-sheet.service';
 import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 
 @Component({
@@ -24,56 +24,42 @@ export class FactsheetsStudentTabComponent implements OnInit {
   @Output() dataLoaded = new EventEmitter<void>();
   currentUserId!: string;
   currentUserRole!: string;
-  currentPageUrl!: string;
   studentData?: Student;
   companies?: Company[];
-  sheets?: DescriptiveSheet[];
+  sheets?: Factsheets[];
   searchTerm: string = '';
   searchTermSubject = new Subject<string>();
-  FilteredSheetsWithCompanies: { sheet: DescriptiveSheet; company: Company }[] = [];
-  currentFilter: 'all' | 'date_asc' | 'date_desc' = 'all';
+  filteredSheetsWithCompanies: { sheet: Factsheets; company: Company }[] = [];
+  currentDateFilter: 'all' | 'date_asc' | 'date_desc' = 'all';
   allDataLoaded: Boolean = false;
-  loadedChildrenCount: number = 0;
-  totalChildren: number = 2;
 
   constructor(
     private readonly studentService: StudentService,
     private readonly authService: AuthService,
     private readonly navigationService: NavigationService,
     private readonly companyService: CompanyService,
-    private readonly DescriptionSheetService: DescriptionSheetService
+    private readonly factsheetsService: FactsheetsService
   ) {}
 
     ngOnInit() {
         if (this.currentUser) {          
             if (this.authService.isStudent(this.currentUser)) {
                 this.currentUserRole = 'STUDENT';
-                this.totalChildren = 2;
+                this.currentUserId = this.currentUser.idUPPA;
             }
             else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
                 this.currentUserRole = 'INTERNSHIP_MANAGER';
-                this.totalChildren = 1;
-            }
-            
-            this.loadedChildrenCount = 0;
-            this.currentPageUrl = this.navigationService.getCurrentPageUrl();
-            
-            if (this.authService.isStudent(this.currentUser)) {
-                this.currentUserId = this.currentUser.idUPPA;
-                this.currentUserRole = 'STUDENT';
-            } else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
                 this.currentUserId = `${this.currentUser.idPersonnel}`;
-                this.currentUserRole = 'INTERNSHIP_MANAGER';
             }
-            
-            this.loadData(this.currentUserId);
-            
+
             this.searchTermSubject.pipe(
                 debounceTime(800),
                 distinctUntilChanged()
             ).subscribe(() => {
                 this.getFilteredSheetsWithCompanies();
             });
+            
+            this.loadData(this.currentUserId);
         }
     }
     
@@ -81,7 +67,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
         forkJoin({
             student: this.studentService.getStudentById(studentId),
             companies: this.companyService.getCompanies(),
-            sheets: this.DescriptionSheetService.getSheetsByStudentId(studentId)
+            sheets: this.factsheetsService.getSheetsByStudentId(studentId)
         }).subscribe(({student, companies, sheets}) => {
                 this.studentData = student;
                 this.companies = companies;
@@ -103,18 +89,17 @@ export class FactsheetsStudentTabComponent implements OnInit {
             let searchesWithCompany = this.sheets.map(sheet => {
                 const company = searchCompanies.find(c => c.idEntreprise === sheet.idEntreprise);
                 return company ? { sheet, company } : null;
-            }).filter((result): result is { sheet: DescriptiveSheet; company: Company } => result !== null);
+            }).filter((result): result is { sheet: Factsheets; company: Company } => result !== null);
             
             // Appliquer les filtres
             searchesWithCompany = this.applyFilters(searchesWithCompany);
     
             // Mettre à jour la propriété qui déclenche la mise à jour du template
-            this.FilteredSheetsWithCompanies = searchesWithCompany;
-            console.log(this.FilteredSheetsWithCompanies);
+            this.filteredSheetsWithCompanies = searchesWithCompany;
         }
     }
     
-    applyFilters(sheets: { sheet: DescriptiveSheet; company: Company }[]) {
+    applyFilters(sheets: { sheet: Factsheets; company: Company }[]) {
         let filtered = [...sheets];
         const searchTermLower = this.searchTerm.toLowerCase().trim();
 
@@ -127,7 +112,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
         }
 
         // Appliquer les filtres de statut et de tri
-        switch (this.currentFilter) {
+        switch (this.currentDateFilter) {
             case 'date_asc':
                 filtered.sort((a, b) => a.sheet.dateCreation!.getTime() - b.sheet.dateCreation!.getTime());
                 break;
@@ -154,14 +139,14 @@ export class FactsheetsStudentTabComponent implements OnInit {
 
 
     toggleDateSort() {
-        if (this.currentFilter === 'date_asc') {
-            this.currentFilter = 'date_desc';
+        if (this.currentDateFilter === 'date_asc') {
+            this.currentDateFilter = 'date_desc';
         }
-        else if (this.currentFilter === 'date_desc') {
-            this.currentFilter = 'all';
+        else if (this.currentDateFilter === 'date_desc') {
+            this.currentDateFilter = 'all';
         }
         else {
-            this.currentFilter = 'date_asc';
+            this.currentDateFilter = 'date_asc';
         }
         this.getFilteredSheetsWithCompanies();
     }

@@ -1,7 +1,7 @@
 <div class="content-box">
-  @if (currentUserRole === 'STUDENT' && currentPageUrl === '/factsheets') {
+  @if (currentUserRole === 'STUDENT') {
     <div class="titleAndAddSearchButton">
-      <h3><b>Vos fiches descriptives</b></h3>
+      <h3><b>Fiches descriptives</b></h3>
       <button
         (click)="goToAddSearchFormView()"
       >
@@ -30,7 +30,7 @@
       <div class="filter-buttons">
         <button 
           class="filter-button"
-          [class.active]="currentFilter === 'date_asc' || currentFilter === 'date_desc'"
+          [class.active]="currentDateFilter === 'date_asc' || currentDateFilter === 'date_desc'"
           (click)="toggleDateSort()"
         >
           Date
@@ -52,7 +52,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (item of FilteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
+          @for (item of filteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
             <tr>
               <td class="firstTd">{{ item.company.raisonSociale }}</td>
               <td>{{ item.sheet.dateCreation | date:'dd/MM/yyyy' }}</td>
@@ -77,7 +77,7 @@
 
   <!-- Vue cards pour mobile -->
   <div class="cards-view">
-    @for (item of FilteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
+    @for (item of filteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
       <div class="search-card">
         <div class="card-header">
           <h4>{{ item.company.raisonSociale }}</h4>

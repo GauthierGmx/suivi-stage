@@ -38,16 +38,16 @@ export class SearchesStudentTabComponent implements OnInit {
         private readonly internshipSearchService: InternshipSearchService,
         private readonly navigationService: NavigationService,
         private readonly companyService: CompanyService
-    ) {
+    ) {}
+
+    ngOnInit() {
         this.searchTermSubject.pipe(
             debounceTime(800),
             distinctUntilChanged()
         ).subscribe(() => {
             this.applyFilters();
         });
-    }
 
-    ngOnInit() {
         this.loadData();
     }
 
