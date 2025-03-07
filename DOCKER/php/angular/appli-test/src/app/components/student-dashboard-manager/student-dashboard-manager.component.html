@@ -7,7 +7,7 @@
             <div *ngIf="selectedStudent" [hidden]="!allDataLoaded">
                 <app-breadcrumb [currentUserRole]="currentUserRole" [selectedStudent]="selectedStudent"/>
                 <app-stats-cards [currentUser]="currentUser" [selectedStudent]="selectedStudent" (dataLoaded)="onChildDataLoaded()"/>
-                <app-searches-student-tab [currentUser]="selectedStudent" [userRole]="currentUserRole" (dataLoaded)="onChildDataLoaded()"/>
+                <app-searches-student-tab [student]="selectedStudent" [currentUserRole]="currentUserRole" (dataLoaded)="onChildDataLoaded()"/>
             </div>
         }
     </div>
