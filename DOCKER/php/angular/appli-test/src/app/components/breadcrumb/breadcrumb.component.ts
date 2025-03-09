@@ -28,7 +28,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-// S'abonner aux changements de route
+    // S'abonner aux changements de route
     this.subscription.add(
       this.router.events
         .pipe(filter(event => event instanceof NavigationEnd))
@@ -47,14 +47,9 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
   private generateBreadcrumbs() {
     const paths = this.router.url.split('/')
-      .filter(path => path !== '');
+      .filter(path => path !== '' && !this.isNumeric(path)); // Exclut tous les nombres
     
-    // Vérifie si le dernier élément est un nombre
-    const filteredPaths = this.isNumeric(paths[paths.length - 1]) 
-      ? paths.slice(0, -1) 
-      : paths;
-    
-    this.breadcrumbs = filteredPaths.map((path, index) => {
+    this.breadcrumbs = paths.map((path, index) => {
       const url = '/' + paths.slice(0, index + 1).join('/');
       const label = this.formatLabel(path);
       return { label, url };
