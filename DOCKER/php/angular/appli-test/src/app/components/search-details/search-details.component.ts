@@ -29,7 +29,7 @@ export class SearchDetailsComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        const searchId = Number(this.route.snapshot.paramMap.get('id'));
+        const searchId = Number(this.route.snapshot.paramMap.get('idSearch'));
         
         if (searchId) {
             this.internshipSearchService.getSearchById(searchId).subscribe(

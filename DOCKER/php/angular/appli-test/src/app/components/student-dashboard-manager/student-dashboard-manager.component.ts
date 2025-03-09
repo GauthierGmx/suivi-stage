@@ -43,10 +43,9 @@ export class StudentDashboardManagerComponent implements OnInit {
       const student = await firstValueFrom(this.studentService.getStudentById(studentId));
 
       if (student) {
-        this.selectedStudent = student; 
+        this.selectedStudent = student;
+        sessionStorage.setItem('selectedStudent', JSON.stringify(this.selectedStudent)) 
       }
-
-      console.log(this.selectedStudent);
     }
   }
 

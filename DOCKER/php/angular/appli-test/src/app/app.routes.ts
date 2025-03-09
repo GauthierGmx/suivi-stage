@@ -10,6 +10,7 @@ import { StudentDashboardManagerComponent } from './components/student-dashboard
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+
   { 
     path: 'dashboard', 
     component: DashboardComponent,
@@ -26,9 +27,16 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'dashboard/search-details/:id',
+    path: 'dashboard/search-details/:idSearch',
     component: SearchDetailsComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    data: { role: 'STUDENT' }
+  },
+  {
+    path: 'dashboard/student-dashboard/:idStudent/search-details/:idSearch',
+    component: SearchDetailsComponent,
+    canActivate: [authGuard],
+    data: { role: 'INTERNSHIP_MANAGER' }
   },
   {
     path: 'dashboard/update-search/:id',
@@ -40,5 +48,6 @@ export const routes: Routes = [
     component: StudentDashboardManagerComponent,
     canActivate: [authGuard]
   },
+
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
