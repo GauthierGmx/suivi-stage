@@ -46,13 +46,24 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   }
 
   private generateBreadcrumbs() {
-    const paths = this.router.url.split('/')
-      .filter(path => path !== '' && !this.isNumeric(path)); // Exclut tous les nombres
-    
+    const rawPaths = this.router.url.split('/').filter(path => path !== '');
+    const paths: string[] = [];
+    const urls: string[] = [];
+    let lastUrlSegment = '';
+
+    rawPaths.forEach(path => {
+      if (this.isNumeric(path) && urls.length > 0) {
+        // Attache le nombre au dernier segment d'URL trouvé
+        urls[urls.length - 1] += '/' + path;
+      } else {
+        paths.push(path); // Ajoute uniquement les segments non numériques au chemin
+        lastUrlSegment = (urls.length > 0 ? urls[urls.length - 1] + '/' : '/') + path;
+        urls.push(lastUrlSegment);
+      }
+    });
+
     this.breadcrumbs = paths.map((path, index) => {
-      const url = '/' + paths.slice(0, index + 1).join('/');
-      const label = this.formatLabel(path);
-      return { label, url };
+      return { label: this.formatLabel(path), url: urls[index] };
     });
   }
 

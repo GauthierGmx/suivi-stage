@@ -95,4 +95,8 @@ export class SearchDetailsComponent implements OnInit {
             this.navigationService.navigateToSearchEditForm(this.search.idRecherche);
         }
     }
+
+    goBack() {
+        this.navigationService.goBack();
+    }
 }
