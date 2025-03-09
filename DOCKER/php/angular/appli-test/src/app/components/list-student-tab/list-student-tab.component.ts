@@ -134,8 +134,8 @@ export class ListStudentTabComponent implements OnInit{
             filteredDatas = filteredDatas.filter(data =>
                 data.student.nom!.toLowerCase().includes(searchTermLower) ||
                 data.student.prenom!.toLowerCase().includes(searchTermLower) ||
-                data.studyYear.toLowerCase().includes(searchTermLower) ||
-                data.TdGroup.toLowerCase().includes(searchTermLower)
+                data.studyYear?.toLowerCase().includes(searchTermLower) ||
+                data.TdGroup?.toLowerCase().includes(searchTermLower)
             );
         }
     
