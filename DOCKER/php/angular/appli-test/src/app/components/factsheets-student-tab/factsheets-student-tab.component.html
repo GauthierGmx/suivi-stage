@@ -1,0 +1,108 @@
+<div class="content-box">
+  @if (currentUserRole === 'STUDENT') {
+    <div class="titleAndAddSearchButton">
+      <h3><b>Fiches descriptives</b></h3>
+      <button
+        (click)="goToAddSearchFormView()"
+      >
+        Ajouter une fiche descriptive
+      </button>
+    </div>
+    <div class="searchBarAndfilters">
+      <div class="search-container">
+        <input 
+          type="text"
+          [(ngModel)] = 'searchTerm'
+          (input)="onSearchTermChange($event)"
+          placeholder="Rechercher sur un des champs..." 
+          class="search-input"
+        />
+        @if (searchTerm) {
+          <button 
+            (click)="clearSearchTerm()"
+            class="clear-button"
+          >
+            X
+          </button>
+        }
+      </div>
+  
+      <div class="filter-buttons">
+        <button 
+          class="filter-button"
+          [class.active]="currentDateFilter === 'date_asc' || currentDateFilter === 'date_desc'"
+          (click)="toggleDateSort()"
+        >
+          Date
+        </button>
+      </div>
+    </div>
+
+
+  <!-- Vue tableau pour desktop -->
+  <div class="table-view">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Entreprise</th>
+            <th>DAte création</th>
+            <th>Date modification</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
+            <tr>
+              <td class="firstTd">{{ item.company.raisonSociale }}</td>
+              <td>{{ item.sheet.dateCreation | date:'dd/MM/yyyy' }}</td>
+              <td>{{ item.sheet.dateDerniereModification | date:'dd/MM/yyyy' }}</td>
+              <td class="lastTd">
+                <button 
+                  class="view-button"
+                  (click)="viewSearchDetails(item.sheet.idFicheDescriptive)"
+                >
+                  Voir
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+  <!-- Vue cards pour mobile -->
+  <div class="cards-view">
+    @for (item of filteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
+      <div class="search-card">
+        <div class="card-header">
+          <h4>{{ item.company.raisonSociale }}</h4>
+        </div>
+        <div class="card-content">
+          <p class="location">
+            <span class="label">Date création:</span> 
+            {{ item.sheet.dateCreation | date:'dd/MM/yyyy' }}
+          </p>
+          <p class="date">
+            <span class="label">Date modification:</span> 
+            {{ item.sheet.dateDerniereModification | date:'dd/MM/yyyy' }}
+          </p>
+        </div>
+        <div class="card-footer">
+          <button 
+            class="view-button"
+            (click)="viewSearchDetails(item.sheet.idFicheDescriptive)"
+          >
+            Voir
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+}
+</div>
+

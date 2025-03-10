@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { DescriptiveSheet, SheetStatus } from '../models/description-sheet.model';
+import { Factsheets, SheetStatus } from '../models/description-sheet.model';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DescriptionSheetService {
+export class FactsheetsService {
   // Données de test
-  private mockSheets: DescriptiveSheet[] = [
+  private mockSheets: Factsheets[] = [
     {
       idFicheDescriptive: 1,
       dateCreation: new Date('2024-03-15'),
@@ -25,12 +25,12 @@ export class DescriptionSheetService {
       nbJourParSemaine: 5,
       nbHeureParSemaine: 35,
       clauseConfidentialite: true,
-      statut: 'BROUILLON',
+      statut: 'EN_REVISION',
       personnelTechnique: true,
       materielPrete: true,
       idEntreprise: 1,
       idTuteur: 1,
-      idUPPA: '101',
+      idUPPA: '610123',
       numeroConvention: 'CONV2024-001'
     },
     {
@@ -85,7 +85,7 @@ export class DescriptionSheetService {
 
   constructor(private http: HttpClient) {}
 
-  getSheets(fields?: string[]): Observable<DescriptiveSheet[]> {
+  getSheets(fields?: string[]): Observable<Factsheets[]> {
     let params = new HttpParams();
     
     if (fields && fields.length > 0) {
@@ -93,16 +93,19 @@ export class DescriptionSheetService {
     }
 
     /*
-    return this.http.get<DescriptiveSheet[]>('http://localhost:8000/api/fiche-descriptive', {params}).pipe(
+    return this.http.get<Factsheets[]>('http://localhost:8000/api/fiche-descriptive', {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
     */
 
-    return of(this.mockSheets);
+    return of(this.mockSheets).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
   }
 
-  getSheetsByStudentId(studentId: string, fields?: string[]): Observable<DescriptiveSheet[]> {
+  getSheetsByStudentId(studentId: string, fields?: string[]): Observable<Factsheets[]> {
     let params = new HttpParams();
     
     if (fields && fields.length > 0) {
@@ -110,16 +113,19 @@ export class DescriptionSheetService {
     }
 
     /*
-    return this.http.get<DescriptiveSheet[]>(`http://localhost:8000/api/etudiants/${studentId}/fiches-descriptives`, {params}).pipe(
+    return this.http.get<Factsheets[]>(`http://localhost:8000/api/etudiants/${studentId}/fiches-descriptives`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
     */
 
-    return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId));
+    return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId)).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
   }
 
-  getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus, fields?: string[]): Observable<DescriptiveSheet[]> {
+  getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus, fields?: string[]): Observable<Factsheets[]> {
     let params = new HttpParams();
 
     if (fields && fields.length > 0) {
@@ -127,17 +133,20 @@ export class DescriptionSheetService {
     }
 
     /*
-    return this.http.get<DescriptiveSheet[]>(`http://localhost:8000/api/`, {params}).pipe(
+    return this.http.get<Factsheets[]>(`http://localhost:8000/api/`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
     */
 
-    return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
+    return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut)).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
   }
 
-  addSheet(sheet: Omit<DescriptiveSheet, 'idFicheDescriptive'>): Observable<DescriptiveSheet> {
-    const newSheet: DescriptiveSheet = {
+  addSheet(sheet: Omit<Factsheets, 'idFicheDescriptive'>): Observable<Factsheets> {
+    const newSheet: Factsheets = {
       ...sheet,
       idFicheDescriptive: Math.max(...this.mockSheets.map(s => s.idFicheDescriptive)) + 1,
       dateCreation: new Date()
@@ -146,7 +155,7 @@ export class DescriptionSheetService {
     return of(newSheet);
   }
 
-  updateSheet(id: number, sheetData: Partial<DescriptiveSheet>): Observable<DescriptiveSheet> {
+  updateSheet(id: number, sheetData: Partial<Factsheets>): Observable<Factsheets> {
     const index = this.mockSheets.findIndex(s => s.idFicheDescriptive === id);
     if (index !== -1) {
       this.mockSheets[index] = {

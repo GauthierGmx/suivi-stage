@@ -1,4 +1,4 @@
-export class DescriptiveSheet {
+export class Factsheets {
   idFicheDescriptive: number;
   dateCreation: Date | null;
   dateDerniereModification: Date | null;
