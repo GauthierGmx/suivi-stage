@@ -49,7 +49,7 @@ export class UpdateSearchComponent {
             if (term) {
                 this.filteredCompanies = this.companies
                     .filter(company => 
-                        company.raisonSociale.toLowerCase()
+                        company.raisonSociale!.toLowerCase()
                         .includes(term.toLowerCase())
                     )
                     .slice(0, 10);
@@ -69,19 +69,19 @@ export class UpdateSearchComponent {
             this.updatedSearch = search
         };
 
-        const company = await firstValueFrom(this.companyService.getCompanyById(this.updatedSearch.idEntreprise));
+        const company = await firstValueFrom(this.companyService.getCompanyById(this.updatedSearch.idEntreprise!, ['idEntreprise', 'raisonSociale', 'adresse', 'codePostal', 'ville']));
         if (company) {
             this.selectCompany(company)
         };
 
         //Récupération du currentUser
-        const user = localStorage.getItem('currentUser');
+        const user = sessionStorage.getItem('currentUser');
         if (user) {
             this.currentUser = JSON.parse(user);
         }
 
         //Récupération de toutes les entreprises
-        this.companyService.getCompanies()
+        this.companyService.getCompanies(['idEntreprise', 'raisonSociale', 'adresse', 'codePostal', 'ville'])
         .subscribe(companies => {
             this.companies = companies;
             this.dataLoaded = true;
@@ -125,25 +125,25 @@ export class UpdateSearchComponent {
     isFormValid(): boolean {
         return !!(
             this.updatedSearch.idEntreprise &&
-            this.updatedSearch.nomContact.trim() &&
-            this.updatedSearch.prenomContact.trim() &&
-            this.updatedSearch.fonctionContact.trim() &&
-            this.updatedSearch.telephoneContact?.match(/^[0-9]{10}$/) &&
-            this.updatedSearch.adresseMailContact?.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) &&
-            this.updatedSearch.date1erContact &&
-            this.updatedSearch.typeContact.trim() &&
-            this.updatedSearch.statut.trim()
+            this.updatedSearch.nomContact!.trim() &&
+            this.updatedSearch.prenomContact!.trim() &&
+            this.updatedSearch.fonctionContact!.trim() &&
+            this.updatedSearch.telephoneContact!.match(/^[0-9]{10}$/) &&
+            this.updatedSearch.adresseMailContact!.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) &&
+            this.updatedSearch.date1erContact! &&
+            this.updatedSearch.typeContact!.trim() &&
+            this.updatedSearch.statut!.trim()
         );
     }
 
     //Vérification si le formulaire de l'entreprise est valide
     isCompanyFormValid(): boolean {
         return !!(
-            this.newCompany.raisonSociale.trim() &&
-            this.newCompany.adresse.trim() &&
-            this.newCompany.codePostal?.match(/^\d{5}$/) &&
-            this.newCompany.ville.trim() &&
-            this.newCompany.pays.trim()
+            this.newCompany.raisonSociale!.trim() &&
+            this.newCompany.adresse!.trim() &&
+            this.newCompany.codePostal!.match(/^\d{5}$/) &&
+            this.newCompany.ville!.trim() &&
+            this.newCompany.pays!.trim()
         );
     }
 
@@ -222,7 +222,7 @@ export class UpdateSearchComponent {
     selectCompany(company: Company) {
         this.selectedCompany = company;
         this.updatedSearch.idEntreprise = company.idEntreprise;
-        this.searchTerm = company.raisonSociale;
+        this.searchTerm = company.raisonSociale ? company.raisonSociale : '';
         this.showDropdown = false;
     }
 }

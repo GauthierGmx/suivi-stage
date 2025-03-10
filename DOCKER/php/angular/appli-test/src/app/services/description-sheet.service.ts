@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DescriptiveSheet, SheetStatus } from '../models/description-sheet.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
@@ -85,15 +85,54 @@ export class DescriptionSheetService {
 
   constructor(private http: HttpClient) {}
 
-  getSheets(): Observable<DescriptiveSheet[]> {
+  getSheets(fields?: string[]): Observable<DescriptiveSheet[]> {
+    let params = new HttpParams();
+    
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    /*
+    return this.http.get<DescriptiveSheet[]>('http://localhost:8000/api/fiche-descriptive', {params}).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    */
+
     return of(this.mockSheets);
   }
 
-  getSheetsByStudentId(studentId: string): Observable<DescriptiveSheet[]> {
+  getSheetsByStudentId(studentId: string, fields?: string[]): Observable<DescriptiveSheet[]> {
+    let params = new HttpParams();
+    
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    /*
+    return this.http.get<DescriptiveSheet[]>(`http://localhost:8000/api/etudiants/${studentId}/fiches-descriptives`, {params}).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    */
+
     return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId));
   }
 
-  getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus): Observable<DescriptiveSheet[]> {
+  getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus, fields?: string[]): Observable<DescriptiveSheet[]> {
+    let params = new HttpParams();
+
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    /*
+    return this.http.get<DescriptiveSheet[]>(`http://localhost:8000/api/`, {params}).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    */
+
     return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
   }
 

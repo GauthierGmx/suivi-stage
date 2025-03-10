@@ -1,0 +1,431 @@
+/* Container principal */
+.content-box {
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    display: block;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+/* En-tête avec titre et bouton */
+.titleAndAddSearchButton {
+    padding: 5px 0 5px 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.titleAndAddSearchButton h3 {
+    color: #08A28A;
+}
+
+.titleAndAddSearchButton button {
+    padding: 5px 8px 7px;
+    border-radius: 8px;
+    background-color: #0A63A4;
+    color: white;
+}
+
+.titleAndAddSearchButton button:active {
+    background-color: #338ccd;
+    transform: translate(1px, 1px);
+}
+
+/* Barre de recherche et filtres */
+.searchBarAndfilters {
+    padding: 0 5px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.search-container {
+    position: relative;
+    margin-bottom: 16px;
+    min-width: 250px;
+    flex: 1;
+    max-width: 300px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    padding-right: 40px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+}
+
+.clear-button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+/* Boutons de filtres */
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 2;
+}
+
+.filter-button {
+    padding: 8px 16px;
+    border: 1px solid #E5E7EB;
+    border-radius: 9999px;
+    background: white;
+    min-width: 100px;
+    max-width: 165px;
+    font-size: 14px;
+    font-weight: 500;
+    justify-content: center;
+    flex: 1;
+    appearance: none;
+    -webkit-appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 1em;
+    padding-right: 32px;
+}
+
+/* Styles spécifiques pour le bouton de tri par date */
+.filter-button.date_asc {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.filter-button.date_desc {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='18 15 12 9 6 15'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.filter-button.default {
+    background-image: none;
+}
+
+.filter-button.active {
+    background-color: #F3F4F6;
+}
+
+select.filter-button {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+select.filter-button:not(:focus) {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='9 18 15 12 9 6'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+/* Tableau */
+.table-container {
+    overflow-x: auto;
+    margin: 0 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    min-width: 800px;
+}
+
+th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+tbody td {
+    background-clip: padding-box;
+    padding: 15px;
+}
+
+.firstTd {
+    border-radius: 16px 0 0 16px;
+}
+
+.lastTd {
+    padding-left: 1rem !important;
+    text-align: left;
+    border-radius: 0 16px 16px 0;
+}
+
+tbody tr {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+/* Couleurs de base */
+tbody tr:nth-child(odd) td {
+    background-color: #eee4ff;
+}
+
+tbody tr:nth-child(even) td {
+    background-color: #d7ebff;
+}
+
+/* Couleurs au survol pour les lignes impaires */
+tbody tr:nth-child(odd):hover td {
+    background-color: #dcc6ff !important;
+}
+
+tbody tr:nth-child(odd):hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #c094ff;
+    border-radius: 16px;
+    pointer-events: none;
+}
+
+/* Couleurs au survol pour les lignes paires */
+tbody tr:nth-child(even):hover td {
+    background-color: #b8dcff !important;
+}
+
+tbody tr:nth-child(even):hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #4a8fd0;
+    border-radius: 16px;
+    pointer-events: none;
+}
+
+/* Badges de statut */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-badge.relance {
+    background-color: #d6b1fe;
+}
+
+.status-badge.valide {
+    background-color: #9bfdbe;
+}
+
+.status-badge.en-attente {
+    background-color: #a4ccff;
+}
+
+.status-badge.refuse {
+    background-color: #fda6a6;
+}
+
+/* Vue cards */
+.table-view {
+    display: block;
+}
+
+.cards-view {
+    display: none;
+    padding: 0 16px;
+    margin-top: 20px;
+}
+
+.search-card {
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 3px solid transparent;
+}
+
+.search-card:hover {
+    border: 3px solid #4a8fd0;
+    background-color: #b8dcff;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.card-header h4 {
+    margin: 0;
+    color: #2d3748;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.card-content {
+    margin-bottom: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.card-content p {
+    margin: 0;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.card-content .label {
+    font-weight: 500;
+    color: #4a5568;
+    margin-right: 8px;
+    min-width: 45px;
+}
+
+/* Media Queries */
+@media (max-width: 950px) {
+    .table-view {
+        display: none;
+    }
+
+    .cards-view {
+        display: block;
+    }
+
+    .searchBarAndfilters {
+        flex-direction: column;
+        gap: 10px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .search-container {
+        width: 100%;
+        max-width: none;
+        margin-bottom: 10px;
+    }
+
+    .filter-buttons {
+        width: 100%;
+        display: flex;
+        align-items: start;
+        justify-content: start;
+    }
+
+    .filter-button {
+        width: 100%;
+        min-width: 135px;
+        padding: 6px 12px;
+    }
+
+    .search-card {
+        position: relative;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-separator {
+        margin: 1rem 0;
+        border: none;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .card-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 1rem;
+        gap: 1rem;
+    }
+
+    .card-actions .edit-icon, 
+    .card-actions .delete-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .card-actions .edit-icon:hover, 
+    .card-actions .delete-icon:hover {
+        transform: translateY(-2px);  /* Même effet sur mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .searchBarAndfilters {
+        padding: 0 8px;
+    }
+
+    .filter-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-button {
+        max-width: 150px;
+        min-width: 135px;
+    }
+
+    .search-input {
+        font-size: 14px;
+    }
+
+    .card-content {
+        grid-template-columns: 1fr;
+    }
+
+    .card-header {
+        flex-direction: flex;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .status-badge {
+        align-self: flex-start;
+    }
+}
+
+/* Style pour les icônes d'action */
+.action-icons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 40%;
+    width: 100%;
+}
+
+.edit-icon, .delete-icon {
+    cursor: pointer;
+    transition: all 0.2s ease;  /* Ajout de la transition pour tous les effets */
+}
+
+.edit-icon {
+    color: #0A63A4;
+}
+
+.edit-icon:hover {
+    color: #338ccd;
+    transform: translateY(-3px);  /* Effet de surélévation */
+}
+
+.delete-icon {
+    color: #dc2626;
+}
+
+.delete-icon:hover {
+    color: #ef4444;
+    transform: translateY(-3px);  /* Effet de surélévation */
+}

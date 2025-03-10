@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Student } from '../../models/student.model';
+import { Subscription, filter } from 'rxjs';
 
 interface BreadcrumbItem {
   label: string;
@@ -16,35 +17,53 @@ interface BreadcrumbItem {
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.css']
 })
-export class BreadcrumbComponent implements OnInit {
+export class BreadcrumbComponent implements OnInit, OnDestroy {
+  @Input() currentUserRole?: string;
+  @Input() selectedStudent?: Student;
   breadcrumbs: BreadcrumbItem[] = [];
+  private subscription: Subscription = new Subscription();
 
-  constructor(private router: Router) {}
+  constructor(
+    private readonly router: Router
+  ) {}
 
   ngOnInit() {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.generateBreadcrumbs();
-      });
+    // S'abonner aux changements de route
+    this.subscription.add(
+      this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))
+        .subscribe(() => {
+          this.generateBreadcrumbs();
+        })
+    );
     
     // Générer les breadcrumbs initiaux
     this.generateBreadcrumbs();
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
   private generateBreadcrumbs() {
-    const paths = this.router.url.split('/')
-      .filter(path => path !== '');
-    
-    // Vérifie si le dernier élément est un nombre
-    const filteredPaths = this.isNumeric(paths[paths.length - 1]) 
-      ? paths.slice(0, -1) 
-      : paths;
-    
-    this.breadcrumbs = filteredPaths.map((path, index) => {
-      const url = '/' + paths.slice(0, index + 1).join('/');
-      const label = this.formatLabel(path);
-      return { label, url };
+    const rawPaths = this.router.url.split('/').filter(path => path !== '');
+    const paths: string[] = [];
+    const urls: string[] = [];
+    let lastUrlSegment = '';
+
+    rawPaths.forEach(path => {
+      if (this.isNumeric(path) && urls.length > 0) {
+        // Attache le nombre au dernier segment d'URL trouvé
+        urls[urls.length - 1] += '/' + path;
+      } else {
+        paths.push(path); // Ajoute uniquement les segments non numériques au chemin
+        lastUrlSegment = (urls.length > 0 ? urls[urls.length - 1] + '/' : '/') + path;
+        urls.push(lastUrlSegment);
+      }
+    });
+
+    this.breadcrumbs = paths.map((path, index) => {
+      return { label: this.formatLabel(path), url: urls[index] };
     });
   }
 
@@ -53,20 +72,37 @@ export class BreadcrumbComponent implements OnInit {
   }
 
   private formatLabel(path: string): string {
-    // Traduit les termes
-    const translations: { [key: string]: string } = {
-      'dashboard': 'journal de bord',
-      'factsheets': 'fiche descriptive',
-      'add-search-form': 'ajout recherche',
-      'update-search': 'modification recherche',
-      'search-details': 'consultation recherche'
+    // Dictionnaire de traduction selon le rôle
+    const translations: { [key: string]: { [key: string]: string } } = {
+      'STUDENT': {
+        'dashboard': 'journal de bord',
+        'factsheets': 'fiche descriptive',
+        'add-search-form': 'ajout recherche',
+        'update-search': 'modification recherche',
+        'search-details': 'consultation recherche'
+      },
+      'INTERNSHIP_MANAGER': {
+        'dashboard': 'suivi des étudiants',
+        'factsheets': 'fiche descriptive',
+        'search-details': 'détails recherche',
+        'student-dashboard': this.selectedStudent?.prenom && this.selectedStudent?.nom
+          ? `Journal de ${this.selectedStudent.prenom} ${this.selectedStudent.nom}`
+          : 'Journal de l\'étudiant'
+      }
     };
+    
+    // Utilise les traductions du rôle actuel ou STUDENT par défaut
+    const roleTranslations = translations[this.currentUserRole || 'STUDENT'];
     
     // Traduit chaque mot s'il existe dans le dictionnaire
     const translatedWords = path.split(' ').map(word => 
-      translations[word.toLowerCase()] || word
+      roleTranslations[word.toLowerCase()] || word
     );
     
+    if (path.toLowerCase() === 'student-dashboard' && this.currentUserRole === 'INTERNSHIP_MANAGER') {
+      return roleTranslations['student-dashboard'];
+    }
+
     // Met une majuscule uniquement au premier mot
     return translatedWords
       .map((word, index) => {

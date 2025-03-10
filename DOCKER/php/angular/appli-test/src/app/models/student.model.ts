@@ -1,39 +1,39 @@
 export class Student {
   idUPPA: string;
-  nomEtudiant: string;
-  prenomEtudiant: string;
-  adresseEtudiant: string;
-  villeEtudiant: string;
-  codePostalEtudiant: string;
-  telephoneEtudiant: string;
-  adresseMailEtudiant: string;
-  idParcours: number;
-  idDepartement: number;
+  nom: string | null;
+  prenom: string | null;
+  adresse: string | null;
+  ville: string | null;
+  codePostal: string | null;
+  telephone: string | null;
+  adresseMail: string | null;
+  idParcours: number | null;
+  idDepartement: number | null;
   idEntreprise: number | null;
   idTuteur: number | null;
 
   constructor(
     idUPPA: string,
-    nomEtudiant: string,
-    prenomEtudiant: string,
-    adresseEtudidant: string,
-    villeEtudiant: string,
-    codePostalEtudiant: string,
-    telephoneEtudiant: string,
-    adresseMailEtudiant: string,
-    idParcours: number,
-    idDepartement: number = 1,
+    nom: string,
+    prenom: string,
+    adresse: string | null,
+    ville: string | null,
+    codePostal: string | null,
+    telephone: string | null,
+    adresseMail: string | null,
+    idParcours: number | null,
+    idDepartement: number | null,
     idEntreprise: number | null,
     idTuteur: number | null
   ) {
     this.idUPPA = idUPPA;
-    this.nomEtudiant = nomEtudiant;
-    this.prenomEtudiant = prenomEtudiant;
-    this.adresseEtudiant = adresseEtudidant;
-    this.villeEtudiant = villeEtudiant;
-    this.codePostalEtudiant = codePostalEtudiant;
-    this.telephoneEtudiant = telephoneEtudiant;
-    this.adresseMailEtudiant = adresseMailEtudiant;
+    this.nom = nom;
+    this.prenom = prenom;
+    this.adresse = adresse;
+    this.ville = ville;
+    this.codePostal = codePostal;
+    this.telephone = telephone;
+    this.adresseMail = adresseMail;
     this.idParcours = idParcours;
     this.idDepartement = idDepartement;
     this.idEntreprise = idEntreprise;

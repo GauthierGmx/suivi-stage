@@ -10,13 +10,24 @@ use Illuminate\Http\Request;
 class EtudiantController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Retourne tous les étudiants
      *
+     * @param \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $fields = explode(',', $request->query('fields', '*'));
+
+        $allowedFields = ['idUPPA','nom','prenom',
+                          'adresse','ville','codePostal',
+                          'telephone','adresseMail','idDepartement',
+                          'idEntreprise','idTuteur'];
+        $fields = array_intersect($fields, $allowedFields);
+
+        $etudiants = Etudiant::select(empty($fields) ? '*' : $fields)->get();
+
+        return response()->json($etudiants, 200);
     }
 
     /**
@@ -48,7 +59,24 @@ class EtudiantController extends Controller
      */
     public function show($id)
     {
-        //
+        try
+        {
+            $unEtudiant = Etudiant::findOrFail($id);
+            return response()->json($unEtudiant, 200);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
+        {
+            return response()->json([
+                'message' => 'Aucun étudiant trouvé'
+            ],404);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite',
+                'erreurs' => $e->getMessage()
+            ],500);
+        }
     }
 
     /**

@@ -1,14 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Staff } from '../../../models/staff.model';
-import { Student } from '../../../models/student.model';
-import { InternshipSearch, SearchStatus } from '../../../models/internship-search.model';
-import { DescriptiveSheet, SheetStatus } from '../../../models/description-sheet.model';
-import { NavigationService } from '../../../services/navigation.service';
-import { StudentService } from '../../../services/student.service';
-import { InternshipSearchService } from '../../../services/internship-search.service';
-import { DescriptionSheetService } from '../../../services/description-sheet.service';
-import { AppComponent } from '../../../app.component';
+import { Staff } from '../../models/staff.model';
+import { Student } from '../../models/student.model';
+import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
+import { DescriptiveSheet, SheetStatus } from '../../models/description-sheet.model';
+import { NavigationService } from '../../services/navigation.service';
+import { StudentService } from '../../services/student.service';
+import { InternshipSearchService } from '../../services/internship-search.service';
+import { DescriptionSheetService } from '../../services/description-sheet.service';
+import { AuthService } from '../../services/auth.service';
 import { forkJoin } from 'rxjs';
 
 const VALIDED_INTERNSHIP_SEARCH_STATUT = 'Validé';
@@ -32,31 +32,30 @@ export class StatsCardsComponent implements OnInit {
   descriptiveSheets!: DescriptiveSheet[];
 
   constructor(
-    private readonly navigationService: NavigationService,
-    private readonly studentService: StudentService,
-    private readonly internshipSearchService: InternshipSearchService,
-    private readonly descriptiveSheetService: DescriptionSheetService,
-    private readonly appComponent: AppComponent
-  )
-  {}
+    private navigationService: NavigationService,
+    private studentService: StudentService,
+    private internshipSearchService: InternshipSearchService,
+    private descriptiveSheetService: DescriptionSheetService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.currentPageUrl = this.navigationService.getCurrentPageUrl();
 
-    if (this.appComponent.isStudent(this.currentUser)) {
+    if (this.authService.isStudent(this.currentUser)) {
       this.currentUserId = this.currentUser.idUPPA;
       this.currentUserRole = 'STUDENT';
     }
-    else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
       this.currentUserId = `${this.currentUser.idPersonnel}`;
       this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
 
     // Utiliser forkJoin pour attendre que toutes les données soient chargées
     forkJoin({
-      students: this.studentService.getStudents(),
-      searches: this.internshipSearchService.getSearches(),
-      sheets: this.descriptiveSheetService.getSheets()
+      students: this.studentService.getStudents(['idUPPA']),
+      searches: this.internshipSearchService.getSearches(['idRecherche', 'statut', 'idUPPA']),
+      sheets: this.descriptiveSheetService.getSheets(['idFicheDescriptive', 'statut', 'idUPPA'])
     }).subscribe(({students, searches, sheets}) => {
         this.students = students;
         this.searches = searches;
@@ -131,8 +130,8 @@ export class StatsCardsComponent implements OnInit {
     }
     return this.searches.filter(search =>
       search.idUPPA === studentId &&
-      search.dateCreation > this.getLastWeekDate() &&
-      search.dateCreation <= this.getCurrentDate()
+      search.dateCreation! > this.getLastWeekDate() &&
+      search.dateCreation! <= this.getCurrentDate()
     ).length
   }
 
@@ -169,8 +168,10 @@ export class StatsCardsComponent implements OnInit {
     return new Date();
   }
 
-  getLastWeekDate() {
+  getLastWeekDate(): Date {
     const today = new Date();
-    return new Date(today.getDate() - 7);
+    let lastWeekDate = today;
+    lastWeekDate.setDate(today.getDate() - 7);
+    return today;
   }
 }

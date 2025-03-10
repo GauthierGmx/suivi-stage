@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Company } from '../models/company.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
@@ -10,15 +10,27 @@ export class CompanyService {
 
   constructor(private http: HttpClient) {}
 
-  getCompanies(): Observable<Company[]> {
-    return this.http.get<Company[]>('http://localhost:8000/api/entreprises').pipe(
+  getCompanies(fields?: string[]): Observable<Company[]> {
+    let params = new HttpParams();
+
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    return this.http.get<Company[]>('http://localhost:8000/api/entreprises', {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, []))
     );
   }
 
-  getCompanyById(idCompany: number): Observable<Company | undefined> {
-    return this.http.get<Company>(`http://localhost:8000/api/entreprises/${idCompany}`).pipe(
+  getCompanyById(idCompany: number, fields?: string[]): Observable<Company | undefined> {
+    let params = new HttpParams();
+
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    return this.http.get<Company>(`http://localhost:8000/api/entreprises/${idCompany}`, {params}).pipe(
       tap(response => this.log(response)),
       catchError((error) => this.handleError(error, undefined))
     );

@@ -1,10 +1,9 @@
 import { Component, OnInit, HostListener, ElementRef } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { Staff } from '../../../models/staff.model'
-import { Student } from '../../../models/student.model'
-import { AuthService } from '../../../services/auth.service'
-import { AppComponent } from '../../../app.component'
+import { Staff } from '../../models/staff.model'
+import { Student } from '../../models/student.model'
+import { AuthService } from '../../services/auth.service'
 
 @Component({
     selector: 'app-header',
@@ -23,21 +22,20 @@ export class HeaderComponent implements OnInit {
 
     constructor(
         private readonly authService: AuthService,
-        private readonly appComponent: AppComponent,
         private readonly elementRef: ElementRef
     ) {}
 
     ngOnInit() {
         this.currentUser = this.authService.getCurrentUser();
 
-        if (this.appComponent.isStudent(this.currentUser)) {
-            this.nomCurrentUser = this.currentUser.nomEtudiant;
-            this.prenomCurrentUser = this.currentUser.prenomEtudiant;
+        if (this.authService.isStudent(this.currentUser)) {
+            this.nomCurrentUser = this.currentUser.nom ? this.currentUser.nom : '';
+            this.prenomCurrentUser = this.currentUser.prenom ? this.currentUser.prenom : '';
             this.currentUserRole = 'STUDENT';
         }
-        else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-            this.nomCurrentUser = this.currentUser.nom;
-            this.prenomCurrentUser = this.currentUser.prenom;
+        else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+            this.nomCurrentUser = this.currentUser.nom ? this.currentUser.nom : '';
+            this.prenomCurrentUser = this.currentUser.prenom ? this.currentUser.prenom : '';
             this.currentUserRole = 'INTERNSHIP_MANAGER';
         }
     }

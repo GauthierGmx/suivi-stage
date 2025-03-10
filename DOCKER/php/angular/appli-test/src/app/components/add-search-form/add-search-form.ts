@@ -48,7 +48,7 @@ export class AddSearchFormComponent implements OnInit {
             if (term) {
                 this.filteredCompanies = this.companies
                     .filter(company => 
-                        company.raisonSociale.toLowerCase()
+                        company.raisonSociale!.toLowerCase()
                         .includes(term.toLowerCase())
                     )
                     .slice(0, 10);
@@ -72,7 +72,7 @@ export class AddSearchFormComponent implements OnInit {
         }
 
         // Récupération des entreprises
-        this.companyService.getCompanies()
+        this.companyService.getCompanies(['idEntreprise', 'raisonSociale', 'adresse', 'codePostal', 'ville'])
             .subscribe(companies => {
                 this.companies = companies;
                 this.dataLoaded = true;
@@ -112,24 +112,24 @@ export class AddSearchFormComponent implements OnInit {
     isFormValid(): boolean {
         return !!(
             this.newSearch.idEntreprise &&
-            this.newSearch.nomContact.trim() &&
-            this.newSearch.prenomContact.trim() &&
-            this.newSearch.fonctionContact.trim() &&
-            this.newSearch.telephoneContact?.match(/^[0-9]{10}$/) &&
-            this.newSearch.adresseMailContact?.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) &&
-            this.newSearch.date1erContact &&
-            this.newSearch.typeContact.trim() &&
-            this.newSearch.statut.trim()
+            this.newSearch.nomContact!.trim() &&
+            this.newSearch.prenomContact!.trim() &&
+            this.newSearch.fonctionContact!.trim() &&
+            this.newSearch.telephoneContact!.match(/^(\+33|0)\d{9}$/) &&
+            this.newSearch.adresseMailContact!.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) &&
+            this.newSearch.date1erContact! &&
+            this.newSearch.typeContact!.trim() &&
+            this.newSearch.statut!.trim()
         );
     }
 
     isCompanyFormValid(): boolean {
         return !!(
-            this.newCompany.raisonSociale.trim() &&
-            this.newCompany.adresse.trim() &&
-            this.newCompany.codePostal?.match(/^\d{5}$/) &&
-            this.newCompany.ville.trim() &&
-            this.newCompany.pays.trim()
+            this.newCompany.raisonSociale!.trim() &&
+            this.newCompany.adresse!.trim() &&
+            this.newCompany.codePostal!.match(/^\d{5}$/) &&
+            this.newCompany.ville!.trim() &&
+            this.newCompany.pays!.trim()
         );
     }
 
@@ -203,7 +203,7 @@ export class AddSearchFormComponent implements OnInit {
     selectCompany(company: Company) {
         this.selectedCompany = company;
         this.newSearch.idEntreprise = company.idEntreprise;
-        this.searchTerm = company.raisonSociale;
+        this.searchTerm = company.raisonSociale ? company.raisonSociale : '';
         this.showDropdown = false;
     }
 }

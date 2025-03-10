@@ -59,7 +59,7 @@
 }
 
 <!-- Vue responsable des stages - Journal de recherche - Affichage des cartes de statistiques pour le journal d'un étudiant -->
-@if (currentPageUrl.includes('/student-logbook') && currentUserRole === 'INTERNSHIP_MANAGER') {
+@if (currentPageUrl.includes('/student-dashboard') && currentUserRole === 'INTERNSHIP_MANAGER') {
     <div class="stats-grid">
         <div class="stats-card primary">
           <h3>Nombre des recherches</h3>
@@ -67,7 +67,7 @@
         </div>
         <div class="stats-card secondary">
           <h3>Nombre de recherches cette semaine</h3>
-          <p class="date-range">Du {{ getLastWeekDate() | date : 'dd/MM' }} au {{ getCurrentDate() | date : 'dd/MM' }}</p>
+          <h3 class="date-range">Du {{ getLastWeekDate() | date : 'dd/MM' }} au {{ getCurrentDate() | date : 'dd/MM' }}</h3>
           <p class="count">{{ countSearchesByStudentIdThisWeek(selectedStudent?.idUPPA) }}</p>
         </div>
         <div class="stats-card tertiary">

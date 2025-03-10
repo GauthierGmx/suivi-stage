@@ -1,0 +1,42 @@
+@if (dataLoaded) {
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Connexion UPPA</h2>
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <div class="form-group">
+          <label for="email">Email UPPA</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+          />
+        </div>
+        <button type="submit">
+          Se connecter
+        </button>
+      </form>
+    </div>
+  </div>
+  @if (isLogining) {
+    <div class="loading-overlay">
+      <app-loading/>
+    </div>
+  }
+}
+@else {
+  <div class="login-container">
+    <app-loading/>
+  </div>
+}

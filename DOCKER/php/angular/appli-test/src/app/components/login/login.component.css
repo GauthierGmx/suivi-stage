@@ -66,4 +66,14 @@ button:hover {
 
 .test-credentials p {
   margin: 0.25rem 0;
-} 
+}
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}

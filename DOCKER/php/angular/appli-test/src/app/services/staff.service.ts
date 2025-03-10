@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Staff } from '../models/staff.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
@@ -71,11 +71,37 @@ export class StaffService {
 
   constructor(private http: HttpClient) {}
 
-  getStaffs(): Observable<Staff[]> {
+  getStaffs(fields?: string[]): Observable<Staff[]> {
+    let params = new HttpParams();
+    
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    /*
+    return this.http.get<Student[]>('http://localhost:8000/api/', {params}).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    */
+
     return of(this.staffs);
   }
 
-  getStaffById(idStaff: number): Observable<Staff | undefined> {
+  getStaffById(idStaff: number, fields?: string[]): Observable<Staff | undefined> {
+    let params = new HttpParams();
+
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    /*
+    return this.http.get<Student[]>(`http://localhost:8000/api/`, {params}).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    */
+
     return of(this.staffs.find(s => s.idPersonnel === idStaff));
   }
 

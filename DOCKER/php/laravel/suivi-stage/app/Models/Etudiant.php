@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Etudiant extends Model
 {
     use HasFactory;
+
     // Définit les attributs pouvant être remplis
     protected $fillable = [
         'idUPPA',
@@ -19,10 +20,20 @@ class Etudiant extends Model
         'telephone',
         'adresseMail',
     ];
+
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idUPPA';
+
+    // Indique que la clé primaire n'est pas un entier auto-incrémenté
+    public $incrementing = false;
+
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
+
+    // Cast de l'idUPPA en string
+    protected $casts = [
+        'idUPPA' => 'string',
+    ];
 
     // Relation 1-N avec DepartementIUT
     public function departementIUT()

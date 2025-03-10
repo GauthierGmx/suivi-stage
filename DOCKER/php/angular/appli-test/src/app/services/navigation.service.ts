@@ -32,6 +32,10 @@ export class NavigationService {
     }
   }
 
+  navigateToDashboard() {
+    this.router.navigate(['/dashboard']);
+  }
+
   navigateToSearchForm() {
     this.router.navigate(['/dashboard/add-search-form']);
   }
@@ -44,8 +48,8 @@ export class NavigationService {
     this.router.navigate(['/dashboard/update-search/', searchId]);
   }
 
-  navigateToDashboard() {
-    this.router.navigate(['/dashboard']);
+  navigateToStudentDashboardManagerView(studentId: string) {
+    this.router.navigate(['dashboard/student-dashboard/', studentId]);
   }
 
   getCurrentPageUrl() {
