@@ -115,7 +115,7 @@ export class AddSearchFormComponent implements OnInit {
             this.newSearch.nomContact!.trim() &&
             this.newSearch.prenomContact!.trim() &&
             this.newSearch.fonctionContact!.trim() &&
-            this.newSearch.telephoneContact!.match(/^[0-9]{10}$/) &&
+            this.newSearch.telephoneContact!.match(/^(\+33|0)\d{9}$/) &&
             this.newSearch.adresseMailContact!.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) &&
             this.newSearch.date1erContact! &&
             this.newSearch.typeContact!.trim() &&
