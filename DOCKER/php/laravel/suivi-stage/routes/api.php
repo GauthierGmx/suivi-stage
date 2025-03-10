@@ -42,6 +42,21 @@ Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'st
 Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update');
 Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show');
 Route::get('/fiche-descriptive', [FicheDescriptiveController::class, 'index'])->name('fiche-descriptive.index');
+Route::post('/process-data', function (\Illuminate\Http\Request $request) {
+    // Appelle chaque contrôleur séparément
+    $etudiantController = new EtudiantController();
+    $entrepriseController = new EntrepriseController();
+    $ficheDescriptiveController = new FicheDescriptiveController();
+
+    $responses = [
+        'etudiant' => $etudiantController->store($request)->getData(),
+        'entreprise' => $entrepriseController->store($request)->getData(),
+        'ficheDescriptive' => $ficheDescriptiveController->store($request)->getData(),
+    ];
+
+    return response()->json($responses);
+})->middleware('dispatchData');
+
 
 // Route pour le Controller Etudiant
 Route::get('/etudiants/{id}/recherches-stages', [EtudiantController::class, 'indexRechercheStage'])->name('etudiants.indexRechercheStage');
