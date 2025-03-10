@@ -10,12 +10,14 @@ import { NavigationService } from '../../services/navigation.service';
 import { StudentService } from '../../services/student.service';
 import { CompanyService } from '../../services/company.service';
 import { FactsheetsService } from '../../services/description-sheet.service';
-import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom } from 'rxjs';
+import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
+
 
 @Component({
   selector: 'app-factsheets-student-tab',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DeleteConfirmationModalComponent],
   templateUrl: './factsheets-student-tab.component.html',
   styleUrls: ['./factsheets-student-tab.component.css'],
 })
@@ -32,6 +34,9 @@ export class FactsheetsStudentTabComponent implements OnInit {
   filteredSheetsWithCompanies: { sheet: Factsheets; company: Company }[] = [];
   currentDateFilter: 'all' | 'date_asc' | 'date_desc' = 'all';
   allDataLoaded: Boolean = false;
+  sheetToDelete?: Factsheets;
+  showDeleteModal = false;
+  isDeleting = false;
 
   constructor(
     private readonly studentService: StudentService,
@@ -158,4 +163,50 @@ export class FactsheetsStudentTabComponent implements OnInit {
     goToAddSearchFormView() {
         this.navigationService.navigateToSearchForm();
     }
+
+    
+    //Affiche la fenêtre modale de confirmation de la supression d'une recherche de stage
+    openDeleteModal(sheet: Factsheets) {
+        this.sheetToDelete = sheet;
+        this.showDeleteModal = true;
+    }
+
+
+
+    
+
+
+    //Suppression de la recherche de stage sélectionnée
+    async onConfirmDelete() {
+        if (this.sheetToDelete) {
+            try {
+                this.isDeleting = true;
+                await firstValueFrom(this.factsheetsService.deleteSheet(this.sheetToDelete.idFicheDescriptive));
+                await this.loadData(this.currentUserId);
+            }
+            catch (error) {
+                console.error('Erreur lors de la suppression de la recherche:', error);
+            }
+            finally {
+                this.isDeleting = false;
+                this.showDeleteModal = false;
+                this.sheetToDelete = undefined;
+            }
+        }
+    }
+
+    //Annulation de la suppression d'une recherche de stage
+    onCancelDelete() {
+        this.showDeleteModal = false;
+        this.sheetToDelete = undefined;
+    }
+
+        
+
+
+    /*
+    goToUpdateSheetFormView(searchId: number) {
+        this.navigationService.navigateToSheetEditForm(searchId);
+    }
+        */
 }

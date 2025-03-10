@@ -1,5 +1,4 @@
 <div class="content-box">
-  @if (currentUserRole === 'STUDENT') {
     <div class="titleAndAddSearchButton">
       <h3><b>Fiches descriptives</b></h3>
       <button
@@ -29,12 +28,12 @@
   
       <div class="filter-buttons">
         <button 
-          class="filter-button"
-          [class.active]="currentDateFilter === 'date_asc' || currentDateFilter === 'date_desc'"
-          (click)="toggleDateSort()"
-        >
-          Date
-        </button>
+        class="filter-button"
+        [class]="currentDateFilter"
+        (click)="toggleDateSort()"
+      >
+        Date
+      </button>
       </div>
     </div>
 
@@ -46,7 +45,7 @@
         <thead>
           <tr>
             <th>Entreprise</th>
-            <th>DAte création</th>
+            <th>Date création</th>
             <th>Date modification</th>
             <th>Action</th>
           </tr>
@@ -58,12 +57,39 @@
               <td>{{ item.sheet.dateCreation | date:'dd/MM/yyyy' }}</td>
               <td>{{ item.sheet.dateDerniereModification | date:'dd/MM/yyyy' }}</td>
               <td class="lastTd">
-                <button 
-                  class="view-button"
-                  (click)="viewSearchDetails(item.sheet.idFicheDescriptive)"
-                >
-                  Voir
-                </button>
+                <div class="action-icons">
+                  <svg 
+                    
+                    class="edit-icon" 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2" 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round"
+                  >
+                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                  </svg>
+
+                  <svg 
+                    (click)="$event.stopPropagation(); openDeleteModal(item.sheet)"
+                    class="delete-icon" 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2" 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round"
+                  >
+                    <path d="M3 6h18"/>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                  </svg>
+                </div>
               </td>
             </tr>
           }
@@ -92,17 +118,52 @@
             {{ item.sheet.dateDerniereModification | date:'dd/MM/yyyy' }}
           </p>
         </div>
-        <div class="card-footer">
-          <button 
-            class="view-button"
-            (click)="viewSearchDetails(item.sheet.idFicheDescriptive)"
+        <hr class="card-separator">
+        <div class="card-actions">
+          <svg 
+            
+            class="edit-icon" 
+            width="20" 
+            height="20" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
           >
-            Voir
-          </button>
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+          </svg>
+
+          <svg 
+            
+            class="delete-icon" 
+            width="20" 
+            height="20" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+          >
+            <path d="M3 6h18"/>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+          </svg>
         </div>
       </div>
     }
   </div>
-}
+
+  @if (showDeleteModal) {
+    <app-delete-confirmation-modal
+      [isDeleting]="isDeleting"
+      (confirm)="onConfirmDelete()"
+      (cancel)="onCancelDelete()"
+    />
+  }
+
+
 </div>
 
