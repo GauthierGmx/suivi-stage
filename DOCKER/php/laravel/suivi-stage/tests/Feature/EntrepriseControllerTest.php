@@ -67,7 +67,11 @@ class EntrepriseControllerTest extends TestCase
             'codeAPE_NAF' => null,
             'statutJuridique' => null,
             'effectif' => null,
-            'representantLegal' => null,
+            'nomRepresentant' => null,
+            'prenomRepresentant' => null,
+            'adresseMailRepresentant' => null,
+            'telephoneRepresentant' => null,
+            'fonctionRepresentant' => null,
             'longitudeAdresse' => null,
             'latitudeAdresse' => null,
         ];
@@ -75,10 +79,7 @@ class EntrepriseControllerTest extends TestCase
         $response = $this->postJson('/api/entreprises/create', $donnees);
 
         $response->assertStatus(201)
-                 ->assertJson([
-                        'message' => 'Entreprise créée avec succès',
-                        'entreprise' => $donnees
-        ]);
+                 ->assertJson($donnees);
     }
 
     /**
@@ -100,7 +101,11 @@ class EntrepriseControllerTest extends TestCase
             'codeAPE_NAF' => null,
             'statutJuridique' => null,
             'effectif' => null,
-            'representantLegal' => null,
+            'nomRepresentant' => null,
+            'prenomRepresentant' => null,
+            'adresseMailRepresentant' => null,
+            'telephoneRepresentant' => null,
+            'fonctionRepresentant' => null,
             'longitudeAdresse' => null,
             'latitudeAdresse' => null,
         ];
@@ -128,7 +133,7 @@ class EntrepriseControllerTest extends TestCase
 
         $donnees = [
             'numSIRET' => null,
-            'raisonSociale' => null,
+            'raisonSociale' => 'TEST API',
             'typeEtablissement' => null,
             'adresse' => null,
             'ville' => null,
@@ -138,7 +143,11 @@ class EntrepriseControllerTest extends TestCase
             'codeAPE_NAF' => null,
             'statutJuridique' => null,
             'effectif' => null,
-            'representantLegal' => null,
+            'nomRepresentant' => null,
+            'prenomRepresentant' => null,
+            'adresseMailRepresentant' => null,
+            'telephoneRepresentant' => null,
+            'fonctionRepresentant' => null,
             'longitudeAdresse' => null,
             'latitudeAdresse' => null,
         ];
@@ -166,25 +175,7 @@ class EntrepriseControllerTest extends TestCase
         $response = $this->get('/api/entreprises/' . $entreprise->idEntreprise);
 
         $response->assertStatus(200)
-                 ->assertJson([
-                    'entreprise' => [
-                        'idEntreprise' => $entreprise->idEntreprise,
-                        'raisonSociale' => $entreprise->raisonSociale,
-                        'numSIRET' => $entreprise->numSIRET,
-                        'typeEtablissement' => $entreprise->typeEtablissement,
-                        'adresse' => $entreprise->adresse,
-                        'ville' => $entreprise->ville,
-                        'codePostal' => $entreprise->codePostal,
-                        'pays' => $entreprise->pays,
-                        'telephone' => $entreprise->telephone,
-                        'codeAPE_NAF' => $entreprise->codeAPE_NAF,
-                        'statutJuridique' => $entreprise->statutJuridique,
-                        'effectif' => $entreprise->effectif,
-                        'representantLegal' => $entreprise->representantLegal,
-                        'longitudeAdresse' => $entreprise->longitudeAdresse,
-                        'latitudeAdresse' => $entreprise->latitudeAdresse,
-                    ],
-                ]);
+                 ->assertJson($entreprise->toArray());
     }
 
     /**
