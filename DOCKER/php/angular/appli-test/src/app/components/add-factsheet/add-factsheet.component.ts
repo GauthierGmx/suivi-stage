@@ -14,10 +14,7 @@ import { forkJoin } from 'rxjs';
 import { StudentService } from '../../services/student.service';
 import { InternshipSearchService } from '../../services/internship-search.service';
 import { DescriptionSheetService } from '../../services/description-sheet.service';
-import { Student } from '../../models/student.model';
-import { AppComponent } from '../../app.component';
 import { AuthService } from '../../services/auth.service';
-import { Staff } from '../../models/staff.model';
 
 @Component({
   selector: 'app-add-factsheet',
@@ -49,7 +46,6 @@ export class AddFactsheetComponent implements OnInit {
     private readonly studentService: StudentService,
     private readonly internshipSearchService: InternshipSearchService,
     private readonly descriptiveSheetService: DescriptionSheetService,
-    private readonly appComponent: AppComponent,
     private readonly authService: AuthService,
   ) {
     this.navigationService.factsheetStep$.subscribe(
@@ -60,10 +56,10 @@ export class AddFactsheetComponent implements OnInit {
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
     
-    if (this.appComponent.isStudent(this.currentUser)) {
+    if (this.authService.isStudent(this.currentUser)) {
       this.currentUserRole = 'STUDENT';
     }
-    else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
         this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
 
@@ -78,7 +74,7 @@ export class AddFactsheetComponent implements OnInit {
     
     if (this.currentStep === 9) {
       // Ajouter l'idUppa si l'utilisateur est un étudiant
-      if (this.currentUser && this.appComponent.isStudent(this.currentUser)) {
+      if (this.currentUser && this.authService.isStudent(this.currentUser)) {
         this.formData.idUppa = this.currentUser.idUPPA;
       }
 

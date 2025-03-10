@@ -31,13 +31,13 @@ export class AddFactsheets1Component {
   ngOnInit(): void {
     // Initialization code here
     if (this.student) {
-      this.formData.nomEtudiant = this.student.nomEtudiant || '';
-      this.formData.prenomEtudiant = this.student.prenomEtudiant || '';
-      this.formData.telephoneEtudiant = this.student.telephoneEtudiant || '';
-      this.formData.emailEtudiant = this.student.adresseMailEtudiant || '';
-      this.formData.numeroEtRueEtudiant = this.student.adresseEtudiant || '';
-      this.formData.codePostalEtudiant = this.student.codePostalEtudiant || '';
-      this.formData.villeEtudiant = this.student.villeEtudiant || '';
+      this.formData.nomEtudiant = this.student.nom ?? '';
+      this.formData.prenomEtudiant = this.student.prenom ?? '';
+      this.formData.telephoneEtudiant = this.student.telephone ?? '';
+      this.formData.emailEtudiant = this.student.adresseMail ?? '';
+      this.formData.numeroEtRueEtudiant = this.student.adresse ?? '';
+      this.formData.codePostalEtudiant = this.student.codePostal ?? '';
+      this.formData.villeEtudiant = this.student.ville ?? '';
     }
 
   }
