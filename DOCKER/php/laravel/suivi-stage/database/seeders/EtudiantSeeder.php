@@ -104,6 +104,16 @@ class EtudiantSeeder extends Seeder
                 'idDepartement' => 1,
                 'idEntreprise' => 3,
                 'idTuteur' => 4
+            ],
+            [
+                'idUPPA' => '611107',
+                'login' => 'aherrmann001',
+                'nom' => 'HERRMANN',
+                'prenom' => 'Anthony',
+                'adresseMail' => 'aherrmann001@iutbayonne.univ-pau.fr',
+                'idDepartement' => 1,
+                'idEntreprise' => 3,
+                'idTuteur' => 4
             ]
         ]);
     }
