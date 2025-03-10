@@ -34,22 +34,22 @@
         <div class="form-row">
           <div class="form-group-slider">
             <label for="persoTechnique">Personnel technique disponible</label>
-              <label class="toggle-switch">
-                  <input type="checkbox" id="persoTechnique" [(ngModel)]="formData.persoTechniqueDeroulementStage">
+              <label class="switch">
+                  <input type="checkbox" id="persoTechnique" [(ngModel)]="formData.persoTechniqueDeroulementStage" name="persoTechniqueDeroulementStage">
                   <span class="slider"></span>
               </label>
           </div>          
-           <div class="form-group-slider">
+          <div class="form-group-slider">
             <label for="materielPrete">Matériel prêté</label>
-            <label class="toggle-switch">
-              <input type="checkbox" id="materielPrete" [(ngModel)]="formData.materielPreteDeroulementStage">
+            <label class="switch">
+              <input type="checkbox" id="materielPrete" [(ngModel)]="formData.materielPreteDeroulementStage" name="materielPreteDeroulementStage">
               <span class="slider"></span>
             </label>
           </div> 
           <div class="form-group-slider">
             <label for="clauseConfidentialite">Clause de confidentialité</label>
-            <label class="toggle-switch">
-              <input type="checkbox" id="clauseConfidentialite" [(ngModel)]="formData.clauseConfidentialiteDeroulementStage">
+            <label class="switch">
+              <input type="checkbox" id="clauseConfidentialite" [(ngModel)]="formData.clauseConfidentialiteDeroulementStage" name="clauseConfidentialiteDeroulementStage">
               <span class="slider"></span>
             </label>
           </div>

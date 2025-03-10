@@ -194,7 +194,24 @@
   height: 0;
 }
 
-/* Style du slider (fond du switch) */
+/* From Uiverse.io by NomNomcats */ 
+/* The switch - the box around the slider */
+.switch {
+  font-size: 15px;
+  position: relative;
+  display: inline-block;
+  width: 4.2em;
+  height: 2em;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -202,29 +219,57 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc; /* Couleur par défaut */
-  border-radius: 25px;
-  transition: background-color 0.4s;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 30px;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Indicateur du bouton (cercle mobile) */
-.slider::before {
-  content: "";
+.slider:before {
   position: absolute;
-  height: 18px;
-  width: 18px;
-  left: 4px;
-  bottom: 3.5px;
+  content: "";
+  height: 1.6em;
+  width: 1.6em;
+  border-radius: 20px;
+  left: 0.2em;
+  bottom: 0.2em;
   background-color: white;
-  border-radius: 50%;
-  transition: transform 0.4s;
+  transition: 0.4s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Changement de couleur et déplacement quand coché */
-.toggle-switch input:checked + .slider {
-  background-color: #4CAF50; /* Couleur quand activé */
+.switch input:checked + .slider {
+  background-color: #4cc9f0;
 }
 
-.toggle-switch input:checked + .slider::before {
-  transform: translateX(25px); /* Déplacement vers la droite */
+.switch input:focus + .slider {
+  box-shadow: 0 0 1px #4cc9f0;
 }
+
+.switch input:checked + .slider:before {
+  transform: translateX(2em);
+  background-color: #4cc9f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Add some cool effects */
+.slider:after {
+  content: "NON";
+  color: white;
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8em;
+  transition: opacity 0.4s;
+  opacity: 1;
+}
+
+.switch input:checked + .slider:after {
+  content: "OUI";
+  left: 0.5em;
+  opacity: 1;
+  right: auto;
+}
+
+

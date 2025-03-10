@@ -1,6 +1,6 @@
 <app-add-factsheets-1 
-  *ngIf="currentStep === 1 && currentUser" 
-  [currentUser]="currentUser" 
+  *ngIf="currentStep === 1 && currentUser && currentUserRole === 'STUDENT'" 
+  [student]="currentUser" 
   (formData)='formData' 
   (next)="onNext($event)"></app-add-factsheets-1>
 <app-add-factsheets-2 (formData)='formData' *ngIf="currentStep === 2" (next)="onNext($event)" (previous)="onPrevious()"></app-add-factsheets-2>

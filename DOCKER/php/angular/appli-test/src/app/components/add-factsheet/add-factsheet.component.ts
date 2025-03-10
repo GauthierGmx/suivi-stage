@@ -38,7 +38,7 @@ import { Staff } from '../../models/staff.model';
   styleUrl: './add-factsheet.component.css'
 })
 export class AddFactsheetComponent implements OnInit {
-  currentUser?: Staff | Student;
+  currentUser?: any;
   currentUserRole?: string;
   currentStep = 1;
   formData: any = {};
@@ -66,6 +66,7 @@ export class AddFactsheetComponent implements OnInit {
     else if (this.appComponent.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
         this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
+
   }
 
   onStepChange(step: number) {
