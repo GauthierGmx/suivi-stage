@@ -28,7 +28,7 @@ class EtudiantController extends Controller
         $etudiants = Etudiant::select(empty($fields) ? '*' : $fields)->get();
 
         return response()->json($etudiants, 200);
-    }
+    }   
 
     /**
      * Show the form for creating a new resource.
