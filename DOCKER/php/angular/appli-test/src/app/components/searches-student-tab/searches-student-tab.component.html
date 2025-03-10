@@ -1,5 +1,5 @@
 <div class="content-box">
-  <div class="titleAndAddSearchButton">
+  <div *ngIf="currentUserRole === 'STUDENT'" class="titleAndAddSearchButton">
     <h3><b>Recherches de stage</b></h3>
     <button
       (click)="goToAddSearchFormView()"
@@ -7,13 +7,16 @@
       Ajouter une recherche
     </button>
   </div>
+  <div *ngIf="currentUserRole === 'INTERNSHIP_MANAGER'" class="titleAndAddSearchButton">
+    <h3><b>Journal de {{student.prenom}} {{student.nom}}</b></h3>
+  </div>
   <div class="searchBarAndfilters">
     <div class="search-container">
       <input 
         type="text"
         [(ngModel)]="searchTerm"
         (input)="onSearchTermChange($event)"
-        placeholder="Rechercher sur un des champs..." 
+        placeholder="Rechercher..." 
         class="search-input"
       />
       @if (searchTerm) {
@@ -26,15 +29,54 @@
       }
     </div>
 
-    <div class="filter-buttons">
-      <button 
+    <div *ngIf="currentUserRole === 'STUDENT'" class="filter-buttons">
+      <select 
+        #citySelect
+        [(ngModel)]="currentCityFilter"
+        (change)="setCityFilter(currentCityFilter, citySelect)"
+        class="filter-button"
+      >
+        <option value="all">Toutes les villes</option>
+        @for (city of availableCities; track city) {
+          <option [value]="city">{{ city }}</option>
+        }
+      </select>
+      
+      <select 
+        #statutSelect
+        [(ngModel)]="currentStatutFilter"
+        (change)="setStatutFilter(currentStatutFilter, statutSelect)"
+        class="filter-button"
+      >
+        <option value="all">Tous les statuts</option>
+        <option value="En cours">En attente</option>
+        <option value="Relancé">Relancé</option>
+        <option value="Validé">Validé</option>
+        <option value="Refusé">Refusé</option>
+      </select>
+
+      <button
         class="filter-button"
         [class]="currentDateFilter"
         (click)="toggleDateSort()"
       >
         Date
       </button>
+    </div>
 
+    <div *ngIf="currentUserRole === 'INTERNSHIP_MANAGER'" class="filter-buttons">
+      <select 
+        #citySelect
+        [(ngModel)]="currentCityFilter"
+        (change)="setCityFilter(currentCityFilter, citySelect)"
+        class="filter-button"
+      >
+        <option value="all">Toutes les villes</option>
+        @for (city of availableCities; track city) {
+          <option [value]="city">{{ city }}</option>
+        }
+      </select>
+      
       <select 
         #statutSelect
         [(ngModel)]="currentStatutFilter"
@@ -49,16 +91,26 @@
       </select>
 
       <select 
-        #citySelect
-        [(ngModel)]="currentCityFilter"
-        (change)="setCityFilter(currentCityFilter, citySelect)"
+        #daysSelect
+        [(ngModel)]="maxDaysFilter"
+        (change)="setMaxDaysFilter(maxDaysFilter)"
         class="filter-button"
       >
-        <option value="all">Toutes les villes</option>
-        @for (city of availableCities; track city) {
-          <option [value]="city">{{ city }}</option>
-        }
+        <option [value]="0">Toutes les dates</option>
+        <option [value]="7">7 derniers jours</option>
+        <option [value]="15">15 derniers jours</option>
+        <option [value]="30">30 derniers jours</option>
+        <option [value]="60">60 derniers jours</option>
+        <option [value]="90">90 derniers jours</option>
       </select>
+      
+      <button *ngIf="currentUserRole === 'INTERNSHIP_MANAGER'"
+        class="filter-button"
+        [class]="currentDateFilter"
+        (click)="toggleDateSort()"
+      >
+        Date modification
+      </button>
     </div>
   </div>
 
@@ -71,8 +123,9 @@
             <th>Entreprise</th>
             <th>Ville</th>
             <th>Date de création</th>
+            <th *ngIf="currentUserRole === 'INTERNSHIP_MANAGER'">Dernière Modification</th>
             <th>Statut</th>
-            <th>Action</th>
+            <th *ngIf="currentUserRole === 'STUDENT'">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -83,12 +136,13 @@
               <td class="firstTd">{{ item.company.raisonSociale }}</td>
               <td>{{ item.company.ville }}</td>
               <td>{{ item.search.dateCreation | date:'dd/MM/yyyy' }}</td>
-              <td>
+              <td>{{ item.search.dateModification | date:'dd/MM/yyyy' }}</td>
+              <td [class.lastTd]="currentUserRole === 'INTERNSHIP_MANAGER'">
                 <span [class]="getStatusClass(item.search.statut!)">
                   {{ getStatusLabel(item.search.statut!) }}
                 </span>
               </td>
-              <td class="lastTd">
+              <td *ngIf="currentUserRole === 'STUDENT'" class="lastTd">
                 <div class="action-icons">
                   <svg 
                     (click)="$event.stopPropagation(); goToUpdateSearchFormView(item.search.idRecherche)"
@@ -153,8 +207,8 @@
             {{ item.search.dateCreation | date:'dd/MM/yyyy' }}
           </p>
         </div>
-        <hr class="card-separator">
-        <div class="card-actions">
+        <hr *ngIf="currentUserRole === 'STUDENT'" class="card-separator">
+        <div *ngIf="currentUserRole === 'STUDENT'" class="card-actions">
           <svg 
             (click)="$event.stopPropagation(); goToUpdateSearchFormView(item.search.idRecherche)"
             class="edit-icon" 

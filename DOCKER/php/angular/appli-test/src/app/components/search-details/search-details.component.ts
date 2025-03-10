@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { Student } from '../../models/student.model';
 import { InternshipSearch } from '../../models/internship-search.model';
 import { Company } from '../../models/company.model';
+import { AuthService } from '../../services/auth.service';
 import { InternshipSearchService } from '../../services/internship-search.service';
 import { CompanyService } from '../../services/company.service';
 import { NavigationService } from '../../services/navigation.service';
@@ -17,19 +19,40 @@ import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
     styleUrl: './search-details.component.css'
 })
 export class SearchDetailsComponent implements OnInit {
+    selectedStudent?: Student;
+    currentUserRole?: string;
     search?: InternshipSearch;
     company?: Company;
     dataLoaded: boolean = false;
 
     constructor(
         private readonly route: ActivatedRoute,
+        private readonly authService: AuthService,
         private readonly internshipSearchService: InternshipSearchService,
         private readonly companyService: CompanyService,
         private readonly navigationService: NavigationService
     ) {}
 
     ngOnInit() {
-        const searchId = Number(this.route.snapshot.paramMap.get('id'));
+        let currentUser;
+        const user = sessionStorage.getItem('currentUser');
+        if (user) {
+            currentUser = JSON.parse(user);
+        }
+
+        if (this.authService.isStudent(currentUser)) {
+            this.currentUserRole = 'STUDENT';
+        }
+        else if (this.authService.isStaff(currentUser)) {
+            this.currentUserRole = 'INTERNSHIP_MANAGER';
+        }
+
+        const selectedStudent = sessionStorage.getItem('selectedStudent');
+        if (selectedStudent) {
+            this.selectedStudent = JSON.parse(selectedStudent);
+        }
+
+        const searchId = Number(this.route.snapshot.paramMap.get('idSearch'));
         
         if (searchId) {
             this.internshipSearchService.getSearchById(searchId).subscribe(
@@ -71,5 +94,9 @@ export class SearchDetailsComponent implements OnInit {
         if (this.search) {
             this.navigationService.navigateToSearchEditForm(this.search.idRecherche);
         }
+    }
+
+    goBack() {
+        this.navigationService.goBack();
     }
 }

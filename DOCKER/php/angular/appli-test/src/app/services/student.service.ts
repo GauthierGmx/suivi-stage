@@ -8,8 +8,6 @@ import { Observable, catchError, tap, of, BehaviorSubject } from 'rxjs';
 })
 export class StudentService {
 
-  private selectedStudent = new BehaviorSubject<Student | null>(null);
-
   constructor(private http: HttpClient) {}
 
   getStudents(fields?: string[]): Observable<Student[]> {
@@ -37,19 +35,6 @@ export class StudentService {
       catchError(error => this.handleError(error, null))
     );
   }
-
-    // Nouvelles méthodes pour gérer l'étudiant sélectionné
-    getSelectedStudent(): Observable<Student | null> {
-      return this.selectedStudent.asObservable();
-    }
-    
-    setSelectedStudent(student: Student) {
-      this.selectedStudent.next(student);
-    }
-  
-    clearSelectedStudent() {
-      this.selectedStudent.next(null);
-    }
 
   //Log la réponse de l'API
   private log(response: any) {
