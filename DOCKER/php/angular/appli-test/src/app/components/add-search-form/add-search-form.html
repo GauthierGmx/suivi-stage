@@ -56,7 +56,8 @@
                 name="searchTerm"
                 [(ngModel)]="searchTerm"
                 (ngModelChange)="onSearchChange($event)"
-                placeholder="Rechercher une entreprise..."
+                placeholder="IUT de Bayonne"
+                #nomEntreprise="ngModel"
                 required
                 (focus)="showDropdown = true"
               >
@@ -72,6 +73,9 @@
                   }
                 </div>
               }
+              <div class="errorMessage" *ngIf="nomEntreprise.invalid && nomEntreprise.errors && (nomEntreprise.dirty || nomEntreprise.touched)">
+                <small *ngIf="nomEntreprise.errors?.['required']"><b>La sélection d'une entreprise est obligatoire.</b></small>
+              </div>
             </div>
           </div>
         </div>
@@ -123,10 +127,14 @@
               type="text" 
               id="nomContact" 
               name="nomContact"
-              placeholder="Entrer le nom du contact..."
-              [(ngModel)]="newSearch.nomContact" 
+              placeholder="Dupont"
+              [(ngModel)]="newSearch.nomContact"
+              #nomContact="ngModel"
               required
             >
+            <div class="errorMessage" *ngIf="nomContact.invalid && nomContact.errors && (nomContact.dirty || nomContact.touched)">
+              <small *ngIf="nomContact.errors?.['required']"><b>Le nom du contact est requis.</b></small>
+            </div>
           </div>
         </div>
 
@@ -138,10 +146,14 @@
               type="text" 
               id="prenomContact" 
               name="prenomContact"
-              placeholder="Entrer le prénom du contact..."
-              [(ngModel)]="newSearch.prenomContact" 
+              placeholder="Jean"
+              [(ngModel)]="newSearch.prenomContact"
+              #prenomContact="ngModel"
               required
             >
+            <div class="errorMessage" *ngIf="prenomContact.invalid && prenomContact.errors && (prenomContact.dirty || prenomContact.touched)">
+              <small *ngIf="prenomContact.errors?.['required']"><b>Le prénom du contact est requis.</b></small>
+            </div>
           </div>
         </div>
 
@@ -153,11 +165,16 @@
               type="tel" 
               id="telContact" 
               name="telContact"
-              placeholder="Entrer le téléphone du contact..."
-              [(ngModel)]="newSearch.telephoneContact" 
+              placeholder="0606060606"
+              [(ngModel)]="newSearch.telephoneContact"
+              #telContact="ngModel"
               required
-              pattern="^[0-9]{10}$"
+              pattern="^(\+33|0)\d{9}$"
             >
+            <div class="errorMessage" *ngIf="telContact.invalid && telContact.errors && (telContact.dirty || telContact.touched)">
+              <small *ngIf="telContact.errors?.['required']"><b>Le téléphone du contact est requis.</b></small>
+              <small *ngIf="telContact.errors?.['pattern']"><b>Le numéro doit commencer par un "0" ou "+33" et contenir 10 chiffres.</b></small>
+            </div>
           </div>
         </div>
 
@@ -169,11 +186,16 @@
               type="email" 
               id="mailContact" 
               name="mailContact"
-              placeholder="Entrer l'adresse mail du contact..."
-              [(ngModel)]="newSearch.adresseMailContact" 
+              placeholder="adresseMail@mail.com"
+              [(ngModel)]="newSearch.adresseMailContact"
+              #mailContact="ngModel"
               required
               pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
             >
+            <div class="errorMessage" *ngIf="mailContact.invalid && mailContact.errors && (mailContact.dirty || mailContact.touched)">
+              <small *ngIf="mailContact.errors?.['required']"><b>L'adresse mail du contact est requis.</b></small>
+              <small *ngIf="mailContact.errors?.['pattern']"><b>L'adresse email n'est pas valide.</b></small>
+            </div>
           </div>
         </div>
       </div>
@@ -186,10 +208,14 @@
             type="text" 
             id="fonctionContact" 
             name="fonctionContact"
-            placeholder="Entrer la fonction du contact..."
-            [(ngModel)]="newSearch.fonctionContact" 
+            placeholder="Manager"
+            [(ngModel)]="newSearch.fonctionContact"
+            #fonctionContact="ngModel"
             required
           >
+          <div class="errorMessage" *ngIf="fonctionContact.invalid && fonctionContact.errors && (fonctionContact.dirty || fonctionContact.touched)">
+            <small *ngIf="fonctionContact.errors?.['required']"><b>La fonction du contact est requis.</b></small>
+          </div>
         </div>
       </div>
 
@@ -235,7 +261,6 @@
           id="observations"
           name="observations"
           rows="4"
-          placeholder="Ajoutez vos observations ici..."
           [(ngModel)]="newSearch.observations"
         ></textarea>
       </div>
@@ -282,9 +307,13 @@
             id="raisonSociale"
             name="raisonSociale"
             [(ngModel)]="newCompany.raisonSociale"
+            #raisonSociale="ngModel"
             required
-            placeholder="Entrer le nom de l'entreprise"
+            placeholder="IUT de Bayonne"
           >
+          <div class="errorMessage" *ngIf="raisonSociale.invalid && raisonSociale.errors && (raisonSociale.dirty || raisonSociale.touched)">
+            <small *ngIf="raisonSociale.errors?.['required']"><b>Le nom de l'entreprise est requis.</b></small>
+          </div>
         </div>
 
         <div class="form-group">
@@ -294,9 +323,13 @@
             id="adresse"
             name="adresse"
             [(ngModel)]="newCompany.adresse"
+            #adresse="ngModel"
             required
-            placeholder="Entrer l'adresse de l'entreprise..."
+            placeholder="2 allée du parc Montaury"
           >
+          <div class="errorMessage" *ngIf="adresse.invalid && adresse.errors && (adresse.dirty || adresse.touched)">
+            <small *ngIf="adresse.errors?.['required']"><b>L'adresse de l'entreprise est requis.</b></small>
+          </div>
         </div>
 
         <div class="form-group">
@@ -306,10 +339,15 @@
             id="codePostal"
             name="codePostal"
             [(ngModel)]="newCompany.codePostal"
+            #codePostal="ngModel"
             required
             pattern="^\d{5}$"
-            placeholder="Entrer le code postal de l'entreprise..."
+            placeholder="64600"
           >
+          <div class="errorMessage" *ngIf="codePostal.invalid && codePostal.errors && (codePostal.dirty || codePostal.touched)">
+            <small *ngIf="codePostal.errors?.['required']"><b>Le code postal de l'entreprise est requis.</b></small>
+            <small *ngIf="codePostal.errors?.['pattern']"><b>Le code postal n'est pas valide.</b></small>
+          </div>
         </div>
 
         <div class="form-group">
@@ -319,9 +357,13 @@
             id="ville"
             name="ville"
             [(ngModel)]="newCompany.ville"
+            #ville="ngModel"
             required
-            placeholder="Entrer la ville de l'entreprise..."
+            placeholder="Anglet"
           >
+          <div class="errorMessage" *ngIf="ville.invalid && ville.errors && (ville.dirty || ville.touched)">
+            <small *ngIf="ville.errors?.['required']"><b>La ville de l'entreprise est requis.</b></small>
+          </div>
         </div>
 
         <div class="form-group">
@@ -331,9 +373,13 @@
             id="pays"
             name="pays"
             [(ngModel)]="newCompany.pays"
+            #pays="ngModel"
             required
-            placeholder="Entrer le pays de l'entreprise..."
+            placeholder="France"
           >
+          <div class="errorMessage" *ngIf="pays.invalid && pays.errors && (pays.dirty || pays.touched)">
+            <small *ngIf="pays.errors?.['required']"><b>La pays de l'entreprise est requis.</b></small>
+          </div>
         </div>
 
         <div class="modal-buttons">
