@@ -1,88 +1,134 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Models\TuteurEntreprise;
+use App\Http\Controllers\EtudiantController;
+use App\Http\Controllers\EntrepriseController;
+use App\Http\Controllers\FicheDescriptiveController;
+use App\Http\Controllers\TuteurEntrepriseController;
 
-class TuteurEntrepriseController extends Controller
+class DispatchDataDescriptiveSheet
 {
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Handle an incoming request.
      */
-    public function show($id)
+    public function handle(Request $request, Closure $next): Response
     {
-        try
-        {
-            $unTuteurEntreprise = Etudiant::findOrFail($id);
-            return response()->json($unTuteurEntreprise, 200);
-        }
-        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
-        {
-            return response()->json([
-                'message' => 'Aucun tuteur d\'entreprise trouvé'
-            ],404);
-        }
-        catch (\Exception $e)
-        {
-            return response()->json([
-                'message' => 'Une erreur s\'est produite',
-                'erreurs' => $e->getMessage()
-            ],500);
-        }
-    }
+        $data = $request->json()->all();
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        try
-        {
-            $donneesValidees = $request->validate([
-                'adresseMail'   => 'required|email|max:100',
-                'nom'           => 'required|string|max:50',
-                'prenom'        => 'required|string|max:50',
-                'telephone'     => ["required","string","regex:/^(\+33|0)\d{9}$/"],
-                'fonction'      => 'required|string|max:50',
-                'idEntreprise'  => 'required|integer',
-            ]);
-    
-            $unTuteurEntreprise = TuteurEntreprise::create([
-                'nom'           => $donneesValidees['nom'] ?? null, // Ajoute la valeur si elle est présente, sinon null
-                'prenom'        => $donneesValidees['prenom'] ?? null,
-                'telephone'     => $donneesValidees['telephone'] ?? null,
-                'adresseMail'   => $donneesValidees['adresseMail'],
-                'idEntreprise'  => $donneesValidees['ville'] ?? null,
-                'fonction'      => $donneesValidees['fonction'] ?? null,
-            ]);
-    
-            return response()->json($unTuteurEntreprise,201);
+        if (!is_array($data)) {
+            return response()->json(['error' => 'Invalid JSON format'], 400);
         }
-        catch (\Illuminate\Validation\ValidationException $e)
-        {
-            return response()->json([
-                'message' => 'Erreur de validation dans les données',
-                'erreur' => $e->errors()
-            ],422);
+
+        // **1️⃣ Mapping des champs front -> base**
+        $mapping = [
+            // Étudiant
+            'nomEtudiant' => 'nom',
+            'prenomEtudiant' => 'prenom',
+            'telephoneEtudiant' => 'telephone',
+            'adresseMailEtudiant' => 'adresseMail',
+            'adresseEtudiant' => 'adresse',
+            'codePostalEtudiant' => 'codePostal',
+            'villeEtudiant' => 'ville',
+
+            // Entreprise 
+            'raisonSocialeEntreprise' => 'raisonSociale',
+            'adresseEntreprise' => 'adresse',
+            'codePostalEntreprise' => 'codePostal',
+            'villeEntreprise' => 'ville',
+            'paysEntreprise' => 'pays',
+            'telephoneEntreprise' => 'telephone',
+            'numSIRETEntreprise' => 'numSIRET',
+            'codeAPE_NAFEntreprise' => 'codeAPE_NAF',
+            'statutJuridiqueEntreprise' => 'statutJuridique',
+            'effectifEntreprise' => 'effectif',
+            
+            // Représentant de l'entreprise 
+            'nomRepresentantEntreprise' => 'nomRepresentant',
+            'prenomRepresentantEntreprise' => 'prenomRepresentant',
+            'telephoneRepresentantEntreprise' => 'telephoneRepresentant',
+            'adresseMailRepresentantEntreprise' => 'adresseMailRepresentant',
+            'fonctionRepresentantEntreprise' => 'fonctionRepresentant',
+
+            // Tuteur Entreprise (table séparée)
+            'nomTuteurEntreprise' => 'nom',
+            'prenomTuteurEntreprise' => 'prenom',
+            'telephoneTuteurEntreprise' => 'telephone',
+            'adresseMailTuteurEntreprise' => 'adresseMail',
+            'fonctionTuteurEntreprise' => 'fonction',
+
+            // Fiche Descriptive
+            'serviceEntreprise' => 'service',
+            'typeStageFicheDescriptive' => 'typeStage',
+            'thematiqueFicheDescriptive' => 'thematique',
+            'sujetFicheDescriptive' => 'sujet',
+            'tachesFicheDescriptive' => 'taches',
+            'competencesFicheDescriptive' => 'competences',
+            'detailsFicheDescriptive' => 'details',
+            'debutStageFicheDescriptive' => 'debutStage',
+            'finStageFicheDescriptive' => 'finStage',
+            'nbJourSemaineFicheDescriptive' => 'nbJourSemaine',
+            'nbHeuresSemaineFicheDescriptive' => 'nbHeuresSemaine',
+            'personnelTechniqueDisponibleFicheDescriptive' => 'personnelTechniqueDisponible',
+            'materielPreteFicheDescriptive' => 'materielPrete',
+            'clauseConfidentialiteFicheDescriptive' => 'clauseConfidentialite'
+        ];
+
+        // **2️⃣ Initialisation des catégories**
+        $triData = [
+            'etudiant' => [],
+            'entreprise' => [],
+            'ficheDescriptive' => [],
+            'tuteurEntreprise' => []
+        ];
+
+        // **3️⃣ Parcours des données pour les trier et mapper les champs**
+        foreach ($data as $key => $item) {
+            if (isset($item['type'], $item['value'])) {
+                $type = $item['type'];
+                $value = $item['value'];
+
+                // Appliquer le mapping si le champ existe dans la table de correspondance
+                $mappedKey = $mapping[$key] ?? $key;
+
+                // Vérifier que la catégorie est valide avant d'insérer
+                if (array_key_exists($type, $triData)) {
+                    $triData[$type][$mappedKey] = $value;
+                }
+            }
         }
-        catch (\Illuminate\Database\QueryException $e)
-        {
-            return response()->json([
-                'message' => 'Erreur dans la base de données',
-                'erreur' => $e->getMessage()
-            ],500);
+
+        // **4️⃣ Gestion spécifique du tuteurEntreprise**
+        if (!empty($triData['tuteurEntreprise'])) {
+            $tuteur = TuteurEntreprise::firstOrCreate(
+                ['adresseMail' => $triData['tuteurEntreprise']['adresseMail'] ?? null],
+                [
+                    'nom' => $triData['tuteurEntreprise']['nom'] ?? '',
+                    'prenom' => $triData['tuteurEntreprise']['prenom'] ?? '',
+                    'telephone' => $triData['tuteurEntreprise']['telephone'] ?? '',
+                    'fonction' => $triData['tuteurEntreprise']['fonction'] ?? ''
+                ]
+            );
+            $triData['tuteurEntreprise']['id'] = $tuteur->id;
         }
-        catch (\Exception $e)
-        {
-            return response()->json([
-                'message' => 'Une erreur s\'est produite',
-                'erreur' => $e->getMessage()
-            ],500);
-        }
+
+        // **5️⃣ Appel des contrôleurs**
+        $etudiantController = new EtudiantController();
+        $entrepriseController = new EntrepriseController();
+        $ficheDescriptiveController = new FicheDescriptiveController();
+        $tuteurController = new TuteurEntrepriseController();
+
+        $responses = [
+            'etudiant' => !empty($triData['etudiant']) ? $etudiantController->store(new Request($triData['etudiant']))->getData() : null,
+            'entreprise' => !empty($triData['entreprise']) ? $entrepriseController->store(new Request($triData['entreprise']))->getData() : null,
+            'ficheDescriptive' => !empty($triData['ficheDescriptive']) ? $ficheDescriptiveController->store(new Request($triData['ficheDescriptive']))->getData() : null,
+            'tuteur' => !empty($triData['tuteurEntreprise']) ? $tuteurController->store(new Request($triData['tuteurEntreprise']))->getData() : null
+        ];
+
+        return response()->json($responses);
     }
 }

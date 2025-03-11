@@ -18,61 +18,71 @@ class DispatchDataDescriptiveSheet
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $data = $request->json()->all(); // Récupère les données JSON
-        
+        $data = $request->json()->all();
+
         if (!is_array($data)) {
             return response()->json(['error' => 'Invalid JSON format'], 400);
         }
 
-        // Trier les données par type
-        $etudiant = [];
-        $entreprise = [];
-        $ficheDescriptive = [];
-        $tuteur = null;
+        // **1️⃣ Tableau de correspondance des champs Front -> Base**
+        $mapping = [
+            'nomTuteur' => 'nom',
+            'prenomTuteur' => 'prenom',
+            'telephoneTuteur' => 'telephone',
+            'adresseMailTuteur' => 'adresseMail',
+            'fonctionTuteur' => 'fonction'
+        ];
 
-        foreach ($data as $item) {
-            if (isset($item['type'])) {
-                switch ($item['type']) {
-                    case 'etudiant':
-                        $etudiant[] = $item;
-                        break;
-                    case 'entreprise':
-                        $entreprise[] = $item;
-                        break;
-                    case 'ficheDescriptive':
-                        $ficheDescriptive[] = $item;
-                        break;
-                    case 'tuteurEntreprise':
-                        if (!isset($item['adresseMail'], $item['nom'], $item['prenom'], $item['telephone'], $item['idEntreprise'], $item['fonction'])) {
-                            return response()->json(['error' => 'Données incomplètes pour le tuteur'], 400);
-                        }
+        // **2️⃣ Initialisation des tableaux de données**
+        $triData = [
+            'etudiant' => [],
+            'entreprise' => [],
+            'ficheDescriptive' => [],
+            'tuteurEntreprise' => []
+        ];
 
-                        $tuteur = TuteurEntreprise::firstOrCreate(
-                            ['adresseMail' => $item['adresseMail']],
-                            [
-                                'nom' => $item['nom'],
-                                'prenom' => $item['prenom'],
-                                'telephone' => $item['telephone'],
-                                'idEntreprise' => (int) $item['idEntreprise'],
-                                'fonction' => $item['fonction']
-                            ]
-                        );
-                        break;
+        // **3️⃣ Trier les données en fonction de leur type et appliquer le mapping**
+        foreach ($data as $key => $item) {
+            if (isset($item['type'], $item['value'])) {
+                $type = $item['type'];
+                $value = $item['value'];
+
+                // Vérifier si le champ doit être renommé (ex: nomTuteur -> nom)
+                $key = $mapping[$key] ?? $key;
+
+                // Vérifier que le type correspond à une catégorie existante
+                if (array_key_exists($type, $triData)) {
+                    $triData[$type][$key] = $value;
                 }
             }
         }
 
-        // Instancier les contrôleurs et leur envoyer les données
+        // **4️⃣ Gérer le tuteurEntreprise (création ou récupération)**
+        if (!empty($triData['tuteurEntreprise'])) {
+            $tuteur = TuteurEntreprise::firstOrCreate(
+                ['adresseMail' => $triData['tuteurEntreprise']['adresseMail'] ?? null],
+                [
+                    'nom' => $triData['tuteurEntreprise']['nom'] ?? '',
+                    'prenom' => $triData['tuteurEntreprise']['prenom'] ?? '',
+                    'telephone' => $triData['tuteurEntreprise']['telephone'] ?? '',
+                    'idEntreprise' => $triData['tuteurEntreprise']['idEntreprise'] ?? null,
+                    'fonction' => $triData['tuteurEntreprise']['fonction'] ?? ''
+                ]
+            );
+            $triData['tuteurEntreprise']['id'] = $tuteur->id;
+        }
+
+        // **5️⃣ Appel des contrôleurs**
         $etudiantController = new EtudiantController();
         $entrepriseController = new EntrepriseController();
         $ficheDescriptiveController = new FicheDescriptiveController();
         $tuteurController = new TuteurEntrepriseController();
 
         $responses = [
-            'etudiant' => $etudiantController->store(new Request(['etudiant' => $etudiant]))->getData(),
-            'entreprise' => $entrepriseController->store(new Request(['entreprise' => $entreprise]))->getData(),
-            'ficheDescriptive' => $ficheDescriptiveController->store(new Request(['ficheDescriptive' => $ficheDescriptive]))->getData(),
-            'tuteur' => $tuteur ? $tuteurController->store(new Request(['tuteur' => $tuteur]))->getData() : null
+            'etudiant' => !empty($triData['etudiant']) ? $etudiantController->store(new Request($triData['etudiant']))->getData() : null,
+            'entreprise' => !empty($triData['entreprise']) ? $entrepriseController->store(new Request($triData['entreprise']))->getData() : null,
+            'ficheDescriptive' => !empty($triData['ficheDescriptive']) ? $ficheDescriptiveController->store(new Request($triData['ficheDescriptive']))->getData() : null,
+            'tuteur' => !empty($triData['tuteurEntreprise']) ? $tuteurController->store(new Request($triData['tuteurEntreprise']))->getData() : null
         ];
 
         return response()->json($responses);
