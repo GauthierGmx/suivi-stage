@@ -21,12 +21,30 @@ export class AddFactsheets3Component {
   dataLoaded: boolean = false;
 
   formData = {
-    raisonSocialeEntreprise: 'Thalès',
-    numRueEntreprise: '5 Esplanade de la Gare',
-    codePostalEntreprise: '33110',
-    villeEntreprise: 'Le Bouscat',
-    paysEntreprise: 'France',
-    telephoneEntreprise: '0606060606',
+    raisonSocialeEntreprise: {
+      value: 'Thalès',
+      type: 'entreprise'
+    },
+    adresseEntreprise: {
+      value: '5 Esplanade de la Gare',
+      type: 'entreprise'
+    },
+    codePostalEntreprise: {
+      value: '33110',
+      type: 'entreprise'
+    },
+    villeEntreprise: {
+      value: 'Le Bouscat',
+      type: 'entreprise'
+    },
+    paysEntreprise: {
+      value: 'France',
+      type: 'entreprise'
+    },
+    telephoneEntreprise: {
+      value: '0606060606',
+      type: 'entreprise'
+    }
   };
 
   constructor(

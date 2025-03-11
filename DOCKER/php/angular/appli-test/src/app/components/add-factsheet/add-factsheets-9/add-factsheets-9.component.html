@@ -12,22 +12,29 @@
         <div class="form-row">
           <div class="form-group">
             <label for="dateDebut">Date de début</label>
-            <input type="date" id="dateDebut" [(ngModel)]="formData.debutDuStageDeroulementStage" name="dateDebut">
+            <input type="date" id="dateDebut" [(ngModel)]="formData.debutStageFicheDescriptive.value" name="dateDebut">
           </div>
           <div class="form-group">
             <label for="dateFin">Date de fin</label>
-            <input type="date" id="dateFin" [(ngModel)]="formData.finDuStageDeroulementStage" name="dateFin">
+            <input type="date" id="dateFin" [(ngModel)]="formData.finStageFicheDescriptive.value" name="dateFin">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="nbJoursTravail">Nombre de jours de travail par semaine</label>
-            <input type="number" id="nbJoursTravail" [(ngModel)]="formData.nbJourTravailHebdoDeroulementStage" name="nbJoursTravail" min="1" max="7">
+            <input type="number" id="nbJoursTravail" [(ngModel)]="formData.nbJourSemaineFicheDescriptive.value" name="nbJoursTravail" min="1" max="7">
           </div>
           <div class="form-group">
             <label for="nbHeuresHebdo">Nombre d'heures par semaine</label>
-            <input type="number" id="nbHeuresHebdo" [(ngModel)]="formData.nbHeuresHebdoDeroulementStage" name="nbHeuresHebdo" min="1" max="40">
+            <input type="number" id="nbHeuresHebdo" [(ngModel)]="formData.nbHeuresSemaineFicheDescriptive.value" name="nbHeuresHebdo" min="1" max="40">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="materielPrete">Matériel prêté</label>
+            <input type="number" id="materielPrete" [(ngModel)]="formData.materielPreteFicheDescriptive.value" name="materielPrete">
           </div>
         </div>
 
@@ -35,21 +42,14 @@
           <div class="form-group-slider">
             <label for="persoTechnique">Personnel technique disponible</label>
               <label class="switch">
-                  <input type="checkbox" id="persoTechnique" [(ngModel)]="formData.persoTechniqueDeroulementStage" name="persoTechniqueDeroulementStage">
+                  <input type="checkbox" id="persoTechnique" [(ngModel)]="formData.personnelTechniqueDisponibleFicheDescriptive.value" name="persoTechniqueDeroulementStage">
                   <span class="slider"></span>
               </label>
           </div>          
           <div class="form-group-slider">
-            <label for="materielPrete">Matériel prêté</label>
-            <label class="switch">
-              <input type="checkbox" id="materielPrete" [(ngModel)]="formData.materielPreteDeroulementStage" name="materielPreteDeroulementStage">
-              <span class="slider"></span>
-            </label>
-          </div> 
-          <div class="form-group-slider">
             <label for="clauseConfidentialite">Clause de confidentialité</label>
             <label class="switch">
-              <input type="checkbox" id="clauseConfidentialite" [(ngModel)]="formData.clauseConfidentialiteDeroulementStage" name="clauseConfidentialiteDeroulementStage">
+              <input type="checkbox" id="clauseConfidentialite" [(ngModel)]="formData.clauseConfidentialiteFicheDescriptive.value" name="clauseConfidentialiteDeroulementStage">
               <span class="slider"></span>
             </label>
           </div>

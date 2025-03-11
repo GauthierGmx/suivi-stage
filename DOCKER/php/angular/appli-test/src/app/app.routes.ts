@@ -3,7 +3,7 @@ import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { FactsheetsComponent } from './components/factsheets/factsheets.component';
-import { AddSearchFormComponent } from './components/add-search-form/add-search-form';
+import { AddSearchFormComponent } from './components/add-search-form/add-search-form.component';
 import { SearchDetailsComponent } from './components/search-details/search-details.component';
 import { UpdateSearchComponent } from './components/update-search/update-search.component';
 import { StudentDashboardManagerComponent } from './components/student-dashboard-manager/student-dashboard-manager.component';
@@ -19,7 +19,7 @@ export const routes: Routes = [
   },
   {
     path: 'factsheets',
-    component: FactsheetsComponent,
+    component: AddFactsheetComponent,
     canActivate: [authGuard]
   },
   {
@@ -49,9 +49,8 @@ export const routes: Routes = [
     component: StudentDashboardManagerComponent,
     canActivate: [authGuard]
   },
-
   {
-    path: 'add-factsheet',
+    path: 'factsheets/add-factsheet',
     component: AddFactsheetComponent,
     canActivate: [authGuard]
   },

@@ -17,10 +17,22 @@ export class AddFactsheets2Component {
   currentStep: number;
 
   formData = {
-    composanteEtabEnseign: '181 - IUT de Bayonne et du Pays Basque (Anglet)',
-    parcoursEtabEnseign: 'BBWIA2 - BUT2 - INFO - Intégration d\'Applications et Management du SI',
-    adresseEtabEnseign: '2 allée du Parc Montaury, 64600 Anglet',
-    telephoneEtabEnseign: '05.59.57.43.02',
+    composanteEtablissement: {
+      value: '181 - IUT de Bayonne et du Pays Basque (Anglet)',
+      type: 'etablissement'
+    },
+    parcoursEtablissement: {
+      value: 'BBWIA2 - BUT2 - INFO - Intégration d\'Applications et Management du SI',
+      type: 'parcours'
+    },
+    adresseEtablissement: {
+      value: '2 allée du Parc Montaury, 64600 Anglet',
+      type: 'etablissement'
+    },
+    telephoneEtablissement: {
+      value: '05.59.57.43.02',
+      type: 'etablissement'
+    }
   };
 
   constructor(private readonly navigationService: NavigationService) {

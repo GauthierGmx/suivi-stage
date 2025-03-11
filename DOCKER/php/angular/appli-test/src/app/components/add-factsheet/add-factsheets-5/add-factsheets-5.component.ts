@@ -17,11 +17,26 @@ export class AddFactsheets5Component {
   currentStep: number;
 
   formData = {
-    nomRepresEntreprise: 'RYTER',
-    prenomRepresEntreprise: 'Pascal',
-    telephoneRepresEntreprise: '0707070707',
-    emailRepresEntreprise: 'mail@gmail.com',
-    fonctionRepresEntreprise: 'Responsable'
+    nomRepresentantEntreprise: {
+      value: 'RYTER',
+      type: 'entreprise'
+    },
+    prenomRepresentantEntreprise: {
+      value: 'Pascal',
+      type: 'entreprise'
+    },
+    telephoneRepresentantEntreprise: {
+      value: '0707070707',
+      type: 'entreprise'
+    },
+    adresseMailRepresentantEntreprise: {
+      value: 'mail@gmail.com',
+      type: 'entreprise'
+    },
+    fonctionRepresentantEntreprise: {
+      value: 'Responsable',
+      type: 'entreprise'
+    }
   };
 
   constructor(private readonly navigationService: NavigationService) {

@@ -17,27 +17,47 @@ export class AddFactsheets1Component {
   currentStep: number;
   @Input() student!: Student;
 
-
   formData = {
-    nomEtudiant: '',
-    prenomEtudiant: '',
-    telephoneEtudiant: '',
-    emailEtudiant: '',
-    numeroEtRueEtudiant: '',
-    codePostalEtudiant: '',
-    villeEtudiant: ''
+    nomEtudiant: {
+      value: '',
+      type: 'etudiant'
+    },
+    prenomEtudiant: {
+      value: '',
+      type: 'etudiant'
+    },
+    telephoneEtudiant: {
+      value: '',
+      type: 'etudiant'
+    },
+    adresseMailEtudiant: {
+      value: '',
+      type: 'etudiant'
+    },
+    adresseEtudiant: {
+      value: '',
+      type: 'etudiant'
+    },
+    codePostalEtudiant: {
+      value: '',
+      type: 'etudiant'
+    },
+    villeEtudiant: {
+      value: '',
+      type: 'etudiant'
+    }
   };
 
   ngOnInit(): void {
     // Initialization code here
     if (this.student) {
-      this.formData.nomEtudiant = this.student.nom ?? '';
-      this.formData.prenomEtudiant = this.student.prenom ?? '';
-      this.formData.telephoneEtudiant = this.student.telephone ?? '';
-      this.formData.emailEtudiant = this.student.adresseMail ?? '';
-      this.formData.numeroEtRueEtudiant = this.student.adresse ?? '';
-      this.formData.codePostalEtudiant = this.student.codePostal ?? '';
-      this.formData.villeEtudiant = this.student.ville ?? '';
+      this.formData.nomEtudiant.value = this.student.nom ?? '';
+      this.formData.prenomEtudiant.value = this.student.prenom ?? '';
+      this.formData.telephoneEtudiant.value = this.student.telephone ?? '';
+      this.formData.adresseMailEtudiant.value = this.student.adresseMail ?? '';
+      this.formData.adresseEtudiant.value = this.student.adresse ?? '';
+      this.formData.codePostalEtudiant.value = this.student.codePostal ?? '';
+      this.formData.villeEtudiant.value = this.student.ville ?? '';
     }
 
   }

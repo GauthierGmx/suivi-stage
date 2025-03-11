@@ -17,12 +17,30 @@ export class AddFactsheets6Component {
   currentStep: number;
 
   formData = {
-    emailLieuDuStage: 'mail@gmail.com',
-    telephoneLieuDuStage: '0606060606',
-    numeroEtRueLieuDuStage: '1 Avenue des pins',
-    codePostalLieuDuStage: '47000',
-    villeLieuDuStage: 'Agen',
-    paysLieuDuStage: 'France'
+    adresseMailStageFicheDescriptive: {
+      value: 'mail@gmail.com',
+      type: 'ficheDescriptive'
+    },
+    telephoneStageFicheDescriptive: {
+      value: '0606060606',
+      type: 'ficheDescriptive'
+    },
+    adresseStageFicheDescriptive: {
+      value: '1 Avenue des pins',
+      type: 'ficheDescriptive'
+    },
+    codePostalStageFicheDescriptive: {
+      value: '47000',
+      type: 'ficheDescriptive'
+    },
+    villeStageFicheDescriptive: {
+      value: 'Agen',
+      type: 'ficheDescriptive'
+    },
+    paysStageFicheDescriptive: {
+      value: 'France',
+      type: 'ficheDescriptive'
+    }
   };
 
   constructor(private readonly navigationService: NavigationService) {

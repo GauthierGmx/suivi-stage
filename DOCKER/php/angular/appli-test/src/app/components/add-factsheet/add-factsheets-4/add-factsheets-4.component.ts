@@ -17,13 +17,34 @@ export class AddFactsheets4Component {
   currentStep: number;
 
   formData = {
-    serviceEntreprise: 'Informatique',
-    typeEtablissementEntreprise: 'Administration',
-    activitePrincipaleEntreprise: 'Recherche et développement',
-    numSiretEntreprise: '12345678901234',
-    codeApeOrNafEntreprise: '45654',
-    statutJuridiqueEntreprise: 'SA',
-    effectifEntreprise: 'Moins de 10'
+    serviceEntreprise: {
+      value: 'Informatique',
+      type: 'ficheDescriptive'
+    },
+    typeEtablissementEntreprise: {
+      value: 'Administration',
+      type: 'entreprise'
+    },
+    activitePrincipaleEntreprise: {
+      value: 'Recherche et développement',
+      type: 'entreprise'
+    },
+    numSIRETEntreprise: {
+      value: '12345678901234',
+      type: 'entreprise'
+    },
+    codeAPE_NAFEntreprise: {
+      value: '45654',
+      type: 'entreprise'
+    },
+    statutJuridiqueEntreprise: {
+      value: 'SA',
+      type: 'entreprise'
+    },
+    effectifEntreprise: {
+      value: 'Moins de 10',
+      type: 'entreprise'
+    }
   };
 
   constructor(private readonly navigationService: NavigationService) {

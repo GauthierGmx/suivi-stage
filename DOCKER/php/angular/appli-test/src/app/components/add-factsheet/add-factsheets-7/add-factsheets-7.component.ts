@@ -17,11 +17,26 @@ export class AddFactsheets7Component {
   currentStep: number;
 
   formData = {
-    nomTuteurStage: 'Dupont',
-    prenomTuteurStage: 'Théo',
-    telephoneTuteurStage: '0606060606',
-    mailTuteurStage: 'mailTuteur@gmail.com',
-    fonctionTuteurStage: 'Développeur'
+    nomTuteurEntreprise: {
+      value: 'Dupont',
+      type: 'tuteurEntreprise'
+    },
+    prenomTuteurEntreprise: {
+      value: 'Théo',
+      type: 'tuteurEntreprise'
+    },
+    telephoneTuteurEntreprise: {
+      value: '0606060606',
+      type: 'tuteurEntreprise'
+    },
+    adresseMailTuteurEntreprise: {
+      value: 'mailTuteur@gmail.com',
+      type: 'tuteurEntreprise'
+    },
+    fonctionTuteurEntreprise: {
+      value: 'Développeur',
+      type: 'tuteurEntreprise'
+    }
   };
 
   constructor(private readonly navigationService: NavigationService) {

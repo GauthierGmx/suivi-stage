@@ -27,7 +27,7 @@ export class DescriptionSheetService {
       clauseConfidentialite: true,
       statut: 'BROUILLON',
       personnelTechnique: true,
-      materielPrete: true,
+      materielPrete: 'true',
       idEntreprise: 1,
       idTuteur: 1,
       idUPPA: '101',
@@ -51,7 +51,7 @@ export class DescriptionSheetService {
       clauseConfidentialite: true,
       statut: 'VALIDE',
       personnelTechnique: true,
-      materielPrete: true,
+      materielPrete: 'true',
       idEntreprise: 2,
       idTuteur: 2,
       idUPPA: '101',
@@ -75,7 +75,7 @@ export class DescriptionSheetService {
       clauseConfidentialite: false,
       statut: 'EN_REVISION',
       personnelTechnique: true,
-      materielPrete: true,
+      materielPrete: 'true',
       idEntreprise: 3,
       idTuteur: 3,
       idUPPA: '101',
@@ -141,7 +141,7 @@ export class DescriptionSheetService {
       headers: new HttpHeaders({'Content-type': 'application/json'})
     };
 
-    return this.http.post<DescriptiveSheet>('http://localhost:8000/api/fiche-descriptive/create', sheet, httpOptions).pipe(
+    return this.http.post<DescriptiveSheet>('http://localhost:8000/api/fiche-descriptive/data', sheet, httpOptions).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );

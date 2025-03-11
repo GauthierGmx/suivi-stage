@@ -17,12 +17,30 @@ export class AddFactsheets8Component {
   currentStep: number;
 
   formData = {
-    TypeDeStageContenuStage: 'Obligatoire',
-    ThematiqueDeStageContenuStage: 'Développement',
-    SujetContenuDeStage: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-    FonctionTachesDuStagiaireContenuStage: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-    CompetencesContenuStage: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-    DetailsContenuStage:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat'
+    typeStageFicheDescriptive: {
+      value: 'Obligatoire',
+      type: 'ficheDescriptive'
+    },
+    thematiqueFicheDescriptive: {
+      value: 'Développement',
+      type: 'ficheDescriptive'
+    },
+    sujetFicheDescriptive: {
+      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+      type: 'ficheDescriptive'
+    },
+    tachesFicheDescriptive: {
+      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+      type: 'ficheDescriptive'
+    },
+    competencesFicheDescriptive: {
+      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+      type: 'ficheDescriptive'
+    },
+    detailsFicheDescriptive: {
+      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+      type: 'ficheDescriptive'
+    }
   };
 
   constructor(private readonly navigationService: NavigationService) {

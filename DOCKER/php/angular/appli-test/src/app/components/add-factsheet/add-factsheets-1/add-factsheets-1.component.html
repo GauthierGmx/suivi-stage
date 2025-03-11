@@ -11,40 +11,40 @@
       <div class="form-row">
         <div class="form-group">
           <label for="nom">NOM</label>
-          <input type="text" id="nom" [(ngModel)]="formData.nomEtudiant" name="nom" disabled>
+          <input type="text" id="nom" [(ngModel)]="formData.nomEtudiant.value" name="nom" disabled>
         </div>
         <div class="form-group">
           <label for="prenom">Prénom</label>
-          <input type="text" id="prenom" [(ngModel)]="formData.prenomEtudiant" name="prenom" value="Anthony" disabled>
+          <input type="text" id="prenom" [(ngModel)]="formData.prenomEtudiant.value" name="prenom" value="Anthony" disabled>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label for="telephone">Téléphone</label>
-          <input type="text" id="telephone" [(ngModel)]="formData.telephoneEtudiant" name='telephone' value="0606060606" disabled>
+          <input type="text" id="telephone" [(ngModel)]="formData.telephoneEtudiant.value" name='telephone' value="0606060606" disabled>
         </div>
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" [(ngModel)]="formData.emailEtudiant" name='email' value="mail@gmail.com" disabled>
+          <label for="adresseMail">Email</label>
+          <input type="adresseMail" id="adresseMail" [(ngModel)]="formData.adresseMailEtudiant.value" name='adresseMail' value="mail@gmail.com" disabled>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="numeroEtRueEtudiant">Adresse - Numéro et Rue</label>
-          <input type="text" id="numeroEtRueEtudiant" [(ngModel)]="formData.numeroEtRueEtudiant" name='numeroEtRueEtudiant' placeholder="Numéro Rue" disabled>
+          <label for="adresse">Adresse - Numéro et Rue</label>
+          <input type="text" id="adresse" [(ngModel)]="formData.adresseEtudiant.value" name='adresse' placeholder="Adresse" disabled>
         </div>
         <div class="form-group">
           <label for="code-postal">Adresse - Code Postal</label>
-          <input type="text" id="code-postal" [(ngModel)]="formData.codePostalEtudiant" name='code-postal' placeholder="Code Postal" disabled>
+          <input type="text" id="code-postal" [(ngModel)]="formData.codePostalEtudiant.value" name='code-postal' placeholder="Code Postal" disabled>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label for="ville">Adresse - Ville</label>
-          <input type="text" id="ville" [(ngModel)]="formData.villeEtudiant" name='ville' placeholder="Ville" disabled>
+          <input type="text" id="ville" [(ngModel)]="formData.villeEtudiant.value" name='ville' placeholder="Ville" disabled>
         </div>
       </div>
 

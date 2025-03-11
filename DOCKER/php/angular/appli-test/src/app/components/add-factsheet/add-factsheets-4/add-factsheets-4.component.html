@@ -11,11 +11,11 @@
       <div class="form-row">
         <div class="form-group">
           <label for="service">Service/Division</label>
-          <input type="text" id="service" [(ngModel)]="formData.serviceEntreprise" name="service">
+          <input type="text" id="service" [(ngModel)]="formData.serviceEntreprise.value" name="service">
         </div>
         <div class="form-group">
           <label for="typeEtablissement">Type d'établissement</label>
-          <select id="typeEtablissement" [(ngModel)]="formData.typeEtablissementEntreprise" name="typeEtablissement">
+          <select id="typeEtablissement" [(ngModel)]="formData.typeEtablissementEntreprise.value" name="typeEtablissement">
             <option value="Administration">Administration</option>
             <option value="Prive">Privé</option>
           </select>
@@ -25,22 +25,22 @@
       <div class="form-row">
         <div class="form-group">
           <label for="activitePrincipale">Activité principale</label>
-          <input type="text" id="activitePrincipale" [(ngModel)]="formData.activitePrincipaleEntreprise" name="activitePrincipale">
+          <input type="text" id="activitePrincipale" [(ngModel)]="formData.activitePrincipaleEntreprise.value" name="activitePrincipale">
         </div>
         <div class="form-group">
           <label for="numSiret">Numéro SIRET</label>
-          <input type="text" id="numSiret" [(ngModel)]="formData.numSiretEntreprise" name="numSiret">
+          <input type="text" id="numSiret" [(ngModel)]="formData.numSIRETEntreprise.value" name="numSiret">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label for="codeApeOrNaf">Code APE/NAF</label>
-          <input type="text" id="codeApeOrNaf" [(ngModel)]="formData.codeApeOrNafEntreprise" name="codeApeOrNaf">
+          <input type="text" id="codeApeOrNaf" [(ngModel)]="formData.codeAPE_NAFEntreprise.value" name="codeApeOrNaf">
         </div>
         <div class="form-group">
           <label for="statutJuridique">Statut juridique</label>
-          <select type="text" id="statutJuridique" [(ngModel)]="formData.statutJuridiqueEntreprise" name="statutJuridique">
+          <select type="text" id="statutJuridique" [(ngModel)]="formData.statutJuridiqueEntreprise.value" name="statutJuridique">
             <option value="SA">SA</option>
           </select>
         </div>
@@ -49,7 +49,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="effectif">Effectif</label>
-          <select id="effectif" [(ngModel)]="formData.effectifEntreprise" name="effectif">
+          <select id="effectif" [(ngModel)]="formData.effectifEntreprise.value" name="effectif">
             <option value="Moins de 10">Moins de 10</option>
             <option value="10-49">10-49</option>
             <option value="50 et plus">50 et plus</option>

@@ -17,13 +17,34 @@ export class AddFactsheets9Component {
   currentStep: number;
 
   formData = {
-    debutDuStageDeroulementStage: new Date(),
-    finDuStageDeroulementStage: new Date(),
-    nbJourTravailHebdoDeroulementStage: '5',
-    nbHeuresHebdoDeroulementStage: '35',
-    persoTechniqueDeroulementStage: false,
-    materielPreteDeroulementStage: false,
-    clauseConfidentialiteDeroulementStage: false,
+    debutStageFicheDescriptive: {
+      value: new Date(),
+      type: 'ficheDescriptive'
+    },
+    finStageFicheDescriptive: {
+      value: new Date(),
+      type: 'ficheDescriptive'
+    },
+    nbJourSemaineFicheDescriptive: {
+      value: '5',
+      type: 'ficheDescriptive'
+    },
+    nbHeuresSemaineFicheDescriptive: {
+      value: '35',
+      type: 'ficheDescriptive'
+    },
+    personnelTechniqueDisponibleFicheDescriptive: {
+      value: false,
+      type: 'ficheDescriptive'
+    },
+    materielPreteFicheDescriptive: {
+      value: 'pc / bloc-notes',
+      type: 'ficheDescriptive'
+    },
+    clauseConfidentialiteFicheDescriptive: {
+      value: false,
+      type: 'ficheDescriptive'
+    }
   };
 
   constructor(private readonly navigationService: NavigationService) {
