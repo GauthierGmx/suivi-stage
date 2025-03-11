@@ -24,16 +24,61 @@ class DispatchDataDescriptiveSheet
             return response()->json(['error' => 'Invalid JSON format'], 400);
         }
 
-        // **1️⃣ Tableau de correspondance des champs Front -> Base**
+        // **1️⃣ Mapping des champs front -> base**
         $mapping = [
-            'nomTuteur' => 'nom',
-            'prenomTuteur' => 'prenom',
-            'telephoneTuteur' => 'telephone',
-            'adresseMailTuteur' => 'adresseMail',
-            'fonctionTuteur' => 'fonction'
+            // Étudiant
+            'nomEtudiant' => 'nom',
+            'prenomEtudiant' => 'prenom',
+            'telephoneEtudiant' => 'telephone',
+            'adresseMailEtudiant' => 'adresseMail',
+            'adresseEtudiant' => 'adresse',
+            'codePostalEtudiant' => 'codePostal',
+            'villeEtudiant' => 'ville',
+
+            // Entreprise 
+            'raisonSocialeEntreprise' => 'raisonSociale',
+            'adresseEntreprise' => 'adresse',
+            'codePostalEntreprise' => 'codePostal',
+            'villeEntreprise' => 'ville',
+            'paysEntreprise' => 'pays',
+            'telephoneEntreprise' => 'telephone',
+            'numSIRETEntreprise' => 'numSIRET',
+            'codeAPE_NAFEntreprise' => 'codeAPE_NAF',
+            'statutJuridiqueEntreprise' => 'statutJuridique',
+            'effectifEntreprise' => 'effectif',
+            
+            // Représentant de l'entreprise 
+            'nomRepresentantEntreprise' => 'nomRepresentant',
+            'prenomRepresentantEntreprise' => 'prenomRepresentant',
+            'telephoneRepresentantEntreprise' => 'telephoneRepresentant',
+            'adresseMailRepresentantEntreprise' => 'adresseMailRepresentant',
+            'fonctionRepresentantEntreprise' => 'fonctionRepresentant',
+
+            // Tuteur Entreprise (table séparée)
+            'nomTuteurEntreprise' => 'nom',
+            'prenomTuteurEntreprise' => 'prenom',
+            'telephoneTuteurEntreprise' => 'telephone',
+            'adresseMailTuteurEntreprise' => 'adresseMail',
+            'fonctionTuteurEntreprise' => 'fonction',
+
+            // Fiche Descriptive
+            'serviceEntreprise' => 'service',
+            'typeStageFicheDescriptive' => 'typeStage',
+            'thematiqueFicheDescriptive' => 'thematique',
+            'sujetFicheDescriptive' => 'sujet',
+            'tachesFicheDescriptive' => 'taches',
+            'competencesFicheDescriptive' => 'competences',
+            'detailsFicheDescriptive' => 'details',
+            'debutStageFicheDescriptive' => 'debutStage',
+            'finStageFicheDescriptive' => 'finStage',
+            'nbJourSemaineFicheDescriptive' => 'nbJourSemaine',
+            'nbHeuresSemaineFicheDescriptive' => 'nbHeuresSemaine',
+            'personnelTechniqueDisponibleFicheDescriptive' => 'personnelTechniqueDisponible',
+            'materielPreteFicheDescriptive' => 'materielPrete',
+            'clauseConfidentialiteFicheDescriptive' => 'clauseConfidentialite'
         ];
 
-        // **2️⃣ Initialisation des tableaux de données**
+        // **2️⃣ Initialisation des catégories**
         $triData = [
             'etudiant' => [],
             'entreprise' => [],
@@ -41,23 +86,23 @@ class DispatchDataDescriptiveSheet
             'tuteurEntreprise' => []
         ];
 
-        // **3️⃣ Trier les données en fonction de leur type et appliquer le mapping**
+        // **3️⃣ Parcours des données pour les trier et mapper les champs**
         foreach ($data as $key => $item) {
             if (isset($item['type'], $item['value'])) {
                 $type = $item['type'];
                 $value = $item['value'];
 
-                // Vérifier si le champ doit être renommé (ex: nomTuteur -> nom)
-                $key = $mapping[$key] ?? $key;
+                // Appliquer le mapping si le champ existe dans la table de correspondance
+                $mappedKey = $mapping[$key] ?? $key;
 
-                // Vérifier que le type correspond à une catégorie existante
+                // Vérifier que la catégorie est valide avant d'insérer
                 if (array_key_exists($type, $triData)) {
-                    $triData[$type][$key] = $value;
+                    $triData[$type][$mappedKey] = $value;
                 }
             }
         }
 
-        // **4️⃣ Gérer le tuteurEntreprise (création ou récupération)**
+        // **4️⃣ Gestion spécifique du tuteurEntreprise**
         if (!empty($triData['tuteurEntreprise'])) {
             $tuteur = TuteurEntreprise::firstOrCreate(
                 ['adresseMail' => $triData['tuteurEntreprise']['adresseMail'] ?? null],
@@ -65,7 +110,6 @@ class DispatchDataDescriptiveSheet
                     'nom' => $triData['tuteurEntreprise']['nom'] ?? '',
                     'prenom' => $triData['tuteurEntreprise']['prenom'] ?? '',
                     'telephone' => $triData['tuteurEntreprise']['telephone'] ?? '',
-                    'idEntreprise' => $triData['tuteurEntreprise']['idEntreprise'] ?? null,
                     'fonction' => $triData['tuteurEntreprise']['fonction'] ?? ''
                 ]
             );
