@@ -41,10 +41,9 @@
         class="filter-button"
       >
         <option value="all">Tous les statuts</option>
-        <option value="BROUILLON">Brouillon</option>
-        <option value="VALIDE">Valide</option>
-        <option value="EN_REVISION">En révision</option>
-        <option value="REFUSE">Refusé</option>
+        <option value="Validee">Valide</option>
+        <option value="En cours">En révision</option>
+        <option value="Refusée">Refusé</option>
       </select>
       </div>
     </div>
@@ -125,6 +124,9 @@
       <div class="search-card">
         <div class="card-header">
           <h4>{{ item.company.raisonSociale }}</h4>
+          <span [class]="getStatusClass(item.sheet.statut!)">
+            {{ getStatusLabel(item.sheet.statut!) }}
+          </span>
         </div>
         <div class="card-content">
           <p class="location">
@@ -154,7 +156,7 @@
           </svg>
 
           <svg 
-            
+            (click)="$event.stopPropagation(); openDeleteModal(item.sheet)"
             class="delete-icon" 
             width="20" 
             height="20" 

@@ -33,7 +33,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
   searchTermSubject = new Subject<string>();
   filteredSheetsWithCompanies: { sheet: Factsheets; company: Company }[] = [];
   currentDateFilter: 'all' | 'date_asc' | 'date_desc' = 'all';
-  currentStatutFilter: 'all' | 'BROUILLON' | 'VALIDE' | 'EN_REVISION' | 'REFUSE' = 'all';
+  currentStatutFilter: 'all' | 'Refusée' | 'Validee' | 'En cours' = 'all';
   allDataLoaded: Boolean = false;
   sheetToDelete?: Factsheets;
   showDeleteModal = false;
@@ -90,15 +90,14 @@ export class FactsheetsStudentTabComponent implements OnInit {
 
     getStatusClass(status: string): string {
         const statusMap: Record<string, string> = {
-            'BROUILLON': 'status-badge relance',
-            'VALIDE': 'status-badge valide',
-            'EN_REVISION': 'status-badge en-attente',
-            'REFUSE': 'status-badge refuse'
+            'Validee': 'status-badge valide',
+            'En cours': 'status-badge en-attente',
+            'Refusée': 'status-badge refuse'
         };
         return statusMap[status] || 'status-badge';
     }
 
-    setStatutFilter(filter: 'all' | 'BROUILLON' | 'VALIDE' | 'EN_REVISION' | 'REFUSE', selectElement: HTMLSelectElement) {
+    setStatutFilter(filter: 'all' | 'Refusée' | 'Validee' | 'En cours', selectElement: HTMLSelectElement) {
         this.currentStatutFilter = filter;
         this.resetFilters();
         this.applyFilters();
@@ -118,10 +117,9 @@ export class FactsheetsStudentTabComponent implements OnInit {
     //Récupération du label lié à un statut
     getStatusLabel(status: SheetStatus): string {
         const labels: Record<SheetStatus, string> = {
-            'BROUILLON': 'BROUILLON',
-            'EN_REVISION': 'En révision',
-            'VALIDE': 'Validé',
-            'REFUSE': 'Refusé'
+            'En cours': 'En cours',
+            'Validee': 'Validée',
+            'Refusée': 'Refusée'
         };
         return labels[status];
     }
@@ -158,7 +156,6 @@ export class FactsheetsStudentTabComponent implements OnInit {
             filteredSearches = filteredSearches.filter(s => s.sheet.statut === this.currentStatutFilter);
         }
 
-        console.log("ALOOOO",this.currentStatutFilter);
     
         // Appliquer les filtres de tri par date
         if (this.currentDateFilter === 'date_asc') {
@@ -223,7 +220,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
         if (this.sheetToDelete) {
             try {
                 this.isDeleting = true;
-                await firstValueFrom(this.factsheetsService.deleteSheet(this.sheetToDelete.idFicheDescriptive));
+                await firstValueFrom(this.factsheetsService.deleteSheet(this.sheetToDelete));
                 await this.loadData(this.currentUserId);
             }
             catch (error) {

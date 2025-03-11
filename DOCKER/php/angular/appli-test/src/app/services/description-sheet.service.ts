@@ -25,7 +25,7 @@ export class FactsheetsService {
       nbJourParSemaine: 5,
       nbHeureParSemaine: 35,
       clauseConfidentialite: true,
-      statut: 'EN_REVISION',
+      statut: 'En cours',
       personnelTechnique: true,
       materielPrete: true,
       idEntreprise: 1,
@@ -49,7 +49,7 @@ export class FactsheetsService {
       nbJourParSemaine: 4,
       nbHeureParSemaine: 32,
       clauseConfidentialite: true,
-      statut: 'VALIDE',
+      statut: 'Validee',
       personnelTechnique: true,
       materielPrete: true,
       idEntreprise: 2,
@@ -73,7 +73,7 @@ export class FactsheetsService {
       nbJourParSemaine: 5,
       nbHeureParSemaine: 35,
       clauseConfidentialite: false,
-      statut: 'EN_REVISION',
+      statut: 'Refusée',
       personnelTechnique: true,
       materielPrete: true,
       idEntreprise: 3,
@@ -113,17 +113,18 @@ export class FactsheetsService {
       params = params.set('fields', fields.join(','));
     }
 
-    /*
+    
     return this.http.get<Factsheets[]>(`http://localhost:8000/api/etudiants/${studentId}/fiches-descriptives`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
-    */
     
+    /*
     return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId)).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
+    */
     
   }
 
@@ -169,14 +170,14 @@ export class FactsheetsService {
     throw new Error('Fiche non trouvée');
   }
 
-  deleteSheet(id: number): Observable<void> {
-    const index = this.mockSheets.findIndex(s => s.idFicheDescriptive === id);
-    if (index !== -1) {
-      this.mockSheets.splice(index, 1);
-      return of(void 0);
-    }
-    throw new Error('Fiche non trouvée');
+  deleteSheet(sheet: Factsheets): Observable<void> {
+    return this.http.delete(`http://localhost:8000/api/fiche-descriptive/delete/${sheet.idFicheDescriptive}`).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
   }
+
+
 
   //Log la réponse de l'API
   private log(response: any) {

@@ -80,4 +80,4 @@ export class Factsheets {
   }
 }
 
-export type SheetStatus = 'BROUILLON' | 'EN_REVISION' | 'VALIDE' | 'REFUSE'; 
+export type SheetStatus = 'En cours' | 'Validee' | 'Refusée' ; 
