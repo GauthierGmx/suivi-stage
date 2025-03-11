@@ -72,6 +72,6 @@ class CasAuthMiddleware
                 'user_type' => $userType
             ]);
         }
-        return redirect()->away(config('app.angular_url') . '/dashboard');
+        return redirect()->away(env('ANGULAR_URL') . '/dashboard');
     }
 }
