@@ -92,17 +92,18 @@ export class FactsheetsService {
       params = params.set('fields', fields.join(','));
     }
 
-    /*
+    
     return this.http.get<Factsheets[]>('http://localhost:8000/api/fiche-descriptive', {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
-    */
-
+    
+    /*
     return of(this.mockSheets).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
+    */
   }
 
   getSheetsByStudentId(studentId: string, fields?: string[]): Observable<Factsheets[]> {
@@ -118,11 +119,12 @@ export class FactsheetsService {
       catchError(error => this.handleError(error, null))
     );
     */
-
+    
     return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId)).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
+    
   }
 
   getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus, fields?: string[]): Observable<Factsheets[]> {

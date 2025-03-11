@@ -2,7 +2,7 @@
     <div class="titleAndAddSearchButton">
       <h3><b>Fiches descriptives</b></h3>
       <button
-        (click)="goToAddSearchFormView()"
+        
       >
         Ajouter une fiche descriptive
       </button>
@@ -34,6 +34,18 @@
       >
         Date
       </button>
+      <select 
+        #statutSelect
+        [(ngModel)]="currentStatutFilter"
+        (change)="setStatutFilter(currentStatutFilter, statutSelect)"
+        class="filter-button"
+      >
+        <option value="all">Tous les statuts</option>
+        <option value="BROUILLON">Brouillon</option>
+        <option value="VALIDE">Valide</option>
+        <option value="EN_REVISION">En révision</option>
+        <option value="REFUSE">Refusé</option>
+      </select>
       </div>
     </div>
 
@@ -47,6 +59,7 @@
             <th>Entreprise</th>
             <th>Date création</th>
             <th>Date modification</th>
+            <th>Statut</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -56,6 +69,11 @@
               <td class="firstTd">{{ item.company.raisonSociale }}</td>
               <td>{{ item.sheet.dateCreation | date:'dd/MM/yyyy' }}</td>
               <td>{{ item.sheet.dateDerniereModification | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span [class]="getStatusClass(item.sheet.statut!)">
+                  {{ getStatusLabel(item.sheet.statut!) }}
+                </span>
+              </td>
               <td class="lastTd">
                 <div class="action-icons">
                   <svg 

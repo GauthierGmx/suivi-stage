@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Student } from '../../models/student.model';
 import { Staff } from '../../models/staff.model';
 import { Company } from '../../models/company.model';
-import { Factsheets } from '../../models/description-sheet.model';
+import { Factsheets, SheetStatus } from '../../models/description-sheet.model';
 import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
 import { StudentService } from '../../services/student.service';
@@ -33,6 +33,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
   searchTermSubject = new Subject<string>();
   filteredSheetsWithCompanies: { sheet: Factsheets; company: Company }[] = [];
   currentDateFilter: 'all' | 'date_asc' | 'date_desc' = 'all';
+  currentStatutFilter: 'all' | 'BROUILLON' | 'VALIDE' | 'EN_REVISION' | 'REFUSE' = 'all';
   allDataLoaded: Boolean = false;
   sheetToDelete?: Factsheets;
   showDeleteModal = false;
@@ -61,7 +62,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
                 debounceTime(800),
                 distinctUntilChanged()
             ).subscribe(() => {
-                this.getFilteredSheetsWithCompanies();
+                this.applyFilters();
             });
             
             this.loadData(this.currentUserId);
@@ -74,59 +75,100 @@ export class FactsheetsStudentTabComponent implements OnInit {
             companies: this.companyService.getCompanies(),
             sheets: this.factsheetsService.getSheetsByStudentId(studentId)
         }).subscribe(({student, companies, sheets}) => {
-                this.studentData = student;
-                this.companies = companies;
-                this.sheets = sheets;
-                this.getFilteredSheetsWithCompanies();
-                this.dataLoaded.emit();
-            }
-        );
+            this.studentData = student;
+            this.companies = companies;
+            this.sheets = sheets;
+            this.filteredSheetsWithCompanies = this.sheets.map(sheet => {
+                const company = this.companies!.find(c => c.idEntreprise === sheet.idEntreprise);
+                return { sheet, company: company! };
+            });
+            this.applyFilters();
+            this.dataLoaded.emit();
+        });
     }
 
-    getFilteredSheetsWithCompanies() {
-        if (this.companies && this.sheets) {
-            let searchCompanies: Company[] = this.companies.filter(
-                c => this.sheets!.some(
-                    s => c.idEntreprise === s.idEntreprise
-                )
-            );
-    
-            let searchesWithCompany = this.sheets.map(sheet => {
-                const company = searchCompanies.find(c => c.idEntreprise === sheet.idEntreprise);
-                return company ? { sheet, company } : null;
-            }).filter((result): result is { sheet: Factsheets; company: Company } => result !== null);
-            
-            // Appliquer les filtres
-            searchesWithCompany = this.applyFilters(searchesWithCompany);
-    
-            // Mettre à jour la propriété qui déclenche la mise à jour du template
-            this.filteredSheetsWithCompanies = searchesWithCompany;
+
+    getStatusClass(status: string): string {
+        const statusMap: Record<string, string> = {
+            'BROUILLON': 'status-badge relance',
+            'VALIDE': 'status-badge valide',
+            'EN_REVISION': 'status-badge en-attente',
+            'REFUSE': 'status-badge refuse'
+        };
+        return statusMap[status] || 'status-badge';
+    }
+
+    setStatutFilter(filter: 'all' | 'BROUILLON' | 'VALIDE' | 'EN_REVISION' | 'REFUSE', selectElement: HTMLSelectElement) {
+        this.currentStatutFilter = filter;
+        this.resetFilters();
+        this.applyFilters();
+        selectElement.blur();
+    }
+
+    // Nouvelle méthode pour réinitialiser les filtres
+    resetFilters() {
+        if(this.sheets){
+            this.filteredSheetsWithCompanies = this.sheets.map(sheet => {
+                const company = this.companies!.find(c => c.idEntreprise === sheet.idEntreprise);
+                return { sheet, company: company! };
+            });
         }
     }
-    
-    applyFilters(sheets: { sheet: Factsheets; company: Company }[]) {
-        let filtered = [...sheets];
-        const searchTermLower = this.searchTerm.toLowerCase().trim();
 
+    //Récupération du label lié à un statut
+    getStatusLabel(status: SheetStatus): string {
+        const labels: Record<SheetStatus, string> = {
+            'BROUILLON': 'BROUILLON',
+            'EN_REVISION': 'En révision',
+            'VALIDE': 'Validé',
+            'REFUSE': 'Refusé'
+        };
+        return labels[status];
+    }
+
+
+    
+
+
+    //Application des filtres et de la barre de recherche
+    applyFilters() {
+        
+    
+        let filteredSearches = [...this.filteredSheetsWithCompanies];
+        const searchTermLower = this.searchTerm.toLowerCase().trim();
+    
+        // Convertir les dates de création en objets Date si nécessaire
+        filteredSearches.forEach(s => {
+            if (!(s.sheet.dateCreation instanceof Date)) {
+                s.sheet.dateCreation = new Date(s.sheet.dateCreation!);
+            }
+        });
+    
         // Appliquer le filtre de recherche textuelle
         if (searchTermLower) {
-            filtered = sheets.filter(s =>
+            filteredSearches = filteredSearches.filter(s =>
                 s.company.raisonSociale!.toLowerCase().includes(searchTermLower) ||
-                s.company.ville!.toLowerCase().includes(searchTermLower)
+                s.company.ville!.toLowerCase().includes(searchTermLower) ||
+                this.getStatusLabel(s.sheet.statut!).toLowerCase().includes(searchTermLower)
             );
         }
-
-        // Appliquer les filtres de statut et de tri
-        switch (this.currentDateFilter) {
-            case 'date_asc':
-                filtered.sort((a, b) => a.sheet.dateCreation!.getTime() - b.sheet.dateCreation!.getTime());
-                break;
-            case 'date_desc':
-                filtered.sort((a, b) => b.sheet.dateCreation!.getTime() - a.sheet.dateCreation!.getTime());
-                break;
+    
+        // Appliquer le filtre de statut
+        if (this.currentStatutFilter !== 'all') {
+            filteredSearches = filteredSearches.filter(s => s.sheet.statut === this.currentStatutFilter);
         }
 
-        return filtered;
+        console.log("ALOOOO",this.currentStatutFilter);
+    
+        // Appliquer les filtres de tri par date
+        if (this.currentDateFilter === 'date_asc') {
+            filteredSearches.sort((a, b) => a.sheet.dateCreation!.getTime() - b.sheet.dateCreation!.getTime());
+        } else if (this.currentDateFilter === 'date_desc') {
+            filteredSearches.sort((a, b) => b.sheet.dateCreation!.getTime() - a.sheet.dateCreation!.getTime());
+        }
+    
+        // Mettre à jour les résultats filtrés
+        this.filteredSheetsWithCompanies = filteredSearches;
     }
 
     onSearchTermChange(event: Event) {
@@ -134,26 +176,26 @@ export class FactsheetsStudentTabComponent implements OnInit {
         if (target) {
             this.searchTerm = target.value;
             this.searchTermSubject.next(this.searchTerm);
+            this.applyFilters();
         }
     }
 
     clearSearchTerm() {
         this.searchTerm = '';
         this.searchTermSubject.next(this.searchTerm);
+        this.applyFilters();
     }
 
 
     toggleDateSort() {
         if (this.currentDateFilter === 'date_asc') {
             this.currentDateFilter = 'date_desc';
-        }
-        else if (this.currentDateFilter === 'date_desc') {
+        } else if (this.currentDateFilter === 'date_desc') {
             this.currentDateFilter = 'all';
-        }
-        else {
+        } else {
             this.currentDateFilter = 'date_asc';
         }
-        this.getFilteredSheetsWithCompanies();
+        this.applyFilters();
     }
 
     viewSearchDetails(searchId: number) {
@@ -176,7 +218,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
     
 
 
-    //Suppression de la recherche de stage sélectionnée
+    //Suppression de la fiche descriptive
     async onConfirmDelete() {
         if (this.sheetToDelete) {
             try {
@@ -195,18 +237,11 @@ export class FactsheetsStudentTabComponent implements OnInit {
         }
     }
 
-    //Annulation de la suppression d'une recherche de stage
+    //Annulation de la suppression d'une fiche descriptive
     onCancelDelete() {
         this.showDeleteModal = false;
         this.sheetToDelete = undefined;
     }
 
-        
 
-
-    /*
-    goToUpdateSheetFormView(searchId: number) {
-        this.navigationService.navigateToSheetEditForm(searchId);
-    }
-        */
 }
