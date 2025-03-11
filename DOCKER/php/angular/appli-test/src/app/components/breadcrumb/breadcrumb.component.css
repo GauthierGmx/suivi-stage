@@ -1,24 +1,36 @@
 .breadcrumb {
   margin: 0.5rem 0 0.75rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .breadcrumb ol {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   padding: 0;
   margin: 0;
   list-style: none;
+  min-width: min-content;
 }
 
 .breadcrumb li {
   display: flex;
   align-items: center;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .breadcrumb li {
+    font-size: 0.75rem;
+  }
 }
 
 .breadcrumb li:not(:first-child)::before {
   content: "/";
   padding: 0 0.2rem;
   color: #ababab;
+  flex-shrink: 0;
 }
 
 .breadcrumb a {
@@ -32,4 +44,20 @@
 
 .breadcrumb .active {
   color: #000000;
+}
+
+@media (max-width: 480px) {
+  .breadcrumb {
+    margin: 0.25rem 0 0.5rem;
+  }
+
+  .breadcrumb li:not(:last-child):not(:first-child) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .breadcrumb li:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

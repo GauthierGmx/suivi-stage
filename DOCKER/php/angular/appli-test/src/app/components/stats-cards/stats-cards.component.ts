@@ -168,8 +168,10 @@ export class StatsCardsComponent implements OnInit {
     return new Date();
   }
 
-  getLastWeekDate() {
+  getLastWeekDate(): Date {
     const today = new Date();
-    return new Date(today.getDate() - 7);
+    let lastWeekDate = today;
+    lastWeekDate.setDate(today.getDate() - 7);
+    return today;
   }
 }

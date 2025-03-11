@@ -170,6 +170,12 @@ textarea {
     cursor: not-allowed;
 }
 
+.errorMessage {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
 .modal-overlay {
     position: fixed;
     inset: 0;

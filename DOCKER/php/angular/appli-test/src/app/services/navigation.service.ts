@@ -45,8 +45,8 @@ export class NavigationService {
     this.router.navigate(['/dashboard/update-search/', searchId]);
   }
 
-  navigateToStudentSearchesView(studentId: string) {
-
+  navigateToStudentDashboardManagerView(studentId: string) {
+    this.router.navigate(['dashboard/student-dashboard/', studentId]);
   }
 
   getCurrentPageUrl() {
