@@ -134,8 +134,8 @@ export class ListStudentTabComponent implements OnInit{
             filteredDatas = filteredDatas.filter(data =>
                 data.student.nom!.toLowerCase().includes(searchTermLower) ||
                 data.student.prenom!.toLowerCase().includes(searchTermLower) ||
-                data.studyYear.toLowerCase().includes(searchTermLower) ||
-                data.TdGroup.toLowerCase().includes(searchTermLower)
+                data.studyYear?.toLowerCase().includes(searchTermLower) ||
+                data.TdGroup?.toLowerCase().includes(searchTermLower)
             );
         }
     
@@ -234,7 +234,7 @@ export class ListStudentTabComponent implements OnInit{
     }
 
     //Redirection vers la vue de consultation d'une recherche de stage
-    goToStudentSearchesView(studentId: string) {
-        this.navigationService.navigateToStudentSearchesView(studentId);
+    goToStudentDashboardManagerView(studentId: string) {
+        this.navigationService.navigateToStudentDashboardManagerView(studentId);
     }
 }

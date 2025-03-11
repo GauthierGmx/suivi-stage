@@ -1,0 +1,27 @@
+.dashboard {
+    margin: 0 auto;
+    padding: 32px;
+    max-width: 1600px;
+}
+
+.content {
+    width: 100%;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+    padding: 16px;
+    }
+} 

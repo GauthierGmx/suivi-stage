@@ -10,7 +10,7 @@
         <app-stats-cards [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
         
         @if (currentUserRole === 'STUDENT') {
-          <app-searches-student-tab [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+          <app-searches-student-tab [student]="currentUser" [currentUserRole]="currentUserRole" (dataLoaded)="onChildDataLoaded()"/>
         }
         @else if (currentUserRole === 'INTERNSHIP_MANAGER') {
           <app-list-student-tab (dataLoaded)="onChildDataLoaded()"/>

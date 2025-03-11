@@ -22,7 +22,11 @@ class Entreprise extends Model
         'codeAPE_NAF',
         'statutJuridique',
         'effectif',
-        'representantLegal',
+        'nomRepresentant',
+        'prenomRepresentant',
+        'adresseMailRepresentant',
+        'telephoneRepresentant',
+        'fonctionRepresentant',
         'longitudeAdresse',
         'latitudeAdresse'
     ];
