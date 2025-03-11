@@ -46,37 +46,45 @@ class EntrepriseController extends Controller
         try
         {
             $donneesValidees = $request->validate([
-                'numSIRET'          => ["nullable","string","regex:/^\d{14}$/"], // Obligé de passer les paramètres dans un tableau puisque la règle "regex" est utilisée avec d'autres
-                'raisonSociale'     => 'required|string|max:100',
-                'typeEtablissement' => 'nullable|string|in:Administration,Association,Entreprise,Etablissement public',
-                'adresse'           => 'nullable|string|max:100',
-                'ville'             => 'nullable|string|max:50',
-                'codePostal'        => ["nullable","string","regex:/^\d{5}$/"],
-                'pays'              => 'nullable|string|max:50',
-                'telephone'         => ["nullable","string","regex:/^(\+33|0)\d{9}$/"],
-                'codeAPE_NAF'       => ["nullable","string","regex:/^\d{2}\.\d{2}[A-Z]$/"],
-                'statutJuridique'   => 'nullable|string|in:EI,EURL,SARL,SASU,SAS,SA,SNC,SCS,SCA',
-                'effectif'          => 'nullable|integer',
-                'representantLegal' => 'nullable|string|max:100',
-                'longitudeAdresse'  => 'nullable|string|max:20',
-                'latitudeAdresse'   => 'nullable|string|max:20',
+                'numSIRET'                  => ["nullable","string","regex:/^\d{14}$/"], // Obligé de passer les paramètres dans un tableau puisque la règle "regex" est utilisée avec d'autres
+                'raisonSociale'             => 'required|string|max:100',
+                'typeEtablissement'         => 'nullable|string|in:Administration,Association,Entreprise,Etablissement public',
+                'adresse'                   => 'nullable|string|max:100',
+                'ville'                     => 'nullable|string|max:50',
+                'codePostal'                => ["nullable","string","regex:/^\d{5}$/"],
+                'pays'                      => 'nullable|string|max:50',
+                'telephone'                 => ["nullable","string","regex:/^(\+33|0)\d{9}$/"],
+                'codeAPE_NAF'               => ["nullable","string","regex:/^\d{2}\.\d{2}[A-Z]$/"],
+                'statutJuridique'           => 'nullable|string|in:EI,EURL,SARL,SASU,SAS,SA,SNC,SCS,SCA',
+                'effectif'                  => 'nullable|integer',
+                'nomRepresentant'           => 'nullable|string|max:100',
+                'prenomRepresentant'        => 'nullable|string|max:50',
+                'adresseMailRepresentant'   => 'nullable|string|email|max:100',
+                'telephoneRepresentant'     => ['nullable','string','regex:/^(\+33|0)\d{9}$/'],
+                'fonctionRepresentant'      => 'nullable|string|max:50',
+                'longitudeAdresse'          => 'nullable|string|max:20',
+                'latitudeAdresse'           => 'nullable|string|max:20',
             ]);
     
             $uneEntreprise = Entreprise::create([
-                'numSIRET'          => $donneesValidees['numSIRET'] ?? null, // Ajoute la valeur si elle est présente, sinon null
-                'raisonSociale'     => $donneesValidees['raisonSociale'],
-                'typeEtablissement' => $donneesValidees['typeEtablissement'] ?? null,
-                'adresse'           => $donneesValidees['adresse'] ?? null,
-                'ville'             => $donneesValidees['ville'] ?? null,
-                'codePostal'        => $donneesValidees['codePostal'] ?? null,
-                'pays'              => $donneesValidees['pays'] ?? null,
-                'telephone'         => $donneesValidees['telephone'] ?? null,
-                'codeAPE_NAF'       => $donneesValidees['codeAPE_NAF'] ?? null,
-                'statutJuridique'   => $donneesValidees['statutJuridique'] ?? null,
-                'effectif'          => $donneesValidees['effectif'] ?? null,
-                'representantLegal' => $donneesValidees['representantLegal'] ?? null,
-                'longitudeAdresse'  => $donneesValidees['longitudeAdresse'] ?? null,
-                'latitudeAdresse'   => $donneesValidees['latitudeAdresse'] ?? null,
+                'numSIRET'                  => $donneesValidees['numSIRET'] ?? null, // Ajoute la valeur si elle est présente, sinon null
+                'raisonSociale'             => $donneesValidees['raisonSociale'],
+                'typeEtablissement'         => $donneesValidees['typeEtablissement'] ?? null,
+                'adresse'                   => $donneesValidees['adresse'] ?? null,
+                'ville'                     => $donneesValidees['ville'] ?? null,
+                'codePostal'                => $donneesValidees['codePostal'] ?? null,
+                'pays'                      => $donneesValidees['pays'] ?? null,
+                'telephone'                 => $donneesValidees['telephone'] ?? null,
+                'codeAPE_NAF'               => $donneesValidees['codeAPE_NAF'] ?? null,
+                'statutJuridique'           => $donneesValidees['statutJuridique'] ?? null,
+                'effectif'                  => $donneesValidees['effectif'] ?? null,
+                'nomRepresentant'           => $donneesValidees['nomRepresentant'] ?? null,
+                'prenomRepresentant'        => $donneesValidees['prenomRepresentant'] ?? null,
+                'adresseMailRepresentant'   => $donneesValidees['adresseMailRepresentant'] ?? null,
+                'telephoneRepresentant'     => $donneesValidees['telephoneRepresentant'] ?? null,
+                'fonctionRepresentant'      => $donneesValidees['fonctionRepresentant'] ?? null,
+                'longitudeAdresse'          => $donneesValidees['longitudeAdresse'] ?? null,
+                'latitudeAdresse'           => $donneesValidees['latitudeAdresse'] ?? null,
             ]);
     
             return response()->json($uneEntreprise,201);
