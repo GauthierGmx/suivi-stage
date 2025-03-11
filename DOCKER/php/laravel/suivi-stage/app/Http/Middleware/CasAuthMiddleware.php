@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 use App\Models\Etudiant;
 use App\Models\Personnel;
+use Illuminate\Support\Facades\Auth;
 
 class CasAuthMiddleware
 {
@@ -31,35 +31,40 @@ class CasAuthMiddleware
             config('auth.cas.server.basename'),
         );
 
-        // TO BE REMOVED IN PRODUCTION (This methode deactivate the SSL verification)
-        \phpCAS::setNoCasServerValidation();
+        // TO BE REMOVED IN PRODUCTION (This method deactivates the SSL verification)
+        if (app()->environment() !== 'production') {
+            \phpCAS::setNoCasServerValidation();
+        }
 
-        // Force the user to authentify if not already done
-        if(!\phpCAS::isAuthenticated()) {
+        // Force the user to authenticate if not already done
+        if (!\phpCAS::isAuthenticated()) {
             \phpCAS::forceAuthentication();
         }
 
         $userLogin = \phpCAS::getUser();
-        // Verify if the login has already been in set in session variable
-        if(!session()->has('cas_login'))
+                
+        // Vérifier si l'utilisateur existe en base de données
+        if (!session()->has('cas_login'))
         {
             $user = Etudiant::where('login', $userLogin)->first();
             $userType = "Etudiant";
 
-            // If no student found
+            // Si aucun étudiant trouvé, chercher dans les personnels
             if (!$user)
             {
-                $user = Personnel::where('login', $userLogin)->first();
-                $userType = "Personnel";
+                $user = Personnel::where('login', $userLogin)->first();$userType = "Personnel";
             }
 
-            // If no student and personnel found
+            // Si aucun utilisateur trouvé
             if (!$user)
             {
                 abort(403, "Vous n'êtes pas autorisé à accéder à cette page.");
             }
 
-            // Fill the session with the user informations
+            // Log the user info for debugging
+            \Log::info('User login:', ['user' => $userLogin]);
+
+            // Remplir la session avec les informations de l'utilisateur
             session([
                 'cas_login' => $userLogin,
                 'id' => $userType === "Etudiant" ? $user->idUPPA : $user->idPersonnel,
@@ -67,6 +72,6 @@ class CasAuthMiddleware
                 'user_type' => $userType
             ]);
         }
-        return $next($request);
+        return redirect()->away(config('app.angular_url') . '/dashboard');
     }
 }
