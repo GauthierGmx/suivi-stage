@@ -60,5 +60,6 @@ Route::get('/parcours', [ParcoursController::class, 'index'])->name('parcours.in
 
 // Route pour le Controller TuteurEntreprise
 Route::get('/tuteur-entreprise/{id}', [TuteurEntrepriseController::class, 'show'])->name('tuteur-entreprise.show');
-Route::post('/tuteur-entreprise', [TuteurEntrepriseController::class, 'store'])->middleware('dispatchDataDescriptiveSheet');
+Route::post('/tuteur-entreprise/create', [TuteurEntrepriseController::class, 'store'])->middleware('dispatchDataDescriptiveSheet');
 Route::put('/tuteur-entreprise/update/{id}', [TuteurEntrepriseController::class, 'update'])->middleware('dispatchDataDescriptiveSheet');
+Route::get('/tuteur-entreprise', [TuteurEntrepriseController::class, 'index'])->name('tuteur-entreprise.index');
