@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InternshipSearch, SearchStatus } from '../../models/internship-search.model';
@@ -41,10 +41,9 @@ export class SearchesStudentTabComponent implements OnInit {
     constructor(
         private readonly internshipSearchService: InternshipSearchService,
         private readonly navigationService: NavigationService,
-        private readonly companyService: CompanyService
-    ) {}
-
-    ngOnInit() {
+        private readonly companyService: CompanyService,
+        private readonly cdr: ChangeDetectorRef
+    ) {
         this.searchTermSubject.pipe(
             debounceTime(800),
             distinctUntilChanged()
@@ -52,6 +51,10 @@ export class SearchesStudentTabComponent implements OnInit {
             this.applyFilters();
         });
 
+        this.loadData();
+    }
+
+    ngOnInit() {
         this.loadData();
     }
 
@@ -97,6 +100,9 @@ export class SearchesStudentTabComponent implements OnInit {
             this.availableCities = searchesWithCompany ? [...new Set(searchesWithCompany.map(item => item.company.ville).filter(ville => ville !== null))].sort() : [];
             
             this.applyFilters();
+        }
+        else {
+            this.filteredSearchesWithCompany = [];
         }
     }
 
@@ -259,6 +265,7 @@ export class SearchesStudentTabComponent implements OnInit {
                 this.isDeleting = true;
                 await firstValueFrom(this.internshipSearchService.deleteSearch(this.searchToDelete));
                 await this.loadData();
+                this.cdr.detectChanges();
             }
             catch (error) {
                 console.error('Erreur lors de la suppression de la recherche:', error);
