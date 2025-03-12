@@ -238,4 +238,8 @@ export class FactsheetsStudentTabComponent implements OnInit {
     }
 
 
+    //Redirection vers la vue de consultation d'une recherche de stage
+    goToSheetDetails(sheetId: number) {
+        this.navigationService.navigateToSheetView(sheetId);
+    }
 }
