@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Parcours;
 use Illuminate\Http\Request;
 
 class ParcoursController extends Controller
@@ -23,4 +24,5 @@ class ParcoursController extends Controller
 
         return response()->json($parcours, 200);
     }
+
 }

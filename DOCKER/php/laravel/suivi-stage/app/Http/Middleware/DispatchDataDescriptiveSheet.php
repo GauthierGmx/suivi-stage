@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\TuteurEntreprise;
 use App\Models\Entreprise;
+use App\Models\FicheDescriptive;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\FicheDescriptiveController;
@@ -16,6 +17,65 @@ use Illuminate\Support\Facades\Http;
 
 class DispatchDataDescriptiveSheet
 {
+    protected $mapping = [
+        // Étudiant
+        'nomEtudiant' => 'nom',
+        'prenomEtudiant' => 'prenom',
+        'telephoneEtudiant' => 'telephone',
+        'adresseMailEtudiant' => 'adresseMail',
+        'adresseEtudiant' => 'adresse',
+        'codePostalEtudiant' => 'codePostal',
+        'villeEtudiant' => 'ville',
+
+        // Entreprise
+        'raisonSocialeEntreprise' => 'raisonSociale',
+        'adresseEntreprise' => 'adresse',
+        'codePostalEntreprise' => 'codePostal',
+        'villeEntreprise' => 'ville',
+        'paysEntreprise' => 'pays',
+        'telephoneEntreprise' => 'telephone',
+        'numSIRETEntreprise' => 'numSIRET',
+        'codeAPE_NAFEntreprise' => 'codeAPE_NAF',
+        'statutJuridiqueEntreprise' => 'statutJuridique',
+        'effectifEntreprise' => 'effectif',
+        'typeEtablissementEntreprise' => 'typeEtablissement',
+
+        // Représentant de l'entreprise
+        'nomRepresentantEntreprise' => 'nomRepresentant',
+        'prenomRepresentantEntreprise' => 'prenomRepresentant',
+        'telephoneRepresentantEntreprise' => 'telephoneRepresentant',
+        'adresseMailRepresentantEntreprise' => 'adresseMailRepresentant',
+        'fonctionRepresentantEntreprise' => 'fonctionRepresentant',
+
+        // Tuteur Entreprise
+        'nomTuteurEntreprise' => 'nom',
+        'prenomTuteurEntreprise' => 'prenom',
+        'telephoneTuteurEntreprise' => 'telephone',
+        'adresseMailTuteurEntreprise' => 'adresseMail',
+        'fonctionTuteurEntreprise' => 'fonction',
+
+        // Fiche Descriptive
+        'serviceEntreprise' => 'service',
+        'typeStageFicheDescriptive' => 'typeStage',
+        'thematiqueFicheDescriptive' => 'thematique',
+        'sujetFicheDescriptive' => 'sujet',
+        'tachesFicheDescriptive' => 'taches',
+        'competencesFicheDescriptive' => 'competences',
+        'detailsFicheDescriptive' => 'details',
+        'debutStageFicheDescriptive' => 'debutStage',
+        'finStageFicheDescriptive' => 'finStage',
+        'nbJourSemaineFicheDescriptive' => 'nbJourSemaine',
+        'nbHeuresSemaineFicheDescriptive' => 'nbHeuresSemaine',
+        'personnelTechniqueDisponibleFicheDescriptive' => 'personnelTechniqueDisponible',
+        'materielPreteFicheDescriptive' => 'materielPrete',
+        'clauseConfidentialiteFicheDescriptive' => 'clauseConfidentialite',
+        'adresseMailStageFicheDescriptive' => 'adresseMailStage',
+        'telephoneStageFicheDescriptive' => 'telephoneStage',
+        'codePostalStageFicheDescriptive'=> 'codePostalStage',
+        'villeStageFicheDescriptive' => 'villeStage',
+        'paysStageFicheDescriptive' => 'paysStage',
+    ];
+
     /**
      * Handle an incoming request.
      */
@@ -27,65 +87,25 @@ class DispatchDataDescriptiveSheet
             return response()->json(['error' => 'Invalid JSON format'], 400);
         }
 
-        // **1️⃣ Mapping des champs front -> base**
-        $mapping = [
-            // Étudiant
-            'nomEtudiant' => 'nom',
-            'prenomEtudiant' => 'prenom',
-            'telephoneEtudiant' => 'telephone',
-            'adresseMailEtudiant' => 'adresseMail',
-            'adresseEtudiant' => 'adresse',
-            'codePostalEtudiant' => 'codePostal',
-            'villeEtudiant' => 'ville',
+         // Vérifiez si la route demandée correspond à celle de handleSheetCreation
+         if ($request->is('fiche-descriptive/create')){
+            return $this->handleSheetCreation($request);
+        }
 
-            // Entreprise 
-            'raisonSocialeEntreprise' => 'raisonSociale',
-            'adresseEntreprise' => 'adresse',
-            'codePostalEntreprise' => 'codePostal',
-            'villeEntreprise' => 'ville',
-            'paysEntreprise' => 'pays',
-            'telephoneEntreprise' => 'telephone',
-            'numSIRETEntreprise' => 'numSIRET',
-            'codeAPE_NAFEntreprise' => 'codeAPE_NAF',
-            'statutJuridiqueEntreprise' => 'statutJuridique',
-            'effectifEntreprise' => 'effectif',
-            'typeEtablissementEntreprise' => 'typeEtablissement',
+        //Pour le renvoie d'une fiche descriptive
+        if ($request->is('fiche-descriptive/*') && $request->route('id')) {
+            return $this->handleSheetGet($request, $request->route('id'));
+        }
 
-            // Représentant de l'entreprise 
-            'nomRepresentantEntreprise' => 'nomRepresentant',
-            'prenomRepresentantEntreprise' => 'prenomRepresentant',
-            'telephoneRepresentantEntreprise' => 'telephoneRepresentant',
-            'adresseMailRepresentantEntreprise' => 'adresseMailRepresentant',
-            'fonctionRepresentantEntreprise' => 'fonctionRepresentant',
+        return $next($request);
+    }
 
-            // Tuteur Entreprise
-            'nomTuteurEntreprise' => 'nom',
-            'prenomTuteurEntreprise' => 'prenom',
-            'telephoneTuteurEntreprise' => 'telephone',
-            'adresseMailTuteurEntreprise' => 'adresseMail',
-            'fonctionTuteurEntreprise' => 'fonction',
+    public function handleSheetCreation(Request $request)
+    {
+        $data = $request->json()->all();
 
-            // Fiche Descriptive
-            'serviceEntreprise' => 'service',
-            'typeStageFicheDescriptive' => 'typeStage',
-            'thematiqueFicheDescriptive' => 'thematique',
-            'sujetFicheDescriptive' => 'sujet',
-            'tachesFicheDescriptive' => 'taches',
-            'competencesFicheDescriptive' => 'competences',
-            'detailsFicheDescriptive' => 'details',
-            'debutStageFicheDescriptive' => 'debutStage',
-            'finStageFicheDescriptive' => 'finStage',
-            'nbJourSemaineFicheDescriptive' => 'nbJourSemaine',
-            'nbHeuresSemaineFicheDescriptive' => 'nbHeuresSemaine',
-            'personnelTechniqueDisponibleFicheDescriptive' => 'personnelTechniqueDisponible',
-            'materielPreteFicheDescriptive' => 'materielPrete',
-            'clauseConfidentialiteFicheDescriptive' => 'clauseConfidentialite',
-            'adresseMailStageFicheDescriptive' => 'adresseMailStage',
-            'telephoneStageFicheDescriptive' => 'telephoneStage',
-            'codePostalStageFicheDescriptive'=> 'codePostalStage',
-            'villeStageFicheDescriptive' => 'villeStage',
-            'paysStageFicheDescriptive' => 'paysStage',
-        ];
+        // **1️⃣ Récupération du mapping**
+        $mapping = $this->mapping;
 
         // **2️⃣ Initialisation des catégories**
         $triData = [
@@ -174,7 +194,7 @@ class DispatchDataDescriptiveSheet
         $tuteurController = new TuteurEntrepriseController();
 
         $responses = [
-            'etudiant' => !empty($triData['etudiant']) ? $etudiantController->store(new Request($triData['etudiant']))->getData() : null,
+            //'etudiant' => !empty($triData['etudiant']) ? $etudiantController->store(new Request($triData['etudiant']))->getData() : null,
             //'entreprise' => !empty($triData['entreprise']) ? $entrepriseController->getOrCreate(new Request($triData['entreprise']))->getData() : null,
             'ficheDescriptive' => !empty($triData['ficheDescriptive']) ? $ficheDescriptiveController->store(new Request($triData['ficheDescriptive']))->getData() : null,
             'tuteur' => !empty($triData['tuteurEntreprise']) ? $this->handleTuteurCreation($triData['tuteurEntreprise']) : null
@@ -182,7 +202,6 @@ class DispatchDataDescriptiveSheet
 
         return response()->json($responses);
     }
-
 
     // Fonction pour gérer la création ou la récupération du tuteur
     private function handleTuteurCreation($tuteurData)
@@ -206,5 +225,356 @@ class DispatchDataDescriptiveSheet
 
         // Retourner le tuteur créé ou trouvé
         return $tuteur ? $tuteur->toArray() : null;
+    }
+
+    /**
+     * Mise à jour de la fiche descriptive.
+     */
+    public function updateFicheDescriptive(Request $request, $id)
+    {
+        // **1️⃣ Récupération de la fiche descriptive**
+        $ficheDescriptive = FicheDescriptive::find($id);
+        if (!$ficheDescriptive) {
+            return response()->json(['error' => 'Fiche descriptive non trouvée'], 404);
+        }
+
+        // **2️⃣ Récupérer les IDs de l'entreprise et du tuteur associés**
+        $idEntreprise = $ficheDescriptive->idEntreprise;
+        $idTuteurEntreprise = $ficheDescriptive->idTuteurEntreprise;
+
+        // **3️⃣ Récupération et validation des données du JSON**
+        $data = $request->json()->all();
+        if (!is_array($data)) {
+            return response()->json(['error' => 'Invalid JSON format'], 400);
+        }
+
+        // **4️⃣ Structuration des données avec le mapping**
+        $triData = [
+            'etudiant' => [],
+            'entreprise' => [],
+            'ficheDescriptive' => [],
+            'tuteurEntreprise' => []
+        ];
+
+        global $mapping;
+        foreach ($data as $key => $item) {
+            if (isset($item['type'], $item['value'])) {
+                $type = $item['type'];
+                $value = $item['value'];
+
+                // Appliquer le mapping
+                $mappedKey = $mapping[$key] ?? $key;
+
+                // Vérifier si le type est valide et appliquer le mapping
+                if (array_key_exists($type, $triData)) {
+                    $triData[$type][$mappedKey] = $value;
+                }
+            }
+        }
+
+        // **5️⃣ Validation des données après mapping**
+        $validatedData = $this->validateData($triData);
+
+        // **6️⃣ Mise à jour de la fiche descriptive**
+        $ficheDescriptive->update($validatedData['ficheDescriptive']);
+
+        // **7️⃣ Mise à jour de l'entreprise si nécessaire**
+        $entreprise = null;
+        if (!empty($validatedData['entreprise'])) {
+            $entreprise = Entreprise::find($idEntreprise);
+            if ($entreprise) {
+                $entreprise->update($validatedData['entreprise']);
+            } else {
+                \Log::error("Entreprise non trouvée pour ID: " . $idEntreprise);
+            }
+        }
+
+        // **8️⃣ Mise à jour du tuteur entreprise si nécessaire**
+        $tuteur = null;
+        if (!empty($validatedData['tuteurEntreprise'])) {
+            $tuteur = TuteurEntreprise::find($idTuteur);
+            if ($tuteur) {
+                $tuteur->update($validatedData['tuteurEntreprise']);
+            } else {
+                \Log::error("Tuteur entreprise non trouvé pour ID: " . $idTuteur);
+            }
+        }
+
+        // **9️⃣ Générer la réponse finale avec les mises à jour**
+        return response()->json([
+            'ficheDescriptive' => $ficheDescriptive,
+            'entreprise' => $entreprise,
+            'tuteurEntreprise' => $tuteur
+        ]);
+    }
+
+    /**
+     * 
+     * 
+     */
+    public function handleSheetGet(Request $request)
+    {
+        // Logique pour récupérer ou manipuler les données
+        $id = $request->route('id'); // Vous pouvez récupérer l'ID de la route
+
+        // Exemple : récupérez les données d'une fiche descriptive, d'un tuteur, ou d'une entreprise
+        $ficheDescriptive = FicheDescriptive::findOrFail($id);
+
+        // Si la fiche descriptive n'est pas trouvée
+        if (!$ficheDescriptive) {
+            return response()->json(['message' => 'Fiche descriptive non trouvée'], 404);
+        }
+
+        // Récupérer les données du tuteur et de l'entreprise
+        $tuteur = TuteurEntreprise::find($ficheDescriptive->idTuteurEntreprise);
+        $entreprise = Entreprise::find($ficheDescriptive->idEntreprise);
+
+        // Vérifier la présence du tuteur et de l'entreprise
+        if (!$tuteur || !$entreprise) {
+            return response()->json(['message' => 'Tuteur ou entreprise non trouvée'], 404);
+        }
+
+        // Vérification de la validité des champs obligatoires
+        if (empty($entreprise->numSIRET) || empty($entreprise->raisonSociale)) {
+            return response()->json(['error' => 'Le numéro SIRET ou/et la raison sociale est obligatoire'], 400);
+        }
+ 
+         // Construire le tableau des données à renvoyer
+         $data = [
+            //Informations Fiche Descriptive
+             'idFicheDescriptive' => [
+                'value' => $ficheDescriptive->idFicheDescriptive,
+                'type' => 'ficheDescriptive',
+             ],
+             'dateCreationFicheDescriptive' => [
+                'value' => $ficheDescriptive->dateCreation,
+                'type' => 'ficheDescriptive',
+             ],
+             'dateDerniereModificationFicheDescriptive' => [
+                'value' => $ficheDescriptive->dateDerniereModification,
+                'type' => 'ficheDescriptive',
+             ],
+             'contenuStageFicheDescriptive' => [
+                'value' => $ficheDescriptive->contenuStage,
+                'type' => 'ficheDescriptive',
+             ],
+             'thematiqueFicheDescriptive' => [
+                'value' => $ficheDescriptive->thematique,
+                'type' => 'ficheDescriptive',
+             ],
+             'sujetFicheDescriptive' => [
+                'value' => $ficheDescriptive->sujet,
+                'type' => 'ficheDescriptive',
+             ],
+             'fonctionsFicheDescriptive' => [
+                'value' => $ficheDescriptive->fonctions,
+                'type' => 'ficheDescriptive',
+             ],
+             'tachesFicheDescriptive' => [
+                'value' => $ficheDescriptive->taches,
+                'type' => 'ficheDescriptive',
+             ],
+             'competencesFicheDescriptive' => [
+                'value' => $ficheDescriptive->competences,
+                'type' => 'ficheDescriptive',
+             ],
+             'detailsFicheDescriptive' => [
+                'value' => $ficheDescriptive->details,
+                'type' => 'ficheDescriptive',
+             ],
+             'debutStageFicheDescriptive' => [
+                'value' => $ficheDescriptive->debutStage,
+                'type' => 'ficheDescriptive',
+             ],
+             'finStageFicheDescriptive' => [
+                'value' => $ficheDescriptive->finStage,
+                'type' => 'ficheDescriptive',
+             ],
+             'nbJourSemaineFicheDescriptive' => [
+                'value' => $ficheDescriptive->nbJourSemaine,
+                'type' => 'ficheDescriptive',
+             ],
+             'nbHeureSemaineFicheDescriptive' => [
+                'value' => $ficheDescriptive->nbHeureSemaine,
+                'type' => 'ficheDescriptive',
+             ],
+             'clauseConfidentialiteFicheDescriptive' => [
+                'value' => $ficheDescriptive->clauseConfidentialite,
+                'type' => 'ficheDescriptive',
+             ],
+             'serviceEntrepriseFicheDescriptive' => [
+                'value' => $ficheDescriptive->serviceEntreprise,
+                'type' => 'ficheDescriptive',
+             ],
+             'adresseMailStageFicheDescriptive' => [
+                'value' => $ficheDescriptive->adresseMailStage,
+                'type' => 'ficheDescriptive',
+             ],
+             'telephoneStageFicheDescriptive' => [
+                'value' => $ficheDescriptive->telephoneStage,
+                'type' => 'ficheDescriptive',
+             ],
+             'adresseStageFicheDescriptive' => [
+                'value' => $ficheDescriptive->adresseStage,
+                'type' => 'ficheDescriptive',
+             ],
+             'codePostalStageFicheDescriptive' => [
+                'value' => $ficheDescriptive->codePostalStage,
+                'type' => 'ficheDescriptive',
+             ],
+             'villeStageFicheDescriptive' => [
+                'value' => $ficheDescriptive->villeStage,
+                'type' => 'ficheDescriptive',
+             ],
+             'paysStageFicheDescriptive' => [
+                'value' => $ficheDescriptive->paysStage,
+                'type' => 'ficheDescriptive',
+             ],
+             'statutFicheDescriptive' => [
+                 'value' => $ficheDescriptive->statut, // Assurez-vous que la fiche a un champ statut
+                 'type' => 'ficheDescriptive',
+             ],
+             'numeroConventionFicheDescriptive' => [
+                'value' => $ficheDescriptive->numeroConvention,
+                'type' => 'ficheDescriptive',
+             ],
+             'interruptionStageFicheDescriptive' => [
+                'value' => $ficheDescriptive->interruptionStage,
+                'type' => 'ficheDescriptive',
+             ],
+             'dateDebutInterruptionFicheDescriptive' => [
+                'value' => $ficheDescriptive->dateDebutInterruption,
+                'type' => 'ficheDescriptive',
+             ],
+             'dateFinInterruptionFicheDescriptive' => [
+                'value' => $ficheDescriptive->dateFinInterruption,
+                'type' => 'ficheDescriptive',
+             ],
+             'personnelTechniqueDisponibleFicheDescriptive' => [
+                'value' => $ficheDescriptive->personnelTechniqueDisponible,
+                'type' => 'ficheDescriptive',
+             ],
+             'materielPreteFicheDescriptive' => [
+                'value' => $ficheDescriptive->materielPrete,
+                'type' => 'ficheDescriptive',
+             ],
+             'idEntreprise' => [
+                'value' => $ficheDescriptive->idEntreprise,
+                'type' => 'ficheDescriptive',
+             ],
+             'idTuteurEntreprise' => [
+                'value' => $ficheDescriptive->idTuteurEntreprise,
+                'type' => 'ficheDescriptive',
+             ],
+             //Informations étudiant 
+             'idUPPA' => [
+                'value' => $ficheDescriptive->id, // Assurez-vous de récupérer l'ID correctement
+                'type' => 'ficheDescriptive',
+            ],
+             'nomEtudiant' => [
+                 'value' => $ficheDescriptive->nomEtudiant, // Remplacez par les bons champs
+                 'type' => 'etudiant',
+             ],
+             'prenomEtudiant' => [
+                 'value' => $ficheDescriptive->prenomEtudiant,
+                 'type' => 'etudiant',
+             ],
+             'telephoneEtudiant' => [
+                 'value' => $ficheDescriptive->telephoneEtudiant,
+                 'type' => 'etudiant',
+             ],
+
+             // Informations du tuteur
+             'nomTuteurEntreprise' => [
+                 'value' => $tuteur->nom,
+                 'type' => 'tuteurEntreprise',
+             ],
+             'prenomTuteurEntreprise' => [
+                 'value' => $tuteur->prenom,
+                 'type' => 'tuteurEntreprise',
+             ],
+             'telephoneTuteurEntreprise' => [
+                 'value' => $tuteur->telephone,
+                 'type' => 'tuteurEntreprise',
+             ],
+             'adresseMailTuteurEntreprise' => [
+                 'value' => $tuteur->adresseMail,
+                 'type' => 'tuteurEntreprise',
+             ],
+             'fonctionTuteurEntreprise' => [
+                 'value' => $tuteur->fonction,
+                 'type' => 'tuteurEntreprise',
+             ],
+ 
+             // Informations de l'entreprise
+             'numSIRETEntreprise' => [
+                'value' => $entreprise->numSIRET,
+                'type' => 'entreprise',
+            ],
+             'raisonSocialeEntreprise' => [
+                 'value' => $entreprise->raisonSociale,
+                 'type' => 'entreprise',
+             ],
+             'adresseEntreprise' => [
+                 'value' => $entreprise->adresse,
+                 'type' => 'entreprise',
+             ],
+             'typeEtablissementEntreprise' => [
+                 'value' => $entreprise->typeEtablissement,
+                 'type' => 'entreprise',
+             ],
+             'telephoneEntreprise' => [
+                'value' => $entreprise->telephone,
+                'type' => 'entreprise',
+            ],
+             'codePostalEntreprise' => [
+                 'value' => $entreprise->codePostal,
+                 'type' => 'entreprise',
+             ],
+             'villeEntreprise' => [
+                 'value' => $entreprise->ville,
+                 'type' => 'entreprise',
+             ],
+             'paysEntreprise' => [
+                 'value' => $entreprise->pays,
+                 'type' => 'entreprise',
+             ],
+             'codeAPE_NAFEntreprise' => [
+                 'value' => $entreprise->codeAPE_NAF,
+                 'type' => 'entreprise',
+             ],
+             'statutJuridiqueEntreprise' => [
+                 'value' => $entreprise->statutJuridique,
+                 'type' => 'entreprise',
+             ],
+             'effectifEntreprise' => [
+                 'value' => $entreprise->effectif,
+                 'type' => 'entreprise',
+             ],
+             'nomRepresentantEntreprise' => [
+                 'value' => $entreprise->nomRepresentant,
+                 'type' => 'entreprise',
+             ],
+             'prenomRepresentantEntreprise' => [
+                 'value' => $entreprise->prenomRepresentant,
+                 'type' => 'entreprise',
+             ],
+             'telephoneRepresentantEntreprise' => [
+                 'value' => $entreprise->telephoneRepresentant,
+                 'type' => 'entreprise',
+             ],
+             'adresseMailRepresentantEntreprise' => [
+                 'value' => $entreprise->adresseMailRepresentant,
+                 'type' => 'entreprise',
+             ],
+             'fonctionRepresentantEntreprise' => [
+                 'value' => $entreprise->fonctionRepresentant,
+                 'type' => 'entreprise',
+             ],
+ 
+         ];
+  
+         // Retourner la réponse JSON
+         return response()->json($data);
     }
 }

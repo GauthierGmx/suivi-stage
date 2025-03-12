@@ -8,6 +8,8 @@ use App\Http\Controllers\RechercheStageController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\FicheDescriptiveController; 
 use App\Http\Controllers\EtudiantController;
+use App\Http\Controllers\ParcoursController;
+use App\Http\Controllers\TuteurEntrepriseController;
 use App\Http\Middleware\DispatchDataDescriptiveSheet;
 
 /*
@@ -38,11 +40,14 @@ Route::post('/entreprises/create', [EntrepriseController::class, 'store'])->name
 Route::get('/entreprises/{id}', [EntrepriseController::class, 'show'])->name('entreprises.show');
 
 // Route pour le Controller FicheDescriptive
-Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.store');
+//Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.store');
 Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update');
-Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show');
+//Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show');
 Route::get('/fiche-descriptive', [FicheDescriptiveController::class, 'index'])->name('fiche-descriptive.index');
-Route::post('/fiche-descriptive/data', function () {})->middleware('dispatchDataDescriptiveSheet');
+Route::post('fiche-descriptive/create', [DispatchDataDescriptiveSheet::class, 'handleSheetCreation']);
+Route::get('fiche-descriptive/{id}', [DispatchDataDescriptiveSheet::class, 'handleSheetGet']);
+
+
 
 // Route pour le Controller Etudiant
 Route::get('/etudiants/{id}/recherches-stages', [EtudiantController::class, 'indexRechercheStage'])->name('etudiants.indexRechercheStage');
@@ -56,3 +61,4 @@ Route::get('/parcours', [ParcoursController::class, 'index'])->name('parcours.in
 // Route pour le Controller TuteurEntreprise
 Route::get('/tuteur-entreprise/{id}', [TuteurEntrepriseController::class, 'show'])->name('tuteur-entreprise.show');
 Route::post('/tuteur-entreprise', [TuteurEntrepriseController::class, 'store'])->middleware('dispatchDataDescriptiveSheet');
+Route::put('/tuteur-entreprise/update/{id}', [TuteurEntrepriseController::class, 'update'])->middleware('dispatchDataDescriptiveSheet');
