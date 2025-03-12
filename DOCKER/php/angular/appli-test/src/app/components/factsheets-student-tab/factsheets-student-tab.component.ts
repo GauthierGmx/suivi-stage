@@ -58,29 +58,6 @@ export class FactsheetsStudentTabComponent implements OnInit {
 }
 
     
-    /*
-    loadData(studentId: string) {
-
-
-        forkJoin({
-            student: this.studentService.getStudentById(studentId),
-            companies: this.companyService.getCompanies(),
-            sheets: this.factsheetsService.getSheetsByStudentId(studentId)
-        }).subscribe(({student, companies, sheets}) => {
-            this.studentData = student;
-            this.companies = companies;
-            this.sheets = sheets;
-            if(this.sheets) {
-                this.filteredSheetsWithCompanies = this.sheets.map(sheet => {
-                    const company = this.companies!.find(c => c.idEntreprise === sheet.idEntreprise);
-                    return { sheet, company: company! };
-                });
-                this.applyFilters();
-            }
-            this.dataLoaded.emit();
-        });
-    }
-        */
 
     //Chargement des données de l'étudiant, de ses recherches de stages et des entreprises liées
     loadData() {
@@ -101,7 +78,6 @@ export class FactsheetsStudentTabComponent implements OnInit {
                     } else {
                         this.filteredSheetsWithCompanies = [];
                     }
-                    console.log("azpeazpeazpeazep", this.sheets);
                     this.dataLoaded.emit();
                 })
             )
