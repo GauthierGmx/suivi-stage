@@ -88,9 +88,9 @@ class TuteurEntrepriseControllerTest extends TestCase
             $mock->shouldReceive('show')->andThrow(new \Exception('Erreur simulée'));
         });
 
-        $unEtudiant = Etudiant::first();
+        $unTuteur = TuteurEntreprise::first();
 
-        $response = $this->get('/api/etudiants/'.$unEtudiant->idUPPA);
+        $response = $this->get('/api/tuteur-entreprise/'.$unTuteur->idTuteur);
 
         $response->assertStatus(500)
                  ->assertJson(['message' => 'Une erreur s\'est produite']);
@@ -102,6 +102,46 @@ class TuteurEntrepriseControllerTest extends TestCase
     ================================
     */
 
+    /**
+     * La méthode store va retourner une confirmation 201 et le tuteur d'entreprise créé
+     * 
+     * @return void
+     */
+
+    public function test_store_renvoie_une_confirmation_et_le_tuteur_entreprise_cree(){
+        $data = [
+            'nom' => 'Doe',
+            'prenom' => 'John',
+            'adresseMail' => 'john.doe@gmail.com',
+            'telephone' => '0601020304',
+            'fonction' => 'Responsable RH',
+            'idEntreprise' => 3
+        ];
+
+        $response = $this->postJson('/api/tuteur-entreprise/create', $data);
+        $response->assertStatus(201)
+                 ->assertJson($data);
+    }
+
+
+    /**
+     * La méthode store va retourner une erreur 422 si les données ne sont pas valides
+     * 
+     * @return void
+     */
+    public function test_store_renvoie_une_erreur_422_si_les_donnees_ne_sont_pas_valides(){
+        $data = [
+            'nom' => 'Doe',
+            'prenom' => 'John',
+            'email' => 'john.doe',
+            'telephone' => '0601020304',
+            'fonction' => 'Responsable RH',
+            'idEntreprise' => 1
+        ];
+
+        $response = $this->postJson('/api/tuteur-entreprise/create', $data);
+        $response->assertStatus(422);
+    }
     /*
     ================================
         TEST DE LA METHODE UPDATE
