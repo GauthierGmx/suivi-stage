@@ -8,7 +8,7 @@ use App\Http\Controllers\RechercheStageController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\FicheDescriptiveController; 
 use App\Http\Controllers\EtudiantController;
-
+use App\Http\Middleware\DispatchDataDescriptiveSheet;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,3 +55,4 @@ Route::get('/parcours', [ParcoursController::class, 'index'])->name('parcours.in
 
 // Route pour le Controller TuteurEntreprise
 Route::get('/tuteur-entreprise/{id}', [TuteurEntrepriseController::class, 'show'])->name('tuteur-entreprise.show');
+Route::post('/tuteur-entreprise', [TuteurEntrepriseController::class, 'store'])->middleware('dispatchDataDescriptiveSheet');

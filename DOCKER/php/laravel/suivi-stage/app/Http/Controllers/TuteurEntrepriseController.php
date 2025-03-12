@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Entreprise;
+use App\Models\TuteurEntreprise;
 
 class TuteurEntrepriseController extends Controller
 {
@@ -26,7 +28,7 @@ class TuteurEntrepriseController extends Controller
     {
         try
         {
-            $unTuteurEntreprise = Etudiant::findOrFail($id);
+            $unTuteurEntreprise = TuteurEntreprise::findOrFail($id);
             return response()->json($unTuteurEntreprise, 200);
         }
         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
@@ -51,48 +53,53 @@ class TuteurEntrepriseController extends Controller
      */
     public function store(Request $request)
     {
-        try
-        {
+        try {
             $donneesValidees = $request->validate([
                 'adresseMail'   => 'required|email|max:100',
                 'nom'           => 'required|string|max:50',
                 'prenom'        => 'required|string|max:50',
-                'telephone'     => ["required","string","regex:/^(\+33|0)\d{9}$/"],
+                'telephone'     => ['required', 'string', 'regex:/^(\+33|0)\d{9}$/'],
                 'fonction'      => 'required|string|max:50',
-                'idEntreprise'  => 'required|integer',
+                'idEntreprise'  => 'required|integer|exists:entreprises,idEntreprise',  // Vérification si l'entreprise existe
             ]);
     
+            // Vérification supplémentaire
+            if (!isset($donneesValidees['idEntreprise'])) {
+                return response()->json(['error' => "L'ID de l'entreprise est manquant."], 400);
+            }
+    
+            // Vérifier si l'entreprise existe
+            $entreprise = Entreprise::find($donneesValidees['idEntreprise']);
+            if (!$entreprise) {
+                return response()->json(['error' => "L'entreprise spécifiée n'existe pas."], 404);
+            }
+    
+            // Création du tuteur avec l'ID de l'entreprise
             $unTuteurEntreprise = TuteurEntreprise::create([
-                'nom'           => $donneesValidees['nom'] ?? null, // Ajoute la valeur si elle est présente, sinon null
-                'prenom'        => $donneesValidees['prenom'] ?? null,
-                'telephone'     => $donneesValidees['telephone'] ?? null,
+                'nom'           => $donneesValidees['nom'],
+                'prenom'        => $donneesValidees['prenom'],
+                'telephone'     => $donneesValidees['telephone'],
                 'adresseMail'   => $donneesValidees['adresseMail'],
-                'idEntreprise'  => $donneesValidees['ville'] ?? null,
-                'fonction'      => $donneesValidees['fonction'] ?? null,
+                'idEntreprise'  => $donneesValidees['idEntreprise'],
+                'fonction'      => $donneesValidees['fonction'],
             ]);
     
-            return response()->json($unTuteurEntreprise,201);
-        }
-        catch (\Illuminate\Validation\ValidationException $e)
-        {
+            return response()->json($unTuteurEntreprise, 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
-                'message' => 'Erreur de validation dans les données',
-                'erreur' => $e->errors()
-            ],422);
-        }
-        catch (\Illuminate\Database\QueryException $e)
-        {
+                'message' => 'Erreur de validation',
+                'erreurs' => $e->errors(),
+            ], 422);
+        } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
                 'message' => 'Erreur dans la base de données',
-                'erreur' => $e->getMessage()
-            ],500);
-        }
-        catch (\Exception $e)
-        {
+                'erreur' => $e->getMessage(),
+            ], 500);
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Une erreur s\'est produite',
-                'erreur' => $e->getMessage()
-            ],500);
+                'erreur' => $e->getMessage(),
+            ], 500);
         }
-    }
+    }    
 }
