@@ -14,6 +14,14 @@ export class DescriptiveSheet {
   nbJourParSemaine: number | null;
   nbHeureParSemaine: number | null;
   clauseConfidentialite: boolean | null;
+  adresseMailStage: string | null;
+  telephoneStage: string | null;
+  adresseStage: string | null;
+  codePostalStage: string | null;
+  villeStage: string | null;
+  paysStage: string | null;
+  longitudeStage: string | null;
+  latitudeStage: string | null;
   statut: SheetStatus | null;
   personnelTechnique: boolean | null;
   materielPrete: string | null;
@@ -42,6 +50,14 @@ export class DescriptiveSheet {
     nbJourParSemaine: number,
     nbHeureParSemaine: number,
     clauseConfidentialite: boolean,
+    adresseMailStage: string,
+    telephoneStage: string,
+    adresseStage: string,
+    codePostalStage: string,
+    villeStage: string,
+    paysStage: string,
+    longitudeStage: string,
+    latitudeStage: string,
     statut: SheetStatus,
     personnelTechnique: boolean,
     materielPrete: string,
@@ -69,6 +85,14 @@ export class DescriptiveSheet {
     this.nbJourParSemaine = nbJourParSemaine;
     this.nbHeureParSemaine = nbHeureParSemaine;
     this.clauseConfidentialite = clauseConfidentialite;
+    this.adresseMailStage = adresseMailStage;
+    this.telephoneStage = telephoneStage;
+    this.adresseStage = adresseStage;
+    this.codePostalStage = codePostalStage;
+    this.villeStage = villeStage;
+    this.paysStage = paysStage;
+    this.longitudeStage = longitudeStage;
+    this.latitudeStage = latitudeStage;
     this.statut = statut;
     this.personnelTechnique = personnelTechnique;
     this.materielPrete = materielPrete;

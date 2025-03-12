@@ -12,39 +12,73 @@
         <div class="form-row">
           <div class="form-group">
             <label for="raison-sociale">Raison Sociale/Nom de l'entreprise</label>
-            <input type="text" id="raison-sociale" [(ngModel)]="formData.raisonSocialeEntreprise.value" name="raisonSociale">
+<!--             <input type="text" id="raison-sociale" [(ngModel)]="formData.raisonSocialeEntreprise.value" name="raisonSociale">
+ -->          
+            <div class="search-wrapper">
+              <input
+                type="text"
+                id="nomEntreprise"
+                name="searchTerm"
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="onSearchChange($event)"
+                placeholder="IUT de Bayonne"
+                #nomEntreprise="ngModel"
+                required
+                (focus)="showDropdown = true"
+              >
+              @if (showDropdown && filteredCompanies.length > 0) {
+                <div class="dropdown">
+                  @for (enterprise of filteredCompanies; track enterprise.idEntreprise) {
+                    <div
+                      class="dropdown-item"
+                      (click)="selectCompany(enterprise)"
+                    >
+                      {{ enterprise.raisonSociale }}
+                    </div>
+                  }
+                </div>
+              }
+              <div class="errorMessage" *ngIf="nomEntreprise.invalid && nomEntreprise.errors && (nomEntreprise.dirty || nomEntreprise.touched)">
+                <small *ngIf="nomEntreprise.errors?.['required']"><b>La sélection d'une entreprise est obligatoire.</b></small>
+              </div>
+            </div>           
+
           </div>
           <div class="form-group">
             <label for="adresse">Adresse - Numéro et Rue</label>
-            <input type="text" id="adresse" [(ngModel)]="formData.adresseEntreprise.value" name="adresse">
+            <input type="text" id="adresse" [(ngModel)]="formData.adresseEntreprise.value" name="adresse" disabled>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="codePostal">Adresse - Code Postal</label>
-            <input type="text" id="codePostal" [(ngModel)]="formData.codePostalEntreprise.value" name="codePostal">
+            <input type="text" id="codePostal" [(ngModel)]="formData.codePostalEntreprise.value" name="codePostal" disabled>
           </div>
           <div class="form-group">
             <label for="ville">Adresse - Ville</label>
-            <input type="text" id="ville" [(ngModel)]="formData.villeEntreprise.value" name="ville">
+            <input type="text" id="ville" [(ngModel)]="formData.villeEntreprise.value" name="ville" disabled>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="pays">Pays</label>
-            <input type="text" id="pays" [(ngModel)]="formData.paysEntreprise.value" name="pays">
+            <input type="text" id="pays" [(ngModel)]="formData.paysEntreprise.value" name="pays" disabled>
           </div>
           <div class="form-group">
             <label for="telephone">Téléphone</label>
-            <input type="text" id="telephone" [(ngModel)]="formData.telephoneEntreprise.value" name="telephone">
+            <input type="text" id="telephone" [(ngModel)]="formData.telephoneEntreprise.value" name="telephone" placeholder='0630607080' #telephone="ngModel" required pattern="^(\+33|0)\d{9}$">
+            <div class="errorMessage" *ngIf="telephone.invalid && telephone.errors && (telephone.dirty || telephone.touched)">
+              <small *ngIf="telephone.errors?.['required']"><b>Le téléphone du contact est requis.</b></small>
+              <small *ngIf="telephone.errors?.['pattern']"><b>Le numéro doit commencer par un "0" ou "+33" et contenir 10 chiffres.</b></small>
+            </div>
           </div>
         </div>
 
         <div class="buttons">
           <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
-          <button type="submit" class="btn-submit">Suivant</button>
+          <button type="submit" class="btn-submit" [disabled]='!isFormValid()'>Suivant</button>
         </div>
       </div>
       </form>

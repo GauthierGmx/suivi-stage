@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavigationTabsComponent } from '../../navigation-tabs/navigation-tabs.component';
 import { NavigationService } from '../../../services/navigation.service';
+import { FormDataService } from '../../../services/form-data.service';
 
 @Component({
   selector: 'app-add-factsheets-8',
@@ -11,40 +12,39 @@ import { NavigationService } from '../../../services/navigation.service';
   templateUrl: './add-factsheets-8.component.html',
   styleUrl: './add-factsheets-8.component.css'
 })
-export class AddFactsheets8Component {
+export class AddFactsheets8Component implements OnInit {
   @Output() next = new EventEmitter<any>();
   @Output() previous = new EventEmitter<void>();
   currentStep: number;
 
-  formData = {
-    typeStageFicheDescriptive: {
-      value: 'Obligatoire',
-      type: 'ficheDescriptive'
-    },
-    thematiqueFicheDescriptive: {
-      value: 'Développement',
-      type: 'ficheDescriptive'
-    },
-    sujetFicheDescriptive: {
-      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-      type: 'ficheDescriptive'
-    },
-    tachesFicheDescriptive: {
-      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-      type: 'ficheDescriptive'
-    },
-    competencesFicheDescriptive: {
-      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-      type: 'ficheDescriptive'
-    },
-    detailsFicheDescriptive: {
-      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-      type: 'ficheDescriptive'
-    }
-  };
+  get formData() {
+    return this.formDataService.getFormData();
+  }
 
-  constructor(private readonly navigationService: NavigationService) {
+  constructor(
+    private readonly navigationService: NavigationService,
+    private readonly formDataService: FormDataService
+  ) {
     this.currentStep = this.navigationService.getCurrentFactsheetStep();
+  }
+
+  ngOnInit() {
+    this.initializeFormFields();
+  }
+
+  private initializeFormFields() {
+    const fields = {
+      typeStageFicheDescriptive: { value: 'Obligatoire', type: 'ficheDescriptive' },
+      thematiqueFicheDescriptive: { value: '', type: 'ficheDescriptive' },
+      sujetFicheDescriptive: { value: '', type: 'ficheDescriptive' },
+      tachesFicheDescriptive: { value: '', type: 'ficheDescriptive' },
+      competencesFicheDescriptive: { value: '', type: 'ficheDescriptive' },
+      detailsFicheDescriptive: { value: '', type: 'ficheDescriptive' }
+    };
+
+    Object.entries(fields).forEach(([field, config]) => {
+      this.formDataService.initializeField(field, config.value, config.type);
+    });
   }
 
   onStepChange(step: number) {

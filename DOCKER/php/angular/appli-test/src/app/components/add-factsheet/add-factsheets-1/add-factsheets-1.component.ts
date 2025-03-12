@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavigationTabsComponent } from '../../navigation-tabs/navigation-tabs.component';
 import { NavigationService } from '../../../services/navigation.service';
+import { FormDataService } from '../../../services/form-data.service';
 import { Student } from '../../../models/student.model';
 
 @Component({
@@ -12,60 +13,39 @@ import { Student } from '../../../models/student.model';
   templateUrl: './add-factsheets-1.component.html',
   styleUrl: './add-factsheets-1.component.css'
 })
-export class AddFactsheets1Component {
+export class AddFactsheets1Component implements OnInit {
   @Output() next = new EventEmitter<any>();
   currentStep: number;
   @Input() student!: Student;
 
-  formData = {
-    nomEtudiant: {
-      value: '',
-      type: 'etudiant'
-    },
-    prenomEtudiant: {
-      value: '',
-      type: 'etudiant'
-    },
-    telephoneEtudiant: {
-      value: '',
-      type: 'etudiant'
-    },
-    adresseMailEtudiant: {
-      value: '',
-      type: 'etudiant'
-    },
-    adresseEtudiant: {
-      value: '',
-      type: 'etudiant'
-    },
-    codePostalEtudiant: {
-      value: '',
-      type: 'etudiant'
-    },
-    villeEtudiant: {
-      value: '',
-      type: 'etudiant'
-    }
-  };
-
-  ngOnInit(): void {
-    // Initialization code here
-    if (this.student) {
-      this.formData.nomEtudiant.value = this.student.nom ?? '';
-      this.formData.prenomEtudiant.value = this.student.prenom ?? '';
-      this.formData.telephoneEtudiant.value = this.student.telephone ?? '';
-      this.formData.adresseMailEtudiant.value = this.student.adresseMail ?? '';
-      this.formData.adresseEtudiant.value = this.student.adresse ?? '';
-      this.formData.codePostalEtudiant.value = this.student.codePostal ?? '';
-      this.formData.villeEtudiant.value = this.student.ville ?? '';
-    }
-
+  get formData() {
+    return this.formDataService.getFormData();
   }
 
-  constructor(private readonly navigationService: NavigationService) {
+  constructor(
+    private readonly navigationService: NavigationService,
+    private readonly formDataService: FormDataService
+  ) {
     this.currentStep = this.navigationService.getCurrentFactsheetStep();
   }
 
+  ngOnInit(): void {
+    // Initialisation des champs avec les valeurs de l'étudiant
+    const fieldMappings = {
+      'nomEtudiant': this.student?.nom,
+      'prenomEtudiant': this.student?.prenom,
+      'telephoneEtudiant': this.student?.telephone,
+      'adresseMailEtudiant': this.student?.adresseMail,
+      'adresseEtudiant': this.student?.adresse,
+      'codePostalEtudiant': this.student?.codePostal,
+      'villeEtudiant': this.student?.ville
+    };
+
+    // Initialisation de chaque champ
+    Object.entries(fieldMappings).forEach(([field, value]) => {
+      this.formDataService.initializeField(field, value ?? '', 'etudiant');
+    });
+  }
 
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);

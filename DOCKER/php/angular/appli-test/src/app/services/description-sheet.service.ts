@@ -8,7 +8,7 @@ import { Observable, catchError, tap, of } from 'rxjs';
 })
 export class DescriptionSheetService {
   // Données de test
-  private mockSheets: DescriptiveSheet[] = [
+  /* private mockSheets: DescriptiveSheet[] = [
     {
       idFicheDescriptive: 1,
       dateCreation: new Date('2024-03-15'),
@@ -81,7 +81,7 @@ export class DescriptionSheetService {
       idUPPA: '101',
       numeroConvention: 'CONV2024-003'
     }
-  ];
+  ];*/
 
   constructor(private http: HttpClient) {}
 
@@ -92,14 +92,14 @@ export class DescriptionSheetService {
       params = params.set('fields', fields.join(','));
     }
 
-    /*
+    
     return this.http.get<DescriptiveSheet[]>('http://localhost:8000/api/fiche-descriptive', {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
-    */
+    
 
-    return of(this.mockSheets);
+    // return of(this.mockSheets);
   }
 
   getSheetsByStudentId(studentId: string, fields?: string[]): Observable<DescriptiveSheet[]> {
@@ -109,14 +109,14 @@ export class DescriptionSheetService {
       params = params.set('fields', fields.join(','));
     }
 
-    /*
+    
     return this.http.get<DescriptiveSheet[]>(`http://localhost:8000/api/etudiants/${studentId}/fiches-descriptives`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
-    */
+    
 
-    return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId));
+    //return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId));
   }
 
   getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus, fields?: string[]): Observable<DescriptiveSheet[]> {
@@ -126,14 +126,14 @@ export class DescriptionSheetService {
       params = params.set('fields', fields.join(','));
     }
 
-    /*
+    
     return this.http.get<DescriptiveSheet[]>(`http://localhost:8000/api/`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
-    */
+    
 
-    return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
+    // return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
   }
 
   addSheet(sheet: DescriptiveSheet): Observable<DescriptiveSheet> {
@@ -147,7 +147,7 @@ export class DescriptionSheetService {
     );
   }
 
-  updateSheet(id: number, sheetData: Partial<DescriptiveSheet>): Observable<DescriptiveSheet> {
+  /* updateSheet(id: number, sheetData: Partial<DescriptiveSheet>): Observable<DescriptiveSheet> {
     const index = this.mockSheets.findIndex(s => s.idFicheDescriptive === id);
     if (index !== -1) {
       this.mockSheets[index] = {
@@ -166,7 +166,7 @@ export class DescriptionSheetService {
       return of(void 0);
     }
     throw new Error('Fiche non trouvée');
-  }
+  } */
 
   //Log la réponse de l'API
   private log(response: any) {

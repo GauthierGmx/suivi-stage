@@ -1,62 +1,91 @@
 <div class="container">
-  <app-navigation-tabs 
-    [currentStep]="currentStep"
-    (stepChange)="onStepChange($event)">
-  </app-navigation-tabs>
-  
-  <h2 class="title">Contenu du stage</h2>
-  <p class="warning">Les informations pré-remplies sont à vérifier !</p>
-  <div class="content">
-    <form (ngSubmit)="onNext()">
-      <div class="form-content">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="typeStage">Type de stage</label>
-            <select id="typeStage" [(ngModel)]="formData.typeStageFicheDescriptive.value" name="typeStage">
-              <option value="Obligatoire">Obligatoire</option>
-              <option value="Optionnel">Optionnel</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="thematique">Thématique</label>
-            <input type="text" id="thematique" [(ngModel)]="formData.thematiqueFicheDescriptive.value" name="thematique">
-          </div>
-        </div>
+    <app-navigation-tabs [currentStep]="currentStep" (stepChange)="onStepChange($event)"> </app-navigation-tabs>
 
-        <div class="form-row-full">
-          <div class="form-group-full">
-            <label for="sujet">Sujet du stage</label>
-            <textarea id="sujet" [(ngModel)]="formData.sujetFicheDescriptive.value" name="sujet" rows="3"></textarea>
-          </div>
-        </div>
+    <h2 class="title">Contenu du stage</h2>
+    <p class="warning">Les informations pré-remplies sont à vérifier !</p>
+    <div class="content">
+        <form (ngSubmit)="onNext()">
+            <div class="form-content">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="typeStage">Type de stage</label>
+                        <input
+                            type="text"
+                            id="typeStage"
+                            [(ngModel)]="formData.typeStageFicheDescriptive.value"
+                            name="typeStage"
+                            disabled
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="thematique">Thématique</label>
+                        <input
+                            type="text"
+                            id="thematique"
+                            [(ngModel)]="formData.thematiqueFicheDescriptive.value"
+                            name="thematique"
+                            placeholder="Thématique du stage"
+                        />
+                    </div>
+                </div>
 
-        <div class="form-row-full">
-          <div class="form-group-full">
-            <label for="fonctionTaches">Fonctions et tâches du stagiaire</label>
-            <textarea id="fonctionTaches" [(ngModel)]="formData.tachesFicheDescriptive.value" name="fonctionTaches" rows="3"></textarea>
-          </div>
-        </div>
+                <div class="form-row-full">
+                    <div class="form-group-full">
+                        <label for="sujet">Sujet du stage</label>
+                        <textarea
+                            id="sujet"
+                            [(ngModel)]="formData.sujetFicheDescriptive.value"
+                            name="sujet"
+                            rows="3"
+                            placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+                        ></textarea>
+                    </div>
+                </div>
 
-        <div class="form-row-full">
-          <div class="form-group-full">
-            <label for="competences">Compétences à acquérir ou à développer</label>
-            <textarea id="competences" [(ngModel)]="formData.competencesFicheDescriptive.value" name="competences" rows="3"></textarea>
-          </div>
-        </div>
+                <div class="form-row-full">
+                    <div class="form-group-full">
+                        <label for="fonctionTaches">Fonctions et tâches du stagiaire</label>
+                        <textarea
+                            id="fonctionTaches"
+                            [(ngModel)]="formData.tachesFicheDescriptive.value"
+                            name="fonctionTaches"
+                            rows="3"
+                            placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+                        ></textarea>
+                    </div>
+                </div>
 
-        <div class="form-row-full">
-          <div class="form-group-full">
-            <label for="details">Détails supplémentaires</label>
-            <textarea id="details" [(ngModel)]="formData.detailsFicheDescriptive.value" name="details" rows="3"></textarea>
-          </div>
-        </div>
+                <div class="form-row-full">
+                    <div class="form-group-full">
+                        <label for="competences">Compétences à acquérir ou à développer</label>
+                        <textarea
+                            id="competences"
+                            [(ngModel)]="formData.competencesFicheDescriptive.value"
+                            name="competences"
+                            rows="3"
+                            placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+                        ></textarea>
+                    </div>
+                </div>
 
-        <div class="buttons">
-          <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
-          <button type="submit" class="btn-submit">Suivant</button>
-        </div>
-      </div>
-    </form>
-  </div>
+                <div class="form-row-full">
+                    <div class="form-group-full">
+                        <label for="details">Détails supplémentaires</label>
+                        <textarea
+                            id="details"
+                            [(ngModel)]="formData.detailsFicheDescriptive.value"
+                            name="details"
+                            rows="3"
+                            placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
+                    <button type="submit" class="btn-submit">Suivant</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
-  

@@ -15,6 +15,7 @@ import { StudentService } from '../../services/student.service';
 import { InternshipSearchService } from '../../services/internship-search.service';
 import { DescriptionSheetService } from '../../services/description-sheet.service';
 import { AuthService } from '../../services/auth.service';
+import { FormDataService } from '../../services/form-data.service';
 
 @Component({
   selector: 'app-add-factsheet',
@@ -38,7 +39,11 @@ export class AddFactsheetComponent implements OnInit {
   currentUser?: any;
   currentUserRole?: string;
   currentStep = 1;
-  formData: any = {};
+
+  get formData() {
+    return this.formDataService.getFormData();
+  }
+
   @Output() dataSended = new EventEmitter<any>();
 
   constructor(
@@ -47,6 +52,7 @@ export class AddFactsheetComponent implements OnInit {
     private readonly internshipSearchService: InternshipSearchService,
     private readonly descriptiveSheetService: DescriptionSheetService,
     private readonly authService: AuthService,
+    private readonly formDataService: FormDataService
   ) {
     this.navigationService.factsheetStep$.subscribe(
       step => this.currentStep = step
@@ -54,15 +60,26 @@ export class AddFactsheetComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initializeFormFields();
     this.currentUser = this.authService.getCurrentUser();
     
     if (this.authService.isStudent(this.currentUser)) {
       this.currentUserRole = 'STUDENT';
     }
     else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-        this.currentUserRole = 'INTERNSHIP_MANAGER';
+      this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
+  }
 
+  private initializeFormFields() {
+    const fields = {
+      idUPPA: { value: '', type: 'ficheDescriptive' },
+      statut: { value: '', type: 'ficheDescriptive' }
+    };
+
+    Object.entries(fields).forEach(([field, config]) => {
+      this.formDataService.initializeField(field, config.value, config.type);
+    });
   }
 
   onStepChange(step: number) {
@@ -70,12 +87,13 @@ export class AddFactsheetComponent implements OnInit {
   }
 
   onNext(stepData: any) {
-    this.formData = { ...this.formData, ...stepData };
+    Object.entries(stepData).forEach(([field, data]: [string, any]) => {
+      this.formDataService.updateField(field, data.value);
+    });
     
     if (this.currentStep === 9) {
-      // Ajouter l'idUppa si l'utilisateur est un étudiant
       if (this.currentUser && this.authService.isStudent(this.currentUser)) {
-        this.formData.idUppa = this.currentUser.idUPPA;
+        this.formDataService.updateField('idUPPA', this.currentUser.idUPPA);
       }
 
       forkJoin({
@@ -84,8 +102,8 @@ export class AddFactsheetComponent implements OnInit {
         sheets: this.descriptiveSheetService.getSheets()
       }).subscribe({
         next: () => {
-          console.log('Data envoyés', this.formData);
-          console.log('Data envoyés');
+          this.formDataService.updateField('statut', 'En cours');
+          console.log(this.formData)
           this.descriptiveSheetService.addSheet(this.formData);
           this.dataSended.emit(this.formData);
         },

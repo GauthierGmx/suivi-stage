@@ -53,6 +53,12 @@
   h2 {
     margin-bottom: 20px;
   }
+
+  .errorMessage {
+    color: red;
+    font-size: 15px;
+    margin-top: 2px;
+}
   
   .warning {
     color: red;
@@ -172,3 +178,33 @@
     }
   }
   
+
+  .search-wrapper {
+    position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  width: 100%;
+  background: white;
+  border: 2px solid #E5E7EB;
+  border-radius: 0.375rem;
+  margin-top: 0.25rem;
+  max-height: 15rem;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #F3F4F6;
+}
+
+#adresse, #codePostal, #ville, #pays {
+  cursor: not-allowed;
+}

@@ -197,3 +197,6 @@
     }
   }
   
+  #typeStage {
+    cursor: not-allowed;
+  }

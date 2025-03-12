@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavigationTabsComponent } from '../../navigation-tabs/navigation-tabs.component';
 import { NavigationService } from '../../../services/navigation.service';
+import { FormDataService } from '../../../services/form-data.service';
 
 @Component({
   selector: 'app-add-factsheets-2',
@@ -11,32 +12,35 @@ import { NavigationService } from '../../../services/navigation.service';
   templateUrl: './add-factsheets-2.component.html',
   styleUrl: './add-factsheets-2.component.css'
 })
-export class AddFactsheets2Component {
+export class AddFactsheets2Component implements OnInit {
   @Output() next = new EventEmitter<any>();
   @Output() previous = new EventEmitter<void>();
   currentStep: number;
 
-  formData = {
-    composanteEtablissement: {
-      value: '181 - IUT de Bayonne et du Pays Basque (Anglet)',
-      type: 'etablissement'
-    },
-    parcoursEtablissement: {
-      value: 'BBWIA2 - BUT2 - INFO - Intégration d\'Applications et Management du SI',
-      type: 'parcours'
-    },
-    adresseEtablissement: {
-      value: '2 allée du Parc Montaury, 64600 Anglet',
-      type: 'etablissement'
-    },
-    telephoneEtablissement: {
-      value: '05.59.57.43.02',
-      type: 'etablissement'
-    }
-  };
+  get formData() {
+    return this.formDataService.getFormData();
+  }
 
-  constructor(private readonly navigationService: NavigationService) {
+  constructor(
+    private readonly navigationService: NavigationService,
+    private readonly formDataService: FormDataService
+  ) {
     this.currentStep = this.navigationService.getCurrentFactsheetStep();
+  }
+
+  ngOnInit(): void {
+    // Initialisation des champs avec valeurs par défaut
+    const defaultValues = {
+      'composanteEtablissement': '181 - IUT de Bayonne et du Pays Basque (Anglet)',
+      'parcoursEtablissement': 'BBWIA2 - BUT2 - INFO - Intégration d\'Applications et Management du SI',
+      'adresseEtablissement': '2 allée du Parc Montaury, 64600 Anglet',
+      'telephoneEtablissement': '05.59.57.43.02'
+    };
+
+    // Initialisation de chaque champ
+    Object.entries(defaultValues).forEach(([field, value]) => {
+      this.formDataService.initializeField(field, value, 'etablissement');
+    });
   }
 
   onStepChange(step: number) {

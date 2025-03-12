@@ -23,18 +23,18 @@
         <div class="form-row">
           <div class="form-group">
             <label for="nbJoursTravail">Nombre de jours de travail par semaine</label>
-            <input type="number" id="nbJoursTravail" [(ngModel)]="formData.nbJourSemaineFicheDescriptive.value" name="nbJoursTravail" min="1" max="7">
+            <input type="number" id="nbJoursTravail" [(ngModel)]="formData.nbJourSemaineFicheDescriptive.value" name="nbJoursTravail" min="1" max="7" placeholder='5'>
           </div>
           <div class="form-group">
             <label for="nbHeuresHebdo">Nombre d'heures par semaine</label>
-            <input type="number" id="nbHeuresHebdo" [(ngModel)]="formData.nbHeuresSemaineFicheDescriptive.value" name="nbHeuresHebdo" min="1" max="40">
+            <input type="number" id="nbHeuresHebdo" [(ngModel)]="formData.nbHeuresSemaineFicheDescriptive.value" name="nbHeuresHebdo" min="1" max="40" placeholder='35'>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="materielPrete">Matériel prêté</label>
-            <input type="number" id="materielPrete" [(ngModel)]="formData.materielPreteFicheDescriptive.value" name="materielPrete">
+            <input type="text" id="materielPrete" [(ngModel)]="formData.materielPreteFicheDescriptive.value" name="materielPrete" placeholder='Ordinateur, téléphone, ...'>
           </div>
         </div>
 

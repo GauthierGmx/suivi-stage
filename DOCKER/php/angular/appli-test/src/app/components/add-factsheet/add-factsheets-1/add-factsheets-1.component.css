@@ -172,6 +172,6 @@ input {
   }
 }
 
-#nom, #prenom, #telephone, #email, #numeroEtRueEtudiant, #code-postal, #ville {
+#nom, #prenom, #telephone, #adresseMail, #adresse, #code-postal, #ville {
   cursor: not-allowed;
 }
