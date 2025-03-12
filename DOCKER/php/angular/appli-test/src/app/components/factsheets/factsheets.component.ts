@@ -16,8 +16,7 @@ import { FactsheetsStudentTabComponent } from '../factsheets-student-tab/factshe
   styleUrls: ['./factsheets.component.css']
 })
 export class FactsheetsComponent implements OnInit {
-  currentUser?: Staff | Student;
-  student?: Student;
+  currentUser?: any;
   currentUserRole?: string;
   allDataLoaded: Boolean = false;
   loadedChildrenCount: number = 0;
@@ -32,12 +31,9 @@ export class FactsheetsComponent implements OnInit {
     
     if (this.authService.isStudent(this.currentUser)) {
       this.currentUserRole = 'STUDENT';
-      this.student=this.currentUser;
-      this.totalChildren = 2;
     }
     else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
       this.currentUserRole = 'INTERNSHIP_MANAGER';
-      this.totalChildren = 1;
     }
 
     this.loadedChildrenCount = 0;
