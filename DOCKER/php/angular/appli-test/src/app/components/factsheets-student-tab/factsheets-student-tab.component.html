@@ -1,0 +1,189 @@
+<div class="content-box">
+    <div class="titleAndAddSearchButton">
+      <h3><b>Fiches descriptives</b></h3>
+      <button
+        
+      >
+        Ajouter une fiche descriptive
+      </button>
+    </div>
+    <div class="searchBarAndfilters">
+      <div class="search-container">
+        <input 
+          type="text"
+          [(ngModel)] = 'searchTerm'
+          (input)="onSearchTermChange($event)"
+          placeholder="Rechercher sur un des champs..." 
+          class="search-input"
+        />
+        @if (searchTerm) {
+          <button 
+            (click)="clearSearchTerm()"
+            class="clear-button"
+          >
+            X
+          </button>
+        }
+      </div>
+  
+      <div class="filter-buttons">
+        <button 
+        class="filter-button"
+        [class]="currentDateFilter"
+        (click)="toggleDateSort()"
+      >
+        Date
+      </button>
+      <select 
+        #statutSelect
+        [(ngModel)]="currentStatutFilter"
+        (change)="setStatutFilter(currentStatutFilter, statutSelect)"
+        class="filter-button"
+      >
+        <option value="all">Tous les statuts</option>
+        <option value="Validee">Valide</option>
+        <option value="En cours">En révision</option>
+        <option value="Refusée">Refusé</option>
+      </select>
+      </div>
+    </div>
+
+
+  <!-- Vue tableau pour desktop -->
+  <div class="table-view">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Entreprise</th>
+            <th>Date création</th>
+            <th>Date modification</th>
+            <th>Statut</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
+            <tr>
+              <td class="firstTd">{{ item.company.raisonSociale }}</td>
+              <td>{{ item.sheet.dateCreation | date:'dd/MM/yyyy' }}</td>
+              <td>{{ item.sheet.dateDerniereModification | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span [class]="getStatusClass(item.sheet.statut!)">
+                  {{ getStatusLabel(item.sheet.statut!) }}
+                </span>
+              </td>
+              <td class="lastTd">
+                <div class="action-icons">
+                  <svg 
+                    
+                    class="edit-icon" 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2" 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round"
+                  >
+                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                  </svg>
+
+                  <svg 
+                    (click)="$event.stopPropagation(); openDeleteModal(item.sheet)"
+                    class="delete-icon" 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2" 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round"
+                  >
+                    <path d="M3 6h18"/>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                  </svg>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+  <!-- Vue cards pour mobile -->
+  <div class="cards-view">
+    @for (item of filteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
+      <div class="search-card">
+        <div class="card-header">
+          <h4>{{ item.company.raisonSociale }}</h4>
+          <span [class]="getStatusClass(item.sheet.statut!)">
+            {{ getStatusLabel(item.sheet.statut!) }}
+          </span>
+        </div>
+        <div class="card-content">
+          <p class="location">
+            <span class="label">Date création:</span> 
+            {{ item.sheet.dateCreation | date:'dd/MM/yyyy' }}
+          </p>
+          <p class="date">
+            <span class="label">Date modification:</span> 
+            {{ item.sheet.dateDerniereModification | date:'dd/MM/yyyy' }}
+          </p>
+        </div>
+        <hr class="card-separator">
+        <div class="card-actions">
+          <svg 
+            
+            class="edit-icon" 
+            width="20" 
+            height="20" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+          >
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+          </svg>
+
+          <svg 
+            (click)="$event.stopPropagation(); openDeleteModal(item.sheet)"
+            class="delete-icon" 
+            width="20" 
+            height="20" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+          >
+            <path d="M3 6h18"/>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+          </svg>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (showDeleteModal) {
+    <app-delete-confirmation-modal
+      [isDeleting]="isDeleting"
+      (confirm)="onConfirmDelete()"
+      (cancel)="onCancelDelete()"
+    />
+  }
+
+
+</div>
+

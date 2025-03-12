@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\FicheDescriptive;
 use Tests\TestCase;
+use Tests\Feature\Exception;
 
 class FicheDescriptiveControllerTest extends TestCase
 {
@@ -558,6 +559,62 @@ class FicheDescriptiveControllerTest extends TestCase
 
         $response = $this->get('/api/fiche-descriptive/'.$ficheDescriptive->idFicheDescriptive);
     
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
+    }
+
+    /*
+    ==================================
+        TEST DE LA METHODE DESTROY
+    ==================================
+    */
+
+    /**
+     * La méthode destroy doit retourner une confirmation 200 et un message de suppression
+     * 
+     * @return void
+     */
+    public function test_destroy_doit_retourner_un_code_200()
+    {
+        $uneFicheDescriptive = FicheDescriptive::first();
+
+        $response = $this->delete('/api/fiche-descriptive/delete/'.$uneFicheDescriptive->idFicheDescriptive);
+
+        $response->assertStatus(200)
+                 ->assertJson(['message' => 'La fiche descriptive a bien été supprimée']);
+    }
+
+    /**
+     * La méthode destroy doit retourner une erreur 404 si la fiche descriptive n'a pas été trouvée
+     * 
+     * @return void
+     */
+    public function test_destroy_renvoie_une_erreur_non_trouvee_en_cas_de_fiche_non_trouvee()
+    {
+        $idFiche = PHP_INT_MAX;
+
+        $response = $this->delete('/api/fiche-descriptive/delete/'.$idFiche);
+
+        $response->assertStatus(404)
+                 ->assertJson(['message' => 'Aucune fiche descriptive trouvée']);
+    }
+
+    /**
+     * La méthode destroy doit retourner une erreur 500 en cas d'exception
+     * 
+     * @return void
+     */
+    public function test_destroy_renvoie_une_erreur_generique_en_cas_d_exception()
+    {
+        // Mock du modèle FicheDescriptive pour déclencher une exception
+        $this->partialMock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
+            $mock->shouldReceive('destroy')->andThrow(new Exception);
+        });
+
+        $uneFicheDescriptive = FicheDescriptive::first();
+
+        $response = $this->delete('/api/fiche-descriptive/delete/'.$uneFicheDescriptive->idFicheDescriptive);
+
         $response->assertStatus(500)
                  ->assertJson(['message' => 'Une erreur s\'est produite :']);
     }

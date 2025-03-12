@@ -33,24 +33,14 @@ class RechercheStageController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Créer une nouvelle recherche de stage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      *  Une réponse JSON avec :
-     *      - Code 201 : si l'enregistrement a été effectué avec succès
-     *      - Code 422 : en cas d'erreur de validation
-     *      - Code 500 : en cas d'erreur
+     *      - Code 201 : si la recherche de stage a bien été créée
+     *      - Code 422 : s'il y a eu une erreur de validation des données
+     *      - Code 500 : s'il y a eu une erreur
      * @throws \Illuminate\Validation\ValidationException
      * @throws \Illuminate\Database\QueryException
      * @throws \Exception
@@ -120,12 +110,13 @@ class RechercheStageController extends Controller
     
     /**
      * Retourne une recherche de stage particulier
+     * 
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      * Code HTTP retourné :
      *      - Code 200 : si la recherche de stage a été trouvée
      *      - Code 404 : si la recherche de stage n'a pas été trouvée
      *      - Code 500 : s'il y a une erreur
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Exception
      */
@@ -152,22 +143,18 @@ class RechercheStageController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Modifie une recherche de stage particulière
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * Une réponse JSON avec :
+     *      - Code 200 : si la recherche de stage a bien été modifiée
+     *      - Code 422 : s'il y a eu une erreur de validation des données
+     *      - Code 500 : s'il y a eu une erreur
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Exception
      */
     public function update(Request $request, $id)
     {
@@ -205,13 +192,6 @@ class RechercheStageController extends Controller
                 'message' => 'Aucune recherche de stage trouvée'
             ],404);
         }
-        catch (\Illuminate\Database\QueryException $e)
-        {
-            return response()->json([
-                'message' => 'Erreur dans la base de données',
-                'erreurs' => $e->getMessage()
-            ],500);
-        }
         catch (\Exception $e)
         {
             return response()->json([
@@ -223,12 +203,15 @@ class RechercheStageController extends Controller
 
     /**
      * Supprime une recherche de stage particulière
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      * Code HTTP retourné :
      *      - Code 200 : si la recherche de stage a été supprimée
      *      - Code 404 : si la recherche de stage n'a pas été trouvée
      *      - Code 500 : s'il y a une erreur
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Exception
      */
     public function destroy($id)
     {

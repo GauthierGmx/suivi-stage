@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoadingComponent } from '../loading/loading.component';
+import { NavigationService } from '../../services/navigation.service';
 
 @Component({
     selector: 'app-delete-confirmation-modal',
@@ -13,6 +14,15 @@ export class DeleteConfirmationModalComponent {
     @Input() isDeleting = false;
     @Output() confirm = new EventEmitter<void>();
     @Output() cancel = new EventEmitter<void>();
+    currentPageUrl!: string;
+
+    constructor(
+        private navigationService: NavigationService,
+    ) {}
+
+    ngOnInit() {
+        this.currentPageUrl = this.navigationService.getCurrentPageUrl();
+    }
 
     onConfirm() {
         this.confirm.emit();
