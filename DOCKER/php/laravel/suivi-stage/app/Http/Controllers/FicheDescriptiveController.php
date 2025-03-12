@@ -171,6 +171,8 @@ class FicheDescriptiveController extends Controller
      * Récupère les données d'une fiche descriptive
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Exception
      */
     public function show($id){
         try{
