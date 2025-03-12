@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Student } from '../../models/student.model';
@@ -10,7 +10,7 @@ import { NavigationService } from '../../services/navigation.service';
 import { StudentService } from '../../services/student.service';
 import { CompanyService } from '../../services/company.service';
 import { FactsheetsService } from '../../services/description-sheet.service';
-import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
 import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
 
 
@@ -22,10 +22,10 @@ import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/d
   styleUrls: ['./factsheets-student-tab.component.css'],
 })
 export class FactsheetsStudentTabComponent implements OnInit {
-  @Input() currentUser!: Student | Staff;
+  @Input() currentUser!: Student 
+  @Input() currentUserRole?: string;
   @Output() dataLoaded = new EventEmitter<void>();
   currentUserId!: string;
-  currentUserRole!: string;
   studentData?: Student;
   companies?: Company[];
   sheets?: Factsheets[];
@@ -40,36 +40,28 @@ export class FactsheetsStudentTabComponent implements OnInit {
   isDeleting = false;
 
   constructor(
-    private readonly studentService: StudentService,
-    private readonly authService: AuthService,
     private readonly navigationService: NavigationService,
+    private readonly factsheetsService: FactsheetsService,
     private readonly companyService: CompanyService,
-    private readonly factsheetsService: FactsheetsService
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
-    ngOnInit() {
-        if (this.currentUser) {          
-            if (this.authService.isStudent(this.currentUser)) {
-                this.currentUserRole = 'STUDENT';
-                this.currentUserId = this.currentUser.idUPPA;
-            }
-            else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-                this.currentUserRole = 'INTERNSHIP_MANAGER';
-                this.currentUserId = `${this.currentUser.idPersonnel}`;
-            }
+  ngOnInit() {
+    this.searchTermSubject.pipe(
+        debounceTime(800),
+        distinctUntilChanged()
+    ).subscribe(() => {
+        this.applyFilters();
+    });
 
-            this.searchTermSubject.pipe(
-                debounceTime(800),
-                distinctUntilChanged()
-            ).subscribe(() => {
-                this.applyFilters();
-            });
-            
-            this.loadData(this.currentUserId);
-        }
-    }
+    this.loadData();
+}
+
     
+    /*
     loadData(studentId: string) {
+
+
         forkJoin({
             student: this.studentService.getStudentById(studentId),
             companies: this.companyService.getCompanies(),
@@ -78,13 +70,42 @@ export class FactsheetsStudentTabComponent implements OnInit {
             this.studentData = student;
             this.companies = companies;
             this.sheets = sheets;
-            this.filteredSheetsWithCompanies = this.sheets.map(sheet => {
-                const company = this.companies!.find(c => c.idEntreprise === sheet.idEntreprise);
-                return { sheet, company: company! };
-            });
-            this.applyFilters();
+            if(this.sheets) {
+                this.filteredSheetsWithCompanies = this.sheets.map(sheet => {
+                    const company = this.companies!.find(c => c.idEntreprise === sheet.idEntreprise);
+                    return { sheet, company: company! };
+                });
+                this.applyFilters();
+            }
             this.dataLoaded.emit();
         });
+    }
+        */
+
+    //Chargement des données de l'étudiant, de ses recherches de stages et des entreprises liées
+    loadData() {
+        return firstValueFrom(
+            forkJoin({
+                companies: this.companyService.getCompanies(['idEntreprise', 'raisonSociale', 'ville']),
+                sheet: this.factsheetsService.getSheetsByStudentId(this.currentUser.idUPPA),
+            }).pipe(
+                tap(({ companies, sheet }) => {
+                    this.companies = companies;
+                    this.sheets = sheet;
+                    if (this.sheets && this.sheets.length > 0) {
+                        this.filteredSheetsWithCompanies = this.sheets.map(sheet => {
+                            const company = this.companies!.find(c => c.idEntreprise === sheet.idEntreprise);
+                            return { sheet, company: company! };
+                        });
+                        this.applyFilters();
+                    } else {
+                        this.filteredSheetsWithCompanies = [];
+                    }
+                    console.log("azpeazpeazpeazep", this.sheets);
+                    this.dataLoaded.emit();
+                })
+            )
+        );
     }
 
 
@@ -130,7 +151,6 @@ export class FactsheetsStudentTabComponent implements OnInit {
 
     //Application des filtres et de la barre de recherche
     applyFilters() {
-        
     
         let filteredSearches = [...this.filteredSheetsWithCompanies];
         const searchTermLower = this.searchTerm.toLowerCase().trim();
@@ -221,7 +241,8 @@ export class FactsheetsStudentTabComponent implements OnInit {
             try {
                 this.isDeleting = true;
                 await firstValueFrom(this.factsheetsService.deleteSheet(this.sheetToDelete));
-                await this.loadData(this.currentUserId);
+                await this.loadData();
+                this.cdr.detectChanges();
             }
             catch (error) {
                 console.error('Erreur lors de la suppression de la recherche:', error);

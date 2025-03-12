@@ -7,9 +7,10 @@
       <div [hidden]="!allDataLoaded">
         <app-breadcrumb [currentUserRole]="currentUserRole"/>
         <app-stats-cards [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+
         
-        @if (currentUserRole === 'STUDENT') {
-          <app-factsheets-student-tab [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+        @if (currentUserRole === 'STUDENT' && student) {
+          <app-factsheets-student-tab [currentUser]="student" (dataLoaded)="onChildDataLoaded()"/>
         }
       </div>
     }
