@@ -99,4 +99,9 @@ export class InternshipSearchService {
     console.error(error);
     return of(errorValue);
   }
+
+
+  
 } 
+
+

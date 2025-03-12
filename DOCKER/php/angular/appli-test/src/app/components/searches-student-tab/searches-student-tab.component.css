@@ -56,14 +56,20 @@
 
 .clear-button {
     position: absolute;
-    right: 8px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
     cursor: pointer;
     padding: 4px;
-}
+  }
+  
+  .clear-button .icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    color: #9CA3AF;
+  }
 
 /* Boutons de filtres */
 .filter-buttons {

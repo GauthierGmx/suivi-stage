@@ -23,17 +23,17 @@
   <div class="stats-grid">
       <div class="stats-card primary">
         <h3>Nombre de fiche descriptive refusée</h3>
-        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'REFUSE') }}</p>
+        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'Refusée') }}</p>
       </div>
       
       <div class="stats-card secondary">
         <h3>Nombre de fiche descriptive en attente du responsable des stages</h3>
-        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'EN_REVISION') }}</p>
+        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'En cours') }}</p>
       </div>
       
       <div class="stats-card tertiary">
         <h3>Nombre de fiche descriptive validée</h3>
-        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'VALIDE') }}</p>
+        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'Validee') }}</p>
       </div>
     </div>
 }
@@ -87,12 +87,33 @@
       
       <div class="stats-card secondary">
         <h3>Nombre de fiche descriptive en attente de validation</h3>
-        <p>{{ contSheetByStatut('EN_REVISION') }}</p>
+        <p>{{ contSheetByStatut('En cours') }}</p>
       </div>
       
       <div class="stats-card tertiary">
         <h3>Nombre d'étudiant avec au moins une fiche validée</h3>
-        <p>{{ countStudentBySheetStatut('VALIDE') }}</p>
+        <p>{{ countStudentBySheetStatut('Validee') }}</p>
+      </div>
+    </div>
+}
+
+
+<!-- Vue responsable des stages - Liste des fiches descriptives - Affichage des cartes de statistiques pour la liste des étudiants -->
+@if (currentPageUrl === '/factsheets' && currentUserRole === 'INTERNSHIP_MANAGER') {
+  <div class="stats-grid">
+      <div class="stats-card primary">
+        <h3>Nombre d'étudiant sans fiche descriptive</h3>
+        <p>{{ countStudentWithoutSheet() }}</p>
+      </div>
+      
+      <div class="stats-card secondary">
+        <h3>Nombre de fiche descriptive en attente de validation</h3>
+        <p>{{ contSheetByStatut('En cours') }}</p>
+      </div>
+      
+      <div class="stats-card tertiary">
+        <h3>Nombre d'étudiant avec au moins une fiche validée</h3>
+        <p>{{ countStudentBySheetStatut('Validee') }}</p>
       </div>
     </div>
 }
