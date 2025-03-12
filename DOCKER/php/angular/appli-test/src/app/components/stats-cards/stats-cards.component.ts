@@ -51,18 +51,25 @@ export class StatsCardsComponent implements OnInit {
       this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
 
-    // Utiliser forkJoin pour attendre que toutes les données soient chargées
+    this.loadData();
+
+    // Recharge les données après une suppression
+    this.internshipSearchService.searchDeleted$.subscribe(() => {
+      this.loadData();
+    });
+  }
+
+  loadData() {
     forkJoin({
       students: this.studentService.getStudents(['idUPPA']),
       searches: this.internshipSearchService.getSearches(['idRecherche', 'statut', 'idUPPA']),
       sheets: this.descriptiveSheetService.getSheets(['idFicheDescriptive', 'statut', 'idUPPA'])
-    }).subscribe(({students, searches, sheets}) => {
-        this.students = students;
-        this.searches = searches;
-        this.descriptiveSheets = sheets;
-        this.dataLoaded.emit();
-      }
-    );
+    }).subscribe(({ students, searches, sheets }) => {
+      this.students = students;
+      this.searches = searches;
+      this.descriptiveSheets = sheets;
+      this.dataLoaded.emit();
+    });
   }
 
   countStudents() {
