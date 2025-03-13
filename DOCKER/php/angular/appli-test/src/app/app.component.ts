@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { AuthService } from './services/auth.service';
-import { Observable } from 'rxjs';
-import { Student } from './models/student.model';
-import { Staff } from './models/staff.model';
 
 @Component({
   selector: 'app-root',
@@ -15,20 +12,20 @@ import { Staff } from './models/staff.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  currentUser$: Observable<Student | Staff | undefined>;
+  hasCurrentUser: boolean = false;
   hasMarginTop = false;
 
   constructor(
     private readonly authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {
-    this.currentUser$ = this.authService.currentUser$;
+    this.hasCurrentUser = this.authService.isAuthenticated();
   }
 
   ngOnInit() {
-    this.authService.currentUser$.subscribe(user => {
-      this.hasMarginTop = !!user;
+    if (this.hasCurrentUser) {
+      this.hasMarginTop = true;
       this.cdr.detectChanges();
-    });
+    };
   }
 }

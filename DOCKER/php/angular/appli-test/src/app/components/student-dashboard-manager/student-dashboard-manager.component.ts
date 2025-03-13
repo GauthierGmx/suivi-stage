@@ -33,7 +33,10 @@ export class StudentDashboardManagerComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    let user = this.authService.getCurrentUser();
+    let user;
+    this.authService.getAuthenticatedUser().subscribe(currentUser =>
+      user = currentUser
+    );
     if (this.authService.isStaff(user)) {
       this.currentUser = user;
     }

@@ -8,6 +8,7 @@ use App\Http\Controllers\RechercheStageController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\FicheDescriptiveController; 
 use App\Http\Controllers\EtudiantController;
+use App\Http\Controllers\AuthController;
 
 
 /*
@@ -26,7 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Route pour le Controller Auth
-Route::get('/check-auth', [AuthController::class, 'checkAuth']);
+Route::get('/authenticated-user', [AuthController::class, 'getUser']);
 
 // Route pour le Controller RechercheStage
 Route::get('/recherches-stages', [RechercheStageController::class, 'index'])->name('recherches-stages.index');
