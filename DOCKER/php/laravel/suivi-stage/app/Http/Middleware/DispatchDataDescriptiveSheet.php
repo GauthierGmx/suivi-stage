@@ -95,14 +95,14 @@ class DispatchDataDescriptiveSheet
             return $this->handleSheetCreation($request);
         }
 
-        //Pour le renvoie d'une fiche descriptive
-        if ($request->is('api/fiche-descriptive/*') && $request->route('id')) {
-            return $this->handleSheetGet($request, $request->route('id'));
-        }
-
         //Pour la mise à jour d'une fiche descriptive
         if ($request->is('api/fiche-descriptive/update/*') && $request->route('id')) {
             return $this->handleSheetUpdate($request, $request->route('id'));
+        }
+
+        //Pour le renvoie d'une fiche descriptive
+        if ($request->is('api/fiche-descriptive/*') && $request->route('id')) {
+            return $this->handleSheetGet($request, $request->route('id'));
         }
 
         return $next($request);
