@@ -136,7 +136,7 @@ export class FactsheetsService {
     }
 
     
-    return this.http.get<DescriptiveSheet[]>(`http://localhost:8000/api/`, {params}).pipe(
+    return this.http.get<Factsheets[]>(`http://localhost:8000/api/`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
@@ -145,12 +145,12 @@ export class FactsheetsService {
     // return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
   }
 
-  addSheet(sheet: DescriptiveSheet): Observable<DescriptiveSheet> {
+  addSheet(sheet: Factsheets): Observable<Factsheets> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-type': 'application/json'})
     };
 
-    return this.http.post<DescriptiveSheet>('http://localhost:8000/api/fiche-descriptive/data', sheet, httpOptions).pipe(
+    return this.http.post<Factsheets>('http://localhost:8000/api/fiche-descriptive/data', sheet, httpOptions).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
@@ -166,7 +166,7 @@ export class FactsheetsService {
       return of(this.mockSheets[index]);
     }
     throw new Error('Fiche non trouvée');
-  }
+  }*/
 
   deleteSheet(sheet: Factsheets): Observable<void> {
     return this.http.delete(`http://localhost:8000/api/fiche-descriptive/delete/${sheet.idFicheDescriptive}`).pipe(

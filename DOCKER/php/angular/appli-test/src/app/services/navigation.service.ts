@@ -40,6 +40,10 @@ export class NavigationService {
     this.router.navigate(['/dashboard/add-search-form']);
   }
 
+  navigateToAddFactSheetForm() {
+    this.router.navigate(['/factsheets/add-factsheet']);
+  }
+
   navigateToSearchView(searchId: number) {
     this.router.navigate(['/dashboard/search-details/', searchId]);
   }

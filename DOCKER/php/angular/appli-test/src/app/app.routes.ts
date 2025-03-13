@@ -19,7 +19,7 @@ export const routes: Routes = [
   },
   {
     path: 'factsheets',
-    component: AddFactsheetComponent,
+    component: FactsheetsComponent,
     canActivate: [authGuard]
   },
   {

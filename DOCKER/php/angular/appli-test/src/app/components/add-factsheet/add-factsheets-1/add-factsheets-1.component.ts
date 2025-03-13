@@ -5,11 +5,12 @@ import { NavigationTabsComponent } from '../../navigation-tabs/navigation-tabs.c
 import { NavigationService } from '../../../services/navigation.service';
 import { FormDataService } from '../../../services/form-data.service';
 import { Student } from '../../../models/student.model';
+import { BackConfirmationModalComponent } from '../../back-confirmation-modal/back-confirmation-modal.component';
 
 @Component({
   selector: 'app-add-factsheets-1',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavigationTabsComponent],
+  imports: [CommonModule, FormsModule, NavigationTabsComponent, BackConfirmationModalComponent],
   templateUrl: './add-factsheets-1.component.html',
   styleUrl: './add-factsheets-1.component.css'
 })
@@ -17,6 +18,7 @@ export class AddFactsheets1Component implements OnInit {
   @Output() next = new EventEmitter<any>();
   currentStep: number;
   @Input() student!: Student;
+  showBackModal = false;
 
   get formData() {
     return this.formDataService.getFormData();
@@ -53,5 +55,23 @@ export class AddFactsheets1Component implements OnInit {
 
   onNext() {
     this.next.emit(this.formData);
+  }
+
+  onCancel() {
+    this.openBackModal();
+  }
+
+  openBackModal() {
+    this.showBackModal = true;
+  }
+
+  onConfirmBack() { // Renommé de confirmBack à onConfirmBack
+    this.formDataService.resetFormData();
+    this.navigationService.goBack();
+    this.showBackModal = false;
+  }
+
+  onCancelBack() { // Renommé de closeBackModal à onCancelBack
+    this.showBackModal = false;
   }
 }

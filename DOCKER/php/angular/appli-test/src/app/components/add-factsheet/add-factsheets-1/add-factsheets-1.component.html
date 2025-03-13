@@ -49,9 +49,17 @@
       </div>
 
       <div class="buttons">
-        <button type="button" class="btn-cancel">Annuler</button>
+        <button type="button" class="btn-cancel" (click)="onCancel()">Annuler</button>
         <button type="submit" class="btn-submit">Suivant</button>
       </div>
     </form>
   </div>
+  @if (showBackModal) {
+    <app-back-confirmation-modal
+    [show]="showBackModal"
+    (confirmBack)="onConfirmBack()"
+    (cancelBack)="onCancelBack()">
+  </app-back-confirmation-modal>
+  }
+  
 </div>

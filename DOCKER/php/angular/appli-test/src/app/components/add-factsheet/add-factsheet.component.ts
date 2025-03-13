@@ -10,10 +10,11 @@ import { AddFactsheets7Component } from './add-factsheets-7/add-factsheets-7.com
 import { AddFactsheets8Component } from './add-factsheets-8/add-factsheets-8.component';
 import { AddFactsheets9Component } from './add-factsheets-9/add-factsheets-9.component';
 import { NavigationService } from '../../services/navigation.service';
+import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { StudentService } from '../../services/student.service';
 import { InternshipSearchService } from '../../services/internship-search.service';
-import { DescriptionSheetService } from '../../services/description-sheet.service';
+import { FactsheetsService } from '../../services/description-sheet.service';
 import { AuthService } from '../../services/auth.service';
 import { FormDataService } from '../../services/form-data.service';
 
@@ -50,9 +51,10 @@ export class AddFactsheetComponent implements OnInit {
     private readonly navigationService: NavigationService,
     private readonly studentService: StudentService,
     private readonly internshipSearchService: InternshipSearchService,
-    private readonly descriptiveSheetService: DescriptionSheetService,
+    private readonly factsheetsService: FactsheetsService,
     private readonly authService: AuthService,
-    private readonly formDataService: FormDataService
+    private readonly formDataService: FormDataService,
+    private readonly router: Router
   ) {
     this.navigationService.factsheetStep$.subscribe(
       step => this.currentStep = step
@@ -86,12 +88,92 @@ export class AddFactsheetComponent implements OnInit {
     this.navigationService.setFactsheetStep(step);
   }
 
+  private validateAllFields(): boolean {
+    const requiredFields = {
+      // Étape 1 - Informations Étudiant
+      nomEtudiant: 'string',
+      prenomEtudiant: 'string',
+      
+      // Étape 2 - Formation
+      formationEtudiant: 'string',
+      anneeFormationEtudiant: 'string',
+      
+      // Étape 3-4 - Entreprise
+      raisonSocialeEntreprise: 'string',
+      adresseEntreprise: 'string',
+      codePostalEntreprise: 'string',
+      villeEntreprise: 'string',
+      paysEntreprise: 'string',
+      telephoneEntreprise: 'string',
+      serviceEntreprise: 'string',
+      numSIRETEntreprise: 'string',
+      codeAPE_NAFEntreprise: 'string',
+      
+      // Étape 5 - Représentant entreprise
+      nomRepresentantEntreprise: 'string',
+      prenomRepresentantEntreprise: 'string',
+      telephoneRepresentantEntreprise: 'string',
+      adresseMailRepresentantEntreprise: 'string',
+      fonctionRepresentantEntreprise: 'string',
+      
+      // Étape 6 - Lieu de stage
+      adresseStageFicheDescriptive: 'string',
+      codePostalStageFicheDescriptive: 'string',
+      villeStageFicheDescriptive: 'string',
+      paysStageFicheDescriptive: 'string',
+      
+      // Étape 7 - Tuteur entreprise
+      nomTuteurEntreprise: 'string',
+      prenomTuteurEntreprise: 'string',
+      telephoneTuteurEntreprise: 'string',
+      adresseMailTuteurEntreprise: 'string',
+      fonctionTuteurEntreprise: 'string',
+      
+      // Étape 8 - Sujet stage
+      typeStageFicheDescriptive: 'string',
+      thematiqueFicheDescriptive: 'string',
+      sujetFicheDescriptive: 'string',
+      tachesFicheDescriptive: 'string',
+      
+      // Étape 9 - Modalités stage
+      debutStageFicheDescriptive: 'date',
+      finStageFicheDescriptive: 'date',
+      nbJourSemaineFicheDescriptive: 'number',
+      nbHeuresSemaineFicheDescriptive: 'number'
+    };
+
+    for (const [field, type] of Object.entries(requiredFields)) {
+      const fieldData = this.formData[field];
+      if (!fieldData || !fieldData.value) {
+        console.error(`Champ manquant: ${field}`);
+        return false;
+      }
+
+      if (type === 'date' && !(fieldData.value instanceof Date)) {
+        console.error(`Type invalide pour ${field}: attendu Date`);
+        return false;
+      }
+
+      if (type === 'number' && isNaN(Number(fieldData.value))) {
+        console.error(`Type invalide pour ${field}: attendu Number`);
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   onNext(stepData: any) {
     Object.entries(stepData).forEach(([field, data]: [string, any]) => {
       this.formDataService.updateField(field, data.value);
     });
     
     if (this.currentStep === 9) {
+      if (!this.validateAllFields()) {
+        alert('Certains champs requis ne sont pas correctement remplis. Veuillez vérifier tous les onglets.');
+        return;
+      }
+
       if (this.currentUser && this.authService.isStudent(this.currentUser)) {
         this.formDataService.updateField('idUPPA', this.currentUser.idUPPA);
       }
@@ -99,15 +181,20 @@ export class AddFactsheetComponent implements OnInit {
       forkJoin({
         students: this.studentService.getStudents(),
         searches: this.internshipSearchService.getSearches(),
-        sheets: this.descriptiveSheetService.getSheets()
+        sheets: this.factsheetsService.getSheets()
       }).subscribe({
         next: () => {
           this.formDataService.updateField('statut', 'En cours');
-          console.log(this.formData)
-          this.descriptiveSheetService.addSheet(this.formData);
+          this.factsheetsService.addSheet(this.formData);
+          console.log('Formulaire envoyé:', this.formData);
           this.dataSended.emit(this.formData);
+          this.formDataService.resetFormData();
+          this.router.navigateByUrl('/factsheets');
         },
-        error: (error) => console.error('Erreur lors de l\'envoi:', error)
+        error: (error) => {
+          console.error('Erreur lors de l\'envoi:', error);
+          alert('Une erreur est survenue lors de l\'envoi du formulaire.');
+        }
       });
       return;
     }

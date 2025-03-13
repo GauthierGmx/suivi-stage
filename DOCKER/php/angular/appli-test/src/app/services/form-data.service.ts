@@ -19,19 +19,33 @@ export class FormDataService {
     }
 
     initializeField(fieldName: string, defaultValue: string | boolean | Date, type: string) {
-    if (!this.formData[fieldName]) {
-        this.formData[fieldName] = {
-        value: defaultValue,
-        type: type
-    };
-    }
+        /* if (fieldName === 'statut') {
+            this.formData[fieldName] = defaultValue;
+            return;
+        } */
+
+        if (!this.formData[fieldName]) {
+            this.formData[fieldName] = {
+                value: defaultValue,
+                type: type
+            };
+        }
     }
 
     updateField(fieldName: string, value: string) {
+        /* if (fieldName === 'statut') {
+            this.formData[fieldName] = value;
+            return;
+        } */
+
         if (this.formData[fieldName]) {
             this.formData[fieldName].value = value;
         } else {
             console.warn(`Field ${fieldName} does not exist in formData`);
         }
+    }
+
+    resetFormData() {
+        this.formData = {};
     }
 }
