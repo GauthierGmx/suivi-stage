@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\Etudiant;
 use App\Models\TuteurEntreprise;
 use App\Models\Entreprise;
 use App\Models\FicheDescriptive;
@@ -60,17 +61,19 @@ class DispatchDataDescriptiveSheet
         'thematiqueFicheDescriptive' => 'thematique',
         'sujetFicheDescriptive' => 'sujet',
         'tachesFicheDescriptive' => 'taches',
+        'fonctionsFicheDescriptive' => 'fonctions',
         'competencesFicheDescriptive' => 'competences',
         'detailsFicheDescriptive' => 'details',
         'debutStageFicheDescriptive' => 'debutStage',
         'finStageFicheDescriptive' => 'finStage',
         'nbJourSemaineFicheDescriptive' => 'nbJourSemaine',
-        'nbHeuresSemaineFicheDescriptive' => 'nbHeuresSemaine',
+        'nbHeuresSemaineFicheDescriptive' => 'nbHeureSemaine',
         'personnelTechniqueDisponibleFicheDescriptive' => 'personnelTechniqueDisponible',
         'materielPreteFicheDescriptive' => 'materielPrete',
         'clauseConfidentialiteFicheDescriptive' => 'clauseConfidentialite',
         'adresseMailStageFicheDescriptive' => 'adresseMailStage',
         'telephoneStageFicheDescriptive' => 'telephoneStage',
+        'adresseStageFicheDescriptive' => 'adresseStage',
         'codePostalStageFicheDescriptive'=> 'codePostalStage',
         'villeStageFicheDescriptive' => 'villeStage',
         'paysStageFicheDescriptive' => 'paysStage',
@@ -311,6 +314,7 @@ class DispatchDataDescriptiveSheet
         }
 
         // Récupérer les données du tuteur et de l'entreprise
+        $etudiant = Etudiant::find($ficheDescriptive->idUPPA);
         $tuteur = TuteurEntreprise::find($ficheDescriptive->idTuteurEntreprise);
         $entreprise = Entreprise::find($ficheDescriptive->idEntreprise);
 
@@ -415,7 +419,10 @@ class DispatchDataDescriptiveSheet
                 'value' => $ficheDescriptive->paysStage,
                 'type' => 'ficheDescriptive',
              ],
-             'statut' => $ficheDescriptive->statut,
+             'statut' => [
+                'value' => $ficheDescriptive->statut,
+                'type' => 'ficheDescriptive',
+            ],
              'numeroConventionFicheDescriptive' => [
                 'value' => $ficheDescriptive->numeroConvention,
                 'type' => 'ficheDescriptive',
@@ -450,19 +457,19 @@ class DispatchDataDescriptiveSheet
              ],
              //Informations étudiant 
              'idUPPA' => [
-                'value' => $ficheDescriptive->id, // Assurez-vous de récupérer l'ID correctement
-                'type' => 'ficheDescriptive',
+                'value' => $etudiant->idUPPA,
+                'type' => 'etudiant',
             ],
              'nomEtudiant' => [
-                 'value' => $ficheDescriptive->nomEtudiant, // Remplacez par les bons champs
+                 'value' => $etudiant->nom,
                  'type' => 'etudiant',
              ],
              'prenomEtudiant' => [
-                 'value' => $ficheDescriptive->prenomEtudiant,
+                 'value' => $etudiant->prenom,
                  'type' => 'etudiant',
              ],
              'telephoneEtudiant' => [
-                 'value' => $ficheDescriptive->telephoneEtudiant,
+                 'value' => $etudiant->telephone,
                  'type' => 'etudiant',
              ],
 
