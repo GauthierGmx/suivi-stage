@@ -155,10 +155,7 @@ export class AddFactsheets3Component implements OnInit {
   }
 
   async onNext() {
-    if (this.isFormValid()){
-      this.next.emit(this.formData);
-      console.log(this.formData);
-      }
+    this.next.emit(this.formData);
   }
 
   onPrevious() {

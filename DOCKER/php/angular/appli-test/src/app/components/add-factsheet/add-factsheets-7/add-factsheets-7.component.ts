@@ -32,6 +32,14 @@ export class AddFactsheets7Component implements OnInit {
     this.initializeFormFields();
   }
 
+  isFormValid(): boolean {
+    return this.formData.nomTuteurEntreprise.value !== '' &&
+      this.formData.prenomTuteurEntreprise.value !== '' &&
+      this.formData.telephoneTuteurEntreprise.value !== '' &&
+      this.formData.adresseMailTuteurEntreprise.value !== '' &&
+      this.formData.fonctionTuteurEntreprise.value !== '';
+  }
+
   private initializeFormFields() {
     const fields = {
       nomTuteurEntreprise: { value: '', type: 'tuteurEntreprise' },

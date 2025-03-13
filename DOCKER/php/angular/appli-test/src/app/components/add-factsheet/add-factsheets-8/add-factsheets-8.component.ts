@@ -32,6 +32,14 @@ export class AddFactsheets8Component implements OnInit {
     this.initializeFormFields();
   }
 
+  isFormValid(): boolean {
+    return !!(this.formData.typeStageFicheDescriptive.value &&
+      this.formData.thematiqueFicheDescriptive.value &&
+      this.formData.sujetFicheDescriptive.value &&
+      this.formData.tachesFicheDescriptive.value &&
+      this.formData.competencesFicheDescriptive.value);
+  }
+
   private initializeFormFields() {
     const fields = {
       typeStageFicheDescriptive: { value: 'Obligatoire', type: 'ficheDescriptive' },

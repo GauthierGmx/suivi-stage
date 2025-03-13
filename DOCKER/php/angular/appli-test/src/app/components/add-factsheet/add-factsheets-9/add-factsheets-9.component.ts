@@ -32,6 +32,14 @@ export class AddFactsheets9Component implements OnInit {
     this.initializeFormFields();
   }
 
+  isFormValid(): boolean {
+    return !!(this.formData.debutStageFicheDescriptive.value &&
+      this.formData.finStageFicheDescriptive.value &&
+      this.formData.nbJourSemaineFicheDescriptive.value &&
+      this.formData.nbHeuresSemaineFicheDescriptive.value &&
+      this.formData.materielPreteFicheDescriptive.value);
+  }
+
   private initializeFormFields() {
     const fields = {
       debutStageFicheDescriptive: { value: new Date(), type: 'ficheDescriptive' },

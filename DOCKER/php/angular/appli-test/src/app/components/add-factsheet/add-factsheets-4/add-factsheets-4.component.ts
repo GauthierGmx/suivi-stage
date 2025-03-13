@@ -32,6 +32,17 @@ export class AddFactsheets4Component implements OnInit {
     this.initializeFormFields();
   }
 
+  isFormValid(): boolean {
+    const apeNafRegex = /^\d{2}\.\d{2}[A-Z]$/;
+    return !!(
+      this.formData.serviceEntreprise?.value?.trim() &&
+      this.formData.numSIRETEntreprise?.value?.trim() &&
+      this.formData.codeAPE_NAFEntreprise?.value?.match(apeNafRegex) &&
+      this.formData.statutJuridiqueEntreprise?.value?.trim() &&
+      this.formData.effectifEntreprise?.value?.toString().trim()
+    );
+  }
+
   private initializeFormFields() {
     const fields = {
       serviceEntreprise: { value: '', type: 'ficheDescriptive' },
@@ -53,11 +64,6 @@ export class AddFactsheets4Component implements OnInit {
   }
 
   onNext() {
-    const apeNafValue = this.formData.codeAPE_NAFEntreprise?.value;
-    if (apeNafValue && !this.validateAPE_NAF(apeNafValue)) {
-      alert('Le code APE/NAF est invalide. Format attendu: XX.XXA (ex: 01.23A)');
-      return;
-    }
     this.next.emit(this.formData);
   }
 

@@ -12,35 +12,52 @@
         <div class="form-row">
           <div class="form-group">
             <label for="nom">Nom</label>
-            <input type="text" id="nom" [(ngModel)]="formData.nomTuteurEntreprise.value" name="nom" placeholder='DUPONT'>
+            <input type="text" id="nom" [(ngModel)]="formData.nomTuteurEntreprise.value" name="nom" placeholder='DUPONT' #nom="ngModel" required>
+            <div class="errorMessage" *ngIf="nom.invalid && nom.errors && (nom.dirty || nom.touched)">
+              <small *ngIf="nom.errors?.['required']"><b>Le nom du tuteur est obligatoire.</b></small>
+            </div>
           </div>
           <div class="form-group">
             <label for="prenom">Prénom</label>
-            <input type="text" id="prenom" [(ngModel)]="formData.prenomTuteurEntreprise.value" name="prenom" placeholder='Jean'>
+            <input type="text" id="prenom" [(ngModel)]="formData.prenomTuteurEntreprise.value" name="prenom" placeholder='Jean' #prenom="ngModel" required>
+            <div class="errorMessage" *ngIf="prenom.invalid && prenom.errors && (prenom.dirty || prenom.touched)">
+              <small *ngIf="prenom.errors?.['required']"><b>Le prénom du tuteur est obligatoire.</b></small>
+            </div>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="telephone">Téléphone</label>
-            <input type="text" id="telephone" [(ngModel)]="formData.telephoneTuteurEntreprise.value" name="telephone" placeholder='0123456789'>
+            <input type="text" id="telephone" [(ngModel)]="formData.telephoneTuteurEntreprise.value" name="telephone" placeholder='0123456789' #telephone="ngModel" required pattern="^(\+33|0)\d{9}$">
+            <div class="errorMessage" *ngIf="telephone.invalid && telephone.errors && (telephone.dirty || telephone.touched)">
+              <small *ngIf="telephone.errors?.['required']"><b>Le numéro de téléphone est obligatoire.</b></small>
+              <small *ngIf="telephone.errors?.['pattern']"><b>Le numéro de téléphone doit être au format 0XXXXXXXXX ou +33XXXXXXXXX.</b></small>
+            </div>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" [(ngModel)]="formData.adresseMailTuteurEntreprise.value" name="email" placeholder='test@gmail.com'>
+            <input type="email" id="email" [(ngModel)]="formData.adresseMailTuteurEntreprise.value" name="email" placeholder='test@gmail.com' #email="ngModel" required email>
+            <div class="errorMessage" *ngIf="email.invalid && email.errors && (email.dirty || email.touched)">
+              <small *ngIf="email.errors?.['required']"><b>L'adresse mail est obligatoire.</b></small>
+              <small *ngIf="email.errors?.['email']"><b>L'adresse mail doit être valide.</b></small>
+            </div>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="fonction">Fonction</label>
-            <input type="text" id="fonction" [(ngModel)]="formData.fonctionTuteurEntreprise.value" name="fonction" placeholder='Développeur'>
+            <input type="text" id="fonction" [(ngModel)]="formData.fonctionTuteurEntreprise.value" name="fonction" placeholder='Développeur' #fonction="ngModel" required>
+            <div class="errorMessage" *ngIf="fonction.invalid && fonction.errors && (fonction.dirty || fonction.touched)">
+              <small *ngIf="fonction.errors?.['required']"><b>La fonction du tuteur est obligatoire.</b></small>
+            </div>
           </div>
         </div>
 
         <div class="buttons">
           <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
-          <button type="submit" class="btn-submit">Suivant</button>
+          <button type="submit" class="btn-submit" [disabled]='!isFormValid()'>Suivant</button>
         </div>
       </div>
     </form>

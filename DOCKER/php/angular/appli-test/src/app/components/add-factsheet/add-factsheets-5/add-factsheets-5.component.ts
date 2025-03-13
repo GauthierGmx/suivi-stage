@@ -32,6 +32,14 @@ export class AddFactsheets5Component implements OnInit {
     this.initializeFormFields();
   }
 
+  isFormValid(): boolean {
+    return this.formData.nomRepresentantEntreprise.value !== '' &&
+      this.formData.prenomRepresentantEntreprise.value !== '' &&
+      this.formData.telephoneRepresentantEntreprise.value !== '' &&
+      this.formData.adresseMailRepresentantEntreprise.value !== '' &&
+      this.formData.fonctionRepresentantEntreprise.value !== '';
+  }
+
   private initializeFormFields() {
     const fields = {
       nomRepresentantEntreprise: { value: '', type: 'entreprise' },

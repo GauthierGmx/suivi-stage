@@ -25,7 +25,12 @@
                             [(ngModel)]="formData.thematiqueFicheDescriptive.value"
                             name="thematique"
                             placeholder="Thématique du stage"
+                            #thematique="ngModel"
+                            required
                         />
+                        <div class="errorMessage" *ngIf="thematique.invalid && thematique.errors && (thematique.dirty || thematique.touched)">
+                            <small *ngIf="thematique.errors?.['required']"><b>La thématique est obligatoire.</b></small>
+                        </div>
                     </div>
                 </div>
 
@@ -38,7 +43,12 @@
                             name="sujet"
                             rows="3"
                             placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+                            #sujet="ngModel"
+                            required
                         ></textarea>
+                        <div class="errorMessage" *ngIf="sujet.invalid && sujet.errors && (sujet.dirty || sujet.touched)">
+                            <small *ngIf="sujet.errors?.['required']"><b>Le sujet est obligatoire.</b></small>
+                        </div>
                     </div>
                 </div>
 
@@ -51,7 +61,12 @@
                             name="fonctionTaches"
                             rows="3"
                             placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+                            #fonctionTaches="ngModel"
+                            required
                         ></textarea>
+                        <div class="errorMessage" *ngIf="fonctionTaches.invalid && fonctionTaches.errors && (fonctionTaches.dirty || fonctionTaches.touched)">
+                            <small *ngIf="fonctionTaches.errors?.['required']"><b>Les fonctions et tâches sont obligatoires.</b></small>
+                        </div>
                     </div>
                 </div>
 
@@ -64,7 +79,12 @@
                             name="competences"
                             rows="3"
                             placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+                            #competences="ngModel"
+                            required
                         ></textarea>
+                        <div class="errorMessage" *ngIf="competences.invalid && competences.errors && (competences.dirty || competences.touched)">
+                            <small *ngIf="competences.errors?.['required']"><b>Les compétences sont obligatoires.</b></small>
+                        </div>
                     </div>
                 </div>
 
@@ -83,7 +103,7 @@
 
                 <div class="buttons">
                     <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
-                    <button type="submit" class="btn-submit">Suivant</button>
+                    <button type="submit" class="btn-submit" [disabled]='!isFormValid()'>Suivant</button>
                 </div>
             </div>
         </form>

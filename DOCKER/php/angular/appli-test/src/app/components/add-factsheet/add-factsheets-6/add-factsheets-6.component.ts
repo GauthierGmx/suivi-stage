@@ -32,6 +32,15 @@ export class AddFactsheets6Component implements OnInit {
     this.initializeFormFields();
   }
 
+  isFormValid(): boolean {
+    return !!(this.formData.adresseMailStageFicheDescriptive.value &&
+      this.formData.telephoneStageFicheDescriptive.value &&
+      this.formData.adresseStageFicheDescriptive.value &&
+      this.formData.codePostalStageFicheDescriptive.value &&
+      this.formData.villeStageFicheDescriptive.value &&
+      this.formData.paysStageFicheDescriptive.value);
+  }
+
   private initializeFormFields() {
     const fields = {
       adresseMailStageFicheDescriptive: { value: '', type: 'ficheDescriptive' },
