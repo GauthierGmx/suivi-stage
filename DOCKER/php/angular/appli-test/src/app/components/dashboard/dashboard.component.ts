@@ -33,11 +33,9 @@ export class DashboardComponent implements OnInit {
     this.currentUser = this.authService.getCurrentUser();
     
     if (this.authService.isStudent(this.currentUser)) {
-      this.currentUser as Student;
       this.currentUserRole = 'STUDENT';
     }
     else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-      this.currentUser as Staff;
       this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
 

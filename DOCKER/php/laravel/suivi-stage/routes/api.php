@@ -8,7 +8,9 @@ use App\Http\Controllers\RechercheStageController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\FicheDescriptiveController; 
 use App\Http\Controllers\EtudiantController;
-
+use App\Http\Controllers\ParcoursController;
+use App\Http\Controllers\TuteurEntrepriseController;
+use App\Http\Middleware\DispatchDataDescriptiveSheet;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,13 +43,26 @@ Route::post('/entreprises/create', [EntrepriseController::class, 'store'])->name
 Route::get('/entreprises/{id}', [EntrepriseController::class, 'show'])->name('entreprises.show');
 
 // Route pour le Controller FicheDescriptive
-Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.store');
+//Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.store');
 Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update');
-Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show');
+//Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show');
 Route::get('/fiche-descriptive', [FicheDescriptiveController::class, 'index'])->name('fiche-descriptive.index');
+Route::post('fiche-descriptive/create', [DispatchDataDescriptiveSheet::class, 'handleSheetCreation']);
+Route::put('fiche-descriptive/update/{id}', [DispatchDataDescriptiveSheet::class, 'handleSheetUpdate']);
+Route::get('fiche-descriptive/{id}', [DispatchDataDescriptiveSheet::class, 'handleSheetGet']);
+Route::delete('/fiche-descriptive/delete/{id}', [FicheDescriptiveController::class, 'destroy'])->name('fiche-descriptive.destroy');
 
 // Route pour le Controller Etudiant
 Route::get('/etudiants/{id}/recherches-stages', [EtudiantController::class, 'indexRechercheStage'])->name('etudiants.indexRechercheStage');
 Route::get('/etudiants/{id}/fiches-descriptives', [EtudiantController::class, 'indexFicheDescriptive'])->name('etudiants.indexFicheDescriptive');
 Route::get('/etudiants', [EtudiantController::class, 'index'])->name('etudiants.index');
 Route::get('/etudiants/{id}', [EtudiantController::class, 'show'])->name('etudiants.show');
+
+// Route pour le Controller Parcours
+Route::get('/parcours', [ParcoursController::class, 'index'])->name('parcours.index');
+
+// Route pour le Controller TuteurEntreprise
+Route::get('/tuteur-entreprise/{id}', [TuteurEntrepriseController::class, 'show'])->name('tuteur-entreprise.show');
+Route::post('/tuteur-entreprise/create', [TuteurEntrepriseController::class, 'store']);
+Route::put('/tuteur-entreprise/update/{id}', [TuteurEntrepriseController::class, 'update'])->middleware('dispatchDataDescriptiveSheet');
+Route::get('/tuteur-entreprise', [TuteurEntrepriseController::class, 'index'])->name('tuteur-entreprise.index');

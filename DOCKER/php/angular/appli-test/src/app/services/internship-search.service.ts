@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { InternshipSearch } from '../models/internship-search.model';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, catchError, tap, of} from 'rxjs';
+import { Observable, catchError, tap, of, Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InternshipSearchService {
+  private searchDeletedSubject = new Subject<void>();
+  searchDeleted$ = this.searchDeletedSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -81,6 +83,7 @@ export class InternshipSearchService {
   //Supression d'une recherche de stage
   deleteSearch(search: InternshipSearch): Observable<null> {
     return this.http.delete(`http://localhost:8000/api/recherches-stages/delete/${search.idRecherche}`).pipe(
+      tap(() => this.searchDeletedSubject.next()),
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
@@ -96,4 +99,9 @@ export class InternshipSearchService {
     console.error(error);
     return of(errorValue);
   }
+
+
+  
 } 
+
+
