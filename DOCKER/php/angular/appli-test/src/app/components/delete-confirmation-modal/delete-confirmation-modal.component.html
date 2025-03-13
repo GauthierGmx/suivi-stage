@@ -8,9 +8,15 @@
         <h3 class="modal-title">Confirmation de suppression</h3>
         
         <div class="confirmation-content">
-            <p class="confirmation-message">
-                Êtes-vous sûr de vouloir supprimer cette recherche de stage ?
-            </p>
+            @if (currentPageUrl === '/dashboard') {
+                <p class="confirmation-message">
+                    Êtes-vous sûr de vouloir supprimer cette recherche de stage ?
+                </p>
+            } @else {
+                <p class="confirmation-message">
+                    Êtes-vous sûr de vouloir supprimer cette fiche descriptive ?
+                </p>
+            }
             <p class="warning-message">
                 <b>Cette action est irréversible !</b>
             </p>

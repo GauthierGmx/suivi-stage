@@ -151,8 +151,7 @@ class EtudiantControllerTest extends TestCase
         
         $response = $this->get('/api/etudiants/'.$idEtudiant.'/recherches-stages');
 
-        $response->assertStatus(404)
-                 ->assertJson(['message' => 'Aucune recherche de stage trouvée pour cet étudiant']);
+        $response->assertStatus(204);
     }
 
     /**
@@ -222,8 +221,7 @@ class EtudiantControllerTest extends TestCase
 
         $response = $this->get('/api/etudiants/'.$idEtudiant.'/fiches-descriptives');
 
-        $response->assertStatus(404)
-                 ->assertJson(['message' => 'Aucune fiche descriptive trouvée pour cet étudiant']);
+        $response->assertStatus(204);
     }
     /**
      * LA méthode indexFicheDescriptive doit retourner une erreur 500 si une erreur survient lors de la récupération
@@ -238,7 +236,7 @@ class EtudiantControllerTest extends TestCase
 
         $etudiantFirst = Etudiant::first();
 
-        $response = $this->get('/api/fiche-descriptive/etudiants/'.$etudiantFirst->idUPPA);
+        $response = $this->get('/api/etudiants/'.$etudiantFirst->idUPPA.'/fiches-descriptives');
 
         $response->assertStatus(500)
                  ->assertJson(['message' => 'Une erreur s\'est produite :']);

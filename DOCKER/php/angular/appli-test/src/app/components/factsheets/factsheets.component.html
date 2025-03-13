@@ -1,5 +1,18 @@
-<div class="factsheets">
+<div class="dashboard">
   <div class="content">
-    <h1 class="title">Fiches</h1>
+    @if (currentUser) {      
+      @if (!allDataLoaded) {
+        <app-loading/>
+      }
+      <div [hidden]="!allDataLoaded">
+        <app-breadcrumb [currentUserRole]="currentUserRole"/>
+        <app-stats-cards [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+
+        
+        @if (currentUserRole === 'STUDENT') {
+          <app-factsheets-student-tab [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+        }
+      </div>
+    }
   </div>
-</div> 
+</div>
