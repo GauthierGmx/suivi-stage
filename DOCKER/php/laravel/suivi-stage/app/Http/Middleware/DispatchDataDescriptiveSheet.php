@@ -55,6 +55,7 @@ class DispatchDataDescriptiveSheet
         'fonctionTuteurEntreprise' => 'fonction',
 
         // Fiche Descriptive
+        'statutFicheDescriptive' => 'statut',
         'serviceEntrepriseFicheDescriptive' => 'serviceEntreprise',
         'typeStageFicheDescriptive' => 'typeStage',
         'thematiqueFicheDescriptive' => 'thematique',
@@ -139,9 +140,6 @@ class DispatchDataDescriptiveSheet
                 if (array_key_exists($type, $triData)) {
                     $triData[$type][$mappedKey] = $value;
                 }
-            }
-            if($key == 'statut'){
-                $triData['ficheDescriptive']['statut'] = $data['statut'];
             }
         }
 
@@ -456,7 +454,10 @@ class DispatchDataDescriptiveSheet
                 'value' => $ficheDescriptive->paysStage,
                 'type' => 'ficheDescriptive',
              ],
-             'statut' => $ficheDescriptive->statut,
+             'statutFicheDescriptive' => [
+                'value' => $ficheDescriptive->statut,
+                'type' => 'ficheDescriptive',
+             ],
              'numeroConventionFicheDescriptive' => [
                 'value' => $ficheDescriptive->numeroConvention,
                 'type' => 'ficheDescriptive',

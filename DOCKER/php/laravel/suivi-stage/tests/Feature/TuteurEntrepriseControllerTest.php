@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\TuteurEntreprise;
+use App\Middlewares\DispatchDataDescriptiveSheet;
 use Tests\TestCase;
 
 class TuteurEntrepriseControllerTest extends TestCase
@@ -175,4 +176,73 @@ class TuteurEntrepriseControllerTest extends TestCase
         TEST DE LA METHODE UPDATE
     ================================
     */
+
+    /**
+     * La méthode update va retourner une confirmation 200 et le tuteur d'entreprise modifié
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_confirmation_et_le_tuteur_entreprise_modifie(){
+        $unTuteurEntreprise = TuteurEntreprise::first();
+
+        $data = [
+            'nom' => 'Doe',
+            'prenom' => 'John',
+            'adresseMail' => 'john.doe@gmail.com',
+            'telephone' => '0601020304',
+            'fonction' => 'Responsable RH'
+        ];
+
+        $response = $this->putJson('/api/tuteur-entreprise/update/'.$unTuteurEntreprise->idTuteur, $data);
+        $response->assertStatus(200)
+                 ->assertJson($data);
+    }
+
+    /**
+     * La méthode update va retourner une erreur 422 si les données ne sont pas valides
+     * On n'envoie pas d'email alors qu'il est nécessaire
+     * @return void
+     */
+    public function test_update_renvoie_une_erreur_422_si_les_donnees_ne_sont_pas_valides(){
+        $unTuteurEntreprise = TuteurEntreprise::first();
+
+        $data = [
+            'nom' => 'Doe',
+            'prenom' => 'John',
+            //'email' => 'john.doe',
+            'telephone' => '0601020304',
+            'fonction' => 'Responsable RH'
+        ];
+
+        $response = $this->putJson('/api/tuteur-entreprise/update/'.$unTuteurEntreprise->idTuteur, $data);
+        $response->assertStatus(422);
+    }
+
+    /**
+     * La méthode update va retourner une confirmation 500 si une erreur survient
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_erreur_generique_en_cas_d_exception()
+    {
+        // Mock du modèle TuteurEntreprise pour déclencher une exception
+        $this->mock(\App\Http\Controllers\TuteurEntreprise::class, function ($mock) {
+            $mock->shouldReceive('update')->andThrow(new \Exception('Erreur simulée'));
+        });
+
+        $unTuteurEntreprise = TuteurEntreprise::first();
+
+        $data = [
+            'nom' => 'Doe',
+            'prenom' => 'John',
+            'adresseMail' => 'john.doe@gmail.com',
+            'telephone' => '0601020304',
+            'fonction' => 'Responsable RH'
+        ];
+
+        $response = $this->putJson('/api/tuteur-entreprise/update/'.$unTuteurEntreprise->idTuteur, $data);
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite']);
+    }
 }
