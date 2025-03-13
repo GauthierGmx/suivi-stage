@@ -88,17 +88,17 @@ class DispatchDataDescriptiveSheet
         }
 
          // Vérifiez si la route demandée correspond à celle de handleSheetCreation
-         if ($request->is('fiche-descriptive/create')){
+         if ($request->is('api/fiche-descriptive/create')){
             return $this->handleSheetCreation($request);
         }
 
         //Pour le renvoie d'une fiche descriptive
-        if ($request->is('fiche-descriptive/*') && $request->route('id')) {
+        if ($request->is('api/fiche-descriptive/*') && $request->route('id')) {
             return $this->handleSheetGet($request, $request->route('id'));
         }
 
         //Pour la mise à jour d'une fiche descriptive
-        if ($request->is('fiche-descriptive/update/*') && $request->route('id')) {
+        if ($request->is('api/fiche-descriptive/update/*') && $request->route('id')) {
             return $this->handleSheetUpdate($request, $request->route('id'));
         }
 
@@ -182,60 +182,25 @@ class DispatchDataDescriptiveSheet
 
             // Si le tuteur n'existe pas, alors on le crée
             if (!$tuteur) {
-                $tuteur = TuteurEntreprise::create([
-                    'nom' => $triData['tuteurEntreprise']['nom'] ?? '',
-                    'prenom' => $triData['tuteurEntreprise']['prenom'] ?? '',
-                    'telephone' => $triData['tuteurEntreprise']['telephone'] ?? '',
-                    'fonction' => $triData['tuteurEntreprise']['fonction'] ?? '',
-                    'adresseMail' => $triData['tuteurEntreprise']['adresseMail'] ?? '',
-                    'idEntreprise' => $triData['tuteurEntreprise']['idEntreprise'],
-                ]);
-            }
+                $tuteurController = new TuteurEntrepriseController();
+                $tuteur = $tuteurController->store(new Request($triData['tuteurEntreprise']))->getData();
+            } 
 
             // Ajout des ID à la fiche descriptive
-            $triData['tuteurEntreprise']['id'] = $tuteur->id;
+            $triData['tuteurEntreprise']['id'] = $tuteur->idTuteur;
             $triData['ficheDescriptive']['idTuteurEntreprise'] = $tuteur->idTuteur;
             $triData['ficheDescriptive']['idEntreprise'] = $tuteur->idEntreprise;
         }
 
         // **6️⃣ Appel des contrôleurs pour enregistrer les autres entités**
-        $etudiantController = new EtudiantController();
-        $entrepriseController = new EntrepriseController();
         $ficheDescriptiveController = new FicheDescriptiveController();
-        $tuteurController = new TuteurEntrepriseController();
 
         $responses = [
-            //'etudiant' => !empty($triData['etudiant']) ? $etudiantController->store(new Request($triData['etudiant']))->getData() : null,
-            //'entreprise' => !empty($triData['entreprise']) ? $entrepriseController->getOrCreate(new Request($triData['entreprise']))->getData() : null,
             'ficheDescriptive' => !empty($triData['ficheDescriptive']) ? $ficheDescriptiveController->store(new Request($triData['ficheDescriptive']))->getData() : null,
-            'tuteur' => !empty($triData['tuteurEntreprise']) ? $this->handleTuteurCreation($triData['tuteurEntreprise']) : null
+            'tuteur' => $tuteur
         ];
 
         return response()->json($responses);
-    }
-
-    // Fonction pour gérer la création ou la récupération du tuteur
-    private function handleTuteurCreation($tuteurData)
-    {
-        // Vérification si le TuteurEntreprise existe déjà avec le même email et la même entreprise
-        $tuteur = TuteurEntreprise::where('adresseMail', $tuteurData['adresseMail'])
-                    ->where('idEntreprise', $tuteurData['idEntreprise'])
-                    ->first();
-
-        if (!$tuteur) {
-            // Si le tuteur n'existe pas, on le crée
-            $tuteur = TuteurEntreprise::create([
-                'nom' => $tuteurData['nom'] ?? '',
-                'prenom' => $tuteurData['prenom'] ?? '',
-                'telephone' => $tuteurData['telephone'] ?? '',
-                'fonction' => $tuteurData['fonction'] ?? '',
-                'adresseMail' => $tuteurData['adresseMail'] ?? '',
-                'idEntreprise' => $tuteurData['idEntreprise'],
-            ]);
-        }
-
-        // Retourner le tuteur créé ou trouvé
-        return $tuteur ? $tuteur->toArray() : null;
     }
 
     /**
@@ -273,7 +238,7 @@ class DispatchDataDescriptiveSheet
             'tuteurEntreprise' => []
         ];
 
-        global $mapping;
+        $mapping = $this->mapping;
         foreach ($data as $key => $item) {
             if (isset($item['type'], $item['value'])) {
                 $type = $item['type'];
