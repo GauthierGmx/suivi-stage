@@ -135,9 +135,7 @@ class EtudiantController extends Controller
 
             if($desRecherches->isEmpty())
             {
-                return response()->json([
-                    'message' => 'Aucune recherche de stage trouvée pour cet étudiant'
-                ],404);
+                return response()->noContent();
             }
             
             return response()->json($desRecherches, 200);
@@ -179,9 +177,7 @@ class EtudiantController extends Controller
 
             if($desFiches->isEmpty())
             {
-                return response()->json([
-                    'message' => 'Aucune fiche descriptive trouvée pour cet étudiant'
-                ],404);
+                return response()->noContent();
             }
             
             return response()->json($desFiches, 200);

@@ -1,4 +1,4 @@
-export class DescriptiveSheet {
+export class Factsheets {
   idFicheDescriptive: number;
   dateCreation: Date | null;
   dateDerniereModification: Date | null;
@@ -80,4 +80,4 @@ export class DescriptiveSheet {
   }
 }
 
-export type SheetStatus = 'BROUILLON' | 'EN_REVISION' | 'VALIDE' | 'REFUSE'; 
+export type SheetStatus = 'En cours' | 'Validee' | 'Refusée' ; 

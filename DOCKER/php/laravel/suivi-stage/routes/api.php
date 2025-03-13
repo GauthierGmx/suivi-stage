@@ -47,8 +47,7 @@ Route::get('/fiche-descriptive', [FicheDescriptiveController::class, 'index'])->
 Route::post('fiche-descriptive/create', [DispatchDataDescriptiveSheet::class, 'handleSheetCreation']);
 Route::put('fiche-descriptive/update/{id}', [DispatchDataDescriptiveSheet::class, 'handleSheetUpdate']);
 Route::get('fiche-descriptive/{id}', [DispatchDataDescriptiveSheet::class, 'handleSheetGet']);
-
-
+Route::delete('/fiche-descriptive/delete/{id}', [FicheDescriptiveController::class, 'destroy'])->name('fiche-descriptive.destroy');
 
 // Route pour le Controller Etudiant
 Route::get('/etudiants/{id}/recherches-stages', [EtudiantController::class, 'indexRechercheStage'])->name('etudiants.indexRechercheStage');

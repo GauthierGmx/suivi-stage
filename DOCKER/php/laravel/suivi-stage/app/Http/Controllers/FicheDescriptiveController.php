@@ -198,6 +198,8 @@ class FicheDescriptiveController extends Controller
      * Récupère les données d'une fiche descriptive
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Exception
      */
     public function show($id){
         try{
@@ -236,6 +238,44 @@ class FicheDescriptiveController extends Controller
                 'erreurs' => $e->getMessage()
             ], 500);
         }
-    }    
+    }
+    
+    /**
+     * Supprime une fiche descriptive
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     * Code HTTP retourné :
+     *      - 200 : si la fiche descriptive a bien été supprimée
+     *      - 404 : si la fiche descriptive n'a pas été trouvée
+     *      - 500 : s'il y a eu une erreur
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Exception
+     */
+    public function destroy($id)
+    {
+        try
+        {
+            $uneFicheDescriptive = FicheDescriptive::findOrFail($id);
+            $uneFicheDescriptive->delete();
+
+            return response()->json([
+                'message' => 'La fiche descriptive a bien été supprimée'
+            ], 200);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
+        {
+            return response()->json([
+                'message' => 'Aucune fiche descriptive trouvée'
+            ],404);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite :',
+                'erreurs' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
 ?>
