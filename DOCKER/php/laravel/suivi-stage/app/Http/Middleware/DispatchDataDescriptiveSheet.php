@@ -140,6 +140,9 @@ class DispatchDataDescriptiveSheet
                     $triData[$type][$mappedKey] = $value;
                 }
             }
+            if($key == 'statut'){
+                $triData['ficheDescriptive']['statut'] = $data['statut'];
+            }
         }
 
         // **4️⃣ Récupération de l'ID de l'entreprise via le numSIRET ou raison sociale**
@@ -295,10 +298,13 @@ class DispatchDataDescriptiveSheet
         // **6️⃣ Mise à jour de la fiche descriptive**
         $ficheDescriptive->update($validatedData['ficheDescriptive']);
 
+        $tuteurEntreprise = $validatedData['ficheDescriptive']['idTuteurEntreprise'];
+        $entreprise = $validatedData['ficheDescriptive']['idEntreprise'];
+
         // **7️⃣ Mise à jour de l'entreprise si nécessaire**
         $entreprise = null;
         if (!empty($validatedData['entreprise'])) {
-            $entreprise = Entreprise::find($idEntreprise);
+            $entreprise = Entreprise::find($tuteurEntreprise);
             if ($entreprise) {
                 $entreprise->update($validatedData['entreprise']);
             } else {
@@ -309,11 +315,11 @@ class DispatchDataDescriptiveSheet
         // **8️⃣ Mise à jour du tuteur entreprise si nécessaire**
         $tuteur = null;
         if (!empty($validatedData['tuteurEntreprise'])) {
-            $tuteur = TuteurEntreprise::find($idTuteur);
+            $tuteur = TuteurEntreprise::find($entreprise);
             if ($tuteur) {
                 $tuteur->update($validatedData['tuteurEntreprise']);
             } else {
-                \Log::error("Tuteur entreprise non trouvé pour ID: " . $idTuteur);
+                \Log::error("Tuteur entreprise non trouvé pour ID: " . $idTuteurEntreprise);
             }
         }
 
