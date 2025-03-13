@@ -50,8 +50,6 @@ export class SearchesStudentTabComponent implements OnInit {
         ).subscribe(() => {
             this.applyFilters();
         });
-
-        this.loadData();
     }
 
     ngOnInit() {

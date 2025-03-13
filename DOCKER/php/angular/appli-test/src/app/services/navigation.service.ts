@@ -42,7 +42,7 @@ export class NavigationService {
   }
 
   navigateToSheetView(sheetId:number){
-    this.router.navigate(['factsheet/sheet-details/',sheetId]);
+    this.router.navigate(['factsheets/sheet-details/',sheetId]);
   }
 
   navigateToSearchEditForm(searchId: number) {
