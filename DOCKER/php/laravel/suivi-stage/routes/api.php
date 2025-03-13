@@ -27,6 +27,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Route pour le Controller Auth
+Route::get('/check-auth', [AuthController::class, 'checkAuth']);
+
 // Route pour le Controller RechercheStage
 Route::get('/recherches-stages', [RechercheStageController::class, 'index'])->name('recherches-stages.index');
 Route::post('/recherches-stages/create', [RechercheStageController::class, 'store'])->name('recherches-stages.store');
@@ -40,13 +43,10 @@ Route::post('/entreprises/create', [EntrepriseController::class, 'store'])->name
 Route::get('/entreprises/{id}', [EntrepriseController::class, 'show'])->name('entreprises.show');
 
 // Route pour le Controller FicheDescriptive
-//Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.store');
-//Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update');
-//Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show');
+Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.store')->middleware('dispatch.data.descriptive.sheet');
+Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update')->middleware('dispatch.data.descriptive.sheet');
+Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show')->middleware('dispatch.data.descriptive.sheet');
 Route::get('/fiche-descriptive', [FicheDescriptiveController::class, 'index'])->name('fiche-descriptive.index');
-Route::post('fiche-descriptive/create', [DispatchDataDescriptiveSheet::class, 'handleSheetCreation']);
-Route::put('fiche-descriptive/update/{id}', [DispatchDataDescriptiveSheet::class, 'handleSheetUpdate']);
-Route::get('fiche-descriptive/{id}', [DispatchDataDescriptiveSheet::class, 'handleSheetGet']);
 Route::delete('/fiche-descriptive/delete/{id}', [FicheDescriptiveController::class, 'destroy'])->name('fiche-descriptive.destroy');
 
 // Route pour le Controller Etudiant
@@ -60,6 +60,6 @@ Route::get('/parcours', [ParcoursController::class, 'index'])->name('parcours.in
 
 // Route pour le Controller TuteurEntreprise
 Route::get('/tuteur-entreprise/{id}', [TuteurEntrepriseController::class, 'show'])->name('tuteur-entreprise.show');
-Route::post('/tuteur-entreprise/create', [TuteurEntrepriseController::class, 'store']);
+Route::post('/tuteur-entreprise/create', [TuteurEntrepriseController::class, 'store'])->name('tuteur-entreprise.store');
 Route::put('/tuteur-entreprise/update/{id}', [TuteurEntrepriseController::class, 'update'])->name('tuteur-entreprise.update');
 Route::get('/tuteur-entreprise', [TuteurEntrepriseController::class, 'index'])->name('tuteur-entreprise.index');
