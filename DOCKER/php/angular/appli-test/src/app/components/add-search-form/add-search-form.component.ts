@@ -16,8 +16,8 @@ import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
     selector: 'app-add-search-form',
     standalone: true,
     imports: [CommonModule, FormsModule, LoadingComponent, BreadcrumbComponent],
-    templateUrl: './add-search-form.html',
-    styleUrls: ['./add-search-form.css']
+    templateUrl: './add-search-form.component.html',
+    styleUrls: ['./add-search-form.component.css']
 })
 export class AddSearchFormComponent implements OnInit {
     currentUser!: Student;

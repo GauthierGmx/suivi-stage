@@ -1,0 +1,14 @@
+<app-add-factsheets-1 
+  *ngIf="currentStep === 1 && currentUser && currentUserRole === 'STUDENT'" 
+  [student]="currentUser" 
+  (formData)='formData' 
+  (next)="onNext($event)"
+  ></app-add-factsheets-1>
+<app-add-factsheets-2 (formData)='formData' *ngIf="currentStep === 2" (next)="onNext($event)" (previous)="onPrevious()"></app-add-factsheets-2>
+<app-add-factsheets-3 (formData)='formData' *ngIf="currentStep === 3" (next)="onNext($event)" (previous)="onPrevious()"></app-add-factsheets-3>
+<app-add-factsheets-4 (formData)='formData' *ngIf="currentStep === 4" (next)="onNext($event)" (previous)="onPrevious()"></app-add-factsheets-4>
+<app-add-factsheets-5 (formData)='formData' *ngIf="currentStep === 5" (next)="onNext($event)" (previous)="onPrevious()"></app-add-factsheets-5>
+<app-add-factsheets-6 (formData)='formData' *ngIf="currentStep === 6" (next)="onNext($event)" (previous)="onPrevious()"></app-add-factsheets-6>
+<app-add-factsheets-7 (formData)='formData' *ngIf="currentStep === 7" (next)="onNext($event)" (previous)="onPrevious()"></app-add-factsheets-7>
+<app-add-factsheets-8 (formData)='formData' *ngIf="currentStep === 8" (next)="onNext($event)" (previous)="onPrevious()"></app-add-factsheets-8>
+<app-add-factsheets-9 (formData)='formData' *ngIf="currentStep === 9" (next)="onNext($event)" (previous)="onPrevious()"></app-add-factsheets-9>

@@ -1,0 +1,42 @@
+<div class="container">
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
+
+  <h2 class="title">Informations de l'établissement d'enseignement</h2>
+  <p class="warning">Les informations pré-remplies sont à vérifier !</p>
+  <div class="content">
+    <form (ngSubmit)="onNext()">
+      <div class="form-content">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="composante">Composante/UFR</label>
+          <input type="text" id="composante" [(ngModel)]="formData.composanteEtablissement.value" name="composante" disabled>
+        </div>
+        <div class="form-group">
+          <label for="parcours">Parcours</label>
+          <input type="text" id="parcours" [(ngModel)]="formData.parcoursEtablissement.value" name="parcours">
+        </div>
+      </div>
+
+      <div class="form-row">
+        
+        <div class="form-group">
+          <label for="adresse">Adresse</label>
+          <input type="text" id="adresse" [(ngModel)]="formData.adresseEtablissement.value" name="adresse">
+        </div>
+        <div class="form-group">
+          <label for="telephone">Téléphone</label>
+          <input type="text" id="telephone" [(ngModel)]="formData.telephoneEtablissement.value" name="telephone">
+        </div>
+      </div>
+    </div>
+
+      <div class="buttons">
+        <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
+        <button type="submit" class="btn-submit">Suivant</button>
+      </div>
+    </form>
+  </div>
+</div>

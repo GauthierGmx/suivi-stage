@@ -1,0 +1,9 @@
+<div class="navigation-tabs">
+  <div 
+    *ngFor="let tab of tabs" 
+    class="tab" 
+    [class.active]="isActive(tab.id)"
+    (click)="onTabClick(tab.id)">
+    {{ tab.name }}
+  </div>
+</div> 
