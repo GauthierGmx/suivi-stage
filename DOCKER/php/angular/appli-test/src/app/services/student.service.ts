@@ -23,7 +23,7 @@ export class StudentService {
     );
   }
 
-  getStudentById(studentId: string, fields?: string[]): Observable<Student | undefined> {
+  getStudentById(studentId: string | null, fields?: string[]): Observable<Student | undefined> {
     let params = new HttpParams();
 
     if (fields && fields.length > 0) {

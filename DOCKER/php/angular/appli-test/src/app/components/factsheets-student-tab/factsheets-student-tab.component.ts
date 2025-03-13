@@ -2,12 +2,9 @@ import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } fro
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Student } from '../../models/student.model';
-import { Staff } from '../../models/staff.model';
 import { Company } from '../../models/company.model';
 import { Factsheets, SheetStatus } from '../../models/description-sheet.model';
-import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
-import { StudentService } from '../../services/student.service';
 import { CompanyService } from '../../services/company.service';
 import { FactsheetsService } from '../../services/description-sheet.service';
 import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
@@ -208,7 +205,6 @@ export class FactsheetsStudentTabComponent implements OnInit {
 
 
 
-    
 
 
     //Suppression de la fiche descriptive

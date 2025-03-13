@@ -24,6 +24,13 @@ export class Factsheets {
   interruptionStage?: Boolean | null;
   dateDebutInterruption?: Date | null;
   dateFinInterruption?: Date | null;
+  serviceEntreprise:String | null;
+  adresseMailStage:String | null;
+  telephoneStage:String | null;
+  adresseStage: String | null;
+  codePostalStage: String | null;
+  villeStage: String | null;
+  paysStage: String | null;
 
   constructor(
     idFicheDescriptive: number,
@@ -47,10 +54,18 @@ export class Factsheets {
     idEntreprise: number,
     idTuteur: number,
     idUPPA: string,
+    adresseMailStage:String,
+    adresseStage:String,
+    telephoneStage:String,
+    serviceEntreprise: String,
+    codePostalStage: String,
+    villeStage:String,
+    paysStage:String,
     numeroConvention?: string,
     interruptionStage?: Boolean,
     dateDebutInterruption?: Date,
-    dateFinInterruption?: Date
+    dateFinInterruption?: Date,
+
   ) {
     this.idFicheDescriptive = idFicheDescriptive;
     this.dateCreation = dateCreation;
@@ -77,6 +92,13 @@ export class Factsheets {
     this.interruptionStage = interruptionStage;
     this.dateDebutInterruption = dateDebutInterruption;
     this.dateFinInterruption = dateFinInterruption;
+    this.serviceEntreprise = serviceEntreprise;
+    this.adresseMailStage = adresseMailStage;
+    this.telephoneStage = telephoneStage;
+    this.adresseStage = adresseStage;
+    this.codePostalStage = codePostalStage;
+    this.villeStage = villeStage;
+    this.paysStage = paysStage;
   }
 }
 

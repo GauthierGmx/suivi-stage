@@ -1,0 +1,187 @@
+<div *ngIf="!dataLoaded">
+    <app-loading/>
+</div>
+<div *ngIf="dataLoaded" class="container">
+    <div class="content-wrapper">
+        <app-breadcrumb [currentUserRole]="currentUserRole" [selectedStudent]="selectedStudent"/>
+        <div class="form">
+            <!-- En-tête avec le statut -->
+            <div class="status-section">
+                <h3><b>Informations de l'étudiant</b></h3>
+                <span [class]="getStatusClass(sheet?.statut || '')">
+                    {{ sheet?.statut }}
+                </span>
+            </div>
+
+            <div class="form-grid">
+                <!-- Type de contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Nom</label>
+                        <p class="info-text">{{ selectedStudent?.nom }}</p>
+                    </div>
+                </div>
+
+                <!-- Date 1er contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Prenom</label>
+                        <p class="info-text">{{ selectedStudent?.prenom }}</p>
+                    </div>
+                </div>
+
+                <!-- Nom de l'entreprise -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Telephone</label>
+                        <p class="info-text">{{ selectedStudent?.telephone }}</p>
+                    </div>
+                </div>
+
+                <!-- Adresse -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse mail</label>
+                        <p class="info-text">{{ selectedStudent?.adresseMail }}</p>
+                    </div>
+                </div>
+
+                <!-- Code Postal -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse - Numéro et rue</label>
+                        <p class="info-text">{{ selectedStudent?.adresse }}</p>
+                    </div>
+                </div>
+
+                <!-- Ville -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse - Code postal</label>
+                        <p class="info-text">{{ selectedStudent?.codePostal }}</p>
+                    </div>
+                </div>
+
+                <!-- Ville -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse - Ville</label>
+                        <p class="info-text">{{ selectedStudent?.ville }}</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="separator">
+            <h3><b>Informations de l'entreprise</b></h3>
+
+            <div class="form-grid">
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Raison sociale / Nom de l'entreprise</label>
+                        <p class="info-text">{{ company?.raisonSociale }}</p>
+                    </div>
+                </div>
+
+                <!-- Prénom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse numéro et rue</label>
+                        <p class="info-text">{{ company?.adresse }}</p>
+                    </div>
+                </div>
+
+                <!-- Téléphone contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse Code postal</label>
+                        <p class="info-text">{{ company?.codePostal }}</p>
+                    </div>
+                </div>
+
+                <!-- Mail contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse Ville</label>
+                        <p class="info-text">{{ company?.ville }}</p>
+                    </div>
+                </div>
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Pays</label>
+                        <p class="info-text">{{ company?.pays }}</p>
+                    </div>
+                </div>
+                
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Téléphone</label>
+                        <p class="info-text">{{ company?.pays }}</p>
+                    </div>
+                </div>
+                
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Type d'établissement</label>
+                        <p class="info-text">{{ company?.typeEtablissement }}</p>
+                    </div>
+                </div>
+                
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>N° SIRET</label>
+                        <p class="info-text">{{ company?.numSiret }}</p>
+                    </div>
+                </div>
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Code NAP ou NAF</label>
+                        <p class="info-text">{{ company?.codeAPE_NAF }}</p>
+                    </div>
+                </div>
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Statut juridique</label>
+                        <p class="info-text">{{ company?.statutJuridique }}</p>
+                    </div>
+                </div>
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Effectif</label>
+                        <p class="info-text">{{ company?.effectif }}</p>
+                    </div>
+                </div>
+                
+            </div>
+                
+                <hr class="separator">
+
+
+
+
+            <!-- Boutons d'action -->
+            <div *ngIf="currentUserRole === 'STUDENT'" class="action-buttons">
+                <button class="cancel-button" (click)="goToDashboard()">Retour</button>
+                <button class="edit-button" (click)="goToEdit()">Modifier</button>
+            </div>
+            <div *ngIf="currentUserRole === 'INTERNSHIP_MANAGER'" class="action-buttons">
+                <button class="cancel-button" (click)="goBack()">Retour</button>
+            </div>
+        </div>
+    </div>
+</div>
