@@ -45,6 +45,7 @@ Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class,
 //Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show');
 Route::get('/fiche-descriptive', [FicheDescriptiveController::class, 'index'])->name('fiche-descriptive.index');
 Route::post('fiche-descriptive/create', [DispatchDataDescriptiveSheet::class, 'handleSheetCreation']);
+Route::put('fiche-descriptive/update/{id}', [DispatchDataDescriptiveSheet::class, 'handleSheetUpdate']);
 Route::get('fiche-descriptive/{id}', [DispatchDataDescriptiveSheet::class, 'handleSheetGet']);
 
 

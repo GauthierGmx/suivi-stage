@@ -142,6 +142,34 @@ class TuteurEntrepriseControllerTest extends TestCase
         $response = $this->postJson('/api/tuteur-entreprise/create', $data);
         $response->assertStatus(422);
     }
+
+    /**
+     * La méthode store va retourner une confirmation 500 si une erreur survient
+     * 
+     * @return void
+     */
+    public function test_store_renvoie_une_erreur_generique_en_cas_d_exception()
+    {
+        // Mock du modèle TuteurEntreprise pour déclencher une exception
+        $this->mock(\App\Http\Controllers\TuteurEntreprise::class, function ($mock) {
+            $mock->shouldReceive('store')->andThrow(new \Exception('Erreur simulée'));
+        });
+
+        $data = [
+            'nom' => 'Doe',
+            'prenom' => 'John',
+            'adresseMail' => 'john.doe@gmail.com',
+            'telephone' => '0601020304',
+            'fonction' => 'Responsable RH',
+            'idEntreprise' => 3
+        ];
+
+        $response = $this->get('/api/tuteur-entreprise/create', $data);
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite']);
+    }
+    
     /*
     ================================
         TEST DE LA METHODE UPDATE

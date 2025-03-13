@@ -55,7 +55,7 @@ class DispatchDataDescriptiveSheet
         'fonctionTuteurEntreprise' => 'fonction',
 
         // Fiche Descriptive
-        'serviceEntreprise' => 'service',
+        'serviceEntrepriseFicheDescriptive' => 'serviceEntreprise',
         'typeStageFicheDescriptive' => 'typeStage',
         'thematiqueFicheDescriptive' => 'thematique',
         'sujetFicheDescriptive' => 'sujet',
@@ -97,9 +97,20 @@ class DispatchDataDescriptiveSheet
             return $this->handleSheetGet($request, $request->route('id'));
         }
 
+        //Pour la mise à jour d'une fiche descriptive
+        if ($request->is('fiche-descriptive/update/*') && $request->route('id')) {
+            return $this->handleSheetUpdate($request, $request->route('id'));
+        }
+
         return $next($request);
     }
 
+    /**
+     * Création d'une fiche descriptive.
+     * 
+     * @param Request $request
+     * @return Response
+     */
     public function handleSheetCreation(Request $request)
     {
         $data = $request->json()->all();
@@ -229,8 +240,14 @@ class DispatchDataDescriptiveSheet
 
     /**
      * Mise à jour de la fiche descriptive.
+     * 
+     * @param Request $request
+     * @param int $id
+     * 
+     * @return Response
      */
-    public function updateFicheDescriptive(Request $request, $id)
+
+    public function handleSheetUpdate(Request $request, $id)
     {
         // **1️⃣ Récupération de la fiche descriptive**
         $ficheDescriptive = FicheDescriptive::find($id);
@@ -309,8 +326,11 @@ class DispatchDataDescriptiveSheet
     }
 
     /**
+     * Récupération d'une fiche descriptive.
+     * Envoie de la fiche descriptive au front pour affichage.
      * 
-     * 
+     * @param Request $request
+     * @return Response
      */
     public function handleSheetGet(Request $request)
     {
@@ -430,10 +450,7 @@ class DispatchDataDescriptiveSheet
                 'value' => $ficheDescriptive->paysStage,
                 'type' => 'ficheDescriptive',
              ],
-             'statutFicheDescriptive' => [
-                 'value' => $ficheDescriptive->statut, // Assurez-vous que la fiche a un champ statut
-                 'type' => 'ficheDescriptive',
-             ],
+             'statut' => $ficheDescriptive->statut,
              'numeroConventionFicheDescriptive' => [
                 'value' => $ficheDescriptive->numeroConvention,
                 'type' => 'ficheDescriptive',
