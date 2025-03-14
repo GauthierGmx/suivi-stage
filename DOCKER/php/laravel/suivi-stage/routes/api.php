@@ -10,6 +10,7 @@ use App\Http\Controllers\FicheDescriptiveController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\ParcoursController;
 use App\Http\Controllers\TuteurEntrepriseController;
+use App\Http\Controllers\AnneeUniversitaireController;
 use App\Http\Middleware\DispatchDataDescriptiveSheet;
 
 /*
@@ -60,3 +61,10 @@ Route::get('/tuteur-entreprise/{id}', [TuteurEntrepriseController::class, 'show'
 Route::post('/tuteur-entreprise/create', [TuteurEntrepriseController::class, 'store'])->name('tuteur-entreprise.store');
 Route::put('/tuteur-entreprise/update/{id}', [TuteurEntrepriseController::class, 'update'])->name('tuteur-entreprise.update');
 Route::get('/tuteur-entreprise', [TuteurEntrepriseController::class, 'index'])->name('tuteur-entreprise.index');
+
+// Route pour le Controller AnneeUniversitaire
+Route::get('/annee-universitaire', [AnneeUniversitaireController::class, 'index'])->name('annee-universitaire.index');
+Route::post('/annee-universitaire/create', [AnneeUniversitaireController::class, 'store'])->name('annee-universitaire.store');
+Route::get('/annee-universitaire/{id}', [AnneeUniversitaireController::class, 'show'])->name('annee-universitaire.show');
+Route::put('/annee-universitaire/update/{id}', [AnneeUniversitaireController::class, 'update'])->name('annee-universitaire.update');
+Route::delete('/annee-universitaire/delete/{id}', [AnneeUniversitaireController::class, 'destroy'])->name('annee-universitaire.destroy');
