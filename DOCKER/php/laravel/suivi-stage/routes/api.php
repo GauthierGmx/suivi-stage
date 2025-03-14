@@ -27,9 +27,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route pour le Controller Auth
-Route::get('/check-auth', [AuthController::class, 'checkAuth']);
-
 // Route pour le Controller RechercheStage
 Route::get('/recherches-stages', [RechercheStageController::class, 'index'])->name('recherches-stages.index');
 Route::post('/recherches-stages/create', [RechercheStageController::class, 'store'])->name('recherches-stages.store');

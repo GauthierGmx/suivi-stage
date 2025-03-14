@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Student } from '../models/student.model';
 import { Staff } from '../models/staff.model';
 import { StudentService } from './student.service';
 import { StaffService } from './staff.service';
-import { BehaviorSubject, catchError, firstValueFrom, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,6 @@ export class AuthService {
   staffs: Staff[] = [];
 
   constructor(
-    private readonly http: HttpClient,
     private readonly router: Router,
     private readonly studentService: StudentService,
     private readonly staffService: StaffService
@@ -71,13 +69,8 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  isAuthenticated(): Observable<boolean> {
-    return this.http.get<{ authenticated: boolean }>('http://localhost:8000/api/check-auth').pipe(
-      map(response => response.authenticated),
-      tap(response => this.log(response)),
-      catchError(error => this.handleError(error, null)),
-      catchError(() => of(false))
-    );
+  isAuthenticated(): boolean {
+    return !!this.currentUserSubject.value;
   }
 
   getCurrentUser(): Student | Staff | undefined {
@@ -91,15 +84,4 @@ export class AuthService {
   isStaff(user: Student | Staff | undefined): user is Staff {
     return !!user && 'idPersonnel' in user;
   }
-
-  //Log la réponse de l'API
-  private log(response: any) {
-    console.table(response);
-  }
-
-  //Retourne l'erreur en cas de problème avec l'API
-  private handleError(error: Error, errorValue: any) {
-    console.error(error);
-    return of(errorValue);
-  }  
 }
