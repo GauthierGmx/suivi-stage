@@ -1,42 +1,41 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddFactsheets1Component } from './add-factsheets-1/add-factsheets-1.component';
-import { AddFactsheets2Component } from './add-factsheets-2/add-factsheets-2.component';
-import { AddFactsheets3Component } from './add-factsheets-3/add-factsheets-3.component';
-import { AddFactsheets4Component } from './add-factsheets-4/add-factsheets-4.component';
-import { AddFactsheets5Component } from './add-factsheets-5/add-factsheets-5.component';
-import { AddFactsheets6Component } from './add-factsheets-6/add-factsheets-6.component';
-import { AddFactsheets7Component } from './add-factsheets-7/add-factsheets-7.component';
-import { AddFactsheets8Component } from './add-factsheets-8/add-factsheets-8.component';
-import { AddFactsheets9Component } from './add-factsheets-9/add-factsheets-9.component';
+import { UpdateFactsheet1Component } from './update-factsheet-1/update-factsheet-1.component';
+import { UpdateFactsheets2Component } from './update-factsheet-2/update-factsheet-2.component';
+import { UpdateFactsheets3Component } from './update-factsheets-3/update-factsheets-3.component';
+import { UpdateFactsheets4Component } from './update-factsheets-4/update-factsheets-4.component';
+import { UpdateFactsheets5Component } from './update-factsheets-5/update-factsheets-5.component';
+import { UpdateFactsheets6Component } from './update-factsheets-6/update-factsheets-6.component';
+import { UpdateFactsheets7Component } from './update-factsheets-7/update-factsheets-7.component';
+import { UpdateFactsheets8Component } from './update-factsheets-8/update-factsheets-8.component';
+import { UpdateFactsheets9Component } from './update-factsheets-9/update-factsheets-9.component';
 import { NavigationService } from '../../services/navigation.service';
-import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom, forkJoin } from 'rxjs';
 import { StudentService } from '../../services/student.service';
-import { InternshipSearchService } from '../../services/internship-search.service';
 import { FactsheetsService } from '../../services/description-sheet.service';
 import { AuthService } from '../../services/auth.service';
 import { FormDataService } from '../../services/form-data.service';
 
 @Component({
-  selector: 'app-add-factsheet',
+  selector: 'app-update-factsheet',
   standalone: true,
   imports: [
     CommonModule,
-    AddFactsheets1Component, 
-    AddFactsheets2Component, 
-    AddFactsheets3Component, 
-    AddFactsheets4Component, 
-    AddFactsheets5Component,
-    AddFactsheets6Component, 
-    AddFactsheets7Component, 
-    AddFactsheets8Component, 
-    AddFactsheets9Component
+    UpdateFactsheet1Component, 
+    UpdateFactsheets2Component, 
+    UpdateFactsheets3Component, 
+    UpdateFactsheets4Component, 
+    UpdateFactsheets5Component,
+    UpdateFactsheets6Component, 
+    UpdateFactsheets7Component, 
+    UpdateFactsheets8Component, 
+    UpdateFactsheets9Component
   ],
-  templateUrl: './add-factsheet.component.html',
-  styleUrl: './add-factsheet.component.css'
+  templateUrl: './update-factsheet.component.html',
+  styleUrl: './update-factsheet.component.css'
 })
-export class AddFactsheetComponent implements OnInit {
+export class UpdateFactsheetComponent implements OnInit {
   currentUser?: any;
   currentUserRole?: string;
   currentStep = 1;
@@ -50,10 +49,10 @@ export class AddFactsheetComponent implements OnInit {
   constructor(
     private readonly navigationService: NavigationService,
     private readonly studentService: StudentService,
-    private readonly internshipSearchService: InternshipSearchService,
     private readonly factsheetsService: FactsheetsService,
     private readonly authService: AuthService,
     private readonly formDataService: FormDataService,
+    private readonly route: ActivatedRoute,
     private readonly router: Router
   ) {
     this.navigationService.factsheetStep$.subscribe(
@@ -62,6 +61,16 @@ export class AddFactsheetComponent implements OnInit {
   }
 
   ngOnInit() {
+    const idFicheDescriptive = Number(this.route.snapshot.paramMap.get('id'));
+    console.log(idFicheDescriptive)
+
+    this.factsheetsService.getSheetById(idFicheDescriptive).subscribe(factsheet => {
+      if (factsheet) {
+        //this.updatedSearch = search
+        console.log(idFicheDescriptive)
+      }
+    });
+
     this.initializeFormFields();
     this.currentUser = this.authService.getCurrentUser();
     
@@ -132,8 +141,8 @@ export class AddFactsheetComponent implements OnInit {
       tachesFicheDescriptive: 'string',
       
       // Étape 9 - Modalités stage
-      debutStageFicheDescriptive: 'string',
-      finStageFicheDescriptive: 'string',
+      debutStageFicheDescriptive: 'date',
+      finStageFicheDescriptive: 'date',
       nbJourSemaineFicheDescriptive: 'number',
       nbHeuresSemaineFicheDescriptive: 'number'
     };
@@ -176,12 +185,11 @@ export class AddFactsheetComponent implements OnInit {
 
       forkJoin({
         students: this.studentService.getStudents(),
-        searches: this.internshipSearchService.getSearches(),
         sheets: this.factsheetsService.getSheets()
       }).subscribe({
         next: () => {
           this.formDataService.updateField('statut', 'En cours');
-          this.factsheetsService.addSheet(this.formData);
+          this.factsheetsService.updateSheet(this.formData);
           console.log('Formulaire envoyé:', this.formData);
           this.dataSended.emit(this.formData);
           this.formDataService.resetFormData();

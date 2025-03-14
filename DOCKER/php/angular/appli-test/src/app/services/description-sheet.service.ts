@@ -150,7 +150,29 @@ export class FactsheetsService {
       headers: new HttpHeaders({'Content-type': 'application/json'})
     };
 
-    return this.http.post<Factsheets>('http://localhost:8000/api/fiche-descriptive/data', sheet, httpOptions).pipe(
+    return this.http.post<Factsheets>('http://localhost:8000/api/fiche-descriptive/create', sheet, httpOptions).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+  }
+
+  updateSheet(sheet: Factsheets): Observable<Factsheets> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
+
+    return this.http.post<Factsheets>(`http://localhost:8000/api/fiche-descriptive/update/${sheet.idFicheDescriptive}`, sheet, httpOptions).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+  }
+
+  getSheetById(idFicheDescriptive: number): Observable<Factsheets> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
+
+    return this.http.post<Factsheets>(`http://localhost:8000/api/fiche-descriptive/${idFicheDescriptive}`, idFicheDescriptive, httpOptions).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
