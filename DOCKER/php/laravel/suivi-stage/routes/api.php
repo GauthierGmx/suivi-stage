@@ -11,6 +11,7 @@ use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\ParcoursController;
 use App\Http\Controllers\TuteurEntrepriseController;
 use App\Http\Controllers\AnneeUniversitaireController;
+use App\Http\Controllers\PersonnelController;
 use App\Http\Middleware\DispatchDataDescriptiveSheet;
 
 /*
@@ -68,3 +69,10 @@ Route::post('/annee-universitaire/create', [AnneeUniversitaireController::class,
 Route::get('/annee-universitaire/{id}', [AnneeUniversitaireController::class, 'show'])->name('annee-universitaire.show');
 Route::put('/annee-universitaire/update/{id}', [AnneeUniversitaireController::class, 'update'])->name('annee-universitaire.update');
 Route::delete('/annee-universitaire/delete/{id}', [AnneeUniversitaireController::class, 'destroy'])->name('annee-universitaire.destroy');
+
+// Route pour le Controller Personnel
+Route::get('/personnel', [PersonnelController::class, 'index'])->name('personnel.index');
+Route::post('/personnel/create', [PersonnelController::class, 'store'])->name('personnel.store');
+Route::get('/personnel/{id}', [PersonnelController::class, 'show'])->name('personnel.show');
+Route::put('/personnel/update/{id}', [PersonnelController::class, 'update'])->name('personnel.update');
+Route::delete('/personnel/delete/{id}', [PersonnelController::class, 'destroy'])->name('personnel.destroy');
