@@ -9,20 +9,33 @@ use App\Models\TuteurEntreprise;
 class TuteurEntrepriseController extends Controller
 {
     /**
-     * Index all tutors
+     * Retourne tous les tuteurs d'entreprise
+     * @param \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * 
      */
-    public function index()
+    public function index(Request $request)
     {
-        return TuteurEntreprise::all();
+        $fields = explode(',', request()->query('fields', '*'));
+
+        $allowedFields = ['idTuteur', 'nom', 'prenom', 'telephone', 'adresseMail', 'fonction', 'idEntreprise'];
+        $fields = array_intersect($fields, $allowedFields);
+
+        $tuteurEntreprise = TuteurEntreprise::select(empty($fields) ? '*' : $fields)->get();
+        return response()->json($tuteurEntreprise, 200);
     }
 
     /**
-     * Display the specified resource.
+     * Renvoie un tuteur d'entreprise particulier
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * Une réponse JSON avec :
+     *      - Code 200 : si le tuteur d'entreprise a bien été trouvé
+     *      - Code 404 : si le tuteur d'entreprise n'a pas été trouvé
+     *      - Code 500 : s'il y a eu une erreur
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Exception
      */
     public function show($id)
     {
@@ -47,9 +60,16 @@ class TuteurEntrepriseController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Créer un nouveau tuteur d'entreprise
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * Une réponse JSON avec :
+     *      - Code 201 : si le tuteur d'entreprise a bien été créé
+     *      - Code 422 : s'il y a eu une erreur de validation des données
+     *      - Code 500 : s'il y a eu une erreur
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Database\QueryException
+     * @throws \Exception
      */
     public function store(Request $request)
     {
@@ -60,19 +80,8 @@ class TuteurEntrepriseController extends Controller
                 'prenom'        => 'required|string|max:50',
                 'telephone'     => ['required', 'string', 'regex:/^(\+33|0)\d{9}$/'],
                 'fonction'      => 'required|string|max:50',
-                'idEntreprise'  => 'required|integer|exists:entreprises,idEntreprise',  // Vérification si l'entreprise existe
+                'idEntreprise'  => 'required|integer',
             ]);
-    
-            // Vérification supplémentaire
-            if (!isset($donneesValidees['idEntreprise'])) {
-                return response()->json(['error' => "L'ID de l'entreprise est manquant."], 400);
-            }
-    
-            // Vérifier si l'entreprise existe
-            $entreprise = Entreprise::find($donneesValidees['idEntreprise']);
-            if (!$entreprise) {
-                return response()->json(['error' => "L'entreprise spécifiée n'existe pas."], 404);
-            }
     
             // Création du tuteur avec l'ID de l'entreprise
             $unTuteurEntreprise = TuteurEntreprise::create([
@@ -104,10 +113,19 @@ class TuteurEntrepriseController extends Controller
     }   
     
     /**
-     * Update the specified resource in storage.
+     * Met à jour un tuteur particulier
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * Une réponse JSON avec :
+     *      - Code 200 : si le tuteur d'entreprise a bien été modifiée
+     *      - Code 404 : si le tuteur d'entreprise n'a pas été trouvé
+     *      - Code 422 : s'il y a eu une erreur de validation des données
+     *      - Code 500 : s'il y a eu une erreur
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Illuminate\Database\QueryException
+     * @throws \Exception
      */
     public function update(Request $request,$id){
         try{
