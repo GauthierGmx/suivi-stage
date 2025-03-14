@@ -17,6 +17,7 @@ class PersonnelSeeder extends Seeder
         DB::table('personnels')->insert([
             [
                 'roles' => 'Enseignant',
+                'login' => 'plopisteguy',
                 'nom' => 'LOPISTEGUY',
                 'prenom' => 'Philippe',
                 'telephone' => '+33601020304',
@@ -30,6 +31,7 @@ class PersonnelSeeder extends Seeder
             ],
             [
                 'roles' => 'Enseignant',
+                'login' => 'ydourisboure',
                 'nom' => 'DOURISBOURE',
                 'prenom' => 'Yon',
                 'telephone' => '+33601020304',
@@ -43,6 +45,7 @@ class PersonnelSeeder extends Seeder
             ],
             [
                 'roles' => 'Enseignant',
+                'login' => 'ycarpentier',
                 'nom' => 'CARPENTIER',
                 'prenom' => 'Yann',
                 'telephone' => '+33601020304',
@@ -56,6 +59,7 @@ class PersonnelSeeder extends Seeder
             ],
             [
                 'roles' => 'Enseignant',
+                'login' => 'svoisin',
                 'nom' => 'VOISIN',
                 'prenom' => 'Sophie',
                 'telephone' => '+33601020304',
@@ -69,6 +73,7 @@ class PersonnelSeeder extends Seeder
             ],
             [
                 'roles' => 'Enseignant',
+                'login' => 'mborthwick',
                 'nom' => 'BORTHWICK',
                 'prenom' => 'Margaret',
                 'telephone' => '+33601020304',
@@ -82,6 +87,7 @@ class PersonnelSeeder extends Seeder
             ],
             [
                 'roles' => 'Enseignant',
+                'login' => 'cmarquesuzaa',
                 'nom' => 'MARQUESUZAA',
                 'prenom' => 'Christophe',
                 'telephone' => '+33601020304',

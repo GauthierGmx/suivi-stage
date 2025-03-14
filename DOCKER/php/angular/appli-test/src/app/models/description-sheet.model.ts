@@ -13,24 +13,26 @@ export class Factsheets {
   finStage: Date | null;
   nbJourParSemaine: number | null;
   nbHeureParSemaine: number | null;
-  clauseConfidentialite: Boolean | null;
+  clauseConfidentialite: boolean | null;
+  adresseMailStage: string | null;
+  telephoneStage: string | null;
+  adresseStage: string | null;
+  codePostalStage: string | null;
+  villeStage: string | null;
+  paysStage: string | null;
+  longitudeStage: string | null;
+  latitudeStage: string | null;
   statut: SheetStatus | null;
-  personnelTechnique: Boolean | null;
-  materielPrete: Boolean | null;
+  personnelTechnique: boolean | null;
+  materielPrete: string | null;
   idEntreprise: number | null;
   idTuteur: number | null;
   idUPPA: string | null;
   numeroConvention?: string | null;
-  interruptionStage?: Boolean | null;
+  interruptionStage?: boolean | null;
   dateDebutInterruption?: Date | null;
   dateFinInterruption?: Date | null;
-  serviceEntreprise:String | null;
-  adresseMailStage:String | null;
-  telephoneStage:String | null;
-  adresseStage: String | null;
-  codePostalStage: String | null;
-  villeStage: String | null;
-  paysStage: String | null;
+  serviceEntreprise?: string | null;
 
   constructor(
     idFicheDescriptive: number,
@@ -47,10 +49,18 @@ export class Factsheets {
     finStage: Date,
     nbJourParSemaine: number,
     nbHeureParSemaine: number,
-    clauseConfidentialite: Boolean,
+    clauseConfidentialite: boolean,
+    adresseMailStage: string,
+    telephoneStage: string,
+    adresseStage: string,
+    codePostalStage: string,
+    villeStage: string,
+    paysStage: string,
+    longitudeStage: string,
+    latitudeStage: string,
     statut: SheetStatus,
-    personnelTechnique: Boolean,
-    materielPrete: Boolean,
+    personnelTechnique: boolean,
+    materielPrete: string,
     idEntreprise: number,
     idTuteur: number,
     idUPPA: string,
@@ -62,10 +72,10 @@ export class Factsheets {
     villeStage:String,
     paysStage:String,
     numeroConvention?: string,
-    interruptionStage?: Boolean,
+    interruptionStage?: boolean,
     dateDebutInterruption?: Date,
     dateFinInterruption?: Date,
-
+    serviceEntreprise?: string
   ) {
     this.idFicheDescriptive = idFicheDescriptive;
     this.dateCreation = dateCreation;
@@ -82,6 +92,14 @@ export class Factsheets {
     this.nbJourParSemaine = nbJourParSemaine;
     this.nbHeureParSemaine = nbHeureParSemaine;
     this.clauseConfidentialite = clauseConfidentialite;
+    this.adresseMailStage = adresseMailStage;
+    this.telephoneStage = telephoneStage;
+    this.adresseStage = adresseStage;
+    this.codePostalStage = codePostalStage;
+    this.villeStage = villeStage;
+    this.paysStage = paysStage;
+    this.longitudeStage = longitudeStage;
+    this.latitudeStage = latitudeStage;
     this.statut = statut;
     this.personnelTechnique = personnelTechnique;
     this.materielPrete = materielPrete;
@@ -93,12 +111,6 @@ export class Factsheets {
     this.dateDebutInterruption = dateDebutInterruption;
     this.dateFinInterruption = dateFinInterruption;
     this.serviceEntreprise = serviceEntreprise;
-    this.adresseMailStage = adresseMailStage;
-    this.telephoneStage = telephoneStage;
-    this.adresseStage = adresseStage;
-    this.codePostalStage = codePostalStage;
-    this.villeStage = villeStage;
-    this.paysStage = paysStage;
   }
 }
 

@@ -27,7 +27,7 @@ class CreateEntreprisesTable extends Migration
             $table->string('codePostal',5)->nullable();
             $table->string('pays',50)->nullable();
             $table->string('telephone',12)->nullable();
-            $table->string('codeAPE_NAF',5)->nullable();
+            $table->string('codeAPE_NAF',6)->nullable();
             $table->enum('statutJuridique',['EI','EURL','SARL','SASU','SAS','SA','SNC','SCS','SCA'])->nullable();
             $table->unsignedSmallInteger('effectif')->nullable();
             $table->string('nomRepresentant',100)->nullable();

@@ -19,6 +19,7 @@ class CreateEtudiantsTable extends Migration
             $table->string('idUPPA', 10)->primary();
 
             // Attributs
+            $table->string('login', 50)->unique();
             $table->string('nom', 50);
             $table->string('prenom', 50);
             $table->string('adresse', 100)->nullable();
