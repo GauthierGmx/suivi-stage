@@ -11,6 +11,7 @@ class Personnel extends Model
     // Définit les attributs pouvant être remplis
     protected $fillable = [
         'idPersonnel',
+        'login',
         'roles',
         'nom',
         'prenom',

@@ -12,6 +12,7 @@ class Etudiant extends Model
     // Définit les attributs pouvant être remplis
     protected $fillable = [
         'idUPPA',
+        'login',
         'nom',
         'prenom',
         'adresse',
