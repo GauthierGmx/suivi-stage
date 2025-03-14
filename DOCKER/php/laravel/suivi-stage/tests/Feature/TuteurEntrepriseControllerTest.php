@@ -40,7 +40,7 @@ class TuteurEntrepriseControllerTest extends TestCase
         $response = $this->get('/api/tuteur-entreprise');
 
         $response->assertStatus(200)
-                 ->assertJsonCount($desTuteursEntreprises->count());
+                 ->assertJson($desTuteursEntreprises->toArray());
     }
 
     /*

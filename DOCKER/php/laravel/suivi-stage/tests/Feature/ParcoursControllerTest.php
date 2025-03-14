@@ -39,6 +39,6 @@ class ParcoursControllerTest extends TestCase
         $response = $this->get('/api/parcours');
 
         $response->assertStatus(200)
-                 ->assertJsonCount($desParcours->count());
+                 ->assertJson($desParcours->toArray());
     }
 }
