@@ -1,4 +1,4 @@
-export class tuteur_entreprises
+export class CompanyTutor
  {
     idTuteur: number;
     nom: string | null;

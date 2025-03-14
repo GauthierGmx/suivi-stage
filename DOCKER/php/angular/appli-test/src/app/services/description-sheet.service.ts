@@ -72,7 +72,7 @@ export class FactsheetsService {
 
 
   //Sélection de la fiche descriptive correspondant à celle dont l'id est passé en paramètre
-  getSheetById(idSheet: number, fields?: string[]): Observable<Factsheets | undefined> {
+  getSheetById(idSheet: number, fields?: string[]): Observable<Factsheets> {
     let params = new HttpParams();
     
     if (fields && fields.length > 0) {
@@ -106,6 +106,10 @@ export class FactsheetsService {
     */
     
   }
+
+
+  
+  
 
   getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus, fields?: string[]): Observable<Factsheets[]> {
     let params = new HttpParams();

@@ -10,8 +10,10 @@ import { NavigationService } from '../../services/navigation.service';
 import { LoadingComponent } from '../loading/loading.component';
 import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 import { Factsheets } from '../../models/description-sheet.model';
-import { tuteur_entreprises } from '../../models/tuteur_entreprises.model';
+import { CompanyTutor } from '../../models/companyTutor';
 import { StudentService } from '../../services/student.service';
+import { DetailsSheet } from '../../models/detailsSheet.model';
+
 
 @Component({
     selector: 'app-sheet-details',
@@ -25,8 +27,10 @@ export class SheetDetailsComponent implements OnInit {
     currentUserRole?: string;
     sheet?: Factsheets;
     company?: Company;
-    tutorCompany?:tuteur_entreprises;
+    CompagnyTutor?:CompanyTutor;
     dataLoaded: boolean = false;
+    detailsSheet:any;
+
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -57,19 +61,30 @@ export class SheetDetailsComponent implements OnInit {
         }
 
         const sheetId = Number(this.route.snapshot.paramMap.get('idSheet'));
-        
+
+
+        /*
         if (sheetId) {
             this.factsheetsService.getSheetById(sheetId).subscribe(
                 sheet => {
                     if (sheet) {
                         this.sheet = sheet;
+                        
                         this.loadCompanyDetails(sheet.idEntreprise!);
                         this.loadStudentDetails(sheet.idUPPA);
+                        
                     }
                 }
             );
         }
+        */
+
+
+        this.detailsSheet=this.factsheetsService.getSheetById(sheetId);
+        console.log("alooooo",this.detailsSheet);
     }
+
+    /*
 
     private loadCompanyDetails(companyId: number) {
         this.companyService.getCompanyById(companyId, ['idEntreprise', 'raisonSociale', 'adresse', 'codePostal',
@@ -91,6 +106,11 @@ export class SheetDetailsComponent implements OnInit {
                 }
             )
     }
+
+    */
+
+    
+
 
 
     getStatusClass(status: string): string {
