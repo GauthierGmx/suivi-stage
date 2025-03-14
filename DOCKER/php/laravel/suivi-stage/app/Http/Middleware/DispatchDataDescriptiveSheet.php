@@ -78,6 +78,8 @@ class DispatchDataDescriptiveSheet
         'codePostalStageFicheDescriptive'=> 'codePostalStage',
         'villeStageFicheDescriptive' => 'villeStage',
         'paysStageFicheDescriptive' => 'paysStage',
+        'idEntreprise' => 'idEntreprise',
+        'idTuteurEntreprise' => 'idTuteurEntreprise',
     ];
 
     /**
@@ -259,18 +261,14 @@ class DispatchDataDescriptiveSheet
         }
 
         // **5️⃣ Validation des données après mapping**
-        $validatedData = $this->validateData($triData);
+        $validatedData = $triData;
 
         // **6️⃣ Mise à jour de la fiche descriptive**
         $ficheDescriptive->update($validatedData['ficheDescriptive']);
 
-        $tuteurEntreprise = $validatedData['ficheDescriptive']['idTuteurEntreprise'];
-        $entreprise = $validatedData['ficheDescriptive']['idEntreprise'];
-
         // **7️⃣ Mise à jour de l'entreprise si nécessaire**
-        $entreprise = null;
         if (!empty($validatedData['entreprise'])) {
-            $entreprise = Entreprise::find($tuteurEntreprise);
+            $entreprise = Entreprise::find($idEntreprise);
             if ($entreprise) {
                 $entreprise->update($validatedData['entreprise']);
             } else {
@@ -279,9 +277,8 @@ class DispatchDataDescriptiveSheet
         }
 
         // **8️⃣ Mise à jour du tuteur entreprise si nécessaire**
-        $tuteur = null;
         if (!empty($validatedData['tuteurEntreprise'])) {
-            $tuteur = TuteurEntreprise::find($entreprise);
+            $tuteur = TuteurEntreprise::find($idTuteurEntreprise);
             if ($tuteur) {
                 $tuteur->update($validatedData['tuteurEntreprise']);
             } else {
