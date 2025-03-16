@@ -10,8 +10,6 @@ import { catchError, Observable, of, tap } from 'rxjs';
 })
 export class AuthService {
   currentUser?: Student | Staff;
-  students: Student[] = [];
-  staffs: Staff[] = [];
 
   constructor(
     private readonly http: HttpClient,
@@ -39,7 +37,11 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.currentUser;
+    const savedUser = sessionStorage.getItem('currentUser');
+    if (savedUser && savedUser != "undefined") {
+      return true;
+    }
+    return false;
   }
 
   isStudent(user: Student | Staff | undefined): user is Student {

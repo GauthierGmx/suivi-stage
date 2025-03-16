@@ -33,7 +33,7 @@ class AuthController extends Controller
             // Récupération de l'utilisateur en base de données
             $model = $userType === 'Etudiant' ? Etudiant::class : Personnel::class;
 
-            \Log::info('Model à interroager :', ['model' => $model]);
+            \Log::info('Model à interroger :', ['model' => $model]);
 
             $user = $model::find($userId);
 
