@@ -24,10 +24,10 @@ class CreateFicheDescriptivesTable extends Migration
             $table->text('contenuStage')->nullable();
             $table->string('thematique', 50)->nullable();
             $table->string('sujet', 50)->nullable();
-            $table->string('fonctions', 50)->nullable();
-            $table->string('taches', 50)->nullable();
-            $table->string('competences', 50)->nullable();
-            $table->string('details', 50)->nullable();
+            $table->text('fonctions')->nullable();
+            $table->text('taches')->nullable();
+            $table->text('competences')->nullable();
+            $table->text('details')->nullable();
             $table->date('debutStage')->nullable();
             $table->date('finStage')->nullable();
             $table->unsignedTinyInteger('nbJourSemaine')->nullable();
