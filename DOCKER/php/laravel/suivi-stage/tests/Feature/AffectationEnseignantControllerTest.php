@@ -212,4 +212,178 @@ class AffectationEnseignantControllerTest extends TestCase
     =================================
     */
 
+    /**
+     * La méthode update va retourner une confirmation 200 et les informations de l'affectation modifiée
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_confirmation_et_les_informations_de_l_affectation_modifiee()
+    {
+        $affectation = \DB::table('table_personnel_etudiant_anneeuniv')->first();
+
+        $autrePersonnel = \DB::table('personnels')
+            ->where('idPersonnel', '!=', $affectation->idPersonnel)
+            ->first();
+
+        $donnees = [
+            'idPersonnel' => $autrePersonnel->idPersonnel
+        ];
+
+        $response = $this->putJson("/api/affectation/update/{$affectation->idPersonnel}-{$affectation->idUPPA}-{$affectation->idAnneeUniversitaire}", $donnees);
+
+        $response->assertStatus(200)
+                ->assertJson([
+                    'idPersonnel' => $donnees['idPersonnel'],
+                    'idUPPA' => $affectation->idUPPA,
+                    'idAnneeUniversitaire' => $affectation->idAnneeUniversitaire
+                ]);
+    }
+
+    /**
+     * La méthode update va retourner une erreur 404 si l'affectation n'a pas été trouvée
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_erreur_non_trouvee_si_l_affectation_n_a_pas_ete_trouvee()
+    {
+        // idUPPA inexistant en base
+        $idPersonnel = 1;
+        $idUPPA = 1;
+        $idAnneeUniv = 1;
+
+        $donnees = [
+            'idPersonnel' => 2
+        ];
+
+        $response = $this->putJson("/api/affectation/update/{$idPersonnel}-{$idUPPA}-{$idAnneeUniv}", $donnees);
+
+        $response->assertStatus(404)
+                 ->assertJson(['message' => 'Aucune affectation trouvée']);
+    }
+
+    /**
+     * La méthode update va retourner une erreur 422 si les données ne sont pas valides
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_erreur_de_validation_si_les_donnees_ne_sont_pas_valides()
+    {
+        $affectation = \DB::table('table_personnel_etudiant_anneeuniv')->first();
+
+        // Données invalides (manque idPersonnel)
+        $donnees = [
+            'idUPPA' => $affectation->idUPPA
+        ];
+
+        $response = $this->putJson("/api/affectation/update/{$affectation->idPersonnel}-{$affectation->idUPPA}-{$affectation->idAnneeUniversitaire}", $donnees);
+
+        $response->assertStatus(422)
+                 ->assertJson(['message' => 'Erreur de validation dans les données']);
+    }
+
+    /**
+     * La méthode update va retourner une erreur 500 s'il y a une erreur dans la base de données
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_erreur_generique_s_il_y_a_eu_une_erreur_dans_la_base()
+    {
+        $affectation = \DB::table('table_personnel_etudiant_anneeuniv')->first();
+
+        // Id non existant dans la base
+        $donnees = [
+            'idPersonnel' => PHP_INT_MAX
+        ];
+
+        $response = $this->putJson("/api/affectation/update/{$affectation->idPersonnel}-{$affectation->idUPPA}-{$affectation->idAnneeUniversitaire}", $donnees);
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Erreur dans la base de données :']);
+    }
+
+    /**
+     * La méthode update va retourner une erreur 500 s'il y a une erreur
+     * 
+     * @return void
+     */
+    public function test_update_renvoie_une_erreur_generique_s_il_y_a_eu_une_erreur()
+    {
+        // Mock du modèle AffectationEnseignant pour déclencher une exception
+        $this->mock(\App\Http\Controllers\AffectationEnseignantController::class, function ($mock) {
+            $mock->shouldReceive('update')->andThrow(new \Exception('Erreur simulée'));
+        });
+
+        $affectation = \DB::table('table_personnel_etudiant_anneeuniv')->first();
+
+        $autrePersonnel = \DB::table('personnels')
+            ->where('idPersonnel', '!=', $affectation->idPersonnel)
+            ->first();
+
+        $donnees = [
+            'idPersonnel' => $autrePersonnel->idPersonnel
+        ];
+
+        $response = $this->putJson("/api/affectation/update/{$affectation->idPersonnel}-{$affectation->idUPPA}-{$affectation->idAnneeUniversitaire}", $donnees);
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
+    }
+
+    /*
+    ==================================
+        TEST DE LA METHODE DESTROY
+    ==================================
+    */
+
+    /**
+     * La méthode destroy va retourner une confirmation 200 et un message confirmant la suppression
+     * 
+     * @return void
+     */
+    public function test_destroy_renvoie_une_confirmation_et_un_message_de_la_suppression()
+    {
+        $affectation = \DB::table('table_personnel_etudiant_anneeuniv')->first();
+
+        $response = $this->deleteJson("/api/affectation/delete/{$affectation->idPersonnel}-{$affectation->idUPPA}-{$affectation->idAnneeUniversitaire}");
+
+        $response->assertStatus(200)
+                 ->assertJson(['message' => 'L\'affectation a bien été supprimée']);
+    }
+
+    /**
+     * La méthode destroy va retourner une erreur 404 si l'affectation n'a pas été trouvée
+     * 
+     * @return void
+     */
+    public function test_destroy_renvoie_une_erreur_non_trouvee_si_aucune_affectation_n_a_ete_trouvee()
+    {
+        $idPersonnel = 1;
+        $idUPPA = 1;
+        $idAnneeUniv = 1;
+
+        $response = $this->deleteJson("/api/affectation/delete/{$idPersonnel}-{$idUPPA}-{$idAnneeUniv}");
+
+        $response->assertStatus(404)
+                 ->assertJson(['message' => 'Aucune affectation trouvée']);
+    }
+
+    /**
+     * La méthode destroy va retourner une erreur 500 si l'affectation n'a pas été trouvée
+     * 
+     * @return void
+     */
+    public function test_destroy_renvoie_une_erreur_generique_s_il_y_a_eu_une_erreur()
+    {
+        // Mock du modèle AffectationEnseignant pour déclencher une exception
+        $this->mock(\App\Http\Controllers\AffectationEnseignantController::class, function ($mock) {
+            $mock->shouldReceive('destroy')->andThrow(new \Exception('Erreur simulée'));
+        });
+        
+        $affectation = \DB::table('table_personnel_etudiant_anneeuniv')->first();
+
+        $response = $this->deleteJson("/api/affectation/delete/{$affectation->idPersonnel}-{$affectation->idUPPA}-{$affectation->idAnneeUniversitaire}");
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
+    }
 }
