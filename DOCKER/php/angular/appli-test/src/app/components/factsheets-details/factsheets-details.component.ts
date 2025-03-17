@@ -99,7 +99,6 @@ export class SheetDetailsComponent implements OnInit {
              'ville','pays','telephone','typeEtablissement','numSiret','codeAPE_NAF',
              'statutJuridique','effectif']).subscribe(
             company => {
-                console.log(company);
                 this.company = company;
             }
         );
