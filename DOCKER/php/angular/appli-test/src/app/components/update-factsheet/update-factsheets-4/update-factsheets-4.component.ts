@@ -35,7 +35,7 @@ export class UpdateFactsheets4Component implements OnInit {
   isFormValid(): boolean {
     const apeNafRegex = /^\d{2}\.\d{2}[A-Z]$/;
     return !!(
-      this.formData.serviceEntreprise?.value?.trim() &&
+      this.formData.serviceEntrepriseFicheDescriptive?.value?.trim() &&
       this.formData.numSIRETEntreprise?.value?.trim() &&
       this.formData.codeAPE_NAFEntreprise?.value?.match(apeNafRegex) &&
       this.formData.statutJuridiqueEntreprise?.value?.trim() &&
@@ -45,7 +45,7 @@ export class UpdateFactsheets4Component implements OnInit {
 
   private initializeFormFields() {
     const fields = {
-      serviceEntreprise: { value: '', type: 'ficheDescriptive' },
+      serviceEntrepriseFicheDescriptive: { value: '', type: 'ficheDescriptive' },
       typeEtablissementEntreprise: { value: 'Administration', type: 'entreprise' },
       numSIRETEntreprise: { value: '', type: 'entreprise' },
       codeAPE_NAFEntreprise: { value: '', type: 'entreprise' },

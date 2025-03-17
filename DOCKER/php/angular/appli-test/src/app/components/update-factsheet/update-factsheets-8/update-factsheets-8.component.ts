@@ -33,7 +33,7 @@ export class UpdateFactsheets8Component implements OnInit {
   }
 
   isFormValid(): boolean {
-    return !!(this.formData.typeStageFicheDescriptive.value &&
+    return !!(
       this.formData.thematiqueFicheDescriptive.value &&
       this.formData.sujetFicheDescriptive.value &&
       this.formData.tachesFicheDescriptive.value &&

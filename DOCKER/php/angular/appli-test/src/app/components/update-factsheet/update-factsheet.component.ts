@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UpdateFactsheet1Component } from './update-factsheet-1/update-factsheet-1.component';
 import { UpdateFactsheets2Component } from './update-factsheet-2/update-factsheet-2.component';
@@ -16,29 +16,35 @@ import { StudentService } from '../../services/student.service';
 import { FactsheetsService } from '../../services/description-sheet.service';
 import { AuthService } from '../../services/auth.service';
 import { FormDataService } from '../../services/form-data.service';
+import { LoadingComponent } from "../loading/loading.component";
 
 @Component({
   selector: 'app-update-factsheet',
   standalone: true,
   imports: [
     CommonModule,
-    UpdateFactsheet1Component, 
-    UpdateFactsheets2Component, 
-    UpdateFactsheets3Component, 
-    UpdateFactsheets4Component, 
+    UpdateFactsheet1Component,
+    UpdateFactsheets2Component,
+    UpdateFactsheets3Component,
+    UpdateFactsheets4Component,
     UpdateFactsheets5Component,
-    UpdateFactsheets6Component, 
-    UpdateFactsheets7Component, 
-    UpdateFactsheets8Component, 
-    UpdateFactsheets9Component
-  ],
+    UpdateFactsheets6Component,
+    UpdateFactsheets7Component,
+    UpdateFactsheets8Component,
+    UpdateFactsheets9Component,
+    LoadingComponent
+],
   templateUrl: './update-factsheet.component.html',
   styleUrl: './update-factsheet.component.css'
 })
-export class UpdateFactsheetComponent implements OnInit {
+export class UpdateFactsheetComponent implements OnInit, OnDestroy {
   currentUser?: any;
   currentUserRole?: string;
   currentStep = 1;
+  factsheet?: any;
+  dataLoaded: boolean = false;
+  private idFicheDescriptive: number = 0;
+  isSubmitting: boolean = false;
 
   get formData() {
     return this.formDataService.getFormData();
@@ -59,19 +65,31 @@ export class UpdateFactsheetComponent implements OnInit {
       step => this.currentStep = step
     );
   }
-
-  ngOnInit() {
-    const idFicheDescriptive = Number(this.route.snapshot.paramMap.get('id'));
-    console.log(idFicheDescriptive)
-
-    this.factsheetsService.getSheetById(idFicheDescriptive).subscribe(factsheet => {
-      if (factsheet) {
-        //this.updatedSearch = search
-        console.log(idFicheDescriptive)
+  ngOnInit(): void {
+    // Forcer le step à 1 au chargement
+    this.navigationService.setFactsheetStep(1);
+    this.currentStep = 1;
+    
+    this.idFicheDescriptive = Number(this.route.snapshot.paramMap.get('id'));
+    
+    this.factsheetsService.getSheetById(this.idFicheDescriptive).subscribe({
+    // this.factsheetsService.getSheetById(idFicheDescriptive).subscribe({
+      next: (response) => {
+        this.factsheet = response;
+        console.log('Fiche descriptive récupérée:', this.factsheet);
+        this.dataLoaded = true;
+        
+        // Initialisation des champs avec les données reçues
+        Object.entries(this.factsheet).forEach(([field, value]: [string, any]) => {
+            this.formDataService.initializeField(field, value.value, value.type);
+        });
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération de la fiche:', error);
+        this.router.navigateByUrl('/factsheets');
       }
     });
 
-    this.initializeFormFields();
     this.currentUser = this.authService.getCurrentUser();
     
     if (this.authService.isStudent(this.currentUser)) {
@@ -82,15 +100,9 @@ export class UpdateFactsheetComponent implements OnInit {
     }
   }
 
-  private initializeFormFields() {
-    const fields = {
-      idUPPA: { value: '', type: 'ficheDescriptive' },
-      statut: { value: '', type: 'ficheDescriptive' }
-    };
-
-    Object.entries(fields).forEach(([field, config]) => {
-      this.formDataService.initializeField(field, config.value, config.type);
-    });
+  ngOnDestroy(): void {
+    // Réinitialiser le step quand on quitte le composant
+    this.navigationService.setFactsheetStep(1);
   }
 
   onStepChange(step: number) {
@@ -110,7 +122,7 @@ export class UpdateFactsheetComponent implements OnInit {
       villeEntreprise: 'string',
       paysEntreprise: 'string',
       telephoneEntreprise: 'string',
-      serviceEntreprise: 'string',
+      serviceEntrepriseFicheDescriptive: 'string',
       numSIRETEntreprise: 'string',
       codeAPE_NAFEntreprise: 'string',
       
@@ -135,16 +147,15 @@ export class UpdateFactsheetComponent implements OnInit {
       fonctionTuteurEntreprise: 'string',
       
       // Étape 8 - Sujet stage
-      typeStageFicheDescriptive: 'string',
       thematiqueFicheDescriptive: 'string',
       sujetFicheDescriptive: 'string',
       tachesFicheDescriptive: 'string',
       
       // Étape 9 - Modalités stage
-      debutStageFicheDescriptive: 'date',
-      finStageFicheDescriptive: 'date',
+      debutStageFicheDescriptive: 'string',
+      finStageFicheDescriptive: 'string',
       nbJourSemaineFicheDescriptive: 'number',
-      nbHeuresSemaineFicheDescriptive: 'number'
+      nbHeureSemaineFicheDescriptive: 'number'
     };
 
     for (const [field, type] of Object.entries(requiredFields)) {
@@ -183,21 +194,32 @@ export class UpdateFactsheetComponent implements OnInit {
         this.formDataService.updateField('idUPPA', this.currentUser.idUPPA);
       }
 
+      this.isSubmitting = true; // Activer le loading
+
       forkJoin({
         students: this.studentService.getStudents(),
         sheets: this.factsheetsService.getSheets()
       }).subscribe({
         next: () => {
-          this.formDataService.updateField('statut', 'En cours');
-          this.factsheetsService.updateSheet(this.formData);
-          console.log('Formulaire envoyé:', this.formData);
-          this.dataSended.emit(this.formData);
-          this.formDataService.resetFormData();
-          this.router.navigateByUrl('/factsheets');
+          this.factsheetsService.updateSheet(this.idFicheDescriptive, this.formData).subscribe({
+            next: (response) => {
+              console.log('Formulaire mis à jour avec succès:', response);
+              this.dataSended.emit(response);
+              this.formDataService.resetFormData();
+              this.isSubmitting = false; // Désactiver le loading
+              this.router.navigateByUrl('/factsheets');
+            },
+            error: (error) => {
+              console.error('Erreur lors de la mise à jour de la fiche:', error);
+              alert('Une erreur est survenue lors de la mise à jour de la fiche.');
+              this.isSubmitting = false; // Désactiver le loading en cas d'erreur
+            }
+          });
         },
         error: (error) => {
-          console.error('Erreur lors de l\'envoi:', error);
-          alert('Une erreur est survenue lors de l\'envoi du formulaire.');
+          console.error('Erreur lors de la vérification des données:', error);
+          alert('Une erreur est survenue lors de la vérification des données.');
+          this.isSubmitting = false; // Désactiver le loading en cas d'erreur
         }
       });
       return;

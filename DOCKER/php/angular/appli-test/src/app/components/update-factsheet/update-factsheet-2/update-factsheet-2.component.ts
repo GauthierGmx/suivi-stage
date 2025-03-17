@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavigationTabsComponent } from '../../navigation-tabs/navigation-tabs.component';
 import { NavigationService } from '../../../services/navigation.service';
+import { CareerService } from '../../../services/career.service';
 import { FormDataService } from '../../../services/form-data.service';
+import { Career } from '../../../models/career.model';
 
 @Component({
   selector: 'app-update-factsheets-2',
@@ -16,6 +18,7 @@ export class UpdateFactsheets2Component implements OnInit {
   @Output() next = new EventEmitter<any>();
   @Output() previous = new EventEmitter<void>();
   currentStep: number;
+  careers: Career[];
 
   get formData() {
     return this.formDataService.getFormData();
@@ -23,9 +26,11 @@ export class UpdateFactsheets2Component implements OnInit {
 
   constructor(
     private readonly navigationService: NavigationService,
-    private readonly formDataService: FormDataService
+    private readonly formDataService: FormDataService,
+    private readonly CareerService: CareerService
   ) {
     this.currentStep = this.navigationService.getCurrentFactsheetStep();
+    this.careers = [];
   }
 
   ngOnInit(): void {
@@ -41,6 +46,13 @@ export class UpdateFactsheets2Component implements OnInit {
     Object.entries(defaultValues).forEach(([field, value]) => {
       this.formDataService.initializeField(field, value, 'etablissement');
     });
+
+    // Récupération des parcours
+    this.CareerService.getCareers(['codeParcours', 'libelle', 'idDepartement']).subscribe((careers) => {
+      this.careers = careers;
+    });
+
+
   }
 
   onStepChange(step: number) {

@@ -17,22 +17,24 @@ import { InternshipSearchService } from '../../services/internship-search.servic
 import { FactsheetsService } from '../../services/description-sheet.service';
 import { AuthService } from '../../services/auth.service';
 import { FormDataService } from '../../services/form-data.service';
+import { LoadingComponent } from "../loading/loading.component";
 
 @Component({
   selector: 'app-add-factsheet',
   standalone: true,
   imports: [
     CommonModule,
-    AddFactsheets1Component, 
-    AddFactsheets2Component, 
-    AddFactsheets3Component, 
-    AddFactsheets4Component, 
+    AddFactsheets1Component,
+    AddFactsheets2Component,
+    AddFactsheets3Component,
+    AddFactsheets4Component,
     AddFactsheets5Component,
-    AddFactsheets6Component, 
-    AddFactsheets7Component, 
-    AddFactsheets8Component, 
-    AddFactsheets9Component
-  ],
+    AddFactsheets6Component,
+    AddFactsheets7Component,
+    AddFactsheets8Component,
+    AddFactsheets9Component,
+    LoadingComponent
+],
   templateUrl: './add-factsheet.component.html',
   styleUrl: './add-factsheet.component.css'
 })
@@ -40,6 +42,7 @@ export class AddFactsheetComponent implements OnInit {
   currentUser?: any;
   currentUserRole?: string;
   currentStep = 1;
+  isSubmitting = false;
 
   get formData() {
     return this.formDataService.getFormData();
@@ -62,6 +65,10 @@ export class AddFactsheetComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Forcer le step à 1 au chargement
+    this.navigationService.setFactsheetStep(1);
+    this.currentStep = 1;
+
     this.initializeFormFields();
     this.currentUser = this.authService.getCurrentUser();
     
@@ -71,6 +78,11 @@ export class AddFactsheetComponent implements OnInit {
     else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
       this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
+  }
+
+  ngOnDestroy(): void {
+    // Réinitialiser le step quand on quitte le composant
+    this.navigationService.setFactsheetStep(1);
   }
 
   private initializeFormFields() {
@@ -174,6 +186,8 @@ export class AddFactsheetComponent implements OnInit {
         this.formDataService.updateField('idUPPA', this.currentUser.idUPPA);
       }
 
+      this.isSubmitting = true; // Activer le loading
+
       forkJoin({
         students: this.studentService.getStudents(),
         searches: this.internshipSearchService.getSearches(),
@@ -181,15 +195,26 @@ export class AddFactsheetComponent implements OnInit {
       }).subscribe({
         next: () => {
           this.formDataService.updateField('statut', 'En cours');
-          this.factsheetsService.addSheet(this.formData);
-          console.log('Formulaire envoyé:', this.formData);
-          this.dataSended.emit(this.formData);
-          this.formDataService.resetFormData();
-          this.router.navigateByUrl('/factsheets');
+          
+          this.factsheetsService.addSheet(this.formData).subscribe({
+            next: (response) => {
+              console.log('Formulaire envoyé avec succès:', response);
+              this.dataSended.emit(response);
+              this.formDataService.resetFormData();
+              this.isSubmitting = false; // Désactiver le loading
+              this.router.navigateByUrl('/factsheets');
+            },
+            error: (error) => {
+              console.error('Erreur lors de l\'ajout de la fiche:', error);
+              alert('Une erreur est survenue lors de l\'enregistrement de la fiche.');
+              this.isSubmitting = false; // Désactiver le loading en cas d'erreur
+            }
+          });
         },
         error: (error) => {
-          console.error('Erreur lors de l\'envoi:', error);
-          alert('Une erreur est survenue lors de l\'envoi du formulaire.');
+          console.error('Erreur lors de la vérification des données:', error);
+          alert('Une erreur est survenue lors de la vérification des données.');
+          this.isSubmitting = false; // Désactiver le loading en cas d'erreur
         }
       });
       return;

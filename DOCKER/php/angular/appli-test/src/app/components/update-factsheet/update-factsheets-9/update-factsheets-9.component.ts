@@ -36,7 +36,7 @@ export class UpdateFactsheets9Component implements OnInit {
     return !!(this.formData.debutStageFicheDescriptive.value &&
       this.formData.finStageFicheDescriptive.value &&
       this.formData.nbJourSemaineFicheDescriptive.value &&
-      this.formData.nbHeuresSemaineFicheDescriptive.value &&
+      this.formData.nbHeureSemaineFicheDescriptive.value &&
       this.formData.materielPreteFicheDescriptive.value);
   }
 
@@ -45,7 +45,7 @@ export class UpdateFactsheets9Component implements OnInit {
       debutStageFicheDescriptive: { value: new Date(), type: 'ficheDescriptive' },
       finStageFicheDescriptive: { value: new Date(), type: 'ficheDescriptive' },
       nbJourSemaineFicheDescriptive: { value: '', type: 'ficheDescriptive' },
-      nbHeuresSemaineFicheDescriptive: { value: '', type: 'ficheDescriptive' },
+      nbHeureSemaineFicheDescriptive: { value: '', type: 'ficheDescriptive' },
       personnelTechniqueDisponibleFicheDescriptive: { value: false, type: 'ficheDescriptive' },
       materielPreteFicheDescriptive: { value: '', type: 'ficheDescriptive' },
       clauseConfidentialiteFicheDescriptive: { value: false, type: 'ficheDescriptive' }

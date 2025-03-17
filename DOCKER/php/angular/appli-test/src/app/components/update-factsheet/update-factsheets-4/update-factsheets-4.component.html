@@ -11,7 +11,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="service">Service/Division</label>
-          <input type="text" id="service" [(ngModel)]="formData.serviceEntreprise.value" name="service" placeholder='Informatique'#service="ngModel" required>
+          <input type="text" id="service" [(ngModel)]="formData.serviceEntrepriseFicheDescriptive.value" name="service" placeholder='Informatique'#service="ngModel" required>
           <div class="errorMessage" *ngIf="service.invalid && service.errors && (service.dirty || service.touched)">
             <small *ngIf="service.errors?.['required']"><b>Le service est obligatoire</b></small>
           </div>
