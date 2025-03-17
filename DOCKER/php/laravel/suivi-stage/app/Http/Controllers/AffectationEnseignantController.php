@@ -57,12 +57,11 @@ class AffectationEnseignantController extends Controller
             ]);
 
             // Récupération des données après insertion
-            /*$affectation = \DB::table('table_personnel_etudiant_anneeuniv')
+            $affectation = \DB::table('table_personnel_etudiant_anneeuniv')
                 ->where('idPersonnel', $donneesValidees['idPersonnel'])
                 ->where('idUPPA', $donneesValidees['idUPPA'])
                 ->where('idAnneeUniversitaire', $donneesValidees['idAnneeUniversitaire'])
                 ->first();
-            */
             return response()->json($affectation, 201);
         }	
         catch (\Illuminate\Validation\ValidationException $e)
@@ -101,10 +100,15 @@ class AffectationEnseignantController extends Controller
      */
     public function show($idPersonnel, $idUPPA, $idAnneeUniversitaire)
     {
+        // Récupère les informations de l'affectation avec les noms-prénoms de l'étudiant et du personnel
         $affectation = \DB::table('table_personnel_etudiant_anneeuniv')
-            ->where('idPersonnel', $idPersonnel)
-            ->where('idUPPA', $idUPPA)
-            ->where('idAnneeUniversitaire', $idAnneeUniversitaire)
+            ->join('personnels', 'table_personnel_etudiant_anneeuniv.idPersonnel', '=', 'personnels.idPersonnel')
+            ->join('etudiants', 'table_personnel_etudiant_anneeuniv.idUPPA', '=', 'etudiants.idUPPA')
+            ->join('annee_universitaires', 'table_personnel_etudiant_anneeuniv.idAnneeUniversitaire', '=', 'annee_universitaires.idAnneeUniversitaire')
+            ->select('annee_universitaires.libelle as anneeUniversitaire','personnels.nom as nomPersonnel', 'personnels.prenom as prenomPersonnel', 'etudiants.nom as nomEtudiant', 'etudiants.prenom as prenomEtudiant')
+            ->where('personnels.idPersonnel', $idPersonnel)
+            ->where('etudiants.idUPPA', $idUPPA)
+            ->where('annee_universitaires.idAnneeUniversitaire', $idAnneeUniversitaire)
             ->first();
         
         if (!$affectation)
