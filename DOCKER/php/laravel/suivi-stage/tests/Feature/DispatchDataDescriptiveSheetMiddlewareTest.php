@@ -13,7 +13,7 @@ class DispatchDataDescriptiveSheetMiddlewareTest extends TestCase
      * 
      * @return void
      */
-    
+
     public function setUp(): void
     {
         parent::setUp();
@@ -22,14 +22,21 @@ class DispatchDataDescriptiveSheetMiddlewareTest extends TestCase
     }
 
     /*
-    ================================
-        TEST DE LA METHODE INDEX
-    ================================
+    =============================================
+        TEST DE LA METHODE handleSheetGet
+    =============================================
     */
 
     /**
-     * La méthode index va retourner une confirmation 200 et la liste de toutes les entreprises
+     * La méthode handleSheetGet va retourner une confirmation 200 et l'ensemble des infos liés à la fiche descriptive
      * 
      * @return void
      */
+
+    public function test_handleSheetGet_renvoie_une_confirmation_et_les_infos_de_la_fiche_descriptive(){
+
+        $response = $this->get('/api/fiche-descriptive/1');
+        $response->assertStatus(200);
+                
+    }
 }

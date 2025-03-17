@@ -6,6 +6,7 @@ use App\Models\Etudiant;
 use App\Models\RechercheStage;
 use App\Models\FicheDescriptive;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EtudiantController extends Controller
 {
@@ -190,6 +191,37 @@ class EtudiantController extends Controller
         }
         catch (\Exception $e)
         {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite',
+                'erreurs' => $e->getMessage()
+            ],500);
+        }
+    }
+
+    /**
+     * Retourne toutes les informations du parcours de l'étudiant passé en paramètre
+     * Code HTTP retourné :
+     *     - Code 200 : si l'étudiant a été trouvé et qu'il a un parcours
+     *     - Code 404 : si l'étudiant a été trouvé mais qu'il n'a pas de parcours ou si l'étudiant n'a pas été trouvé
+     *     - Code 500 : s'il y a une erreur
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Exception
+     */
+    public function indexParcours($id){
+        try{
+            $unEtudiant = Etudiant::findOrFail($id);
+            $infoParcours = db::table('table_etudiant_parcours_anneeuniv')->where('idUPPA',$id)
+                            ->orderbydesc('idAnneeUniversitaire')->limit(1)->get();
+            return response()->json($infoParcours, 200);
+        }
+        catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
+            return response()->json([
+                'message' => 'Aucun étudiant trouvé'
+            ],404);
+        }
+        catch(\Exception $e){
             return response()->json([
                 'message' => 'Une erreur s\'est produite',
                 'erreurs' => $e->getMessage()
