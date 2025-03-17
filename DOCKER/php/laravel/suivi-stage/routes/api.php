@@ -12,6 +12,7 @@ use App\Http\Controllers\ParcoursController;
 use App\Http\Controllers\TuteurEntrepriseController;
 use App\Http\Controllers\AnneeUniversitaireController;
 use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\AffectationEtudiantController;
 use App\Http\Middleware\DispatchDataDescriptiveSheet;
 
 /*
@@ -76,3 +77,10 @@ Route::post('/personnel/create', [PersonnelController::class, 'store'])->name('p
 Route::get('/personnel/{id}', [PersonnelController::class, 'show'])->name('personnel.show');
 Route::put('/personnel/update/{id}', [PersonnelController::class, 'update'])->name('personnel.update');
 Route::delete('/personnel/delete/{id}', [PersonnelController::class, 'destroy'])->name('personnel.destroy');
+
+// Route pour le Controller AffectationEtudiant
+Route::get('/affectation', [AffectationEtudiantController::class, 'index'])->name('affectation.index');
+Route::post('/affectation/create', [AffectationEtudiantController::class, 'store'])->name('affectation.store');
+Route::get('/affectation/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEtudiantController::class, 'show'])->name('affectation.show');
+Route::put('/affectation/update/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEtudiantController::class, 'update'])->name('affectation.update');
+Route::delete('/affectation/delete/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEtudiantController::class, 'destroy'])->name('affectation.destroy');
