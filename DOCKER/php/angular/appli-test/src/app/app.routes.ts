@@ -8,6 +8,7 @@ import { SearchDetailsComponent } from './components/search-details/search-detai
 import { UpdateSearchComponent } from './components/update-search/update-search.component';
 import { StudentDashboardManagerComponent } from './components/student-dashboard-manager/student-dashboard-manager.component';
 import { AddFactsheetComponent } from './components/add-factsheet/add-factsheet.component';
+import { UpdateFactsheetComponent } from './components/update-factsheet/update-factsheet.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -42,6 +43,11 @@ export const routes: Routes = [
   {
     path: 'dashboard/update-search/:id',
     component: UpdateSearchComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'factsheets/update-factsheet/:id',
+    component: UpdateFactsheetComponent,
     canActivate: [authGuard]
   },
   {

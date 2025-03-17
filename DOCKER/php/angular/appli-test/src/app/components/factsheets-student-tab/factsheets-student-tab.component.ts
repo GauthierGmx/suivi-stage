@@ -178,6 +178,10 @@ export class FactsheetsStudentTabComponent implements OnInit {
         this.navigationService.navigateToAddFactSheetForm()
     }
 
+    goToUpdateSearchFormView(idFicheDescriptive: number) {
+        this.navigationService.navigateToDescriptiveSheetEditForm(idFicheDescriptive);
+    }
+
     //Affiche la fenêtre modale de confirmation de la supression d'une recherche de stage
     openDeleteModal(sheet: Factsheets) {
         this.sheetToDelete = sheet
