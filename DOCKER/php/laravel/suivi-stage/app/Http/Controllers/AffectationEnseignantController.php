@@ -7,7 +7,7 @@ use App\Models\Etudiant;
 use App\Models\Personnel;
 use App\Models\AnneUniversitaire;
 
-class AffectationEtudiantController extends Controller
+class AffectationEnseignantController extends Controller
 {
     /**
      * Retourne toutes les affectations existantes
