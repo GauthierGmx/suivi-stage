@@ -10,9 +10,7 @@ import { NavigationService } from '../../services/navigation.service';
 import { LoadingComponent } from '../loading/loading.component';
 import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 import { Factsheets } from '../../models/description-sheet.model';
-import { CompanyTutor } from '../../models/companyTutor';
 import { StudentService } from '../../services/student.service';
-import { DetailsSheet } from '../../models/detailsSheet.model';
 
 
 @Component({
@@ -27,7 +25,6 @@ export class SheetDetailsComponent implements OnInit {
     currentUserRole?: string;
     sheet?: Factsheets;
     company?: Company;
-    CompagnyTutor?:CompanyTutor;
     dataLoaded: boolean = false;
     detailsSheet?:any;
 
@@ -104,7 +101,7 @@ export class SheetDetailsComponent implements OnInit {
         );
     }
 
-    private loadStudentDetails(studentId:string | null){
+    private loadStudentDetails(studentId:string){
         this.studentService.getStudentById(studentId,['idUPPA','nom','prenom',
             'adresse','ville','codePostal', 'telephone','adresseMail']).subscribe(
                 student =>{

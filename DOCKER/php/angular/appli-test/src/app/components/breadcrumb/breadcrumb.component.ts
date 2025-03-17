@@ -80,7 +80,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
         'add-search-form': 'ajout recherche',
         'update-search': 'modification recherche',
         'search-details': 'consultation recherche',
-        'sheet-details': 'fiche en detail'
+        'sheet-details': 'consultation fiche descriptive'
       },
       'INTERNSHIP_MANAGER': {
         'dashboard': 'suivi des étudiants',
