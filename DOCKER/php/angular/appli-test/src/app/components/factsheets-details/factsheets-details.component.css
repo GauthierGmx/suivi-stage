@@ -103,20 +103,20 @@ h3 {
 }
 
 .info-box {
-    border: 1px solid #e5e7eb; /* Couleur de la bordure */
-    border-radius: 0.5rem; /* Arrondi des coins */
-    padding: 1.5rem; /* Espacement intérieur plus grand */
-    margin-bottom: 1rem; /* Espacement entre les blocs */
-    background-color: #f9fafb; /* Légère couleur de fond */
+    border: 1px solid #e5e7eb; 
+    border-radius: 0.5rem;
+    padding: 1.5rem; 
+    margin-bottom: 1rem; 
+    background-color: #f9fafb; 
     display: flex;
-    flex-direction: column; /* Organise les éléments en colonne */
-    justify-content: center; /* Centre le contenu verticalement */
-    align-items: flex-start; /* Aligne le texte à gauche (ou ajuster si nécessaire) */
-    min-height: 150px; /* Hauteur minimale pour augmenter la taille verticale */
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: flex-start; 
+    min-height: 150px; 
 }
 
 .info-text {
-    font-size: 1.1rem; /* Augmenter la taille de la police légèrement */
+    font-size: 1.1rem; 
     color: #374151;
 }
 
