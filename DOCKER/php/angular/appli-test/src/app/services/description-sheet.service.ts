@@ -110,16 +110,20 @@ export class FactsheetsService {
 
 
   //Sélection de la fiche descriptive correspondant à celle dont l'id est passé en paramètre
-  getSheetById(idSheet: number, fields?: string[]): Observable<Factsheets> {
-    let params = new HttpParams();
-    
-    if (fields && fields.length > 0) {
-      params = params.set('fields', fields.join(','));
-    }
+  getSheetById(idFicheDescriptive: number): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
 
-    return this.http.get<Factsheets>(`http://localhost:8000/api/fiche-descriptive/${idSheet}`, {params}).pipe(
+    return this.http.get<any>(
+      `http://localhost:8000/api/fiche-descriptive/${idFicheDescriptive}`,
+      httpOptions
+    ).pipe(
       tap(response => this.log(response)),
-      catchError(error => this.handleError(error, undefined))
+      catchError(error => {
+        console.error('Erreur lors de la récupération de la fiche:', error);
+        throw error;
+      })
     );
   }
 

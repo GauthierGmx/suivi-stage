@@ -29,7 +29,7 @@ export class SheetDetailsComponent implements OnInit {
     company?: Company;
     CompagnyTutor?:CompanyTutor;
     dataLoaded: boolean = false;
-    detailsSheet:any;
+    detailsSheet?:any;
 
 
     constructor(
@@ -63,29 +63,37 @@ export class SheetDetailsComponent implements OnInit {
         const sheetId = Number(this.route.snapshot.paramMap.get('idSheet'));
 
 
-        /*
+        
         if (sheetId) {
             this.factsheetsService.getSheetById(sheetId).subscribe(
                 sheet => {
                     if (sheet) {
                         this.sheet = sheet;
                         
-                        this.loadCompanyDetails(sheet.idEntreprise!);
-                        this.loadStudentDetails(sheet.idUPPA);
+                        this.loadCompanyDetails(sheet.idEntreprise.value);
+                        this.loadStudentDetails(sheet.idUPPA.value);
                         
                     }
                 }
             );
         }
-        */
-
-
-        this.detailsSheet=this.factsheetsService.getSheetById(sheetId);
-        console.log("alooooo",this.detailsSheet);
+        
+        
+        
+        
+        
+        this.factsheetsService.getSheetById(sheetId).subscribe({
+            next: (response) => {
+                this.detailsSheet = response;
+            },
+            error: (err) => {
+                console.error("Erreur lors de la récupération de la fiche :", err);
+            }
+        });
     }
-
-    /*
-
+    
+    
+    
     private loadCompanyDetails(companyId: number) {
         this.companyService.getCompanyById(companyId, ['idEntreprise', 'raisonSociale', 'adresse', 'codePostal',
              'ville','pays','telephone','typeEtablissement','numSiret','codeAPE_NAF',
@@ -93,7 +101,6 @@ export class SheetDetailsComponent implements OnInit {
             company => {
                 console.log(company);
                 this.company = company;
-                this.dataLoaded = true;
             }
         );
     }
@@ -103,14 +110,15 @@ export class SheetDetailsComponent implements OnInit {
             'adresse','ville','codePostal', 'telephone','adresseMail']).subscribe(
                 student =>{
                     this.selectedStudent = student;
+                    this.dataLoaded = true;  
                 }
             )
     }
 
-    */
-
     
 
+    
+    
 
 
     getStatusClass(status: string): string {

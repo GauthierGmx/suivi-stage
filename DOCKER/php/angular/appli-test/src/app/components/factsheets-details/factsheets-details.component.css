@@ -102,6 +102,26 @@ h3 {
     max-width: 800px;
 }
 
+.info-box {
+    border: 1px solid #e5e7eb; /* Couleur de la bordure */
+    border-radius: 0.5rem; /* Arrondi des coins */
+    padding: 1.5rem; /* Espacement intérieur plus grand */
+    margin-bottom: 1rem; /* Espacement entre les blocs */
+    background-color: #f9fafb; /* Légère couleur de fond */
+    display: flex;
+    flex-direction: column; /* Organise les éléments en colonne */
+    justify-content: center; /* Centre le contenu verticalement */
+    align-items: flex-start; /* Aligne le texte à gauche (ou ajuster si nécessaire) */
+    min-height: 150px; /* Hauteur minimale pour augmenter la taille verticale */
+}
+
+.info-text {
+    font-size: 1.1rem; /* Augmenter la taille de la police légèrement */
+    color: #374151;
+}
+
+
+
 .action-buttons {
     display: flex;
     justify-content: flex-end;
