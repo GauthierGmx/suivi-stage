@@ -214,7 +214,7 @@ class AffectationEnseignantController extends Controller
             ->where('idPersonnel', $idPersonnel)
             ->where('idUPPA', $idUPPA)
             ->where('idAnneeUniversitaire', $idAnneeUniversitaire)
-            ->first();
+            ->delete();
 
             if (!$affectation)
             {
@@ -222,8 +222,6 @@ class AffectationEnseignantController extends Controller
                     'message' => 'Aucune affectation trouvée'
                 ], 404);
             }
-
-            $affectation->delete();
 
             return response()->json([
                 'message' => 'L\'affectation a bien été supprimée'
