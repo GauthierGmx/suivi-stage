@@ -297,4 +297,38 @@ class DispatchDataDescriptiveSheetMiddlewareTest extends TestCase
                     'message' => 'Fiche descriptive non trouvée'
                 ]);
     }
+
+    /**
+     * La méthode handleSheetGet va retourner une erreur 500 car on simule une erreur
+     * 
+     * @return void
+     */
+
+    public function test_handleSheetGet_renvoie_une_erreur_500_en_simulant_une_erreur(){
+        // Mock du modèle FicheDescriptive pour déclencher une exception
+        $this->partialMock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
+            $mock->shouldReceive('show')->andThrow(new Exception);
+        });
+        $ficheDescriptive = FicheDescriptive::first();
+        $response = $this->get('/api/fiche-descriptive/'.$ficheDescriptive->idFicheDescriptive);
+    
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
+    }
+
+        /*
+    =============================================
+        TEST DE LA METHODE handleSheetCreate
+    =============================================
+    */
+
+    /**
+     * La méthode handleSheetGet va retourner une confirmation 200 car la fiche descriptive a bien été créée
+     * 
+     * @return void
+     */
+
+    public function test_handleSheetCreate_renvoie_une_confirmation_et_les_infos_de_la_fiche_descriptive(){
+        $
+    }
 }
