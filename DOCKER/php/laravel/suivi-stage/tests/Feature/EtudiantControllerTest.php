@@ -275,10 +275,13 @@ class EtudiantControllerTest extends TestCase
         $response = $this->get('/api/etudiants/'.$etudiantFirst->idUPPA.'/parcours');
         $response->assertStatus(200);
         $response->assertJson([
-            'idUPPA' => $etudiantFirst->idUPPA,
-            'codeParcours' => $parcoursFirst->codeParcours,
-            'idAnneeUniversitaire' => $anneeUniv->idAnneeUniversitaire
+            [
+                'idUPPA' => $etudiantFirst->idUPPA,
+                'codeParcours' => $parcoursFirst->codeParcours,
+                'idAnneeUniversitaire' => $anneeUniv->idAnneeUniversitaire
+            ]
         ]);
+        
     }
 
     public function tearDown(): void
