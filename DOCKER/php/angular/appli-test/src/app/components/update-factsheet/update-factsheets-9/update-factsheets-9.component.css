@@ -1,0 +1,281 @@
+/* Copie exacte du CSS de add-factsheets-1 */
+.container {
+    min-height: calc(100vh - 200px);
+    width: 95%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-bottom: 100px; /* Espace pour les boutons */
+  }
+  
+  .navigation-tabs {
+    display: flex;
+    margin-bottom: 30px;
+    justify-content: center;
+    border-bottom: 1px solid #ddd;
+    gap: 0;
+  }
+  
+  .tab {
+    padding: 8px 15px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0;
+    position: relative;
+    bottom: -1px;
+  }
+  
+  .tab:not(:last-child) {
+    border-right: none;
+  }
+  
+  .tab.active {
+    background-color: #e6e6fa;
+    border-bottom: 1px solid #e6e6fa;
+    font-weight: bold;
+  }
+  
+  .content {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    margin-top: 20px;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+  }
+  
+  .warning {
+    color: red;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+
+  .errorMessage {
+    color: red;
+    font-size: 15px;
+    margin-top: 2px;
+}
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 25px;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .form-group {
+    flex: 1;
+    min-width: 0;
+    max-width: 400px;
+  }
+
+  .form-group-slider {
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    padding: 0 20px;
+  }
+  
+  .btn-cancel {
+    padding: 8px 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-submit {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-submit:hover {
+    background-color: #0056b3;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      width: 100%;
+      margin: 0;
+      border-radius: 0;
+      min-height: 100vh;
+    }
+  
+    .form-row {
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    .content {
+      padding: 10px;
+    }
+  
+    .navigation-tabs {
+      overflow-x: auto;
+      justify-content: flex-start;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .container {
+      padding: 10px;
+      padding-bottom: 120px; /* Augmenter l'espace pour les boutons en version mobile */
+    }
+  
+    .buttons {
+      flex-direction: column;
+      gap: 10px;
+      padding: 0 20px;
+      bottom: 20px;
+    }
+  
+    .btn-cancel, .btn-submit {
+      width: 100%;
+    }
+  }
+  
+  /* Conteneur du toggle */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+  margin-left: 10px;
+}
+
+/* Cache l'input */
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* From Uiverse.io by NomNomcats */ 
+/* The switch - the box around the slider */
+.switch {
+  font-size: 15px;
+  position: relative;
+  display: inline-block;
+  width: 4.2em;
+  height: 2em;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 30px;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 1.6em;
+  width: 1.6em;
+  border-radius: 20px;
+  left: 0.2em;
+  bottom: 0.2em;
+  background-color: white;
+  transition: 0.4s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.switch input:checked + .slider {
+  background-color: #4cc9f0;
+}
+
+.switch input:focus + .slider {
+  box-shadow: 0 0 1px #4cc9f0;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(2em);
+  background-color: #4cc9f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Add some cool effects */
+.slider:after {
+  content: "NON";
+  color: white;
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8em;
+  transition: opacity 0.4s;
+  opacity: 1;
+}
+
+.switch input:checked + .slider:after {
+  content: "OUI";
+  left: 0.5em;
+  opacity: 1;
+  right: auto;
+}
+
+

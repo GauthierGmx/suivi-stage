@@ -170,14 +170,42 @@ export class FactsheetsService {
     // return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
   }
 
-  addSheet(sheet: Factsheets): Observable<Factsheets> {
+  addSheet(data: any): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-type': 'application/json'})
     };
 
-    return this.http.post<Factsheets>('http://localhost:8000/api/fiche-descriptive/data', sheet, httpOptions).pipe(
+    return this.http.post<any>('http://localhost:8000/api/fiche-descriptive/create', data, httpOptions).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
+    );
+  }
+
+  updateSheet(idFicheDescriptive: number, sheet: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
+
+    return this.http.put<any>(`http://localhost:8000/api/fiche-descriptive/update/${idFicheDescriptive}`, sheet, httpOptions).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+  }
+
+  getSheetById(idFicheDescriptive: number): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
+
+    return this.http.get<any>(
+      `http://localhost:8000/api/fiche-descriptive/${idFicheDescriptive}`,
+      httpOptions
+    ).pipe(
+      tap(response => this.log(response)),
+      catchError(error => {
+        console.error('Erreur lors de la récupération de la fiche:', error);
+        throw error;
+      })
     );
   }
 
@@ -212,4 +240,4 @@ export class FactsheetsService {
     console.error(error);
     return of(errorValue);
   }  
-} 
+}

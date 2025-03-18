@@ -1,0 +1,22 @@
+<div *ngIf="!dataLoaded">
+  <app-loading/>
+</div>
+<div *ngIf="dataLoaded && !isSubmitting">
+  <app-update-factsheets-1
+    *ngIf="currentStep === 1 && currentUser && currentUserRole === 'STUDENT'" 
+    [student]="currentUser" 
+    (formData)='formData' 
+    (next)="onNext($event)"
+    ></app-update-factsheets-1>
+  <app-update-factsheets-2 (formData)='formData' *ngIf="currentStep === 2" (next)="onNext($event)" (previous)="onPrevious()"></app-update-factsheets-2>
+  <app-update-factsheets-3 (formData)='formData' *ngIf="currentStep === 3" (next)="onNext($event)" (previous)="onPrevious()"></app-update-factsheets-3>
+  <app-update-factsheets-4 (formData)='formData' *ngIf="currentStep === 4" (next)="onNext($event)" (previous)="onPrevious()"></app-update-factsheets-4>
+  <app-update-factsheets-5 (formData)='formData' *ngIf="currentStep === 5" (next)="onNext($event)" (previous)="onPrevious()"></app-update-factsheets-5>
+  <app-update-factsheets-6 (formData)='formData' *ngIf="currentStep === 6" (next)="onNext($event)" (previous)="onPrevious()"></app-update-factsheets-6>
+  <app-update-factsheets-7 (formData)='formData' *ngIf="currentStep === 7" (next)="onNext($event)" (previous)="onPrevious()"></app-update-factsheets-7>
+  <app-update-factsheets-8 (formData)='formData' *ngIf="currentStep === 8" (next)="onNext($event)" (previous)="onPrevious()"></app-update-factsheets-8>
+  <app-update-factsheets-9 (formData)='formData' *ngIf="currentStep === 9" (next)="onNext($event)" (previous)="onPrevious()"></app-update-factsheets-9>
+</div>
+<div *ngIf='isSubmitting'>
+  <app-loading />
+</div>

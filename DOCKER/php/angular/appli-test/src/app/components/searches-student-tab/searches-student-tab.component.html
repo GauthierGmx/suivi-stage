@@ -136,7 +136,7 @@
               <td class="firstTd">{{ item.company.raisonSociale }}</td>
               <td>{{ item.company.ville }}</td>
               <td>{{ item.search.dateCreation | date:'dd/MM/yyyy' }}</td>
-              <td>{{ item.search.dateModification | date:'dd/MM/yyyy' }}</td>
+              <td *ngIf="currentUserRole === 'INTERNSHIP_MANAGER'">{{ item.search.dateModification | date:'dd/MM/yyyy' }}</td>
               <td [class.lastTd]="currentUserRole === 'INTERNSHIP_MANAGER'">
                 <span [class]="getStatusClass(item.search.statut!)">
                   {{ getStatusLabel(item.search.statut!) }}

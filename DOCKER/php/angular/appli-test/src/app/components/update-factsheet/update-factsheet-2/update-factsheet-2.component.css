@@ -172,6 +172,6 @@ input {
   }
 }
 
-#composante, #parcours, #adresse, #telephone {
+#composante {
   cursor: not-allowed;
 }
