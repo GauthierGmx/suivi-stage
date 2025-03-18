@@ -17,6 +17,7 @@ class Parcours extends Model
     ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'codeParcours';
+    public $incrementing = false; // Précise que la clé primaire n'est pas auto-incrémentée pour éviter les conflits
     // Précise que la table ne contient pas de created_at et updated_at
     public $timestamps = false;
 

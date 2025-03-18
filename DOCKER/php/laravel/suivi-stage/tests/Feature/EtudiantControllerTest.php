@@ -8,6 +8,9 @@ use Tests\TestCase;
 use App\Models\RechercheStage;
 use App\Models\Etudiant;
 use App\Models\FicheDescriptive;
+use App\Models\Parcours; 
+use App\Models\AnneeUniversitaire;  
+use Illuminate\Support\Facades\DB;
 
 class EtudiantControllerTest extends TestCase
 {
@@ -254,6 +257,29 @@ class EtudiantControllerTest extends TestCase
                  ->assertJson(['message' => 'Aucun étudiant trouvé']);
     }
 
+    /*
+    =========================================
+        TEST DE LA METHODE INDEXPARCOURS
+    ========================================
+    */
+
+    /**
+     * La méthode indexParcours doit retourner une confirmation 200 et la liste des parcours de l'étudiant
+     * 
+     * @return void
+     */
+    public function test_indexParcours_methode_doit_retourner_200_et_la_liste_des_parcours_de_l_etudiant() {
+        $etudiantFirst = Etudiant::first();
+        $parcoursFirst = Parcours::first();
+        $anneeUniv = AnneeUniversitaire::first();
+        $response = $this->get('/api/etudiants/'.$etudiantFirst->idUPPA.'/parcours');
+        $response->assertStatus(200);
+        $response->assertJson([
+            'idUPPA' => $etudiantFirst->idUPPA,
+            'codeParcours' => $parcoursFirst->codeParcours,
+            'idAnneeUniversitaire' => $anneeUniv->idAnneeUniversitaire
+        ]);
+    }
 
     public function tearDown(): void
     {
