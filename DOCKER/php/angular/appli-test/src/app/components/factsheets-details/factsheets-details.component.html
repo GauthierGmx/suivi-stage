@@ -1,0 +1,455 @@
+<div *ngIf="!dataLoaded">
+    <app-loading/>
+</div>
+<div *ngIf="dataLoaded" class="container">
+    <div class="content-wrapper">
+        <app-breadcrumb [currentUserRole]="currentUserRole" [selectedStudent]="selectedStudent"/>
+        <div class="form">
+            <!-- En-tête avec le statut -->
+            <div class="status-section">
+                <h3><b>Informations de l'étudiant</b></h3>
+                <span [class]="getStatusClass(detailsSheet?.statut.value || '')">
+                    {{ detailsSheet?.statut.value }}
+                </span>
+            </div>
+
+            <div class="form-grid">
+                <!-- Type de contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Nom</label>
+                        <p class="info-text">{{ selectedStudent?.nom }}</p>
+                    </div>
+                </div>
+
+                <!-- Date 1er contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Prenom</label>
+                        <p class="info-text">{{ selectedStudent?.prenom }}</p>
+                    </div>
+                </div>
+
+                <!-- Nom de l'entreprise -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Telephone</label>
+                        <p class="info-text">{{ selectedStudent?.telephone }}</p>
+                    </div>
+                </div>
+
+                <!-- Adresse -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse mail</label>
+                        <p class="info-text">{{ selectedStudent?.adresseMail }}</p>
+                    </div>
+                </div>
+
+                <!-- Code Postal -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse - Numéro et rue</label>
+                        <p class="info-text">{{ selectedStudent?.adresse }}</p>
+                    </div>
+                </div>
+
+                <!-- Ville -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse - Code postal</label>
+                        <p class="info-text">{{ selectedStudent?.codePostal }}</p>
+                    </div>
+                </div>
+
+                <!-- Ville -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse - Ville</label>
+                        <p class="info-text">{{ selectedStudent?.ville }}</p>
+                    </div>
+                </div>
+
+            </div>
+
+            
+            <hr class="separator">
+            <h3><b>Informations de l'établissement d'enseignement</b></h3>
+
+            <div class="form-grid">
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Composante/URF</label>
+                        <p class="info-text">181 - IUT de Bayonne et du pays basque</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Parcours</label>
+                        <p class="info-text">BBWIA2 - BUT2- Info - Intégration d'Applications et Management du S.I</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse</label>
+                        <p class="info-text">2 allée du Parc Montaury, 64600 Anglet</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Téléphone</label>
+                        <p class="info-text">08090908</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="separator">
+            <h3><b>Informations de l'entreprise</b></h3>
+
+            <div class="form-grid">
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Raison sociale / Nom de l'entreprise</label>
+                        <p class="info-text">{{ company?.raisonSociale }}</p>
+                    </div>
+                </div>
+
+                <!-- Prénom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse numéro et rue</label>
+                        <p class="info-text">{{ company?.adresse }}</p>
+                    </div>
+                </div>
+
+                <!-- Téléphone contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse Code postal</label>
+                        <p class="info-text">{{ company?.codePostal }}</p>
+                    </div>
+                </div>
+
+                <!-- Mail contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse Ville</label>
+                        <p class="info-text">{{ company?.ville }}</p>
+                    </div>
+                </div>
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Pays</label>
+                        <p class="info-text">{{ company?.pays }}</p>
+                    </div>
+                </div>
+                
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Téléphone</label>
+                        <p class="info-text">{{ company?.telephone }}</p>
+                    </div>
+                </div>
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Service/Division</label>
+                        <p class="info-text">{{  detailsSheet?.serviceEntrepriseFicheDescriptive.value }}</p>
+                    </div>
+                </div>
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Type d'établissement</label>
+                        <p class="info-text">{{ company?.typeEtablissement }}</p>
+                    </div>
+                </div>
+
+                
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>N° SIRET</label>
+                        <p class="info-text">{{ company?.numSiret }}</p>
+                    </div>
+                </div>
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Code NAP ou NAF</label>
+                        <p class="info-text">{{ company?.codeAPE_NAF }}</p>
+                    </div>
+                </div>
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Statut juridique</label>
+                        <p class="info-text">{{ company?.statutJuridique }}</p>
+                    </div>
+                </div>
+                
+                <!-- Fonction du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Effectif</label>
+                        <p class="info-text">{{ company?.effectif }}</p>
+                    </div>
+                </div>
+                
+            </div>
+
+            <hr class="separator">
+            <h3><b>Informations du lieu de stage</b></h3>
+
+            <div class="form-grid">
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Téléphone</label>
+                        <p class="info-text">{{ detailsSheet?.telephoneStageFicheDescriptive.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Email</label>
+                        <p class="info-text">{{ detailsSheet?.adresseMailStageFicheDescriptive.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Adresse</label>
+                        <p class="info-text">{{ detailsSheet?.adresseStageFicheDescriptive.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Pays</label>
+                        <p class="info-text">{{ detailsSheet?.paysStageFicheDescriptive.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Ville</label>
+                        <p class="info-text">{{ detailsSheet?.villeStageFicheDescriptive.value}}</p>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <hr class="separator">
+            <h3><b>Informations du représentant de l'entreprise</b></h3>
+
+            <div class="form-grid">
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Nom</label>
+                        <p class="info-text">{{ detailsSheet?.nomRepresentantEntreprise.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Prenom</label>
+                        <p class="info-text">{{ detailsSheet?.prenomRepresentantEntreprise.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Téléphone</label>
+                        <p class="info-text">{{ detailsSheet?.telephoneRepresentantEntreprise.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Email</label>
+                        <p class="info-text">{{ detailsSheet?.adresseMailRepresentantEntreprise.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Fonction</label>
+                        <p class="info-text">{{ detailsSheet?.fonctionRepresentantEntreprise.value}}</p>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <hr class="separator">
+            <h3><b>Informations du tuteur de stage</b></h3>
+
+            <div class="form-grid">
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Nom</label>
+                        <p class="info-text">{{ detailsSheet?.nomTuteurEntreprise.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Prenom</label>
+                        <p class="info-text">{{ detailsSheet?.prenomTuteurEntreprise.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Téléphone</label>
+                        <p class="info-text">{{ detailsSheet?.telephoneTuteurEntreprise.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Mail</label>
+                        <p class="info-text">{{ detailsSheet?.adresseMailTuteurEntreprise.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Fonction</label>
+                        <p class="info-text">{{ detailsSheet?.fonctionTuteurEntreprise.value}}</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="separator">
+            <h3><b>Informations du contenu de stage</b></h3>
+
+            <div class="form-grid">
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Type de stage</label>
+                        <p class="info-text">Obligatoire</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Thématique du stage</label>
+                        <p class="info-text">{{ detailsSheet?.thematiqueFicheDescriptive.value}}</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <label>Sujet (précis du stage)</label>
+            <div class="info-box">
+                <p class="info-text">{{ detailsSheet?.sujetFicheDescriptive.value }}</p>
+            </div>
+            
+            <label>Fonction et tâches du stagiaire</label>
+            <div class="info-box">
+                <p class="info-text">{{ detailsSheet?.tachesFicheDescriptive.value }}</p>
+            </div>
+            
+            <label>Compétences (à acquérir ou à développer)</label>
+            <div class="info-box">
+                <p class="info-text">{{ detailsSheet?.competencesFicheDescriptive.value }}</p>
+            </div>
+            
+            <label>Détails</label>
+            <div class="info-box">
+                <p class="info-text">{{ detailsSheet?.detailsFicheDescriptive.value }}</p>
+            </div>
+
+            <hr class="separator">
+            <h3><b>Informations du déroulement du stage</b></h3>
+
+            <div class="form-grid">
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Début du stage</label>
+                        <p class="info-text">{{ detailsSheet?.debutStageFicheDescriptive.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Fin du stage</label>
+                        <p class="info-text">{{ detailsSheet?.finStageFicheDescriptive.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Nombre de jour de travail hebdomadaires</label>
+                        <p class="info-text">{{ detailsSheet?.nbJourSemaineFicheDescriptive.value}}</p>
+                    </div>
+                </div>
+
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Nombres d'heures par semaines</label>
+                        <p class="info-text">{{ detailsSheet?.nbHeureSemaineFicheDescriptive.value}}</p>
+                    </div>
+                </div>
+
+            </div>
+                
+                
+            
+
+
+
+
+            <!-- Boutons d'action -->
+            <div *ngIf="currentUserRole === 'STUDENT'" class="action-buttons">
+                <button class="cancel-button" (click)="goBack()">Retour</button>
+                <button class="edit-button" (click)="goToEdit()">Modifier</button>
+            </div>
+            <div *ngIf="currentUserRole === 'INTERNSHIP_MANAGER'" class="action-buttons">
+                <button class="cancel-button" (click)="goBack()">Retour</button>
+            </div>
+        </div>
+    </div>
+</div>

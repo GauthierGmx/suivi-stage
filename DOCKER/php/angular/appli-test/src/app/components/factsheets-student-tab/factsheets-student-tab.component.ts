@@ -1,17 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { FormsModule } from '@angular/forms'
-import { Student } from '../../models/student.model'
-import { Staff } from '../../models/staff.model'
-import { Company } from '../../models/company.model'
-import { Factsheets, SheetStatus } from '../../models/description-sheet.model'
-import { AuthService } from '../../services/auth.service'
-import { NavigationService } from '../../services/navigation.service'
-import { StudentService } from '../../services/student.service'
-import { CompanyService } from '../../services/company.service'
-import { FactsheetsService } from '../../services/description-sheet.service'
-import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs'
-import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component'
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Student } from '../../models/student.model';
+import { Company } from '../../models/company.model';
+import { Factsheets, SheetStatus } from '../../models/description-sheet.model';
+import { NavigationService } from '../../services/navigation.service';
+import { CompanyService } from '../../services/company.service';
+import { FactsheetsService } from '../../services/description-sheet.service';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
+import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
+
 
 @Component({
     selector: 'app-factsheets-student-tab',
@@ -31,6 +29,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
     searchTerm: string = ''
     searchTermSubject = new Subject<string>()
     filteredSheetsWithCompanies: { sheet: Factsheets; company: Company }[] = []
+    originalSheetsWithCompanies: { sheet: Factsheets; company: Company }[] = []
     currentDateFilter: 'all' | 'date_asc' | 'date_desc' = 'all'
     currentStatutFilter: 'all' | 'Refusée' | 'Validee' | 'En cours' = 'all'
     allDataLoaded: Boolean = false
@@ -64,11 +63,13 @@ export class FactsheetsStudentTabComponent implements OnInit {
                     this.companies = companies
                     this.sheets = sheet
                     if (this.sheets && this.sheets.length > 0) {
-                        this.filteredSheetsWithCompanies = this.sheets.map((sheet) => {
-                            const company = this.companies!.find((c) => c.idEntreprise === sheet.idEntreprise)
-                            return { sheet, company: company! }
-                        })
-                        this.applyFilters()
+                        const sheetsWithCompanies = this.sheets.map((sheet) => {
+                            const company = this.companies!.find((c) => c.idEntreprise === sheet.idEntreprise);
+                            return { sheet, company: company! };
+                        });
+                        this.originalSheetsWithCompanies = [...sheetsWithCompanies];
+                        this.filteredSheetsWithCompanies = [...sheetsWithCompanies];
+                        this.applyFilters();
                     } else {
                         this.filteredSheetsWithCompanies = []
                     }
@@ -89,19 +90,8 @@ export class FactsheetsStudentTabComponent implements OnInit {
 
     setStatutFilter(filter: 'all' | 'Refusée' | 'Validee' | 'En cours', selectElement: HTMLSelectElement) {
         this.currentStatutFilter = filter
-        this.resetFilters()
         this.applyFilters()
         selectElement.blur()
-    }
-
-    // Nouvelle méthode pour réinitialiser les filtres
-    resetFilters() {
-        if (this.sheets) {
-            this.filteredSheetsWithCompanies = this.sheets.map((sheet) => {
-                const company = this.companies!.find((c) => c.idEntreprise === sheet.idEntreprise)
-                return { sheet, company: company! }
-            })
-        }
     }
 
     //Récupération du label lié à un statut
@@ -116,7 +106,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
 
     //Application des filtres et de la barre de recherche
     applyFilters() {
-        let filteredSearches = [...this.filteredSheetsWithCompanies]
+        let filteredSearches = [...this.originalSheetsWithCompanies];
         const searchTermLower = this.searchTerm.toLowerCase().trim()
 
         // Convertir les dates de création en objets Date si nécessaire
@@ -186,11 +176,19 @@ export class FactsheetsStudentTabComponent implements OnInit {
         this.navigationService.navigateToAddFactSheetForm()
     }
 
+    goToUpdateSearchFormView(idFicheDescriptive: number) {
+        this.navigationService.navigateToDescriptiveSheetEditForm(idFicheDescriptive);
+    }
+
     //Affiche la fenêtre modale de confirmation de la supression d'une recherche de stage
     openDeleteModal(sheet: Factsheets) {
         this.sheetToDelete = sheet
         this.showDeleteModal = true
     }
+
+
+
+
 
     //Suppression de la fiche descriptive
     async onConfirmDelete() {
@@ -214,5 +212,11 @@ export class FactsheetsStudentTabComponent implements OnInit {
     onCancelDelete() {
         this.showDeleteModal = false
         this.sheetToDelete = undefined
+    }
+
+
+    //Redirection vers la vue de consultation d'une recherche de stage
+    goToSheetDetails(sheetId: number) {
+        this.navigationService.navigateToSheetView(sheetId);
     }
 }

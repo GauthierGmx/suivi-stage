@@ -92,6 +92,8 @@ export class FactsheetsService {
       params = params.set('fields', fields.join(','));
     }
 
+
+
     
     return this.http.get<Factsheets[]>('http://localhost:8000/api/fiche-descriptive', {params}).pipe(
       tap(response => this.log(response)),
@@ -104,6 +106,25 @@ export class FactsheetsService {
       catchError(error => this.handleError(error, null))
     );
     */
+  }
+
+
+  //Sélection de la fiche descriptive correspondant à celle dont l'id est passé en paramètre
+  getSheetById(idFicheDescriptive: number): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
+
+    return this.http.get<any>(
+      `http://localhost:8000/api/fiche-descriptive/${idFicheDescriptive}`,
+      httpOptions
+    ).pipe(
+      tap(response => this.log(response)),
+      catchError(error => {
+        console.error('Erreur lors de la récupération de la fiche:', error);
+        throw error;
+      })
+    );
   }
 
   getSheetsByStudentId(studentId: string, fields?: string[]): Observable<Factsheets[]> {
@@ -128,6 +149,10 @@ export class FactsheetsService {
     
   }
 
+
+  
+  
+
   getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus, fields?: string[]): Observable<Factsheets[]> {
     let params = new HttpParams();
 
@@ -145,16 +170,28 @@ export class FactsheetsService {
     // return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
   }
 
-  addSheet(sheet: Factsheets): Observable<Factsheets> {
+  addSheet(data: any): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-type': 'application/json'})
     };
 
-    return this.http.post<Factsheets>('http://localhost:8000/api/fiche-descriptive/data', sheet, httpOptions).pipe(
+    return this.http.post<any>('http://localhost:8000/api/fiche-descriptive/create', data, httpOptions).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
   }
+
+  updateSheet(idFicheDescriptive: number, sheet: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
+
+    return this.http.put<any>(`http://localhost:8000/api/fiche-descriptive/update/${idFicheDescriptive}`, sheet, httpOptions).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+  }
+
 
   /* updateSheet(id: number, sheetData: Partial<DescriptiveSheet>): Observable<DescriptiveSheet> {
     const index = this.mockSheets.findIndex(s => s.idFicheDescriptive === id);
@@ -187,4 +224,4 @@ export class FactsheetsService {
     console.error(error);
     return of(errorValue);
   }  
-} 
+}

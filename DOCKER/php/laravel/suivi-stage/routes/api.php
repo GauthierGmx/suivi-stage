@@ -10,6 +10,9 @@ use App\Http\Controllers\FicheDescriptiveController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\ParcoursController;
 use App\Http\Controllers\TuteurEntrepriseController;
+use App\Http\Controllers\AnneeUniversitaireController;
+use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\AffectationEnseignantController;
 use App\Http\Middleware\DispatchDataDescriptiveSheet;
 
 /*
@@ -61,3 +64,24 @@ Route::get('/tuteur-entreprise/{id}', [TuteurEntrepriseController::class, 'show'
 Route::post('/tuteur-entreprise/create', [TuteurEntrepriseController::class, 'store'])->name('tuteur-entreprise.store');
 Route::put('/tuteur-entreprise/update/{id}', [TuteurEntrepriseController::class, 'update'])->name('tuteur-entreprise.update');
 Route::get('/tuteur-entreprise', [TuteurEntrepriseController::class, 'index'])->name('tuteur-entreprise.index');
+
+// Route pour le Controller AnneeUniversitaire
+Route::get('/annee-universitaire', [AnneeUniversitaireController::class, 'index'])->name('annee-universitaire.index');
+Route::post('/annee-universitaire/create', [AnneeUniversitaireController::class, 'store'])->name('annee-universitaire.store');
+Route::get('/annee-universitaire/{id}', [AnneeUniversitaireController::class, 'show'])->name('annee-universitaire.show');
+Route::put('/annee-universitaire/update/{id}', [AnneeUniversitaireController::class, 'update'])->name('annee-universitaire.update');
+Route::delete('/annee-universitaire/delete/{id}', [AnneeUniversitaireController::class, 'destroy'])->name('annee-universitaire.destroy');
+
+// Route pour le Controller Personnel
+Route::get('/personnel', [PersonnelController::class, 'index'])->name('personnel.index');
+Route::post('/personnel/create', [PersonnelController::class, 'store'])->name('personnel.store');
+Route::get('/personnel/{id}', [PersonnelController::class, 'show'])->name('personnel.show');
+Route::put('/personnel/update/{id}', [PersonnelController::class, 'update'])->name('personnel.update');
+Route::delete('/personnel/delete/{id}', [PersonnelController::class, 'destroy'])->name('personnel.destroy');
+
+// Route pour le Controller AffectationEtudiant
+Route::get('/affectation', [AffectationEnseignantController::class, 'index'])->name('affectation.index');
+Route::post('/affectation/create', [AffectationEnseignantController::class, 'store'])->name('affectation.store');
+Route::get('/affectation/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'show'])->name('affectation.show');
+Route::put('/affectation/update/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'update'])->name('affectation.update');
+Route::delete('/affectation/delete/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'destroy'])->name('affectation.destroy');

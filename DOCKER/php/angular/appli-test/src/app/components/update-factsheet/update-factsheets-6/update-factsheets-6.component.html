@@ -1,0 +1,76 @@
+<div class="container">
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
+  
+  <h2 class="title">Informations du lieu du stage</h2>
+  <p class="warning">Les informations pré-remplies sont à vérifier !</p>
+  <div class="content">
+    <form (ngSubmit)="onNext()">
+
+      <div class="form-content">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="adresseMailStage">Email</label>
+          <input type="email" id="adresseMailStage" [(ngModel)]="formData.adresseMailStageFicheDescriptive.value" name="adresseMailStage" placeholder='test@gmail.com' #adresseMailStage="ngModel" required email>
+          <div class="errorMessage" *ngIf="adresseMailStage.invalid && adresseMailStage.errors && (adresseMailStage.dirty || adresseMailStage.touched)">
+            <small *ngIf="adresseMailStage.errors?.['required']"><b>L'adresse mail est obligatoire.</b></small>
+            <small *ngIf="adresseMailStage.errors?.['email']"><b>L'adresse mail doit être valide.</b></small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="telephoneStage">Téléphone</label>
+          <input type="text" id="telephoneStage" [(ngModel)]="formData.telephoneStageFicheDescriptive.value" name="telephoneStage" placeholder='0123456789' #telephoneStage="ngModel" required pattern="^(\+33|0)\d{9}$">
+          <div class="errorMessage" *ngIf="telephoneStage.invalid && telephoneStage.errors && (telephoneStage.dirty || telephoneStage.touched)">
+            <small *ngIf="telephoneStage.errors?.['required']"><b>Le numéro de téléphone est obligatoire.</b></small>
+            <small *ngIf="telephoneStage.errors?.['pattern']"><b>Le numéro de téléphone doit être au format 0XXXXXXXXX ou +33XXXXXXXXX.</b></small>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="adresseStage">Adresse - Numéro et Rue</label>
+          <input type="text" id="adresseStage" [(ngModel)]="formData.adresseStageFicheDescriptive.value" name="adresseStage" placeholder='1 rue de la paix' #adresseStage="ngModel" required>
+          <div class="errorMessage" *ngIf="adresseStage.invalid && adresseStage.errors && (adresseStage.dirty || adresseStage.touched)">
+            <small *ngIf="adresseStage.errors?.['required']"><b>L'adresse est obligatoire.</b></small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="codePostalStage">Code Postal</label>
+          <input type="text" id="codePostalStage" [(ngModel)]="formData.codePostalStageFicheDescriptive.value" name="codePostalStage" placeholder='75000' #codePostalStage="ngModel" required pattern="^\d{5}$">
+          <div class="errorMessage" *ngIf="codePostalStage.invalid && codePostalStage.errors && (codePostalStage.dirty || codePostalStage.touched)">
+            <small *ngIf="codePostalStage.errors?.['required']"><b>Le code postal est obligatoire.</b></small>
+            <small *ngIf="codePostalStage.errors?.['pattern']"><b>Le code postal doit être composé de 5 chiffres.</b></small>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="villeStage">Ville</label>
+          <input type="text" id="villeStage" [(ngModel)]="formData.villeStageFicheDescriptive.value" name="villeStage" placeholder='Paris' #villeStage="ngModel" required>
+          <div class="errorMessage" *ngIf="villeStage.invalid && villeStage.errors && (villeStage.dirty || villeStage.touched)">
+            <small *ngIf="villeStage.errors?.['required']"><b>La ville est obligatoire.</b></small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="paysStage">Pays</label>
+          <input type="text" id="paysStage" [(ngModel)]="formData.paysStageFicheDescriptive.value" name="paysStage" placeholder='France' #paysStage="ngModel" required>
+          <div class="errorMessage" *ngIf="paysStage.invalid && paysStage.errors && (paysStage.dirty || paysStage.touched)">
+            <small *ngIf="paysStage.errors?.['required']"><b>Le pays est obligatoire.</b></small>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
+        <button type="submit" class="btn-submit" [disabled]='!isFormValid()'>Suivant</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+  
