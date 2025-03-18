@@ -284,6 +284,41 @@ class EtudiantControllerTest extends TestCase
         
     }
 
+        /**
+     * La méthode indexParcours doit retourner une confirmation 200 et la liste des parcours de l'étudiant
+     * 
+     * @return void
+     */
+    public function test_indexParcours_methode_doit_retourner_404_car_l_etudiant_n_existe_pas() {
+        $etudiantFirst = '6402561';
+        $parcoursFirst = Parcours::first();
+        $anneeUniv = AnneeUniversitaire::first();
+        $response = $this->get('/api/etudiants/'.$etudiantFirst.'/parcours');
+        $response->assertStatus(404)
+                 ->assertJson(['message' => 'Aucun étudiant trouvé']);
+        
+    }
+
+    /**
+     * LA méthode indexParcours doit retourner une erreur 500 si une erreur survient lors de la récupération
+     * 
+     * @return void
+     */
+    public function test_indexParcours_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
+        // Mock du modèle RechercheStage pour déclencher une exception
+        $this->mock(\App\Http\Controllers\EtudiantController::class, function ($mock) {
+            $mock->shouldReceive('indexParcours')->once()->andThrow(new \Exception('Erreur simulée'));
+        });
+
+        $etudiantFirst = Etudiant::first();
+        $parcoursFirst = Parcours::first();
+        $anneeUniv = AnneeUniversitaire::first();
+        $response = $this->get('/api/etudiants/'.$etudiantFirst->idUPPA.'/fiches-descriptives');
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
+    }
+
     public function tearDown(): void
     {
         parent::tearDown();
