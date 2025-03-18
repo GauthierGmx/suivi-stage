@@ -329,6 +329,6 @@ class DispatchDataDescriptiveSheetMiddlewareTest extends TestCase
      */
 
     public function test_handleSheetCreate_renvoie_une_confirmation_et_les_infos_de_la_fiche_descriptive(){
-        $
+        
     }
 }
