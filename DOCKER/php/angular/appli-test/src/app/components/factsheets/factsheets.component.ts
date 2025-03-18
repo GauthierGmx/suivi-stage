@@ -7,11 +7,12 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { StatsCardsComponent } from '../stats-cards/stats-cards.component';
 import { LoadingComponent } from '../loading/loading.component';
 import { FactsheetsStudentTabComponent } from '../factsheets-student-tab/factsheets-student-tab.component';
+import { ListStudentTabComponent } from "../list-student-tab/list-student-tab.component";
 
 @Component({
   selector: 'app-factsheets',
   standalone: true,
-  imports: [CommonModule, BreadcrumbComponent, StatsCardsComponent, FactsheetsStudentTabComponent, LoadingComponent],
+  imports: [CommonModule, BreadcrumbComponent, StatsCardsComponent, FactsheetsStudentTabComponent, LoadingComponent, ListStudentTabComponent],
   templateUrl: './factsheets.component.html',
   styleUrls: ['./factsheets.component.css']
 })

@@ -11,6 +11,9 @@
         
         @if (currentUserRole === 'STUDENT') {
           <app-factsheets-student-tab [currentUser]="currentUser" (dataLoaded)="onChildDataLoaded()"/>
+        } 
+        @else if (currentUserRole === 'INTERNSHIP_MANAGER') {
+          <app-list-student-tab (dataLoaded)="onChildDataLoaded()"/>
         }
       </div>
     }
