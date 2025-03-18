@@ -192,22 +192,6 @@ export class FactsheetsService {
     );
   }
 
-  getSheetById(idFicheDescriptive: number): Observable<any> {
-    const httpOptions = {
-      headers: new HttpHeaders({'Content-type': 'application/json'})
-    };
-
-    return this.http.get<any>(
-      `http://localhost:8000/api/fiche-descriptive/${idFicheDescriptive}`,
-      httpOptions
-    ).pipe(
-      tap(response => this.log(response)),
-      catchError(error => {
-        console.error('Erreur lors de la récupération de la fiche:', error);
-        throw error;
-      })
-    );
-  }
 
   /* updateSheet(id: number, sheetData: Partial<DescriptiveSheet>): Observable<DescriptiveSheet> {
     const index = this.mockSheets.findIndex(s => s.idFicheDescriptive === id);
