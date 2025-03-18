@@ -64,7 +64,9 @@
         </thead>
         <tbody>
           @for (item of filteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
-            <tr>
+            <tr
+            (click)="goToSheetDetails(item.sheet.idFicheDescriptive)"
+            >
               <td class="firstTd">{{ item.company.raisonSociale }}</td>
               <td>{{ item.sheet.dateCreation | date:'dd/MM/yyyy' }}</td>
               <td>{{ item.sheet.dateDerniereModification | date:'dd/MM/yyyy' }}</td>

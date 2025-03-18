@@ -48,6 +48,10 @@ export class NavigationService {
     this.router.navigate(['/dashboard/search-details/', searchId]);
   }
 
+  navigateToSheetView(sheetId:number){
+    this.router.navigate(['factsheets/sheet-details/',sheetId]);
+  }
+
   navigateToSearchEditForm(searchId: number) {
     this.router.navigate(['/dashboard/update-search/', searchId]);
   }

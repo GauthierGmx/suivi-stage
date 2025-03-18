@@ -1,17 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { FormsModule } from '@angular/forms'
-import { Student } from '../../models/student.model'
-import { Staff } from '../../models/staff.model'
-import { Company } from '../../models/company.model'
-import { Factsheets, SheetStatus } from '../../models/description-sheet.model'
-import { AuthService } from '../../services/auth.service'
-import { NavigationService } from '../../services/navigation.service'
-import { StudentService } from '../../services/student.service'
-import { CompanyService } from '../../services/company.service'
-import { FactsheetsService } from '../../services/description-sheet.service'
-import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs'
-import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component'
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Student } from '../../models/student.model';
+import { Company } from '../../models/company.model';
+import { Factsheets, SheetStatus } from '../../models/description-sheet.model';
+import { NavigationService } from '../../services/navigation.service';
+import { CompanyService } from '../../services/company.service';
+import { FactsheetsService } from '../../services/description-sheet.service';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
+import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
+
 
 @Component({
     selector: 'app-factsheets-student-tab',
@@ -188,6 +186,10 @@ export class FactsheetsStudentTabComponent implements OnInit {
         this.showDeleteModal = true
     }
 
+
+
+
+
     //Suppression de la fiche descriptive
     async onConfirmDelete() {
         if (this.sheetToDelete) {
@@ -210,5 +212,11 @@ export class FactsheetsStudentTabComponent implements OnInit {
     onCancelDelete() {
         this.showDeleteModal = false
         this.sheetToDelete = undefined
+    }
+
+
+    //Redirection vers la vue de consultation d'une recherche de stage
+    goToSheetDetails(sheetId: number) {
+        this.navigationService.navigateToSheetView(sheetId);
     }
 }
