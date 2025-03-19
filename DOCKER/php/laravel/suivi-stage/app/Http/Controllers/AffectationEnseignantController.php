@@ -270,6 +270,10 @@ class AffectationEnseignantController extends Controller
                     \DB::raw("CONCAT(personnels.nom, ' ', personnels.prenom) as nomPersonnel"),
                     \DB::raw("CONCAT(etudiants.nom, ' ', etudiants.prenom) as nomEtudiant")
                 )
+                ->orderBy('personnels.nom')
+                ->orderBy('personnels.prenom')
+                ->orderBy('etudiants.nom')
+                ->orderBy('etudiants.prenom')
                 ->get();
 
             if ($affectations->isEmpty()) {
