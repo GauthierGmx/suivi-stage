@@ -10,6 +10,7 @@ import { StudentDashboardManagerComponent } from './components/student-dashboard
 import { AddFactsheetComponent } from './components/add-factsheet/add-factsheet.component';
 import { SheetDetailsComponent } from './components/factsheets-details/factsheets-details.component';
 import { UpdateFactsheetComponent } from './components/update-factsheet/update-factsheet.component';
+import { StudentFactsheetsManagerComponent } from './components/student-factsheets-manager/student-factsheets-manager.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -48,6 +49,12 @@ export const routes: Routes = [
     data: { role: 'INTERNSHIP_MANAGER' }
   },
   {
+    path: 'factsheets/student-factsheets/:idStudent/sheet-details/:idSheet',
+    component: SheetDetailsComponent,
+    canActivate: [authGuard],
+    data: { role: 'INTERNSHIP_MANAGER' }
+  },
+  {
     path: 'dashboard/update-search/:id',
     component: UpdateSearchComponent,
     canActivate: [authGuard]
@@ -60,6 +67,11 @@ export const routes: Routes = [
   {
     path: 'dashboard/student-dashboard/:id',
     component: StudentDashboardManagerComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'factsheets/student-factsheets/:id',
+    component: StudentFactsheetsManagerComponent,
     canActivate: [authGuard]
   },
   {

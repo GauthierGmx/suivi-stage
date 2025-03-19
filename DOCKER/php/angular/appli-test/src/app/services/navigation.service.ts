@@ -57,7 +57,7 @@ export class NavigationService {
   }
 
   navigateToDescriptiveSheetEditForm(idFicheDescriptive: number){
-    this.router.navigate(['/factsheets/update-factsheet/', idFicheDescriptive])
+    this.router.navigate(['/factsheets/sheet-details/', idFicheDescriptive])
   }
 
   navigateToStudentDashboardManagerView(studentId: string) {
@@ -65,7 +65,7 @@ export class NavigationService {
   }
 
   navigateToStudentFactsheetsManagerView(studentId: string) {
-    this.router.navigate(['/factsheets/add-factsheet', studentId]);
+    this.router.navigate(['factsheets/student-factsheets/', studentId]);
   }
 
   getCurrentPageUrl() {

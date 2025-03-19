@@ -19,7 +19,7 @@ import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/d
     styleUrls: ['./factsheets-student-tab.component.css'],
 })
 export class FactsheetsStudentTabComponent implements OnInit {
-    @Input() currentUser!: Student
+    @Input() student!: Student;
     @Input() currentUserRole?: string
     @Output() dataLoaded = new EventEmitter<void>()
     currentUserId!: string
@@ -45,11 +45,19 @@ export class FactsheetsStudentTabComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.searchTermSubject.pipe(debounceTime(800), distinctUntilChanged()).subscribe(() => {
-            this.applyFilters()
-        })
+        // Configuration de la recherche avec debounce
+        this.searchTermSubject.pipe(
+            debounceTime(800), 
+            distinctUntilChanged()
+        ).subscribe(() => {
+            this.applyFilters();
+        });
 
-        this.loadData()
+        // Charger les données
+        this.loadData().then(() => {
+            // Maintenant que les données sont chargées, on peut les utiliser
+            console.log('Fiches descriptives chargées:', this.filteredSheetsWithCompanies);
+        });
     }
 
     //Chargement des données de l'étudiant, de ses recherches de stages et des entreprises liées
@@ -57,7 +65,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
         return firstValueFrom(
             forkJoin({
                 companies: this.companyService.getCompanies(['idEntreprise', 'raisonSociale', 'ville']),
-                sheet: this.factsheetsService.getSheetsByStudentId(this.currentUser.idUPPA),
+                sheet: this.factsheetsService.getSheetsByStudentId(this.student.idUPPA),
             }).pipe(
                 tap(({ companies, sheet }) => {
                     this.companies = companies

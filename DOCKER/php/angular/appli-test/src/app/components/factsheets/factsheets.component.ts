@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { Staff } from '../../models/staff.model';
-import { Student } from '../../models/student.model';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { StatsCardsComponent } from '../stats-cards/stats-cards.component';
 import { LoadingComponent } from '../loading/loading.component';
@@ -19,7 +17,7 @@ import { ListStudentTabComponent } from "../list-student-tab/list-student-tab.co
 export class FactsheetsComponent implements OnInit {
   currentUser?: any;
   currentUserRole?: string;
-  allDataLoaded: Boolean = false;
+  allDataLoaded: boolean = false;
   loadedChildrenCount: number = 0;
   totalChildren: number = 2;
 

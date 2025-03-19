@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { LoadingComponent } from '../loading/loading.component';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { StatsCardsComponent } from '../stats-cards/stats-cards.component';
-import { SearchesStudentTabComponent } from '../searches-student-tab/searches-student-tab.component';
 import { Staff } from '../../models/staff.model';
 import { Student } from '../../models/student.model';
 import { AuthService } from '../../services/auth.service';
@@ -15,7 +14,7 @@ import { FactsheetsStudentTabComponent } from "../factsheets-student-tab/factshe
 @Component({
   selector: 'app-student-factsheets-manager',
   standalone: true,
-  imports: [CommonModule, LoadingComponent, BreadcrumbComponent, StatsCardsComponent, SearchesStudentTabComponent, FactsheetsStudentTabComponent],
+  imports: [CommonModule, LoadingComponent, BreadcrumbComponent, StatsCardsComponent, FactsheetsStudentTabComponent],
   templateUrl: './student-factsheets-manager.component.html',
   styleUrl: './student-factsheets-manager.component.css'
 })
