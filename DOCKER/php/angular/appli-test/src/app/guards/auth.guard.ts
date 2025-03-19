@@ -28,7 +28,16 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state) =
         selectedStudentId = JSON.parse(selectedStudent).idUPPA;
       }
       const idSearch = route.paramMap.get('idSearch');
-      return router.createUrlTree([`/dashboard/student-dashboard/${selectedStudentId}/search-details/${idSearch}`]);
+      const idSheet = route.paramMap.get('idSheet');
+      const isDashboardRoute = state.url.includes('/dashboard');
+      const isFactsheetRoute = state.url.includes('/factsheets');
+      if(isDashboardRoute){
+        return router.createUrlTree([`/dashboard/student-dashboard/${selectedStudentId}/search-details/${idSearch}`]);
+      } 
+      if (isFactsheetRoute){
+        return router.createUrlTree([`/factsheets/student-factsheets/${selectedStudentId}/sheet-details/${idSheet}`]);
+      }
+      
     }
     else {
       return router.createUrlTree(['/dashboard']);

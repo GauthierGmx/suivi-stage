@@ -198,7 +198,6 @@ export class AddFactsheetComponent implements OnInit {
           
           this.factsheetsService.addSheet(this.formData).subscribe({
             next: (response) => {
-              console.log('Formulaire envoyé avec succès:', response);
               this.dataSended.emit(response);
               this.formDataService.resetFormData();
               this.isSubmitting = false; // Désactiver le loading

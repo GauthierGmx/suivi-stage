@@ -60,7 +60,6 @@ export class InternshipSearchService {
       headers: new HttpHeaders({'Content-type': 'application/json'})
     };
 
-    console.log(search);
 
     return this.http.post<InternshipSearch>('http://localhost:8000/api/recherches-stages/create', search, httpOptions).pipe(
       tap(response => this.log(response)),
