@@ -173,11 +173,11 @@ class DispatchDataDescriptiveSheet
                 // Tu peux ensuite les utiliser comme bon te semble
             } else {
                 Log::error("Entreprise non trouvée avec le SIRET : " . $numSIRET . " ou la raison sociale : " . $raisonSociale);
-                return response()->json(['error' => "L'entreprise avec ce SIRET ou cette raison sociale n'existe pas"], 404);
+                return response()->json(['message' => "L'entreprise avec ce SIRET ou cette raison sociale n'existe pas"], 404);
             }
         } else {
             Log::error("Numéro SIRET et raison sociale manquants");
-            return response()->json(['error' => "Le numéro SIRET ou la raison sociale est obligatoire"], 400);
+            return response()->json(['message' => "Le numéro SIRET ou la raison sociale est obligatoire"], 400);
         }
         // **5️⃣ Création du Tuteur Entreprise s'il n'existe pas**
         if (!empty($triData['tuteurEntreprise'])) {
