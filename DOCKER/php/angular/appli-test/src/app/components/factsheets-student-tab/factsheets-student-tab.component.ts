@@ -9,6 +9,7 @@ import { CompanyService } from '../../services/company.service';
 import { FactsheetsService } from '../../services/description-sheet.service';
 import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
 import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -36,13 +37,18 @@ export class FactsheetsStudentTabComponent implements OnInit {
     sheetToDelete?: Factsheets
     showDeleteModal = false
     isDeleting = false
+    isStudent: boolean = false;
 
     constructor(
         private readonly navigationService: NavigationService,
         private readonly factsheetsService: FactsheetsService,
         private readonly companyService: CompanyService,
-        private readonly cdr: ChangeDetectorRef
-    ) {}
+        private readonly cdr: ChangeDetectorRef,
+        private readonly authService: AuthService,
+    ) {
+        const currentUser = this.authService.getCurrentUser();
+        this.isStudent = this.authService.isStudent(currentUser);
+    }
 
     ngOnInit() {
         // Configuration de la recherche avec debounce

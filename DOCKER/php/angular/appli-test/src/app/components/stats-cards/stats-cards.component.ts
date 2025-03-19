@@ -132,6 +132,16 @@ export class StatsCardsComponent implements OnInit {
     ).length;
   }
 
+  // Compte le nombre de fiches descriptives pour un étudiant donné
+  countSheetByStudentId(studentId: string | undefined) {
+    if (!studentId || !this.factsheets) {
+      return 0;
+    }
+    return this.factsheets.filter(sheet =>
+      sheet.idUPPA === studentId
+    ).length;
+  }
+
   countSearchesByStudentIdThisWeek(studentId: string | undefined) {
     if (!studentId || !this.searches) {
       return 0;
@@ -150,6 +160,17 @@ export class StatsCardsComponent implements OnInit {
     return this.searches.filter(search =>
       search.idUPPA === studentId &&
       search.statut === statut
+    ).length;
+  }
+
+  // Compte le nombre de fiches descriptives par statut pour un étudiant donné
+  countSheetByStudentIdByStatus(studentId: string | undefined, statut: SheetStatus) {
+    if (!this.factsheets) {
+      return 0;
+    }
+    return this.factsheets.filter(sheet =>
+      sheet.idUPPA === studentId &&
+      sheet.statut === statut
     ).length;
   }
 
