@@ -55,8 +55,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
 
         // Charger les données
         this.loadData().then(() => {
-            // Maintenant que les données sont chargées, on peut les utiliser
-            console.log('Fiches descriptives chargées:', this.filteredSheetsWithCompanies);
+            this.allDataLoaded = true
         });
     }
 

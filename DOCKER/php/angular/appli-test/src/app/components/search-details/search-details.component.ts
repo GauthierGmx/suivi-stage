@@ -69,7 +69,6 @@ export class SearchDetailsComponent implements OnInit {
     private loadCompanyDetails(companyId: number) {
         this.companyService.getCompanyById(companyId, ['idEntreprise', 'raisonSociale', 'adresse', 'codePostal', 'ville']).subscribe(
             company => {
-                console.log(company);
                 this.company = company;
                 this.dataLoaded = true;
             }
