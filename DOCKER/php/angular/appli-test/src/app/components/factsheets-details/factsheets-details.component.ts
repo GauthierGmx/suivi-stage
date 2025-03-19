@@ -11,12 +11,13 @@ import { LoadingComponent } from '../loading/loading.component';
 import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 import { Factsheets } from '../../models/description-sheet.model';
 import { StudentService } from '../../services/student.service';
+import { TutorAttributionModalComponent } from '../tutor-attribution-modal/tutor-attribution-modal.component';
 
 
 @Component({
     selector: 'app-sheet-details',
     standalone: true,
-    imports: [CommonModule, LoadingComponent, BreadcrumbComponent],
+    imports: [CommonModule, LoadingComponent, BreadcrumbComponent,TutorAttributionModalComponent],
     templateUrl: './factsheets-details.component.html',
     styleUrl: './factsheets-details.component.css'
 })
@@ -27,6 +28,7 @@ export class SheetDetailsComponent implements OnInit {
     company?: Company;
     dataLoaded: boolean = false;
     detailsSheet?:any;
+    showAttributionModal: Boolean = false;
 
 
     constructor(
@@ -138,5 +140,14 @@ export class SheetDetailsComponent implements OnInit {
 
     goBack() {
         this.navigationService.goBack();
+    }
+
+    //Affiche la fenêtre modale de confirmation de la supression d'une recherche de stage
+    openAttributionModal() {
+        this.showAttributionModal = true;
+    }
+    //Annulation de la suppression d'une fiche descriptive
+    onCancelDelete() {
+        this.showAttributionModal = false;
     }
 }

@@ -48,6 +48,12 @@ export const routes: Routes = [
     data: { role: 'INTERNSHIP_MANAGER' }
   },
   {
+    path: 'factsheets/student-dashboard/:idStudent/sheet-details/:idSheet',
+    component: SheetDetailsComponent,
+    canActivate: [authGuard],
+    data: { role: 'INTERNSHIP_MANAGER' }
+  },
+  {
     path: 'dashboard/update-search/:id',
     component: UpdateSearchComponent,
     canActivate: [authGuard]

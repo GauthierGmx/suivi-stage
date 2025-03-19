@@ -448,8 +448,15 @@
                 <button class="edit-button" (click)="goToEdit()">Modifier</button>
             </div>
             <div *ngIf="currentUserRole === 'INTERNSHIP_MANAGER'" class="action-buttons">
+                <button class="edit-button" (click)="openAttributionModal()">Tuteur</button>
                 <button class="cancel-button" (click)="goBack()">Retour</button>
             </div>
         </div>
     </div>
+
+    @if (showAttributionModal) {
+        <app-tutor-attribution-modal
+          (cancel)="onCancelDelete()"
+        />
+      }
 </div>
