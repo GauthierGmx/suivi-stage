@@ -844,5 +844,255 @@ class DispatchDataDescriptiveSheetMiddlewareTest extends TestCase
                                 'message' => 'L\'entreprise avec ce SIRET ou cette raison sociale n\'existe pas'
                             ]);
     }
+    /**
+     * La méthode handleSheetCreation doit renvoyer 400 car le numSIRET et la raison sociale sont null
+     * 
+     * @return void 
+     */
+    public function test_handleSheetCreate_renvoie_une_erreur_400_car_donnees_null(){
+        $etudiant   = Etudiant::first();
+        $donnees = [
+            "idUPPA" => [
+                "value" => $etudiant->idUPPA,
+                "type" => "ficheDescriptive"
+            ],
+            "statut" => [
+                "value" => "En cours",
+                "type" => "ficheDescriptive"
+            ],
+            "nomEtudiant" => [
+                "value" => $etudiant->nom,
+                "type" => "etudiant"
+            ],
+            "prenomEtudiant" => [
+                "value" => $etudiant->prenom,
+                "type" => "etudiant"
+            ],
+            "telephoneEtudiant" => [
+                "value" => $etudiant->telephone,
+                "type" => "etudiant"
+            ],
+            "adresseMailEtudiant" => [
+                "value" => $etudiant->adresseMail,
+                "type" => "etudiant"
+            ],
+            "adresseEtudiant" => [
+                "value" => $etudiant->adresse,
+                "type" => "etudiant"
+            ],
+            "codePostalEtudiant" => [
+                "value" => $etudiant->codePostal,
+                "type" => "etudiant"
+            ],
+            "villeEtudiant" => [
+                "value" => $etudiant->ville,
+                "type" => "etudiant"
+            ],
+            "composanteEtablissement" => [
+                "value" => "181 - IUT de Bayonne et du Pays Basque (Anglet)",
+                "type" => "etablissement"
+            ],
+            "parcoursEtablissement" => [
+                "value" => "BBWIA2 - BUT2 - INFO - Intégration d'Applications et Management du SI",
+                "type" => "etablissement"
+            ],
+            "adresseEtablissement" => [
+                "value" => "2 allée du Parc Montaury, 64600 Anglet",
+                "type" => "etablissement"
+            ],
+            "telephoneEtablissement" => [
+                "value" => "0101010101",
+                "type" => "etablissement"
+            ],
+            "raisonSocialeEntreprise" => [
+                "value" => null,
+                "type" => "entreprise"
+            ],
+            "adresseEntreprise" => [
+                "value" => "12 rue des choux fleurs",
+                "type" => "entreprise"
+            ],
+            "codePostalEntreprise" => [
+                "value" => "64100",
+                "type" => "entreprise"
+            ],
+            "villeEntreprise" => [
+                "value" => "Bayonne",
+                "type" => "entreprise"
+            ],
+            "paysEntreprise" => [
+                "value" => "France",
+                "type" => "entreprise"
+            ],
+            "telephoneEntreprise" => [
+                "value" => "0101010101",
+                "type" => "entreprise"
+            ],
+            "serviceEntreprise" => [
+                "value" => "Service",
+                "type" => "ficheDescriptive"
+            ],
+            "typeEtablissementEntreprise" => [
+                "value" => "Public",
+                "type" => "entreprise"
+            ],
+            "numSIRETEntreprise" => [
+                "value" => null,
+                "type" => "entreprise"
+            ],
+            "codeAPE_NAFEntreprise" => [
+                "value" => "1234Z",
+                "type" => "entreprise"
+            ],
+            "statutJuridiqueEntreprise" => [
+                "value" => "SA",
+                "type" => "entreprise"
+            ],
+            "effectifEntreprise" => [
+                "value" => 10,
+                "type" => "entreprise"
+            ],
+            "nomRepresentantEntreprise" => [
+                "value" => "Nom",
+                "type" => "entreprise"
+            ],
+            "prenomRepresentantEntreprise" => [
+                "value" => "Prenom",
+                "type" => "entreprise"
+            ],
+            "telephoneRepresentantEntreprise" => [
+                "value" => "0101010101",
+                "type" => "entreprise"
+            ],
+            "adresseMailRepresentantEntreprise" => [
+                "value" => "entreprise@gmail.fr",
+                "type" => "entreprise"
+            ],
+            "fonctionRepresentantEntreprise" => [
+                "value" => "Fonction",
+                "type" => "entreprise"
+            ],
+            "adresseMailStageFicheDescriptive" => [
+                "value" => "contact@rh.fr",
+                "type" => "ficheDescriptive"
+            ],
+            "telephoneStageFicheDescriptive" => [
+                "value" => "0101010101",
+                "type" => "ficheDescriptive"
+            ],
+            "adresseStageFicheDescriptive" => [
+                "value" => "Adresse",
+                "type" => "ficheDescriptive"
+            ],
+            "codePostalStageFicheDescriptive" => [
+                "value" => "47000",
+                "type" => "ficheDescriptive"
+            ],
+            "villeStageFicheDescriptive" => [
+                "value" => "Agen",
+                "type" => "ficheDescriptive"
+            ],
+            "paysStageFicheDescriptive" => [
+                "value" => "France",
+                "type" => "ficheDescriptive"
+            ],
+            "nomTuteurEntreprise" => [
+                "value" => "Nom",
+                "type" => "tuteurEntreprise"
+            ],
+            "prenomTuteurEntreprise" => [
+                "value" => "Prenom",
+                "type" => "tuteurEntreprise"
+            ],
+            "telephoneTuteurEntreprise" => [
+                "value" => "0101010101",
+                "type" => "tuteurEntreprise"
+            ],
+            "adresseMailTuteurEntreprise" => [
+                "value" => "tuteur@entreprise.fr",
+                "type" => "tuteurEntreprise"
+            ],
+            "fonctionTuteurEntreprise" => [
+                "value" => "Fonction",
+                "type" => "tuteurEntreprise"
+            ],
+            "typeStageFicheDescriptive" => [
+                "value" => "Obligatoire",
+                "type" => "ficheDescriptive"
+            ],
+            "thematiqueFicheDescriptive" => [
+                "value" => "Développement",
+                "type" => "ficheDescriptive"
+            ],
+            "sujetFicheDescriptive" => [
+                "value" => "Sujet",
+                "type" => "ficheDescriptive"
+            ],
+            "tachesFicheDescriptive" => [
+                "value" => "Taches",
+                "type" => "ficheDescriptive"
+            ],
+            "fonctionsFicheDescriptive" => [
+                "value" => "Fonctions",
+                "type" => "ficheDescriptive"
+            ],
+            "competencesFicheDescriptive" => [
+                "value" => "Compétences",
+                "type" => "ficheDescriptive"
+            ],
+            "detailsFicheDescriptive" => [
+                "value" => "",
+                "type" => "ficheDescriptive"
+            ],
+            "debutStageFicheDescriptive" => [
+                "value" => "2025-03-05",
+                "type" => "ficheDescriptive"
+            ],
+            "finStageFicheDescriptive" => [
+                "value" => "2025-03-19",
+                "type" => "ficheDescriptive"
+            ],
+            "nbJourSemaineFicheDescriptive" => [
+                "value" => 5,
+                "type" => "ficheDescriptive"
+            ],
+            "nbHeuresSemaineFicheDescriptive" => [
+                "value" => 35,
+                "type" => "ficheDescriptive"
+            ],
+            "personnelTechniqueDisponibleFicheDescriptive" => [
+                "value" => true,
+                "type" => "ficheDescriptive"
+            ],
+            "materielPreteFicheDescriptive" => [
+                "value" => "Ordinateur, téléphone, voiture",
+                "type" => "ficheDescriptive"
+            ],
+            "clauseConfidentialiteFicheDescriptive" => [
+                "value" => false,
+                "type" => "ficheDescriptive"
+            ]
+        ];
+        $response = $this->postJson('/api/fiche-descriptive/create', $donnees)
+                            ->assertStatus(400)
+                            ->assertJson([
+                                'message' => 'Le numéro SIRET ou la raison sociale est obligatoire'
+                            ]); 
+    }
+    /**
+     * La méthode handleSheetCreation doit renvoyer 500 car on simule une erreur
+     * 
+     * @return void 
+     */
+    public function test_handleSheetCreate_renvoie_une_erreur_500_car_une_erreur_est_simule(){
+        $this->partialMock(\App\Http\Middleware\DispatchDataDescriptiveSheet::class, function ($mock) {
+            $mock->shouldReceive('handleSheetCreate')->andThrow(new Exception);
+        });
+        $response = $this->get('/api/fiche-descriptive/create');
+    
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
+    }
+
     
 }
