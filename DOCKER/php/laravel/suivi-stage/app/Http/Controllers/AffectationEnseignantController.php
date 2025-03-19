@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Etudiant;
 use App\Models\Personnel;
 use App\Models\AnneUniversitaire;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AffectationsExport;
+use Illuminate\Support\Facades\Log;
 
 class AffectationEnseignantController extends Controller
 {
@@ -231,6 +234,63 @@ class AffectationEnseignantController extends Controller
         {
             return response()->json([
                 'message' => 'Une erreur s\'est produite :',
+                'erreur' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Exporte les affectations de l'année universitaire courante en Excel
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * Code HTTP retourné :
+     *      - Code 200 : si le fichier Excel est généré avec succès
+     *      - Code 204 : si aucune affectation n'est trouvée pour l'année courante
+     *      - Code 500 : s'il y a une erreur
+     * @throws \Exception
+     */
+    public function extractStudentTeacherAssignments()
+    {
+        try
+        {
+            if (date('m') >= 9) {
+                $anneeUniversitaireCourante = date('Y').'-'.(date('Y')+1);
+            }
+            else {
+                $anneeUniversitaireCourante = (date('Y')-1).'-'.date('Y');
+            }
+
+            $affectations = \DB::table('table_personnel_etudiant_anneeuniv')
+                ->join('personnels', 'table_personnel_etudiant_anneeuniv.idPersonnel', '=', 'personnels.idPersonnel')
+                ->join('etudiants', 'table_personnel_etudiant_anneeuniv.idUPPA', '=', 'etudiants.idUPPA')
+                ->join('annee_universitaires', 'table_personnel_etudiant_anneeuniv.idAnneeUniversitaire', '=', 'annee_universitaires.idAnneeUniversitaire')
+                ->where('annee_universitaires.libelle', $anneeUniversitaireCourante)
+                ->select(
+                    'annee_universitaires.libelle as anneeUniversitaire',
+                    \DB::raw("CONCAT(personnels.nom, ' ', personnels.prenom) as nomPersonnel"),
+                    \DB::raw("CONCAT(etudiants.nom, ' ', etudiants.prenom) as nomEtudiant")
+                )
+                ->get();
+
+            if ($affectations->isEmpty()) {
+                return response()->json([
+                    'message' => "Aucune affectation trouvée pour l'année universitaire courante"
+                ], 204);
+            }
+
+            $fileName = 'affectations-' . $anneeUniversitaireCourante . '.xlsx';
+            
+            // Force le téléchargement avec les bons headers
+            return Excel::download(new AffectationsExport($affectations), $fileName, \Maatwebsite\Excel\Excel::XLSX, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            \Log::error("Erreur lors de l'extraction Excel : " . $e->getMessage());
+            return response()->json([
+                'message' => 'Une erreur s\'est produite lors de l\'export Excel',
                 'erreur' => $e->getMessage()
             ], 500);
         }

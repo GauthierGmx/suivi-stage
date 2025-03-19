@@ -29,6 +29,17 @@
                             Fiche descriptive
                         </a>
                     </li>
+                    @if(currentUserRole === 'INTERNSHIP_MANAGER') {
+                        <li>
+                            <a
+                                (click)="extractAffectations()"
+                                routerLinkActive="active-link"
+                                class="nav-link"
+                            >
+                                Extraction affectations
+                            </a>
+                        </li>
+                    }
                 </ul>
             </nav>
 

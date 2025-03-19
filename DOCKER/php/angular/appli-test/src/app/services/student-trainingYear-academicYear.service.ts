@@ -72,7 +72,7 @@ export class StudentTrainingYearAcademicYearService {
 
     constructor(private http: HttpClient) {}
 
-    getStudentsTDsAcademicYears(fields?: string[]): Observable<Student_TrainingYear_AcademicYear[]> {
+    getStudentsTrainingYearsAcademicYears(fields?: string[]): Observable<Student_TrainingYear_AcademicYear[]> {
         let params = new HttpParams();
 
         if (fields && fields.length > 0) {

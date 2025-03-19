@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router'
 import { Staff } from '../../models/staff.model'
 import { Student } from '../../models/student.model'
 import { AuthService } from '../../services/auth.service'
+import { StudentStaffAcademicYearService } from '../../services/student-staff-academicYear.service'
 
 @Component({
     selector: 'app-header',
@@ -22,6 +23,7 @@ export class HeaderComponent implements OnInit {
 
     constructor(
         private readonly authService: AuthService,
+        private readonly studentStaffAcademicYearService: StudentStaffAcademicYearService,
         private readonly elementRef: ElementRef
     ) {}
 
@@ -76,5 +78,9 @@ export class HeaderComponent implements OnInit {
         this.showProfileMenu = false;
         this.isMobileMenuOpen = false;
         this.authService.logout();
+    }
+
+    extractAffectations() {
+        window.location.href = this.studentStaffAcademicYearService.extractStudentTeacherAssignments();
     }
 }

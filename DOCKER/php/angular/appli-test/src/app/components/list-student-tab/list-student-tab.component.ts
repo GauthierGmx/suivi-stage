@@ -73,7 +73,7 @@ export class ListStudentTabComponent implements OnInit{
                     tds: this.tdService.getTDs(),
                     trainingYears: this.trainingYearService.getTrainingYears(),
                     academicYear: this.academicYearService.getCurrentAcademicYear(),
-                    datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTDsAcademicYears(),
+                    datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTrainingYearsAcademicYears(),
                     datasStudentTdAcademicYear: this.studentTdAcademicYearService.getStudentsTDsAcademicYears()
                 }).pipe(
                     tap(({ students, searches, tds, trainingYears, academicYear, datasStudentTrainingYearAcademicYear, datasStudentTdAcademicYear }) => {
@@ -95,13 +95,13 @@ export class ListStudentTabComponent implements OnInit{
         if (this.studentsData && this.searches && this.tds && this.trainingYears && this.academicYear && this.datasStudentTrainingYearAcademicYear && this.datasStudentTdAcademicYear) {
             this.originalStudentsDatas = this.studentsData.map(student => {
                 const studentSearches = this.searches!.filter(search => search.idUPPA === student.idUPPA);
-                const studentTD = this.tds!.find(td =>
+                const studentTD = this.tds!.find(td => 
                     this.datasStudentTdAcademicYear!.some(data =>
                         data.idUPPA === student.idUPPA &&
-                        data.idAcademicYear === this.academicYear?.idAnneeUniversitaire &&
+                        data.idAcademicYear === this.academicYear!.idAnneeUniversitaire &&
                         data.idTD === td.idTD
                     )
-                )
+                );
                 const studentTrainingYear = this.trainingYears!.find(trainingYear =>
                     this.datasStudentTrainingYearAcademicYear!.some(data =>
                         data.idUPPA === student.idUPPA &&
@@ -109,7 +109,7 @@ export class ListStudentTabComponent implements OnInit{
                         data.idTrainingYear === trainingYear.idAnneeFormation
                     )
                 )
-                
+
                 return {
                     student,
                     countSearches: studentSearches.length,
