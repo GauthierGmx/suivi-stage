@@ -253,11 +253,15 @@ class AffectationEnseignantController extends Controller
     {
         try
         {
-            if (date('m') >= 9) {
-                $anneeUniversitaireCourante = date('Y').'-'.(date('Y')+1);
+            $date = new \DateTime();
+            // Si la date du jour est supérieure ou égale à septembre
+            if ((int)$date->format('m') >= 9) {
+                // L'année universitaire courante est de la forme "anneeN-anneeN+1"
+                $anneeUniversitaireCourante = $date->format('Y').'-'.($date->format('Y')+1);
             }
             else {
-                $anneeUniversitaireCourante = (date('Y')-1).'-'.date('Y');
+                // L'année universitaire courante est de la forme "anneeN-1-anneeN"
+                $anneeUniversitaireCourante = ($date->format('Y')-1).'-'.date('Y');
             }
 
             $affectations = \DB::table('table_personnel_etudiant_anneeuniv')
@@ -282,7 +286,8 @@ class AffectationEnseignantController extends Controller
                 ], 204);
             }
 
-            $fileName = 'affectations-' . $anneeUniversitaireCourante . '.xlsx';
+            // Exemple de nom de fichier : affectations_2024-2025_1903_214353.xlsx
+            $fileName = $date->format('dm_His') . '_affectations_' . $anneeUniversitaireCourante . '.xlsx';
             
             // Force le téléchargement avec les bons headers
             return Excel::download(new AffectationsExport($affectations), $fileName, \Maatwebsite\Excel\Excel::XLSX, [
