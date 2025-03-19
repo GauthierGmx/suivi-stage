@@ -33,7 +33,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
     filteredSheetsWithCompanies: { sheet: Factsheets; company: Company }[] = []
     currentDateFilter: 'all' | 'date_asc' | 'date_desc' = 'all'
     currentStatutFilter: 'all' | 'Refusée' | 'Validee' | 'En cours' = 'all'
-    allDataLoaded: Boolean = false
+    allDataLoaded: boolean = false
     sheetToDelete?: Factsheets
     showDeleteModal = false
     isDeleting = false

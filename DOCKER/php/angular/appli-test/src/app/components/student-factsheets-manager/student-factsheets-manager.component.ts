@@ -10,15 +10,16 @@ import { Student } from '../../models/student.model';
 import { AuthService } from '../../services/auth.service';
 import { StudentService } from '../../services/student.service';
 import { firstValueFrom } from 'rxjs';
+import { FactsheetsStudentTabComponent } from "../factsheets-student-tab/factsheets-student-tab.component";
 
 @Component({
-  selector: 'app-student-dashboard-manager',
+  selector: 'app-student-factsheets-manager',
   standalone: true,
-  imports: [CommonModule, LoadingComponent, BreadcrumbComponent, StatsCardsComponent, SearchesStudentTabComponent],
-  templateUrl: './student-dashboard-manager.component.html',
-  styleUrl: './student-dashboard-manager.component.css'
+  imports: [CommonModule, LoadingComponent, BreadcrumbComponent, StatsCardsComponent, SearchesStudentTabComponent, FactsheetsStudentTabComponent],
+  templateUrl: './student-factsheets-manager.component.html',
+  styleUrl: './student-factsheets-manager.component.css'
 })
-export class StudentDashboardManagerComponent implements OnInit {
+export class StudentFactsheetsManagerComponent implements OnInit {
   currentUser?: Staff;
   currentUserRole: string = 'INTERNSHIP_MANAGER';
   selectedStudent!: Student;

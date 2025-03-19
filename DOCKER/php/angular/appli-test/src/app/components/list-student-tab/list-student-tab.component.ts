@@ -16,7 +16,10 @@ import { AcademicYearService } from '../../services/academic-year.service';
 import { TrainingYearService } from '../../services/training-year.service';
 import { StudentTdAcademicYearService } from '../../services/student-td-academicYear.service';
 import { StudentTrainingYearAcademicYearService } from '../../services/student-trainingYear-academicYear.service';
+import { FactsheetsService } from '../../services/description-sheet.service';
+import { Factsheets } from '../../models/description-sheet.model';
 import { Subject, debounceTime, distinctUntilChanged, firstValueFrom, forkJoin, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-list-student-tab',
@@ -42,6 +45,8 @@ export class ListStudentTabComponent implements OnInit{
     currentTdGroupFilter: 'all' | 'TD 1' | 'TD 2' | 'TD 3' = 'all';
     currentDateFilter: 'default' | 'date_asc' | 'date_desc' = 'default';
     currentNbSearchesFilter: 'default' | 'nb_asc' | 'nb_desc' = 'default';
+    isFactsheetView = false;
+    factsheetsDatas?: Factsheets[];
 
     constructor(
         private readonly studentService: StudentService,
@@ -51,8 +56,11 @@ export class ListStudentTabComponent implements OnInit{
         private readonly academicYearService: AcademicYearService,
         private readonly studentTdAcademicYearService: StudentTdAcademicYearService,
         private readonly studentTrainingYearAcademicYearService: StudentTrainingYearAcademicYearService,
-        private readonly navigationService: NavigationService
+        private readonly navigationService: NavigationService,
+        private readonly factsheetsService: FactsheetsService,
+        private router: Router
     ) {
+        this.isFactsheetView = this.router.url.includes('factsheets');
         this.searchTermSubject.pipe(
             debounceTime(800),
             distinctUntilChanged()
@@ -67,34 +75,61 @@ export class ListStudentTabComponent implements OnInit{
 
     //Chargement des données du tableau de listing des étudiants
     async loadData() {
-        return firstValueFrom(forkJoin({
-                    students: this.studentService.getStudents(['idUPPA','nom', 'prenom']),
-                    searches: this.internshipSearchService.getSearches(['idRecherche', 'dateCreation', 'idUPPA']),
-                    tds: this.tdService.getTDs(),
-                    trainingYears: this.trainingYearService.getTrainingYears(),
-                    academicYear: this.academicYearService.getCurrentAcademicYear(),
-                    datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTDsAcademicYears(),
-                    datasStudentTdAcademicYear: this.studentTdAcademicYearService.getStudentsTDsAcademicYears()
-                }).pipe(
-                    tap(({ students, searches, tds, trainingYears, academicYear, datasStudentTrainingYearAcademicYear, datasStudentTdAcademicYear }) => {
-                        this.studentsData = students;
-                        this.searches = searches;
-                        this.tds = tds;
-                        this.trainingYears = trainingYears;
-                        this.academicYear = academicYear;
-                        this.datasStudentTrainingYearAcademicYear = datasStudentTrainingYearAcademicYear;
-                        this.datasStudentTdAcademicYear = datasStudentTdAcademicYear;
-                        this.getFilteredStudentsWithTdAndStudyYear();
-                        this.dataLoaded.emit();
-                    })
-                ));
+        if (this.isFactsheetView) {
+            return firstValueFrom(forkJoin({
+                students: this.studentService.getStudents(['idUPPA','nom', 'prenom']),
+                factsheets: this.factsheetsService.getSheets(),
+                tds: this.tdService.getTDs(),
+                trainingYears: this.trainingYearService.getTrainingYears(),
+                academicYear: this.academicYearService.getCurrentAcademicYear(),
+                datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTDsAcademicYears(),
+                datasStudentTdAcademicYear: this.studentTdAcademicYearService.getStudentsTDsAcademicYears()
+            }).pipe(
+                tap(({ students, factsheets, tds, trainingYears, academicYear, datasStudentTrainingYearAcademicYear, datasStudentTdAcademicYear }) => {
+                    this.studentsData = students;
+                    this.factsheetsDatas = factsheets;
+                    this.tds = tds;
+                    this.trainingYears = trainingYears;
+                    this.academicYear = academicYear;
+                    this.datasStudentTrainingYearAcademicYear = datasStudentTrainingYearAcademicYear;
+                    this.datasStudentTdAcademicYear = datasStudentTdAcademicYear;
+                    this.getFilteredStudentsWithTdAndStudyYear();
+                    this.dataLoaded.emit();
+                })
+            ));
+        } else {
+            return firstValueFrom(forkJoin({
+                students: this.studentService.getStudents(['idUPPA','nom', 'prenom']),
+                searches: this.internshipSearchService.getSearches(['idRecherche', 'dateCreation', 'idUPPA']),
+                tds: this.tdService.getTDs(),
+                trainingYears: this.trainingYearService.getTrainingYears(),
+                academicYear: this.academicYearService.getCurrentAcademicYear(),
+                datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTDsAcademicYears(),
+                datasStudentTdAcademicYear: this.studentTdAcademicYearService.getStudentsTDsAcademicYears()
+            }).pipe(
+                tap(({ students, searches, tds, trainingYears, academicYear, datasStudentTrainingYearAcademicYear, datasStudentTdAcademicYear }) => {
+                    this.studentsData = students;
+                    this.searches = searches;
+                    this.tds = tds;
+                    this.trainingYears = trainingYears;
+                    this.academicYear = academicYear;
+                    this.datasStudentTrainingYearAcademicYear = datasStudentTrainingYearAcademicYear;
+                    this.datasStudentTdAcademicYear = datasStudentTdAcademicYear;
+                    this.getFilteredStudentsWithTdAndStudyYear();
+                    this.dataLoaded.emit();
+                })
+            ));
+        }
     }
 
     //Récupération des informations des étudiants
     getFilteredStudentsWithTdAndStudyYear() {
-        if (this.studentsData && this.searches && this.tds && this.trainingYears && this.academicYear && this.datasStudentTrainingYearAcademicYear && this.datasStudentTdAcademicYear) {
+        if (this.studentsData && this.tds && this.trainingYears && this.academicYear && this.datasStudentTrainingYearAcademicYear && this.datasStudentTdAcademicYear) {
             this.originalStudentsDatas = this.studentsData.map(student => {
-                const studentSearches = this.searches!.filter(search => search.idUPPA === student.idUPPA);
+                const studentData = this.isFactsheetView ? 
+                    this.factsheetsDatas?.filter(sheet => sheet.idUPPA === student.idUPPA) :
+                    this.searches?.filter(search => search.idUPPA === student.idUPPA);
+
                 const studentTD = this.tds!.find(td =>
                     this.datasStudentTdAcademicYear!.some(data =>
                         data.idUPPA === student.idUPPA &&
@@ -112,8 +147,14 @@ export class ListStudentTabComponent implements OnInit{
                 
                 return {
                     student,
-                    countSearches: studentSearches.length,
-                    lastSearchDate: studentSearches.length > 0 ? new Date(Math.max(...studentSearches.map(s => new Date(s.dateCreation!).getTime()))) : null,
+                    countSearches: studentData?.length ?? 0,
+                    lastSearchDate: studentData?.length ? new Date(Math.max(...studentData.map(s => {
+                        if (this.isFactsheetView) {
+                            return new Date((s as Factsheets).debutStage!).getTime();
+                        } else {
+                            return new Date((s as InternshipSearch).dateCreation!).getTime();
+                        }
+                    }))) : null,
                     studyYear: studentTrainingYear?.libelle,
                     TdGroup: studentTD?.libelle
                 };
@@ -236,5 +277,9 @@ export class ListStudentTabComponent implements OnInit{
     //Redirection vers la vue de consultation d'une recherche de stage
     goToStudentDashboardManagerView(studentId: string) {
         this.navigationService.navigateToStudentDashboardManagerView(studentId);
+    }
+
+    goToStudentFactsheetsManagerView(studentId: string) {
+        this.navigationService.navigateToStudentFactsheetsManagerView(studentId);
     }
 }
