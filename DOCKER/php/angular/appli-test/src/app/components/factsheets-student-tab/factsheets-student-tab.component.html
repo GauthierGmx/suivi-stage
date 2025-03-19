@@ -83,7 +83,7 @@
               <td class="lastTd">
                   <div class="action-icons">
                     <svg 
-                      (click)="$event.stopPropagation(); goToUpdateSearchFormView(item.sheet.idFicheDescriptive)"
+                      (click)="$event.stopPropagation(); goToUpdateFactsheetFormView(item.sheet.idFicheDescriptive)"
                       class="edit-icon" 
                       width="24" 
                       height="24" 
@@ -150,7 +150,7 @@
         <div class="card-actions">
           @if (isStudent) {
             <svg 
-              (click)="$event.stopPropagation(); goToUpdateSearchFormView(item.sheet.idFicheDescriptive)"
+              (click)="$event.stopPropagation(); goToUpdateFactsheetFormView(item.sheet.idFicheDescriptive)"
               class="edit-icon" 
               width="20" 
               height="20" 

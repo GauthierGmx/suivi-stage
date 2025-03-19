@@ -189,7 +189,7 @@ export class FactsheetsStudentTabComponent implements OnInit {
         this.navigationService.navigateToAddFactSheetForm()
     }
 
-    goToUpdateSearchFormView(idFicheDescriptive: number) {
+    goToUpdateFactsheetFormView(idFicheDescriptive: number) {
         this.navigationService.navigateToDescriptiveSheetEditForm(idFicheDescriptive);
     }
 
