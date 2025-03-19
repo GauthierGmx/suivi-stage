@@ -130,6 +130,6 @@ return [
             'port'     => (int) env('UPPA_CAS_PORT'),
             'uri'      => env('UPPA_CAS_URI'),
             'basename' => env('UPPA_CAS_BASENAME'),
-        ],
+        ]
     ],
 ];

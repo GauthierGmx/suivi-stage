@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CasAuthMiddleware;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/logout', function () {
-    phpCAS::Logout(['url' => url('/')]);
+Route::get('/logout', function (Request $request) {
+    $middleware = new CasAuthMiddleware();
+    return $middleware->handleLogout();
 });

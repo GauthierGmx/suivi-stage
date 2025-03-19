@@ -10,6 +10,8 @@ use App\Http\Controllers\FicheDescriptiveController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\AuthController;
 
+// Import du middleware du CAS
+use App\Http\Middleware\CasAuthMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,8 +28,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Route du middleware du CAS
+Route::get('/cas-auth', function (Request $request) {
+    $middleware = new CasAuthMiddleware();
+    return $middleware->handle($request, function ($request) {
+        return redirect()->away(env('ANGULAR_URL'));
+    });
+});
+
 // Route pour le Controller Auth
-Route::get('/authenticated-user', [AuthController::class, 'getUser']);
+Route::get('/get-authenticated-user', [AuthController::class, 'getUser']);
 
 // Route pour le Controller RechercheStage
 Route::get('/recherches-stages', [RechercheStageController::class, 'index'])->name('recherches-stages.index');

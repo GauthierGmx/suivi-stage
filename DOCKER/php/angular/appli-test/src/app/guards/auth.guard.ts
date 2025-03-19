@@ -10,8 +10,11 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, st
 
   const user = await firstValueFrom(authService.getAuthenticatedUser());
 
-  if (!user) {
-    return router.createUrlTree(['/dashboard']);
+  console.log(user);
+
+  if (Array.isArray(user) && user.length === 0) {
+    window.location.href = 'http://localhost:8000/api/cas-auth';
+    return false;
   }
 
   const currentUserRole = authService.isStudent(user)

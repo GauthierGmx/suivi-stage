@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Student } from '../models/student.model';
 import { Staff } from '../models/staff.model';
 import { catchError, Observable, of, tap } from 'rxjs';
@@ -12,8 +11,7 @@ export class AuthService {
   currentUser?: Student | Staff;
 
   constructor(
-    private readonly http: HttpClient,
-    private readonly router: Router
+    private readonly http: HttpClient
   ) {}
 
   getAuthenticatedUser(): Observable<Student | Staff | undefined> {
@@ -23,7 +21,7 @@ export class AuthService {
       return of(this.currentUser);
     }
     else {
-      return this.http.get<Student | Staff>('http://localhost:8000/api/authenticated-user', { withCredentials: true }).pipe(
+      return this.http.get<Student | Staff>('http://localhost:8000/api/get-authenticated-user', { withCredentials: true }).pipe(
         tap(response => sessionStorage.setItem('currentUser', JSON.stringify(response))),
         tap(response => this.log(response)),
         catchError(error => this.handleError(error, []))
@@ -31,9 +29,13 @@ export class AuthService {
     }
   }  
 
-  logout(): void {
+  logout() {
+    // Clear session storage first
     sessionStorage.removeItem('currentUser');
-    this.router.navigate(['/login']);
+    this.currentUser = undefined;
+    
+    // Make GET request with credentials
+    window.location.href = 'http://localhost:8000/logout';
   }
 
   isAuthenticated(): boolean {

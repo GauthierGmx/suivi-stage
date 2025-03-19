@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { InitService } from '../../services/init.service';
 import { Staff } from '../../models/staff.model';
 import { Student } from '../../models/student.model';
 import { WelcomeComponent } from "../welcome-card/welcome-card.component";
@@ -26,13 +27,16 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly cdRef: ChangeDetectorRef
+    private readonly cdRef: ChangeDetectorRef,
+    private readonly initService: InitService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.authService.getAuthenticatedUser().subscribe(currentUser =>
       this.currentUser = currentUser
     );
+
+    this.initService.setInitialized();
     
     if (this.authService.isStudent(this.currentUser)) {
       this.currentUser as Student;
