@@ -62,7 +62,7 @@
 @if (currentPageUrl.includes('/student-dashboard') && currentUserRole === 'INTERNSHIP_MANAGER') {
     <div class="stats-grid">
         <div class="stats-card primary">
-          <h3>Nombre des recherches</h3>
+          <h3>Nombre de recherches</h3>
           <p>{{ countSearchesByStudentId(selectedStudent?.idUPPA) }}</p>
         </div>
         <div class="stats-card secondary">
@@ -97,23 +97,20 @@
     </div>
 }
 
-
-<!-- Vue responsable des stages - Liste des fiches descriptives - Affichage des cartes de statistiques pour la liste des étudiants -->
-@if (currentPageUrl === '/factsheets' && currentUserRole === 'INTERNSHIP_MANAGER') {
-  <div class="stats-grid">
-      <div class="stats-card primary">
-        <h3>Nombre d'étudiant sans fiche descriptive</h3>
-        <p>{{ countStudentWithoutSheet() }}</p>
+<!-- Vue responsable des stages - Journal de recherche - Affichage des cartes de statistiques pour le journal d'un étudiant -->
+@if (currentPageUrl.includes('/student-factsheets') && currentUserRole === 'INTERNSHIP_MANAGER') {
+    <div class="stats-grid">
+        <div class="stats-card primary">
+          <h3>Nombre de recherches</h3>
+          <p>{{ countSearchesByStudentId(selectedStudent?.idUPPA) }}</p>
+        </div>
+        <div class="stats-card secondary">
+          <h3>Nombre de fiches descriptive</h3>
+          <p>{{ countSheetByStudentId(selectedStudent?.idUPPA) }}</p>
+        </div>
+        <div class="stats-card tertiary">
+          <h3>Nombre de fiches descriptive validées</h3>
+          <p>{{ countSheetByStudentIdByStatus(selectedStudent?.idUPPA, 'Validee') }}</p>
+        </div>
       </div>
-      
-      <div class="stats-card secondary">
-        <h3>Nombre de fiche descriptive en attente de validation</h3>
-        <p>{{ contSheetByStatut('En cours') }}</p>
-      </div>
-      
-      <div class="stats-card tertiary">
-        <h3>Nombre d'étudiant avec au moins une fiche validée</h3>
-        <p>{{ countStudentBySheetStatut('Validee') }}</p>
-      </div>
-    </div>
-}
+  }

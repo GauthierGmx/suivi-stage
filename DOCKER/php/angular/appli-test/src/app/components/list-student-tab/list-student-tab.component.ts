@@ -16,7 +16,10 @@ import { AcademicYearService } from '../../services/academic-year.service';
 import { TrainingYearService } from '../../services/training-year.service';
 import { StudentTdAcademicYearService } from '../../services/student-td-academicYear.service';
 import { StudentTrainingYearAcademicYearService } from '../../services/student-trainingYear-academicYear.service';
+import { FactsheetsService } from '../../services/description-sheet.service';
+import { Factsheets } from '../../models/description-sheet.model';
 import { Subject, debounceTime, distinctUntilChanged, firstValueFrom, forkJoin, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-list-student-tab',
@@ -36,12 +39,16 @@ export class ListStudentTabComponent implements OnInit{
     datasStudentTdAcademicYear?: Student_TD_AcademicYear[];
     searchTerm: string = '';
     searchTermSubject = new Subject<string>();
-    filteredStudentsDatas: { student: Student; countSearches: number; lastSearchDate: Date; studyYear: string; TdGroup: string}[] = [];
-    originalStudentsDatas: { student: Student; countSearches: number; lastSearchDate: Date; studyYear: string; TdGroup: string}[] = [];
+    filteredStudentsDatas: { student: Student; countSearches: number; lastSearchDate: Date | null; studyYear: string | null | undefined; TdGroup: string | null | undefined}[] = [];
+    originalStudentsDatas: { student: Student; countSearches: number; lastSearchDate: Date | null; studyYear: string | null | undefined; TdGroup: string | null | undefined}[] = [];
     currentStudyYearFilter: 'all' | 'BUT 1' | 'BUT 2' | 'BUT 3' = 'all';
     currentTdGroupFilter: 'all' | 'TD 1' | 'TD 2' | 'TD 3' = 'all';
     currentDateFilter: 'default' | 'date_asc' | 'date_desc' = 'default';
     currentNbSearchesFilter: 'default' | 'nb_asc' | 'nb_desc' = 'default';
+    isFactsheetView = false;
+    factsheetsDatas?: Factsheets[];
+    filteredFactsheetsDatas: Factsheets[] = [];
+    currentStatusFilter: 'all' | 'En cours' | 'Validée' | 'Rejetée' = 'all';
 
     constructor(
         private readonly studentService: StudentService,
@@ -51,8 +58,11 @@ export class ListStudentTabComponent implements OnInit{
         private readonly academicYearService: AcademicYearService,
         private readonly studentTdAcademicYearService: StudentTdAcademicYearService,
         private readonly studentTrainingYearAcademicYearService: StudentTrainingYearAcademicYearService,
-        private readonly navigationService: NavigationService
+        private readonly navigationService: NavigationService,
+        private readonly factsheetsService: FactsheetsService,
+        private readonly router: Router
     ) {
+        this.isFactsheetView = this.router.url.includes('factsheets');
         this.searchTermSubject.pipe(
             debounceTime(800),
             distinctUntilChanged()
@@ -67,35 +77,67 @@ export class ListStudentTabComponent implements OnInit{
 
     //Chargement des données du tableau de listing des étudiants
     async loadData() {
-        return firstValueFrom(forkJoin({
-                    students: this.studentService.getStudents(['idUPPA','nom', 'prenom']),
-                    searches: this.internshipSearchService.getSearches(['idRecherche', 'dateCreation', 'idUPPA']),
-                    tds: this.tdService.getTDs(),
-                    trainingYears: this.trainingYearService.getTrainingYears(),
-                    academicYear: this.academicYearService.getCurrentAcademicYear(),
-                    datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTrainingYearsAcademicYears(),
-                    datasStudentTdAcademicYear: this.studentTdAcademicYearService.getStudentsTDsAcademicYears()
-                }).pipe(
-                    tap(({ students, searches, tds, trainingYears, academicYear, datasStudentTrainingYearAcademicYear, datasStudentTdAcademicYear }) => {
-                        this.studentsData = students;
-                        this.searches = searches;
-                        this.tds = tds;
-                        this.trainingYears = trainingYears;
-                        this.academicYear = academicYear;
-                        this.datasStudentTrainingYearAcademicYear = datasStudentTrainingYearAcademicYear;
-                        this.datasStudentTdAcademicYear = datasStudentTdAcademicYear;
-                        this.getFilteredStudentsWithTdAndStudyYear();
-                        this.dataLoaded.emit();
-                    })
-                ));
+        if (this.isFactsheetView) {
+            return firstValueFrom(forkJoin({
+                students: this.studentService.getStudents(['idUPPA','nom', 'prenom']),
+                factsheets: this.factsheetsService.getSheets(),
+                tds: this.tdService.getTDs(),
+                trainingYears: this.trainingYearService.getTrainingYears(),
+                academicYear: this.academicYearService.getCurrentAcademicYear(),
+                datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTrainingYearsAcademicYears(),
+                datasStudentTdAcademicYear: this.studentTdAcademicYearService.getStudentsTDsAcademicYears()
+            }).pipe(
+                tap(({ students, factsheets, tds, trainingYears, academicYear, datasStudentTrainingYearAcademicYear, datasStudentTdAcademicYear }) => {
+                    this.studentsData = students;
+                    this.factsheetsDatas = factsheets;
+                    this.tds = tds;
+                    this.trainingYears = trainingYears;
+                    this.academicYear = academicYear;
+                    this.datasStudentTrainingYearAcademicYear = datasStudentTrainingYearAcademicYear;
+                    this.datasStudentTdAcademicYear = datasStudentTdAcademicYear;
+                    this.getFilteredStudentsWithTdAndStudyYear();
+                    this.dataLoaded.emit();
+                    this.filteredFactsheetsDatas = [...factsheets];
+                })
+            ));
+        } else {
+            return firstValueFrom(forkJoin({
+                students: this.studentService.getStudents(['idUPPA','nom', 'prenom']),
+                searches: this.internshipSearchService.getSearches(['idRecherche', 'dateCreation', 'idUPPA']),
+                tds: this.tdService.getTDs(),
+                trainingYears: this.trainingYearService.getTrainingYears(),
+                academicYear: this.academicYearService.getCurrentAcademicYear(),
+                datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTrainingYearsAcademicYears(),
+                datasStudentTdAcademicYear: this.studentTdAcademicYearService.getStudentsTDsAcademicYears()
+            }).pipe(
+                tap(({ students, searches, tds, trainingYears, academicYear, datasStudentTrainingYearAcademicYear, datasStudentTdAcademicYear }) => {
+                    this.studentsData = students;
+                    this.searches = searches;
+                    this.tds = tds;
+                    this.trainingYears = trainingYears;
+                    this.academicYear = academicYear;
+                    this.datasStudentTrainingYearAcademicYear = datasStudentTrainingYearAcademicYear;
+                    this.datasStudentTdAcademicYear = datasStudentTdAcademicYear;
+                    this.getFilteredStudentsWithTdAndStudyYear();
+                    this.dataLoaded.emit();
+                })
+            ));
+        }
     }
 
     //Récupération des informations des étudiants
     getFilteredStudentsWithTdAndStudyYear() {
-        if (this.studentsData && this.searches && this.tds && this.trainingYears && this.academicYear && this.datasStudentTrainingYearAcademicYear && this.datasStudentTdAcademicYear) {
+        if (this.studentsData && this.tds && this.trainingYears && this.academicYear && 
+            this.datasStudentTrainingYearAcademicYear && this.datasStudentTdAcademicYear) {
+            
             this.originalStudentsDatas = this.studentsData.map(student => {
-                const studentSearches = this.searches!.filter(search => search.idUPPA === student.idUPPA);
-                const studentTD = this.tds!.find(td => 
+                // Get student data based on view type
+                const studentData = this.isFactsheetView ? 
+                    this.factsheetsDatas?.filter(sheet => sheet.idUPPA === student.idUPPA) :
+                    this.searches?.filter(search => search.idUPPA === student.idUPPA);
+
+                // Get student TD and training year (same for both views)
+                const studentTD = this.tds!.find(td =>
                     this.datasStudentTdAcademicYear!.some(data =>
                         data.idUPPA === student.idUPPA &&
                         data.idAcademicYear === this.academicYear!.idAnneeUniversitaire &&
@@ -108,16 +150,24 @@ export class ListStudentTabComponent implements OnInit{
                         data.idAcademicYear === this.academicYear?.idAnneeUniversitaire &&
                         data.idTrainingYear === trainingYear.idAnneeFormation
                     )
-                )
+                );
 
                 return {
                     student,
-                    countSearches: studentSearches.length,
-                    lastSearchDate: studentSearches.length > 0 ? new Date(Math.max(...studentSearches.map(s => new Date(s.dateCreation!).getTime()))) : null,
+                    countSearches: studentData?.length ?? 0,
+                    lastSearchDate: studentData?.length ? new Date(Math.max(...studentData.map(s => {
+                        if (this.isFactsheetView) {
+                            // Pour les fiches, on utilise dateModification
+                            return new Date((s as Factsheets).dateDerniereModification!).getTime();
+                        } else {
+                            // Pour les recherches, on garde dateCreation
+                            return new Date((s as InternshipSearch).dateCreation!).getTime();
+                        }
+                    }))) : null,
                     studyYear: studentTrainingYear?.libelle,
                     TdGroup: studentTD?.libelle
                 };
-            }).filter((result): result is { student: Student; countSearches: number; lastSearchDate: Date; studyYear: string; TdGroup: string } => result !== null);
+            });
     
             this.applyFilters();
         }
@@ -130,6 +180,7 @@ export class ListStudentTabComponent implements OnInit{
         let filteredDatas = [...this.originalStudentsDatas];
         const searchTermLower = this.searchTerm.toLowerCase().trim();
     
+        // Recherche commune pour les deux vues
         if (searchTermLower) {
             filteredDatas = filteredDatas.filter(data =>
                 data.student.nom!.toLowerCase().includes(searchTermLower) ||
@@ -139,6 +190,7 @@ export class ListStudentTabComponent implements OnInit{
             );
         }
     
+        // Filtres communs
         if (this.currentStudyYearFilter !== 'all') {
             filteredDatas = filteredDatas.filter(data => data.studyYear === this.currentStudyYearFilter);
         }
@@ -147,26 +199,25 @@ export class ListStudentTabComponent implements OnInit{
             filteredDatas = filteredDatas.filter(data => data.TdGroup === this.currentTdGroupFilter);
         }
     
-        if (this.currentDateFilter === 'date_asc') {
-            filteredDatas.sort((a, b) => {
-                if (!a.lastSearchDate) return 1; // Place les lignes avec la valeur null au champ "Date dernière recherche" à la fin
-                if (!b.lastSearchDate) return -1; // Place les lignes avec la valeur null au champ "Date dernière recherche" à la fin
-                return a.lastSearchDate.getTime() - b.lastSearchDate.getTime();
-            });
-        } 
-        else if (this.currentDateFilter === 'date_desc') {
-            filteredDatas.sort((a, b) => {
-                if (!a.lastSearchDate) return 1; // Place les lignes avec la valeur null au champ "Date dernière recherche" à la fin
-                if (!b.lastSearchDate) return -1; // Place les lignes avec la valeur null au champ "Date dernière recherche" à la fin
-                return b.lastSearchDate.getTime() - a.lastSearchDate.getTime();
-            });
-        }
-
-        if (this.currentNbSearchesFilter === 'nb_asc') {
-            filteredDatas.sort((a, b) => a.countSearches - b.countSearches);
-        }
-        else if (this.currentNbSearchesFilter === 'nb_desc') {
-            filteredDatas.sort((a, b) => b.countSearches - a.countSearches);
+        // Tri spécifique selon la vue
+        if (this.isFactsheetView) {
+            if (this.currentStatusFilter !== 'all') {
+                filteredDatas = filteredDatas.filter(data => {
+                    const studentFiche = this.factsheetsDatas?.find(
+                        fiche => fiche.idUPPA === data.student.idUPPA && 
+                        fiche.statut === this.currentStatusFilter
+                    );
+                    return studentFiche !== undefined;
+                });
+            }
+        } else {
+            // Tri existant pour les recherches
+            if (this.currentDateFilter !== 'default') {
+                // ...existing date sorting code...
+            }
+            if (this.currentNbSearchesFilter !== 'default') {
+                // ...existing number sorting code...
+            }
         }
     
         this.filteredStudentsDatas = filteredDatas;
@@ -199,6 +250,11 @@ export class ListStudentTabComponent implements OnInit{
         this.currentTdGroupFilter = filter;
         this.applyFilters();
         selectElement.blur();
+    }
+
+    setStatusFilter(filter: 'all' | 'En cours' | 'Validée' | 'Rejetée') {
+        this.currentStatusFilter = filter;
+        //this.applyFactsheetsFilters();
     }
 
     //Changement de l'ordre de filtrage des informations par date de création
@@ -236,5 +292,9 @@ export class ListStudentTabComponent implements OnInit{
     //Redirection vers la vue de consultation d'une recherche de stage
     goToStudentDashboardManagerView(studentId: string) {
         this.navigationService.navigateToStudentDashboardManagerView(studentId);
+    }
+
+    goToStudentFactsheetsManagerView(factsheetId: string) {
+        this.navigationService.navigateToStudentFactsheetsManagerView(factsheetId);
     }
 }

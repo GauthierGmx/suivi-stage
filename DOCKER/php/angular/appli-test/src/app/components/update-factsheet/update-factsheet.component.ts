@@ -76,7 +76,6 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
     // this.factsheetsService.getSheetById(idFicheDescriptive).subscribe({
       next: (response) => {
         this.factsheet = response;
-        console.log('Fiche descriptive récupérée:', this.factsheet);
         this.dataLoaded = true;
         
         // Initialisation des champs avec les données reçues
@@ -203,7 +202,6 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
         next: () => {
           this.factsheetsService.updateSheet(this.idFicheDescriptive, this.formData).subscribe({
             next: (response) => {
-              console.log('Formulaire mis à jour avec succès:', response);
               this.dataSended.emit(response);
               this.formDataService.resetFormData();
               this.isSubmitting = false; // Désactiver le loading

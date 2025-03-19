@@ -64,6 +64,10 @@ export class NavigationService {
     this.router.navigate(['dashboard/student-dashboard/', studentId]);
   }
 
+  navigateToStudentFactsheetsManagerView(studentId: string) {
+    this.router.navigate(['factsheets/student-factsheets/', studentId]);
+  }
+
   getCurrentPageUrl() {
     const currentUrl = this.router.url;
     return currentUrl;

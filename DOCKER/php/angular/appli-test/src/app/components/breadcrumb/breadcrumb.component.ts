@@ -90,7 +90,11 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
         'search-details': 'détails recherche',
         'student-dashboard': this.selectedStudent?.prenom && this.selectedStudent?.nom
           ? `Journal de ${this.selectedStudent.prenom} ${this.selectedStudent.nom}`
-          : 'Journal de l\'étudiant'
+          : 'Journal de l\'étudiant',
+        'student-factsheets': this.selectedStudent?.prenom && this.selectedStudent?.nom
+          ? `Fiches descriptives de ${this.selectedStudent.prenom} ${this.selectedStudent.nom}`
+          : 'Fiches descriptives de l\'étudiant',
+        'sheet-details': 'détails fiche descriptive',
       }
     };
     

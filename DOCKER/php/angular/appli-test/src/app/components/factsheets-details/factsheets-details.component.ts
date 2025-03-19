@@ -1,33 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { Student } from '../../models/student.model';
-import { Company } from '../../models/company.model';
-import { AuthService } from '../../services/auth.service';
-import { FactsheetsService } from '../../services/description-sheet.service';
-import { CompanyService } from '../../services/company.service';
-import { NavigationService } from '../../services/navigation.service';
-import { LoadingComponent } from '../loading/loading.component';
-import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
-import { Factsheets } from '../../models/description-sheet.model';
-import { StudentService } from '../../services/student.service';
-
+import { Component, OnInit } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { ActivatedRoute } from '@angular/router'
+import { Student } from '../../models/student.model'
+import { Company } from '../../models/company.model'
+import { AuthService } from '../../services/auth.service'
+import { FactsheetsService } from '../../services/description-sheet.service'
+import { CompanyService } from '../../services/company.service'
+import { NavigationService } from '../../services/navigation.service'
+import { LoadingComponent } from '../loading/loading.component'
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component'
+import { Factsheets } from '../../models/description-sheet.model'
+import { StudentService } from '../../services/student.service'
 
 @Component({
     selector: 'app-sheet-details',
     standalone: true,
     imports: [CommonModule, LoadingComponent, BreadcrumbComponent],
     templateUrl: './factsheets-details.component.html',
-    styleUrl: './factsheets-details.component.css'
+    styleUrl: './factsheets-details.component.css',
 })
 export class SheetDetailsComponent implements OnInit {
-    selectedStudent?: Student;
-    currentUserRole?: string;
-    sheet?: Factsheets;
-    company?: Company;
-    dataLoaded: boolean = false;
-    detailsSheet?:any;
-
+    selectedStudent?: Student
+    currentUserRole?: string
+    sheet?: Factsheets
+    company?: Company
+    dataLoaded: boolean = false
+    detailsSheet?: any
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -39,104 +37,105 @@ export class SheetDetailsComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        let currentUser;
-        const user = sessionStorage.getItem('currentUser');
+        let currentUser
+        const user = sessionStorage.getItem('currentUser')
         if (user) {
-            currentUser = JSON.parse(user);
+            currentUser = JSON.parse(user)
         }
 
         if (this.authService.isStudent(currentUser)) {
-            this.currentUserRole = 'STUDENT';
-        }
-        else if (this.authService.isStaff(currentUser)) {
-            this.currentUserRole = 'INTERNSHIP_MANAGER';
+            this.currentUserRole = 'STUDENT'
+        } else if (this.authService.isStaff(currentUser)) {
+            this.currentUserRole = 'INTERNSHIP_MANAGER'
         }
 
-        const selectedStudent = sessionStorage.getItem('selectedStudent');
+        const selectedStudent = sessionStorage.getItem('selectedStudent')
         if (selectedStudent) {
-            this.selectedStudent = JSON.parse(selectedStudent);
+            this.selectedStudent = JSON.parse(selectedStudent)
         }
 
-        const sheetId = Number(this.route.snapshot.paramMap.get('idSheet'));
+        const sheetId = Number(this.route.snapshot.paramMap.get('idSheet'))
 
-
-        
         if (sheetId) {
-            this.factsheetsService.getSheetById(sheetId).subscribe(
-                sheet => {
-                    if (sheet) {
-                        this.sheet = sheet;
-                        
-                        this.loadCompanyDetails(sheet.idEntreprise.value);
-                        this.loadStudentDetails(sheet.idUPPA.value);
-                        
-                    }
+            this.factsheetsService.getSheetById(sheetId).subscribe((sheet) => {
+                if (sheet) {
+                    this.sheet = sheet
+
+                    this.loadCompanyDetails(sheet.idEntreprise.value)
+                    this.loadStudentDetails(sheet.idUPPA.value)
                 }
-            );
+            })
         }
-        
-        
-        
-        
-        
+
         this.factsheetsService.getSheetById(sheetId).subscribe({
             next: (response) => {
-                this.detailsSheet = response;
+                this.detailsSheet = response
             },
             error: (err) => {
-                console.error("Erreur lors de la récupération de la fiche :", err);
-            }
-        });
+                console.error('Erreur lors de la récupération de la fiche :', err)
+            },
+        })
     }
-    
-    
-    
+
     private loadCompanyDetails(companyId: number) {
-        this.companyService.getCompanyById(companyId, ['idEntreprise', 'raisonSociale', 'adresse', 'codePostal',
-             'ville','pays','telephone','typeEtablissement','numSiret','codeAPE_NAF',
-             'statutJuridique','effectif']).subscribe(
-            company => {
-                this.company = company;
-            }
-        );
+        this.companyService
+            .getCompanyById(companyId, [
+                'idEntreprise',
+                'raisonSociale',
+                'adresse',
+                'codePostal',
+                'ville',
+                'pays',
+                'telephone',
+                'typeEtablissement',
+                'numSiret',
+                'codeAPE_NAF',
+                'statutJuridique',
+                'effectif',
+            ])
+            .subscribe((company) => {
+                this.company = company
+            })
     }
 
-    private loadStudentDetails(studentId:string){
-        this.studentService.getStudentById(studentId,['idUPPA','nom','prenom',
-            'adresse','ville','codePostal', 'telephone','adresseMail']).subscribe(
-                student =>{
-                    this.selectedStudent = student;
-                    this.dataLoaded = true;  
-                }
-            )
+    private loadStudentDetails(studentId: string) {
+        this.studentService
+            .getStudentById(studentId, [
+                'idUPPA',
+                'nom',
+                'prenom',
+                'adresse',
+                'ville',
+                'codePostal',
+                'telephone',
+                'adresseMail',
+            ])
+            .subscribe((student) => {
+                this.selectedStudent = student
+                this.dataLoaded = true
+            })
     }
-
-    
-
-    
-    
-
 
     getStatusClass(status: string): string {
         const statusMap: Record<string, string> = {
-            'Validee': 'status-badge valide',
+            Validee: 'status-badge valide',
             'En cours': 'status-badge en-attente',
-            'Refusée': 'status-badge refuse'
-        };
-        return statusMap[status] || 'status-badge';
+            Refusée: 'status-badge refuse',
+        }
+        return statusMap[status] || 'status-badge'
     }
 
     goToDashboard() {
-        this.navigationService.navigateToDashboard();
+        this.navigationService.navigateToDashboard()
     }
 
     goToEdit() {
         if (this.sheet) {
-            this.navigationService.navigateToSearchEditForm(this.sheet.idFicheDescriptive);
+            this.navigationService.navigateToSearchEditForm(this.sheet.idFicheDescriptive)
         }
     }
 
     goBack() {
-        this.navigationService.goBack();
+        this.navigationService.goBack()
     }
 }
