@@ -1,0 +1,81 @@
+<div class="container">
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
+  
+  <h2 class="title">Informations du déroulement du stage</h2>
+  <p class="warning">Les informations pré-remplies sont à vérifier !</p>
+  <div class="content">
+    <form (ngSubmit)="onNext()">
+      <div class="form-content">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dateDebut">Date de début</label>
+            <input type="date" id="dateDebut" [(ngModel)]="formData.debutStageFicheDescriptive.value" name="dateDebut" #dateDebut="ngModel" required>
+            <div class="errorMessage" *ngIf="dateDebut.invalid && dateDebut.errors && (dateDebut.dirty || dateDebut.touched)">
+              <small *ngIf="dateDebut.errors?.['required']"><b>La date de début est obligatoire.</b></small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="dateFin">Date de fin</label>
+            <input type="date" id="dateFin" [(ngModel)]="formData.finStageFicheDescriptive.value" name="dateFin" #dateFin="ngModel" required>
+            <div class="errorMessage" *ngIf="dateFin.invalid && dateFin.errors && (dateFin.dirty || dateFin.touched)">
+              <small *ngIf="dateFin.errors?.['required']"><b>La date de fin est obligatoire.</b></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nbJoursTravail">Nombre de jours de travail par semaine</label>
+            <input type="number" id="nbJoursTravail" [(ngModel)]="formData.nbJourSemaineFicheDescriptive.value" name="nbJoursTravail" min="1" max="7" placeholder='5' #nbJoursTravail="ngModel" required>
+            <div class="errorMessage" *ngIf="nbJoursTravail.invalid && nbJoursTravail.errors && (nbJoursTravail.dirty || nbJoursTravail.touched)">
+              <small *ngIf="nbJoursTravail.errors?.['required']"><b>Le nombre de jours de travail par semaine est obligatoire.</b></small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nbHeuresHebdo">Nombre d'heures par semaine</label>
+            <input type="number" id="nbHeuresHebdo" [(ngModel)]="formData.nbHeureSemaineFicheDescriptive.value" name="nbHeuresHebdo" min="1" max="40" placeholder='35' #nbHeuresHebdo="ngModel" required>
+            <div class="errorMessage" *ngIf="nbHeuresHebdo.invalid && nbHeuresHebdo.errors && (nbHeuresHebdo.dirty || nbHeuresHebdo.touched)">
+              <small *ngIf="nbHeuresHebdo.errors?.['required']"><b>Le nombre d'heures par semaine est obligatoire.</b></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="materielPrete">Matériel prêté</label>
+            <input type="text" id="materielPrete" [(ngModel)]="formData.materielPreteFicheDescriptive.value" name="materielPrete" placeholder='Ordinateur, téléphone, ...' #materielPrete="ngModel" required>
+            <div class="errorMessage" *ngIf="materielPrete.invalid && materielPrete.errors && (materielPrete.dirty || materielPrete.touched)">
+              <small *ngIf="materielPrete.errors?.['required']"><b>Le matériel prêté est obligatoire.</b></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group-slider">
+            <label for="persoTechnique">Personnel technique disponible</label>
+              <label class="switch">
+                  <input type="checkbox" id="persoTechnique" [(ngModel)]="formData.personnelTechniqueDisponibleFicheDescriptive.value" name="persoTechniqueDeroulementStage">
+                  <span class="slider"></span>
+              </label>
+          </div>          
+          <div class="form-group-slider">
+            <label for="clauseConfidentialite">Clause de confidentialité</label>
+            <label class="switch">
+              <input type="checkbox" id="clauseConfidentialite" [(ngModel)]="formData.clauseConfidentialiteFicheDescriptive.value" name="clauseConfidentialiteDeroulementStage">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
+          <button type="submit" class="btn-submit" [disabled]='!isFormValid()'>Valider</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+  

@@ -1,0 +1,88 @@
+<div class="container">
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
+  
+  <h2 class="title">Informations de l'entreprise</h2>
+  <p class="warning">Les informations pré-remplies sont à vérifier !</p>
+  <div class="content">
+    <form (ngSubmit)="onNext()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="service">Service/Division</label>
+          <input type="text" id="service" [(ngModel)]="formData.serviceEntrepriseFicheDescriptive.value" name="service" placeholder='Informatique'#service="ngModel" required>
+          <div class="errorMessage" *ngIf="service.invalid && service.errors && (service.dirty || service.touched)">
+            <small *ngIf="service.errors?.['required']"><b>Le service est obligatoire</b></small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="typeEtablissement">Type d'établissement</label>
+          <select id="typeEtablissement" [(ngModel)]="formData.typeEtablissementEntreprise.value" name="typeEtablissement">
+            <option value="Administration">Administration</option>
+            <option value="Prive">Privé</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- <div class="form-group">
+          <label for="activitePrincipale">Activité principale</label>
+          <input type="text" id="activitePrincipale" [(ngModel)]="formData.activitePrincipaleEntreprise.value" name="activitePrincipale">
+        </div> -->
+        <div class="form-group">
+          <label for="effectif">Effectif</label>
+          <!-- <select id="effectif" [(ngModel)]="formData.effectifEntreprise.value" name="effectif">
+            <option value="Moins de 10">Moins de 10</option>
+            <option value="10-49">10-49</option>
+            <option value="50 et plus">50 et plus</option>
+          </select> -->
+          <input type="number" id="effectif" [(ngModel)]="formData.effectifEntreprise.value" name="effectif" placeholder='10' #effectif="ngModel" required>
+          <div class="errorMessage" *ngIf="effectif.invalid && effectif.errors && (effectif.dirty || effectif.touched)">
+            <small *ngIf="effectif.errors?.['required']"><b>L'effectif est obligatoire</b></small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="numSiret">Numéro SIRET</label>
+          <input type="text" id="numSiret" [(ngModel)]="formData.numSIRETEntreprise.value" name="numSiret" placeholder='12345678912345' pattern="^\d{14}$" title="14 chiffres" #numSiret="ngModel" maxlength="14" required>
+          <div class="errorMessage" *ngIf="numSiret.invalid && numSiret.errors && (numSiret.dirty || numSiret.touched)">
+            <small *ngIf="numSiret.errors?.['required']"><b>Le numéro SIRET est obligatoire</b></small>
+            <small *ngIf="numSiret.errors?.['pattern']"><b>Le numéro SIRET doit contenir 14 chiffres</b></small>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="codeApeOrNaf">Code APE/NAF</label>
+          <input 
+            type="text" 
+            id="codeApeOrNaf" 
+            [(ngModel)]="formData.codeAPE_NAFEntreprise.value" 
+            name="codeApeOrNaf" 
+            placeholder='01.23A'
+            pattern="^\d{2}\.\d{2}[A-Z]$"
+            title="Format requis: 2 chiffres, point, 2 chiffres, 1 lettre majuscule (ex: 01.23A)"
+            #codeApeOrNaf="ngModel"
+            required
+          >
+          <div class="errorMessage" *ngIf="codeApeOrNaf.invalid && codeApeOrNaf.errors && (codeApeOrNaf.dirty || codeApeOrNaf.touched)">
+            <small *ngIf="codeApeOrNaf.errors?.['required']"><b>Le code APE/NAF est obligatoire</b></small>
+            <small *ngIf="codeApeOrNaf.errors?.['pattern']"><b>Le code APE/NAF doit être au format 01.23A</b></small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="statutJuridique">Statut juridique</label>
+          <select type="text" id="statutJuridique" [(ngModel)]="formData.statutJuridiqueEntreprise.value" name="statutJuridique">
+            <option value="SA">SA</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
+        <button type="submit" class="btn-submit" [disabled]='!isFormValid()'>Suivant</button>
+      </div>
+    </form>
+  </div>
+</div>

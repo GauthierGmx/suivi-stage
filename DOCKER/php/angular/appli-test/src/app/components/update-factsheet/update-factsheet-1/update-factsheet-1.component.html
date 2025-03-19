@@ -1,0 +1,65 @@
+<div class="container">
+  <app-navigation-tabs 
+    [currentStep]="currentStep"
+    (stepChange)="onStepChange($event)">
+  </app-navigation-tabs>
+
+  <h2 class="title">Informations de l'étudiant</h2>
+  <p class="warning">Les informations pré-remplies sont à vérifier !</p>
+  <div class="content">
+    <form (ngSubmit)="onNext()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nom">NOM</label>
+          <input type="text" id="nom" [(ngModel)]="formData.nomEtudiant.value" name="nom" disabled>
+        </div>
+        <div class="form-group">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" [(ngModel)]="formData.prenomEtudiant.value" name="prenom" value="Anthony" disabled>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="telephone">Téléphone</label>
+          <input type="text" id="telephone" [(ngModel)]="formData.telephoneEtudiant.value" name='telephone' value="0606060606" disabled>
+        </div>
+        <div class="form-group">
+          <label for="adresseMail">Email</label>
+          <input type="adresseMail" id="adresseMail" [(ngModel)]="formData.adresseMailEtudiant.value" name='adresseMail' value="mail@gmail.com" disabled>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="adresse">Adresse - Numéro et Rue</label>
+          <input type="text" id="adresse" [(ngModel)]="formData.adresseEtudiant.value" name='adresse' placeholder="Adresse" disabled>
+        </div>
+        <div class="form-group">
+          <label for="code-postal">Adresse - Code Postal</label>
+          <input type="text" id="code-postal" [(ngModel)]="formData.codePostalEtudiant.value" name='code-postal' placeholder="Code Postal" disabled>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="ville">Adresse - Ville</label>
+          <input type="text" id="ville" [(ngModel)]="formData.villeEtudiant.value" name='ville' placeholder="Ville" disabled>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="btn-cancel" (click)="onCancel()">Annuler</button>
+        <button type="submit" class="btn-submit">Suivant</button>
+      </div>
+    </form>
+  </div>
+  @if (showBackModal) {
+    <app-back-confirmation-modal
+    [show]="showBackModal"
+    (confirmBack)="onConfirmBack()"
+    (cancelBack)="onCancelBack()">
+  </app-back-confirmation-modal>
+  }
+  
+</div>
