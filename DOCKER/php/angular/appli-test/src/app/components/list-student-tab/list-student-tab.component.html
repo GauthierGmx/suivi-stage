@@ -1,6 +1,6 @@
 <div class="content-box">
   <div class="title">
-    <h3><b>{{ isFactsheetView ? 'Liste des fiches descriptives' : 'Liste des recherches de stage' }}</b></h3>
+    <h3><b>Liste des étudiants</b></h3>
   </div>
 
   <div class="searchBarAndfilters">
@@ -39,20 +39,6 @@
         >
           Date dernière recherche
         </button>
-      }
-
-      @if (isFactsheetView) {
-        <select 
-          #statutSelect
-          [(ngModel)]="currentStatusFilter"
-          (change)="setStatusFilter(currentStatusFilter)"
-          class="filter-button"
-        >
-          <option value="all">Tous les statuts</option>
-          <option value="En cours">En cours</option>
-          <option value="Validée">Validée</option>
-          <option value="Rejetée">Rejetée</option>
-        </select>
       }
 
       <select 

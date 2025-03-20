@@ -205,8 +205,7 @@ export class ListStudentTabComponent implements OnInit{
             if (this.currentStatusFilter !== 'all') {
                 filteredDatas = filteredDatas.filter(data => {
                     const studentFiche = this.factsheetsDatas?.find(
-                        fiche => fiche.idUPPA === data.student.idUPPA && 
-                        fiche.statut === this.currentStatusFilter
+                        fiche => fiche.idUPPA === data.student.idUPPA
                     );
                     return studentFiche !== undefined;
                 });
@@ -251,11 +250,6 @@ export class ListStudentTabComponent implements OnInit{
         this.currentTdGroupFilter = filter;
         this.applyFilters();
         selectElement.blur();
-    }
-
-    setStatusFilter(filter: 'all' | 'En cours' | 'Validée' | 'Rejetée') {
-        this.currentStatusFilter = filter;
-        //this.applyFactsheetsFilters();
     }
 
     //Changement de l'ordre de filtrage des informations par date de création
