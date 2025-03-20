@@ -155,6 +155,9 @@ class CasAuthMiddleware
     public function handleCasLogout()
     {
         try {
+            \Log::info('Suppression des cookies --> SUCCESS');
+            \Log::info('Envoi de la demande de déconnexion au CAS');
+
             \phpCAS::client(
                 CAS_VERSION_2_0,
                 config('auth.cas.server.hostname'),
