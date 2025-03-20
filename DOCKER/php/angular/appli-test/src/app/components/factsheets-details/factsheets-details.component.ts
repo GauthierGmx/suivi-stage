@@ -12,6 +12,11 @@ import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 import { Factsheets } from '../../models/description-sheet.model';
 import { StudentService } from '../../services/student.service';
 import { TutorAttributionModalComponent } from '../tutor-attribution-modal/tutor-attribution-modal.component';
+import { Staff } from '../../models/staff.model';
+import { StaffService } from '../../services/staff.service';
+import { map } from 'rxjs/operators';
+
+
 
 
 @Component({
@@ -29,6 +34,7 @@ export class SheetDetailsComponent implements OnInit {
     dataLoaded: boolean = false;
     detailsSheet?:any;
     showAttributionModal: Boolean = false;
+    teachers?: Staff[];
 
 
     constructor(
@@ -37,7 +43,8 @@ export class SheetDetailsComponent implements OnInit {
         private readonly factsheetsService: FactsheetsService,
         private readonly companyService: CompanyService,
         private readonly navigationService: NavigationService,
-        private readonly studentService: StudentService
+        private readonly studentService: StudentService,
+        private readonly staffService: StaffService
     ) {}
 
     ngOnInit() {
@@ -52,8 +59,11 @@ export class SheetDetailsComponent implements OnInit {
         }
         else if (this.authService.isStaff(currentUser)) {
             this.currentUserRole = 'INTERNSHIP_MANAGER';
+            this.getAllTeacher();
         }
+        console.log("azepaWTFFFFFFFFFFFFFFFFFFFzeap",this.teachers);
 
+        
         const selectedStudent = sessionStorage.getItem('selectedStudent');
         if (selectedStudent) {
             this.selectedStudent = JSON.parse(selectedStudent);
@@ -75,6 +85,7 @@ export class SheetDetailsComponent implements OnInit {
                     }
                 }
             );
+
         }
         
         
@@ -149,5 +160,20 @@ export class SheetDetailsComponent implements OnInit {
     //Annulation de la suppression d'une fiche descriptive
     onCancelDelete() {
         this.showAttributionModal = false;
+    }
+
+    getAllTeacher() {
+        console.log("les staff",this.staffService.getStaff());
+        this.staffService.getStaff().pipe(
+            map((staffMember: Staff) => staffMember.role === 'Enseignant' ? [staffMember] : [])
+        ).subscribe({
+            next: (filteredTeachers) => {
+                this.teachers = filteredTeachers;
+                console.log("Enseignants chargés:", this.teachers);
+            },
+            error: (err) => {
+                console.error("Erreur lors de la récupération des enseignants:", err);
+            }
+        });
     }
 }

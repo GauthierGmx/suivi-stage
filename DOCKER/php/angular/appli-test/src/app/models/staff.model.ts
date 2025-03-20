@@ -44,4 +44,4 @@ export class Staff {
   }
 }
 
-export type StaffRole = 'SUPERADMIN' | 'ADMIN' | 'STUDENT' | 'TEACHER' | 'INTERNSHIP_MANAGER' | 'MANAGER';
+export type StaffRole = 'SUPERADMIN' | 'ADMIN' | 'STUDENT' | 'Enseignant' | 'INTERNSHIP_MANAGER' | 'MANAGER';

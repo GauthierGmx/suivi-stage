@@ -55,7 +55,7 @@ export class StaffService {
     },
     {
       idPersonnel: 7,
-      role: 'TEACHER',
+      role: 'Enseignant',
       prenom: 'Enseignant',
       nom: 'Référent',
       adresse: 'Rue ...',
@@ -103,6 +103,19 @@ export class StaffService {
     */
 
     return of(this.staffs.find(s => s.idPersonnel === idStaff));
+  }
+
+  getStaff(fields?:Staff[]):Observable<Staff>{
+    let params = new HttpParams();
+    
+        if (fields && fields.length > 0) {
+          params = params.set('fields', fields.join(','));
+        }
+    
+        return this.http.get<Staff[]>('http://localhost:8000/api/personnel', {params}).pipe(
+          tap(response => this.log(response)),
+          catchError(error => this.handleError(error, null))
+        );
   }
 
   //Log la réponse de l'API
