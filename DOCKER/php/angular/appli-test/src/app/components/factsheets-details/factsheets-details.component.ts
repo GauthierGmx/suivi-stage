@@ -23,7 +23,7 @@ import { StaffService } from '../../services/staff.service';
     standalone: true,
     imports: [CommonModule, LoadingComponent, BreadcrumbComponent,TutorAttributionModalComponent],
     templateUrl: './factsheets-details.component.html',
-    styleUrl: './factsheets-details.component.css'
+    styleUrl: './factsheets-details.component.css',
 })
 export class SheetDetailsComponent implements OnInit {
     selectedStudent?: Student;
@@ -48,107 +48,107 @@ export class SheetDetailsComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        let currentUser;
-        const user = sessionStorage.getItem('currentUser');
+        let currentUser
+        const user = sessionStorage.getItem('currentUser')
         if (user) {
-            currentUser = JSON.parse(user);
+            currentUser = JSON.parse(user)
         }
 
         if (this.authService.isStudent(currentUser)) {
-            this.currentUserRole = 'STUDENT';
-        }
-        else if (this.authService.isStaff(currentUser)) {
-            this.currentUserRole = 'INTERNSHIP_MANAGER';
+            this.currentUserRole = 'STUDENT'
+        } else if (this.authService.isStaff(currentUser)) {
+            this.currentUserRole = 'INTERNSHIP_MANAGER'
         }
 
         
         const selectedStudent = sessionStorage.getItem('selectedStudent');
         if (selectedStudent) {
-            this.selectedStudent = JSON.parse(selectedStudent);
+            this.selectedStudent = JSON.parse(selectedStudent)
         }
 
-        const sheetId = Number(this.route.snapshot.paramMap.get('idSheet'));
+        const sheetId = Number(this.route.snapshot.paramMap.get('idSheet'))
 
-
-        
         if (sheetId) {
-            this.factsheetsService.getSheetById(sheetId).subscribe(
-                sheet => {
-                    if (sheet) {
-                        this.sheet = sheet;
-                        
-                        this.loadCompanyDetails(sheet.idEntreprise.value);
-                        this.loadStudentDetails(sheet.idUPPA.value);
-                        
-                    }
-                }
-            );
+            this.factsheetsService.getSheetById(sheetId).subscribe((sheet) => {
+                if (sheet) {
+                    this.sheet = sheet
 
+                    this.loadCompanyDetails(sheet.idEntreprise.value)
+                    this.loadStudentDetails(sheet.idUPPA.value)
+                }
+            })
         }
-        
-        
-        
-        
-        
+
         this.factsheetsService.getSheetById(sheetId).subscribe({
             next: (response) => {
-                this.detailsSheet = response;
+                this.detailsSheet = response
             },
             error: (err) => {
-                console.error("Erreur lors de la récupération de la fiche :", err);
-            }
-        });
+                console.error('Erreur lors de la récupération de la fiche :', err)
+            },
+        })
     }
-    
-    
-    
+
     private loadCompanyDetails(companyId: number) {
-        this.companyService.getCompanyById(companyId, ['idEntreprise', 'raisonSociale', 'adresse', 'codePostal',
-             'ville','pays','telephone','typeEtablissement','numSiret','codeAPE_NAF',
-             'statutJuridique','effectif']).subscribe(
-            company => {
-                this.company = company;
-            }
-        );
+        this.companyService
+            .getCompanyById(companyId, [
+                'idEntreprise',
+                'raisonSociale',
+                'adresse',
+                'codePostal',
+                'ville',
+                'pays',
+                'telephone',
+                'typeEtablissement',
+                'numSiret',
+                'codeAPE_NAF',
+                'statutJuridique',
+                'effectif',
+            ])
+            .subscribe((company) => {
+                this.company = company
+            })
     }
 
-    private loadStudentDetails(studentId:string){
-        this.studentService.getStudentById(studentId,['idUPPA','nom','prenom',
-            'adresse','ville','codePostal', 'telephone','adresseMail']).subscribe(
-                student =>{
-                    this.selectedStudent = student;
-                    this.dataLoaded = true;  
-                }
-            )
+    private loadStudentDetails(studentId: string) {
+        this.studentService
+            .getStudentById(studentId, [
+                'idUPPA',
+                'nom',
+                'prenom',
+                'adresse',
+                'ville',
+                'codePostal',
+                'telephone',
+                'adresseMail',
+            ])
+            .subscribe((student) => {
+                this.selectedStudent = student
+                this.dataLoaded = true
+            })
     }
-
-    
-
-    
-    
-
 
     getStatusClass(status: string): string {
         const statusMap: Record<string, string> = {
-            'Validee': 'status-badge valide',
+            Validee: 'status-badge valide',
             'En cours': 'status-badge en-attente',
-            'Refusée': 'status-badge refuse'
-        };
-        return statusMap[status] || 'status-badge';
+            Refusée: 'status-badge refuse',
+        }
+        return statusMap[status] || 'status-badge'
     }
 
     goToDashboard() {
-        this.navigationService.navigateToDashboard();
+        this.navigationService.navigateToDashboard()
     }
 
     goToEdit() {
         if (this.sheet) {
-            this.navigationService.navigateToSearchEditForm(this.sheet.idFicheDescriptive);
+            this.navigationService.navigateToSearchEditForm(this.sheet.idFicheDescriptive)
         }
     }
 
     goBack() {
-        this.navigationService.goBack();
+        this.navigationService.goBack()
     }
 
     //Affiche la fenêtre modale de confirmation de la supression d'une recherche de stage
@@ -241,4 +241,6 @@ export class SheetDetailsComponent implements OnInit {
     handleCancelAttribution() {
         this.showAttributionModal = false;
     }
+
+   
 }

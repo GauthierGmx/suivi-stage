@@ -22,8 +22,16 @@ class AnneeUniversitaireController extends Controller
         $allowedFields = ['idAnneeUniversitaire','libelle'];
         $fields = array_intersect($fields, $allowedFields);
 
-        // si aucun champ valide n'est fourni, on récupère tout par défaut
-        $anneeUniversitaire = AnneeUniversitaire::select(empty($fields) ? '*' : $fields)->get();
+        // Création de la requête
+        $query = AnneeUniversitaire::query();
+
+        // Filtre sur le libellé si le paramètre search est présent
+        if ($request->has('search')) {
+            $query->where('libelle', $request->query('search'));
+        }
+
+        // Exécution de la requête avec les champs sélectionnés
+        $anneeUniversitaire = $query->select(empty($fields) ? '*' : $fields)->get();
 
         return response()->json($anneeUniversitaire,200);
     }
