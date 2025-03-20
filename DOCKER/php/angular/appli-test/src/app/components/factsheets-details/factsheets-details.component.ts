@@ -35,6 +35,7 @@ export class SheetDetailsComponent implements OnInit {
     detailsSheet?:any;
     showAttributionModal: Boolean = false;
     teachers?: Staff[];
+    choicedTutor?:Staff;
 
 
     constructor(
@@ -59,9 +60,7 @@ export class SheetDetailsComponent implements OnInit {
         }
         else if (this.authService.isStaff(currentUser)) {
             this.currentUserRole = 'INTERNSHIP_MANAGER';
-            this.getAllTeacher();
         }
-        console.log("azepaWTFFFFFFFFFFFFFFFFFFFzeap",this.teachers);
 
         
         const selectedStudent = sessionStorage.getItem('selectedStudent');
@@ -162,17 +161,85 @@ export class SheetDetailsComponent implements OnInit {
         this.showAttributionModal = false;
     }
 
-    getAllTeacher() {
-        this.staffService.getStaff().pipe(
-            map((staffMember: Staff) =>  [staffMember])
-        ).subscribe({
-            next: (filteredTeachers) => {
-                this.teachers = filteredTeachers;
-                console.log("Enseignants chargés:", this.teachers);
+    generateTeacher() {
+        const teachers: Staff[] = [
+            {
+                idPersonnel: 1,
+                role: 'Enseignant',
+                nom: 'Dupont',
+                prenom: 'Jean',
+                adresse: '12 rue des Lilas',
+                ville: 'Paris',
+                codePostal: '75001',
+                telephone: '0123456789',
+                adresseMail: 'jean.dupont@universite.fr',
+                longitudeAdresse: '2.3522',
+                latitudeAdresse: '48.8566',
+                quotaEtudiant: 5
             },
-            error: (err) => {
-                console.error("Erreur lors de la récupération des enseignants:", err);
+            {
+                idPersonnel: 2,
+                role: 'Enseignant',
+                nom: 'Martin',
+                prenom: 'Marie',
+                adresse: '45 avenue des Roses',
+                ville: 'Lyon',
+                codePostal: '69001',
+                telephone: '0234567890',
+                adresseMail: 'marie.martin@universite.fr',
+                longitudeAdresse: '4.8357',
+                latitudeAdresse: '45.7640',
+                quotaEtudiant: 4
+            },
+            {
+                idPersonnel: 3,
+                role: 'Enseignant',
+                nom: 'Leroy',
+                prenom: 'Pierre',
+                adresse: '8 boulevard des Chênes',
+                ville: 'Bordeaux',
+                codePostal: '33000',
+                telephone: '0345678901',
+                adresseMail: 'pierre.leroy@universite.fr',
+                longitudeAdresse: '-0.5792',
+                latitudeAdresse: '44.8378',
+                quotaEtudiant: 6
+            },
+            {
+                idPersonnel: 4,
+                role: 'Enseignant',
+                nom: 'Petit',
+                prenom: 'Sophie',
+                adresse: '23 rue des Peupliers',
+                ville: 'Toulouse',
+                codePostal: '31000',
+                telephone: '0456789012',
+                adresseMail: 'sophie.petit@universite.fr',
+                longitudeAdresse: '1.4442',
+                latitudeAdresse: '43.6047',
+                quotaEtudiant: 3
             }
-        });
+        ];
+        
+        this.teachers = teachers;
+        console.log("Enseignants générés:", this.teachers);
+    }
+
+    handleConfirmAttribution(teacherId: number) {
+        const selectedTeacher = this.teachers?.find(teacher => teacher.idPersonnel === teacherId);
+        
+        if (selectedTeacher) {
+            this.choicedTutor = selectedTeacher; 
+            console.log("Tuteur attribué :", this.choicedTutor);
+        } else {
+            console.warn("Aucun enseignant trouvé avec cet ID :", teacherId);
+        }
+    
+        this.showAttributionModal = false;
+
+    }
+    
+    handleCancelAttribution() {
+        this.showAttributionModal = false;
     }
 }

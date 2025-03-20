@@ -1,11 +1,30 @@
 <div class="modal-overlay">
     <div class="modal">
-        <h3 class="modal-title">Sugestion d'attribution d'un tuteur</h3>
+        <h3 class="modal-title">Suggestion d'attribution d'un tuteur</h3>
         
         <div class="confirmation-content">
-            <p>
-                Liste des enseignants
-            </p>
+            <p>Cliquez sur le bouton pour générer la liste des enseignants</p>
+            
+            <button 
+                type="button"
+                (click)="onGenerateTeachers()"
+                class="generate-button"
+            >
+                Générer les enseignants
+            </button>
+            
+            <div *ngIf="teachers && teachers.length > 0">
+                
+                <div class="dropdown-container">
+                    <label for="teacherSelect">Sélectionnez un enseignant :</label>
+                    <select id="teacherSelect" [(ngModel)]="selectedTeacherId">
+                        <option [ngValue]="null">-- Sélectionner --</option>
+                        <option *ngFor="let teacher of teachers" [ngValue]="teacher.idPersonnel">
+                            {{ teacher.prenom }} {{ teacher.nom }}
+                        </option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <div class="modal-buttons">
@@ -20,6 +39,7 @@
                 type="button"
                 (click)="onConfirm()"
                 class="delete-button"
+                [disabled]="!selectedTeacherId"
             >
                 Attribuer le tuteur
             </button>

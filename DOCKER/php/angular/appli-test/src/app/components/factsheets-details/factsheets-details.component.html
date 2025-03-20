@@ -435,6 +435,18 @@
                 </div>
 
             </div>
+
+
+            <div class="form-grid">
+                <!-- Nom du contact -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <label>Tuteur</label>
+                        <p class="info-text">{{ choicedTutor?.nom}} {{choicedTutor?.prenom}}</p>
+                    </div>
+                </div>
+
+            </div>
                 
                 
             
@@ -455,8 +467,13 @@
     </div>
 
     @if (showAttributionModal) {
-        <app-tutor-attribution-modal
-          (cancel)="onCancelDelete()"
-        />
+        <!-- Modal pour l'attribution du tuteur -->
+        <app-tutor-attribution-modal 
+        *ngIf="showAttributionModal"
+        [teachers]="teachers || []"
+        (generateTeachers)="generateTeacher()"
+        (confirm)="handleConfirmAttribution($event)"
+        (cancel)="handleCancelAttribution()">
+        </app-tutor-attribution-modal>
       }
 </div>
