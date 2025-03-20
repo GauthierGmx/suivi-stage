@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { DescriptiveSheet, SheetStatus } from '../models/description-sheet.model';
+import { Factsheets, SheetStatus } from '../models/description-sheet.model';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DescriptionSheetService {
+export class FactsheetsService {
   // Données de test
-  private mockSheets: DescriptiveSheet[] = [
+  /* private mockSheets: DescriptiveSheet[] = [
     {
       idFicheDescriptive: 1,
       dateCreation: new Date('2024-03-15'),
@@ -25,12 +25,12 @@ export class DescriptionSheetService {
       nbJourParSemaine: 5,
       nbHeureParSemaine: 35,
       clauseConfidentialite: true,
-      statut: 'BROUILLON',
+      statut: 'En cours',
       personnelTechnique: true,
-      materielPrete: true,
+      materielPrete: 'true',
       idEntreprise: 1,
       idTuteur: 1,
-      idUPPA: '101',
+      idUPPA: '610123',
       numeroConvention: 'CONV2024-001'
     },
     {
@@ -49,9 +49,9 @@ export class DescriptionSheetService {
       nbJourParSemaine: 4,
       nbHeureParSemaine: 32,
       clauseConfidentialite: true,
-      statut: 'VALIDE',
+      statut: 'Validee',
       personnelTechnique: true,
-      materielPrete: true,
+      materielPrete: 'true',
       idEntreprise: 2,
       idTuteur: 2,
       idUPPA: '101',
@@ -73,80 +73,127 @@ export class DescriptionSheetService {
       nbJourParSemaine: 5,
       nbHeureParSemaine: 35,
       clauseConfidentialite: false,
-      statut: 'EN_REVISION',
+      statut: 'Refusée',
       personnelTechnique: true,
-      materielPrete: true,
+      materielPrete: 'true',
       idEntreprise: 3,
       idTuteur: 3,
       idUPPA: '101',
       numeroConvention: 'CONV2024-003'
     }
-  ];
+  ];*/
 
   constructor(private http: HttpClient) {}
 
-  getSheets(fields?: string[]): Observable<DescriptiveSheet[]> {
+  getSheets(fields?: string[]): Observable<Factsheets[]> {
     let params = new HttpParams();
     
     if (fields && fields.length > 0) {
       params = params.set('fields', fields.join(','));
     }
 
-    /*
-    return this.http.get<DescriptiveSheet[]>('http://localhost:8000/api/fiche-descriptive', {params}).pipe(
-      tap(response => this.log(response)),
-      catchError(error => this.handleError(error, null))
-    );
-    */
 
-    return of(this.mockSheets);
-  }
 
-  getSheetsByStudentId(studentId: string, fields?: string[]): Observable<DescriptiveSheet[]> {
-    let params = new HttpParams();
     
-    if (fields && fields.length > 0) {
-      params = params.set('fields', fields.join(','));
-    }
-
+    return this.http.get<Factsheets[]>('http://localhost:8000/api/fiche-descriptive', {params}).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    
     /*
-    return this.http.get<DescriptiveSheet[]>(`http://localhost:8000/api/etudiants/${studentId}/fiches-descriptives`, {params}).pipe(
+    return of(this.mockSheets).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
     */
-
-    return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId));
   }
 
-  getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus, fields?: string[]): Observable<DescriptiveSheet[]> {
-    let params = new HttpParams();
 
-    if (fields && fields.length > 0) {
-      params = params.set('fields', fields.join(','));
-    }
-
-    /*
-    return this.http.get<DescriptiveSheet[]>(`http://localhost:8000/api/`, {params}).pipe(
-      tap(response => this.log(response)),
-      catchError(error => this.handleError(error, null))
-    );
-    */
-
-    return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
-  }
-
-  addSheet(sheet: Omit<DescriptiveSheet, 'idFicheDescriptive'>): Observable<DescriptiveSheet> {
-    const newSheet: DescriptiveSheet = {
-      ...sheet,
-      idFicheDescriptive: Math.max(...this.mockSheets.map(s => s.idFicheDescriptive)) + 1,
-      dateCreation: new Date()
+  //Sélection de la fiche descriptive correspondant à celle dont l'id est passé en paramètre
+  getSheetById(idFicheDescriptive: number): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
     };
-    this.mockSheets.push(newSheet);
-    return of(newSheet);
+
+    return this.http.get<any>(
+      `http://localhost:8000/api/fiche-descriptive/${idFicheDescriptive}`,
+      httpOptions
+    ).pipe(
+      tap(response => this.log(response)),
+      catchError(error => {
+        console.error('Erreur lors de la récupération de la fiche:', error);
+        throw error;
+      })
+    );
   }
 
-  updateSheet(id: number, sheetData: Partial<DescriptiveSheet>): Observable<DescriptiveSheet> {
+  getSheetsByStudentId(studentId: string, fields?: string[]): Observable<Factsheets[]> {
+    let params = new HttpParams();
+    
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    
+    return this.http.get<Factsheets[]>(`http://localhost:8000/api/etudiants/${studentId}/fiches-descriptives`, {params}).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    
+    /*
+    return of(this.mockSheets.filter(sheet => sheet.idUPPA === studentId)).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    */
+    
+  }
+
+
+  
+  
+
+  getSheetsByStudentIdAndStatus(studentId: string, statut: SheetStatus, fields?: string[]): Observable<Factsheets[]> {
+    let params = new HttpParams();
+
+    if (fields && fields.length > 0) {
+      params = params.set('fields', fields.join(','));
+    }
+
+    
+    return this.http.get<Factsheets[]>(`http://localhost:8000/api/`, {params}).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+    
+
+    // return of(this.mockSheets.filter(s => s.idUPPA === studentId && s.statut === statut));
+  }
+
+  addSheet(data: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
+
+    return this.http.post<any>('http://localhost:8000/api/fiche-descriptive/create', data, httpOptions).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+  }
+
+  updateSheet(idFicheDescriptive: number, sheet: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
+
+    return this.http.put<any>(`http://localhost:8000/api/fiche-descriptive/update/${idFicheDescriptive}`, sheet, httpOptions).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
+  }
+
+
+  /* updateSheet(id: number, sheetData: Partial<DescriptiveSheet>): Observable<DescriptiveSheet> {
     const index = this.mockSheets.findIndex(s => s.idFicheDescriptive === id);
     if (index !== -1) {
       this.mockSheets[index] = {
@@ -156,16 +203,16 @@ export class DescriptionSheetService {
       return of(this.mockSheets[index]);
     }
     throw new Error('Fiche non trouvée');
+  }*/
+
+  deleteSheet(sheet: Factsheets): Observable<void> {
+    return this.http.delete(`http://localhost:8000/api/fiche-descriptive/delete/${sheet.idFicheDescriptive}`).pipe(
+      tap(response => this.log(response)),
+      catchError(error => this.handleError(error, null))
+    );
   }
 
-  deleteSheet(id: number): Observable<void> {
-    const index = this.mockSheets.findIndex(s => s.idFicheDescriptive === id);
-    if (index !== -1) {
-      this.mockSheets.splice(index, 1);
-      return of(void 0);
-    }
-    throw new Error('Fiche non trouvée');
-  }
+
 
   //Log la réponse de l'API
   private log(response: any) {
@@ -177,4 +224,4 @@ export class DescriptionSheetService {
     console.error(error);
     return of(errorValue);
   }  
-} 
+}

@@ -9,29 +9,40 @@
                     </a>
                 </div>
 
-                <!-- Navigation au centre (visible uniquement sur desktop) -->
-                <nav class="main-nav">
-                    <ul class="nav-list">
+            <!-- Navigation au centre (visible uniquement sur desktop) -->
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li>
+                        <a
+                            routerLink="/dashboard"
+                            routerLinkActive="active-link"
+                            class="nav-link"
+                        >
+                            Journal de bord
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            routerLink="/factsheets"
+                            routerLinkActive="active-link"
+                            class="nav-link"
+                        >
+                            Fiche descriptive
+                        </a>
+                    </li>
+                    @if(currentUserRole === 'INTERNSHIP_MANAGER') {
                         <li>
                             <a
-                                routerLink="/dashboard"
+                                (click)="extractAffectations()"
                                 routerLinkActive="active-link"
                                 class="nav-link"
                             >
-                                Journal de bord
+                                Extraction affectations
                             </a>
                         </li>
-                        <li>
-                            <a
-                                routerLink="/factsheets"
-                                routerLinkActive="active-link"
-                                class="nav-link"
-                            >
-                                Fiche descriptive
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+                    }
+                </ul>
+            </nav>
 
                 <!-- Avatar à droite -->
                 <div class="profile-section">
@@ -82,7 +93,7 @@
             </div>
         </div>
     </header>
-    @if (isDisconnecting) {
+    @if (isDisconnecting || isExtracting) {
         <div class="loading-overlay">
             <app-loading/>
         </div>

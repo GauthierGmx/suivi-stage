@@ -20,6 +20,9 @@ class AnneeUniversitaireSeeder extends Seeder
             ],
             [
                 'libelle' => '2024-2025'
+            ],
+            [
+                'libelle' => '2025-2026'
             ]
         ]);
     }

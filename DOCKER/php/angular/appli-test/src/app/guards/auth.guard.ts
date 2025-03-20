@@ -7,10 +7,10 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, st
   const authService = inject(AuthService);
   const router = inject(Router);
   const expectedRole = route.data['role'];
+  const isDashboardRoute = state.url.includes('/dashboard');
+  const isFactsheetRoute = state.url.includes('/factsheets');
 
   const user = await firstValueFrom(authService.getAuthenticatedUser());
-
-  console.log(user);
 
   if (Array.isArray(user) && user.length === 0) {
     window.location.href = 'http://localhost:8000/api/cas-auth';
@@ -26,10 +26,15 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, st
   if (expectedRole && currentUserRole !== expectedRole) {
     if (currentUserRole === 'INTERNSHIP_MANAGER') {
       const selectedStudent = sessionStorage.getItem('selectedStudent');
-      if (selectedStudent) {
+      if (selectedStudent && isDashboardRoute) {
         const selectedStudentId = JSON.parse(selectedStudent).idUPPA;
         const idSearch = route.paramMap.get('idSearch');
         return router.createUrlTree([`/dashboard/student-dashboard/${selectedStudentId}/search-details/${idSearch}`]);
+      }
+      else if (selectedStudent && isFactsheetRoute) {
+        const selectedStudentId = JSON.parse(selectedStudent).idUPPA;
+        const idSheet = route.paramMap.get('idSheet');
+        return router.createUrlTree([`/factsheets/student-factsheets/${selectedStudentId}/sheet-details/${idSheet}`]);
       }
     }
     return router.createUrlTree(['/dashboard']);

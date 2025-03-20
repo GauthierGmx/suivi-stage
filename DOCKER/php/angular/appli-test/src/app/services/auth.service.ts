@@ -71,5 +71,5 @@ export class AuthService {
   private handleError(error: Error, errorValue: any) {
     console.error(error);
     return of(errorValue);
-  }  
+  }
 }

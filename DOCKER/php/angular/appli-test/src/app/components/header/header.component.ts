@@ -6,6 +6,8 @@ import { Staff } from '../../models/staff.model'
 import { Student } from '../../models/student.model'
 import { AuthService } from '../../services/auth.service'
 import { InitService } from '../../services/init.service'
+import { StudentStaffAcademicYearService } from '../../services/student-staff-academicYear.service'
+import { firstValueFrom } from 'rxjs'
 
 @Component({
     selector: 'app-header',
@@ -22,10 +24,12 @@ export class HeaderComponent implements OnInit {
     showProfileMenu = false;
     isMobileMenuOpen = false;
     isDisconnecting = false;
+    isExtracting = false;
 
     constructor(
         private readonly authService: AuthService,
         private readonly initService: InitService,
+        private readonly studentStaffAcademicYearService: StudentStaffAcademicYearService,
         private readonly elementRef: ElementRef
     ) {}
 
@@ -93,5 +97,36 @@ export class HeaderComponent implements OnInit {
         this.showProfileMenu = false;
         this.isMobileMenuOpen = false;
         this.authService.logout();
+    }
+
+    async extractAffectations() {
+        this.isExtracting = true;
+        try {
+            const response = await firstValueFrom(this.studentStaffAcademicYearService.extractStudentTeacherAssignments());
+            
+            // Créer un blob à partir du contenu base64
+            const byteCharacters = atob(response.fileContent);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: response.mimeType });
+
+            // Créer un lien de téléchargement
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = response.fileName;
+            link.click();
+
+            // Nettoyer
+            window.URL.revokeObjectURL(link.href);
+        }
+        catch (error) {
+            console.error('Erreur lors du téléchargement:', error);
+        }
+        finally {
+            this.isExtracting = false;
+        }
     }
 }

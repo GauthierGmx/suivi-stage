@@ -1,4 +1,4 @@
-export class DescriptiveSheet {
+export class Factsheets {
   idFicheDescriptive: number;
   dateCreation: Date | null;
   dateDerniereModification: Date | null;
@@ -13,17 +13,26 @@ export class DescriptiveSheet {
   finStage: Date | null;
   nbJourParSemaine: number | null;
   nbHeureParSemaine: number | null;
-  clauseConfidentialite: Boolean | null;
+  clauseConfidentialite: boolean | null;
+  adresseMailStage: string | null;
+  telephoneStage: string | null;
+  adresseStage: string | null;
+  codePostalStage: string | null;
+  villeStage: string | null;
+  paysStage: string | null;
+  longitudeStage: string | null;
+  latitudeStage: string | null;
   statut: SheetStatus | null;
-  personnelTechnique: Boolean | null;
-  materielPrete: Boolean | null;
+  personnelTechnique: boolean | null;
+  materielPrete: string | null;
   idEntreprise: number | null;
   idTuteur: number | null;
   idUPPA: string | null;
   numeroConvention?: string | null;
-  interruptionStage?: Boolean | null;
+  interruptionStage?: boolean | null;
   dateDebutInterruption?: Date | null;
   dateFinInterruption?: Date | null;
+  serviceEntreprise?: string | null;
 
   constructor(
     idFicheDescriptive: number,
@@ -40,17 +49,26 @@ export class DescriptiveSheet {
     finStage: Date,
     nbJourParSemaine: number,
     nbHeureParSemaine: number,
-    clauseConfidentialite: Boolean,
+    clauseConfidentialite: boolean,
+    adresseMailStage: string,
+    telephoneStage: string,
+    adresseStage: string,
+    codePostalStage: string,
+    villeStage: string,
+    paysStage: string,
+    longitudeStage: string,
+    latitudeStage: string,
     statut: SheetStatus,
-    personnelTechnique: Boolean,
-    materielPrete: Boolean,
+    personnelTechnique: boolean,
+    materielPrete: string,
     idEntreprise: number,
     idTuteur: number,
     idUPPA: string,
     numeroConvention?: string,
-    interruptionStage?: Boolean,
+    interruptionStage?: boolean,
     dateDebutInterruption?: Date,
-    dateFinInterruption?: Date
+    dateFinInterruption?: Date,
+    serviceEntreprise?: string
   ) {
     this.idFicheDescriptive = idFicheDescriptive;
     this.dateCreation = dateCreation;
@@ -67,6 +85,14 @@ export class DescriptiveSheet {
     this.nbJourParSemaine = nbJourParSemaine;
     this.nbHeureParSemaine = nbHeureParSemaine;
     this.clauseConfidentialite = clauseConfidentialite;
+    this.adresseMailStage = adresseMailStage;
+    this.telephoneStage = telephoneStage;
+    this.adresseStage = adresseStage;
+    this.codePostalStage = codePostalStage;
+    this.villeStage = villeStage;
+    this.paysStage = paysStage;
+    this.longitudeStage = longitudeStage;
+    this.latitudeStage = latitudeStage;
     this.statut = statut;
     this.personnelTechnique = personnelTechnique;
     this.materielPrete = materielPrete;
@@ -77,7 +103,8 @@ export class DescriptiveSheet {
     this.interruptionStage = interruptionStage;
     this.dateDebutInterruption = dateDebutInterruption;
     this.dateFinInterruption = dateFinInterruption;
+    this.serviceEntreprise = serviceEntreprise;
   }
 }
 
-export type SheetStatus = 'BROUILLON' | 'EN_REVISION' | 'VALIDE' | 'REFUSE'; 
+export type SheetStatus = 'En cours' | 'Validee' | 'Refusée' ; 

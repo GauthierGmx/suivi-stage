@@ -12,6 +12,12 @@ use App\Http\Controllers\AuthController;
 
 // Import du middleware du CAS
 use App\Http\Middleware\CasAuthMiddleware;
+use App\Http\Controllers\ParcoursController;
+use App\Http\Controllers\TuteurEntrepriseController;
+use App\Http\Controllers\AnneeUniversitaireController;
+use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\AffectationEnseignantController;
+use App\Http\Middleware\DispatchDataDescriptiveSheet;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,13 +68,45 @@ Route::post('/entreprises/create', [EntrepriseController::class, 'store'])->name
 Route::get('/entreprises/{id}', [EntrepriseController::class, 'show'])->name('entreprises.show');
 
 // Route pour le Controller FicheDescriptive
-Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.store');
-Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update');
-Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show');
+Route::post('/fiche-descriptive/create', [FicheDescriptiveController::class, 'store'])->name('fiche-descriptive.store')->middleware('dispatch.data.descriptive.sheet');
+Route::put('/fiche-descriptive/update/{id}', [FicheDescriptiveController::class, 'update'])->name('fiche-descriptive.update')->middleware('dispatch.data.descriptive.sheet');
+Route::get('/fiche-descriptive/{id}', [FicheDescriptiveController::class, 'show'])->name('fiche-descriptive.show')->middleware('dispatch.data.descriptive.sheet');
 Route::get('/fiche-descriptive', [FicheDescriptiveController::class, 'index'])->name('fiche-descriptive.index');
+Route::delete('/fiche-descriptive/delete/{id}', [FicheDescriptiveController::class, 'destroy'])->name('fiche-descriptive.destroy');
 
 // Route pour le Controller Etudiant
 Route::get('/etudiants/{id}/recherches-stages', [EtudiantController::class, 'indexRechercheStage'])->name('etudiants.indexRechercheStage');
 Route::get('/etudiants/{id}/fiches-descriptives', [EtudiantController::class, 'indexFicheDescriptive'])->name('etudiants.indexFicheDescriptive');
 Route::get('/etudiants', [EtudiantController::class, 'index'])->name('etudiants.index');
 Route::get('/etudiants/{id}', [EtudiantController::class, 'show'])->name('etudiants.show');
+
+// Route pour le Controller Parcours
+Route::get('/parcours', [ParcoursController::class, 'index'])->name('parcours.index');
+
+// Route pour le Controller TuteurEntreprise
+Route::get('/tuteur-entreprise/{id}', [TuteurEntrepriseController::class, 'show'])->name('tuteur-entreprise.show');
+Route::post('/tuteur-entreprise/create', [TuteurEntrepriseController::class, 'store'])->name('tuteur-entreprise.store');
+Route::put('/tuteur-entreprise/update/{id}', [TuteurEntrepriseController::class, 'update'])->name('tuteur-entreprise.update');
+Route::get('/tuteur-entreprise', [TuteurEntrepriseController::class, 'index'])->name('tuteur-entreprise.index');
+
+// Route pour le Controller AnneeUniversitaire
+Route::get('/annee-universitaire', [AnneeUniversitaireController::class, 'index'])->name('annee-universitaire.index');
+Route::post('/annee-universitaire/create', [AnneeUniversitaireController::class, 'store'])->name('annee-universitaire.store');
+Route::get('/annee-universitaire/{id}', [AnneeUniversitaireController::class, 'show'])->name('annee-universitaire.show');
+Route::put('/annee-universitaire/update/{id}', [AnneeUniversitaireController::class, 'update'])->name('annee-universitaire.update');
+Route::delete('/annee-universitaire/delete/{id}', [AnneeUniversitaireController::class, 'destroy'])->name('annee-universitaire.destroy');
+
+// Route pour le Controller Personnel
+Route::get('/personnel', [PersonnelController::class, 'index'])->name('personnel.index');
+Route::post('/personnel/create', [PersonnelController::class, 'store'])->name('personnel.store');
+Route::get('/personnel/{id}', [PersonnelController::class, 'show'])->name('personnel.show');
+Route::put('/personnel/update/{id}', [PersonnelController::class, 'update'])->name('personnel.update');
+Route::delete('/personnel/delete/{id}', [PersonnelController::class, 'destroy'])->name('personnel.destroy');
+
+// Route pour le Controller AffectationEtudiant
+Route::get('/affectation', [AffectationEnseignantController::class, 'index'])->name('affectation.index');
+Route::get('/affectation/extraction-affectations-etudiants-enseignants', [AffectationEnseignantController::class, 'extractStudentTeacherAssignments'])->name('affectation.extractStudentTeacherAssignments');
+Route::post('/affectation/create', [AffectationEnseignantController::class, 'store'])->name('affectation.store');
+Route::get('/affectation/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'show'])->name('affectation.show');
+Route::put('/affectation/update/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'update'])->name('affectation.update');
+Route::delete('/affectation/delete/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'destroy'])->name('affectation.destroy');

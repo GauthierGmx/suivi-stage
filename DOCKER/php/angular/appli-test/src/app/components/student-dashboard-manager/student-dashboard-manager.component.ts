@@ -22,7 +22,7 @@ export class StudentDashboardManagerComponent implements OnInit {
   currentUser?: Staff;
   currentUserRole: string = 'INTERNSHIP_MANAGER';
   selectedStudent!: Student;
-  allDataLoaded: Boolean = false;
+  allDataLoaded: boolean = false;
   loadedChildrenCount: number = 0;
   totalChildren: number = 2
 
@@ -43,12 +43,15 @@ export class StudentDashboardManagerComponent implements OnInit {
 
     const studentId = this.route.snapshot.paramMap.get('id');
     if (studentId) {
-      const student = await firstValueFrom(this.studentService.getStudentById(studentId));
+      this.loadStudentData(studentId);
+    }
+  }
 
-      if (student) {
-        this.selectedStudent = student;
-        sessionStorage.setItem('selectedStudent', JSON.stringify(this.selectedStudent)) 
-      }
+  private async loadStudentData(studentId: string) {
+    const student = await firstValueFrom(this.studentService.getStudentById(studentId));
+    if (student) {
+      this.selectedStudent = student;
+      sessionStorage.setItem('selectedStudent', JSON.stringify(this.selectedStudent)) 
     }
   }
 

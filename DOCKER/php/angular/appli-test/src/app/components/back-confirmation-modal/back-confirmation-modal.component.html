@@ -1,0 +1,23 @@
+@if (show) { @if (isDeleting) {
+<div class="loading-overlay">
+    <app-loading />
+</div>
+}
+<div class="modal-overlay">
+    <div class="modal">
+        <h3 class="modal-title">Confirmation de retour arrière</h3>
+
+        <div class="confirmation-content">
+            <p class="confirmation-message">Êtes-vous sûr de vouloir revenir en arrière ?</p>
+            <p class="warning-message">
+                <b>Vous perdrez votre progression !</b>
+            </p>
+        </div>
+
+        <div class="modal-buttons">
+            <button type="button" (click)="onCancel()" class="cancel-button">Annuler</button>
+            <button type="button" (click)="onConfirm()" class="back-button" [disabled]="isDeleting">Valider</button>
+        </div>
+    </div>
+</div>
+}

@@ -23,17 +23,17 @@
   <div class="stats-grid">
       <div class="stats-card primary">
         <h3>Nombre de fiche descriptive refusée</h3>
-        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'REFUSE') }}</p>
+        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'Refusée') }}</p>
       </div>
       
       <div class="stats-card secondary">
         <h3>Nombre de fiche descriptive en attente du responsable des stages</h3>
-        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'EN_REVISION') }}</p>
+        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'En cours') }}</p>
       </div>
       
       <div class="stats-card tertiary">
         <h3>Nombre de fiche descriptive validée</h3>
-        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'VALIDE') }}</p>
+        <p>{{ countSheetByStudentIdAndStatut(currentUserId, 'Validee') }}</p>
       </div>
     </div>
 }
@@ -62,7 +62,7 @@
 @if (currentPageUrl.includes('/student-dashboard') && currentUserRole === 'INTERNSHIP_MANAGER') {
     <div class="stats-grid">
         <div class="stats-card primary">
-          <h3>Nombre des recherches</h3>
+          <h3>Nombre de recherches</h3>
           <p>{{ countSearchesByStudentId(selectedStudent?.idUPPA) }}</p>
         </div>
         <div class="stats-card secondary">
@@ -87,12 +87,30 @@
       
       <div class="stats-card secondary">
         <h3>Nombre de fiche descriptive en attente de validation</h3>
-        <p>{{ contSheetByStatut('EN_REVISION') }}</p>
+        <p>{{ contSheetByStatut('En cours') }}</p>
       </div>
       
       <div class="stats-card tertiary">
         <h3>Nombre d'étudiant avec au moins une fiche validée</h3>
-        <p>{{ countStudentBySheetStatut('VALIDE') }}</p>
+        <p>{{ countStudentBySheetStatut('Validee') }}</p>
       </div>
     </div>
 }
+
+<!-- Vue responsable des stages - Journal de recherche - Affichage des cartes de statistiques pour le journal d'un étudiant -->
+@if (currentPageUrl.includes('/student-factsheets') && currentUserRole === 'INTERNSHIP_MANAGER') {
+    <div class="stats-grid">
+        <div class="stats-card primary">
+          <h3>Nombre de recherches</h3>
+          <p>{{ countSearchesByStudentId(selectedStudent?.idUPPA) }}</p>
+        </div>
+        <div class="stats-card secondary">
+          <h3>Nombre de fiches descriptive</h3>
+          <p>{{ countSheetByStudentId(selectedStudent?.idUPPA) }}</p>
+        </div>
+        <div class="stats-card tertiary">
+          <h3>Nombre de fiches descriptive validées</h3>
+          <p>{{ countSheetByStudentIdByStatus(selectedStudent?.idUPPA, 'Validee') }}</p>
+        </div>
+      </div>
+  }

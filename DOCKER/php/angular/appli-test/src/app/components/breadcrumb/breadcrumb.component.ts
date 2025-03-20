@@ -79,7 +79,10 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
         'factsheets': 'fiche descriptive',
         'add-search-form': 'ajout recherche',
         'update-search': 'modification recherche',
-        'search-details': 'consultation recherche'
+        'search-details': 'consultation recherche',
+        'sheet-details': 'consultation fiche descriptive',
+        'update-factsheet': 'modification fiche descriptive',
+        'add-factsheet': 'ajout fiche descriptive',
       },
       'INTERNSHIP_MANAGER': {
         'dashboard': 'suivi des étudiants',
@@ -87,7 +90,11 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
         'search-details': 'détails recherche',
         'student-dashboard': this.selectedStudent?.prenom && this.selectedStudent?.nom
           ? `Journal de ${this.selectedStudent.prenom} ${this.selectedStudent.nom}`
-          : 'Journal de l\'étudiant'
+          : 'Journal de l\'étudiant',
+        'student-factsheets': this.selectedStudent?.prenom && this.selectedStudent?.nom
+          ? `Fiches descriptives de ${this.selectedStudent.prenom} ${this.selectedStudent.nom}`
+          : 'Fiches descriptives de l\'étudiant',
+        'sheet-details': 'détails fiche descriptive',
       }
     };
     
@@ -99,7 +106,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
       roleTranslations[word.toLowerCase()] || word
     );
     
-    if (path.toLowerCase() === 'student-dashboard' && this.currentUserRole === 'INTERNSHIP_MANAGER') {
+    if ((path.toLowerCase() === 'student-dashboard' || path.toLowerCase() === 'student-factsheets') && this.currentUserRole === 'INTERNSHIP_MANAGER') {
       return roleTranslations['student-dashboard'];
     }
 

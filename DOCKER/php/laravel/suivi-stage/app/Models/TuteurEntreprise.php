@@ -15,7 +15,8 @@ class TuteurEntreprise extends Model
         'prenom',
         'telephone',
         'adresseMail',
-        'fonction'
+        'fonction',
+        'idEntreprise'
     ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idTuteur';

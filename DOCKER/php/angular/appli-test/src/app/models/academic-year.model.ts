@@ -1,12 +1,10 @@
 export class AcademicYear {
-    idAnneeUniversitaire: number;
+    idAnneeUniversitaire: number = 0;
     libelle: string | null;
   
     constructor(
-        idAnneeUniversitaire: number,
         libelle: string
     ) {
-        this.idAnneeUniversitaire = idAnneeUniversitaire;
         this.libelle = libelle;
     }
 }
