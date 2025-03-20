@@ -163,9 +163,8 @@ export class SheetDetailsComponent implements OnInit {
     }
 
     getAllTeacher() {
-        console.log("les staff",this.staffService.getStaff());
         this.staffService.getStaff().pipe(
-            map((staffMember: Staff) => staffMember.role === 'Enseignant' ? [staffMember] : [])
+            map((staffMember: Staff) =>  [staffMember])
         ).subscribe({
             next: (filteredTeachers) => {
                 this.teachers = filteredTeachers;
