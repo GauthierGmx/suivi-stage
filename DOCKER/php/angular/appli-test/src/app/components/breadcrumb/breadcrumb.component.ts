@@ -106,7 +106,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
       roleTranslations[word.toLowerCase()] || word
     );
     
-    if (path.toLowerCase() === 'student-dashboard' && this.currentUserRole === 'INTERNSHIP_MANAGER') {
+    if ((path.toLowerCase() === 'student-dashboard' || path.toLowerCase() === 'student-factsheets') && this.currentUserRole === 'INTERNSHIP_MANAGER') {
       return roleTranslations['student-dashboard'];
     }
 
