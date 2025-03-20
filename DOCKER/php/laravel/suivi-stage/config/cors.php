@@ -21,7 +21,6 @@ return [
 
     'allowed_origins' => [
         'http://localhost:4200',    // Frontend Angular
-        'https://sso.univ-pau.fr'   // CAS Server
     ],
 
     'allowed_origins_patterns' => [],

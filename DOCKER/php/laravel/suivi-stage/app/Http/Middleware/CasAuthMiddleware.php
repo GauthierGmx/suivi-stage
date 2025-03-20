@@ -99,13 +99,6 @@ class CasAuthMiddleware
     public function handleLogout()
     {
         try {
-            // Set headers for CORS
-            $headers = [
-                'Access-Control-Allow-Origin' => env('ANGULAR_URL'),
-                'Access-Control-Allow-Credentials' => 'true',
-                'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS'
-            ];
-
             \phpCAS::client(
                 CAS_VERSION_2_0,
                 config('auth.cas.server.hostname'),
@@ -119,45 +112,65 @@ class CasAuthMiddleware
             }
 
             $domain = parse_url(env('ANGULAR_URL'), PHP_URL_HOST);
-            $secureCookie = app()->environment('production');
+            
+            // Créer la réponse JSON
+            $response = response()->json(['message' => 'Envoie de la demande de suppression des cookies']);
+            
+            // Supprimer les cookies avec le bon domaine
+            $response->withCookie(Cookie::forget('user_id', '/', $domain));
+            $response->withCookie(Cookie::forget('user_type', '/', $domain));
+            
+            //dd($response);
 
-            // Create cookies with proper expiration
-            $userIdCookie = cookie()->make(
-                'user_id',
-                '',
-                -1,
-                '/',
-                $domain,
-                $secureCookie,
-                true,
-                false,
-                'Lax'
-            );
+            // Envoyer la réponse
+            $response->send();
 
-            $userTypeCookie = cookie()->make(
-                'user_type',
-                '',
-                -1,
-                '/',
-                $domain,
-                $secureCookie,
-                true,
-                false,
-                'Lax'
-            );
-
-            // Create response with cookies and headers
-            return response()
-                ->json(['message' => 'Déconnexion en cours'])
-                ->withHeaders($headers)
-                ->withCookie(cookie()->forget($userIdCookie))
-                ->withCookie(cookie()->forget($userTypeCookie));
-
+            \Log::info('Cookies supprimés');
+            
+            // Déconnexion du CAS
+            \phpCAS::logout();
+            
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la déconnexion : ' . $e->getMessage());
+            return response()->json(['error' => 'Erreur lors de la déconnexion'], 500);
+        }
+    }
+
+    public function handleCookieLogout()
+    {
+        try {
+            $domain = parse_url(env('ANGULAR_URL'), PHP_URL_HOST);
+            
             return response()
-                ->json(['error' => 'Erreur lors de la déconnexion'], 500)
-                ->withHeaders($headers);
+                ->json(['success' => true])
+                ->withCookie(Cookie::forget('user_id', '/', $domain))
+                ->withCookie(Cookie::forget('user_type', '/', $domain));
+            
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la suppression des cookies : ' . $e->getMessage());
+            return response()->json(['error' => 'Erreur lors de la déconnexion'], 500);
+        }
+    }
+
+    public function handleCasLogout()
+    {
+        try {
+            \phpCAS::client(
+                CAS_VERSION_2_0,
+                config('auth.cas.server.hostname'),
+                config('auth.cas.server.port'),
+                config('auth.cas.server.uri'),
+                config('auth.cas.server.basename'),
+            );
+
+            if (app()->environment() !== 'production') {
+                \phpCAS::setNoCasServerValidation();
+            }
+
+            \phpCAS::logout();
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la déconnexion CAS : ' . $e->getMessage());
+            return redirect()->away(env('ANGULAR_URL'));
         }
     }
 }

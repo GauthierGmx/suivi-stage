@@ -14,8 +14,3 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/logout', function (Request $request) {
-    $middleware = new CasAuthMiddleware();
-    return $middleware->handleLogout();
-});

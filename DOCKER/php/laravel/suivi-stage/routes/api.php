@@ -36,6 +36,16 @@ Route::get('/cas-auth', function (Request $request) {
     });
 });
 
+Route::get('/logout', function (Request $request) {
+    $middleware = new CasAuthMiddleware();
+    return $middleware->handleCookieLogout();
+});
+
+Route::get('/cas-logout', function (Request $request) {
+    $middleware = new CasAuthMiddleware();
+    return $middleware->handleCasLogout();
+});
+
 // Route pour le Controller Auth
 Route::get('/get-authenticated-user', [AuthController::class, 'getUser']);
 

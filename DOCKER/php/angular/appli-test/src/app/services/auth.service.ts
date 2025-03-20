@@ -34,8 +34,16 @@ export class AuthService {
     sessionStorage.removeItem('currentUser');
     this.currentUser = undefined;
     
-    // Make GET request with credentials
-    window.location.href = 'http://localhost:8000/logout';
+    // First, clear cookies
+    this.http.get('http://localhost:8000/api/logout', { withCredentials: true })
+      .subscribe({
+        next: () => {
+          window.location.href = 'http://localhost:8000/api/cas-logout';
+        },
+        error: (error) => {
+          console.error('Erreur lors de la déconnexion:', error);
+        }
+      });
   }
 
   isAuthenticated(): boolean {
