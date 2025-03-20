@@ -289,11 +289,26 @@ class AffectationEnseignantController extends Controller
             // Exemple de nom de fichier : affectations_2024-2025_1903_214353.xlsx
             $fileName = $date->format('dm_His') . '_affectations_' . $anneeUniversitaireCourante . '.xlsx';
             
-            // Force le téléchargement avec les bons headers
-            return Excel::download(new AffectationsExport($affectations), $fileName, \Maatwebsite\Excel\Excel::XLSX, [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
-            ]);
+            // Créer un chemin temporaire pour le fichier
+            $tempPath = storage_path('app/temp/' . $fileName);
+            
+            // Sauvegarder le fichier Excel temporairement
+            Excel::store(new AffectationsExport($affectations), 'temp/' . $fileName);
+            
+            // Lire le contenu du fichier et le convertir en base64
+            $fileContent = file_get_contents($tempPath);
+            $base64Excel = base64_encode($fileContent);
+            
+            // Supprimer le fichier temporaire
+            unlink($tempPath);
+
+            // Renvoyer la réponse JSON avec le fichier encodé
+            return response()->json([
+                'message' => 'Le fichier Excel a été généré avec succès',
+                'fileName' => $fileName,
+                'fileContent' => $base64Excel,
+                'mimeType' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ], 200);
         }
         catch (\Exception $e)
         {

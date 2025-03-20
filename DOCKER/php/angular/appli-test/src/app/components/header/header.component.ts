@@ -1,15 +1,17 @@
 import { Component, OnInit, HostListener, ElementRef } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
+import { LoadingComponent } from '../loading/loading.component'
 import { Staff } from '../../models/staff.model'
 import { Student } from '../../models/student.model'
 import { AuthService } from '../../services/auth.service'
 import { StudentStaffAcademicYearService } from '../../services/student-staff-academicYear.service'
+import { firstValueFrom } from 'rxjs'
 
 @Component({
     selector: 'app-header',
     standalone: true,
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, LoadingComponent],
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css']
 })
@@ -20,6 +22,7 @@ export class HeaderComponent implements OnInit {
     currentUserRole?: string;
     showProfileMenu = false;
     isMobileMenuOpen = false;
+    isExtracting = false;
 
     constructor(
         private readonly authService: AuthService,
@@ -80,7 +83,34 @@ export class HeaderComponent implements OnInit {
         this.authService.logout();
     }
 
-    extractAffectations() {
-        window.location.href = this.studentStaffAcademicYearService.extractStudentTeacherAssignments();
+    async extractAffectations() {
+        this.isExtracting = true;
+        try {
+            const response = await firstValueFrom(this.studentStaffAcademicYearService.extractStudentTeacherAssignments());
+            
+            // Créer un blob à partir du contenu base64
+            const byteCharacters = atob(response.fileContent);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: response.mimeType });
+
+            // Créer un lien de téléchargement
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = response.fileName;
+            link.click();
+
+            // Nettoyer
+            window.URL.revokeObjectURL(link.href);
+        }
+        catch (error) {
+            console.error('Erreur lors du téléchargement:', error);
+        }
+        finally {
+            this.isExtracting = false;
+        }
     }
 }
