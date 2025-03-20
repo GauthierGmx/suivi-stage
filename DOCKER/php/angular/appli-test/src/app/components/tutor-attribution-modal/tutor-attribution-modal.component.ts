@@ -9,7 +9,7 @@ import { Staff } from '../../models/staff.model';
     standalone: true,
     imports: [CommonModule, FormsModule],
     templateUrl: './tutor-attribution-modal.component.html',
-    styleUrls: ['./tutor-attribution-modal.component.css'] // Correction ici
+    styleUrls: ['./tutor-attribution-modal.component.css'] 
 })
 export class TutorAttributionModalComponent {
     @Input() teachers: Staff[] = [];
@@ -27,16 +27,16 @@ export class TutorAttributionModalComponent {
     }
 
     onGenerateTeachers() {
-        this.generateTeachers.emit(); // Ajout du .emit()
+        this.generateTeachers.emit();
     }
 
     onConfirm() {
         if (this.selectedTeacherId) {
-            this.confirm.emit(this.selectedTeacherId); // Ajout du .emit()
+            this.confirm.emit(this.selectedTeacherId);
         }
     }
 
     onCancel() {
-        this.cancel.emit(); // Ajout du .emit()
+        this.cancel.emit(); 
     }
 }
