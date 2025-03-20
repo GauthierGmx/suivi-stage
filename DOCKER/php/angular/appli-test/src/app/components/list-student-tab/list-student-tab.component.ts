@@ -84,7 +84,7 @@ export class ListStudentTabComponent implements OnInit{
                 tds: this.tdService.getTDs(),
                 trainingYears: this.trainingYearService.getTrainingYears(),
                 academicYear: this.academicYearService.getCurrentAcademicYear(),
-                datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTDsAcademicYears(),
+                datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTrainingYearsAcademicYears(),
                 datasStudentTdAcademicYear: this.studentTdAcademicYearService.getStudentsTDsAcademicYears()
             }).pipe(
                 tap(({ students, factsheets, tds, trainingYears, academicYear, datasStudentTrainingYearAcademicYear, datasStudentTdAcademicYear }) => {
@@ -107,7 +107,7 @@ export class ListStudentTabComponent implements OnInit{
                 tds: this.tdService.getTDs(),
                 trainingYears: this.trainingYearService.getTrainingYears(),
                 academicYear: this.academicYearService.getCurrentAcademicYear(),
-                datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTDsAcademicYears(),
+                datasStudentTrainingYearAcademicYear: this.studentTrainingYearAcademicYearService.getStudentsTrainingYearsAcademicYears(),
                 datasStudentTdAcademicYear: this.studentTdAcademicYearService.getStudentsTDsAcademicYears()
             }).pipe(
                 tap(({ students, searches, tds, trainingYears, academicYear, datasStudentTrainingYearAcademicYear, datasStudentTdAcademicYear }) => {
@@ -140,11 +140,10 @@ export class ListStudentTabComponent implements OnInit{
                 const studentTD = this.tds!.find(td =>
                     this.datasStudentTdAcademicYear!.some(data =>
                         data.idUPPA === student.idUPPA &&
-                        data.idAcademicYear === this.academicYear?.idAnneeUniversitaire &&
+                        data.idAcademicYear === this.academicYear!.idAnneeUniversitaire &&
                         data.idTD === td.idTD
                     )
                 );
-
                 const studentTrainingYear = this.trainingYears!.find(trainingYear =>
                     this.datasStudentTrainingYearAcademicYear!.some(data =>
                         data.idUPPA === student.idUPPA &&

@@ -12,6 +12,7 @@ ul {
 a {
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
 }
 
 button {
@@ -67,7 +68,7 @@ header {
 }
 
 .nav-link {
-    font-size: 20px;
+    font-size: 19px;
     transition: color 0.2s;
     font-weight: bold;
 }
@@ -157,6 +158,19 @@ header {
 
 .logout-button:hover {
     background-color: #F3F4F6;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1100;
 }
 
 /* Media Queries */
