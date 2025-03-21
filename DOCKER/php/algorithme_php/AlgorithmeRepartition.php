@@ -22,14 +22,14 @@ class AlgorithmeRepartition
         $this->professeursMatrix = [];
     }
 
-    public function executeForStudent(string $idUPPA): ?array 
+    public function executeForStudent(string $idUPPA, string $idFicheDescriptive): ?array 
     {
         try {
-            echo "Traitement pour l'étudiant avec l'ID : $idUPPA\n";
+            echo "Traitement pour l'étudiant avec l'ID : $idUPPA (Fiche descriptive: $idFicheDescriptive)\n";
             
             // Récupération des données
             $this->professeursMatrix = $this->getProfesseursMatrix();
-            $etudiantData = $this->getEtudiantData($idUPPA);
+            $etudiantData = $this->getEtudiantData($idUPPA, $idFicheDescriptive);
             
             if (empty($etudiantData)) {
                 echo "Erreur : Données insuffisantes pour poursuivre le traitement.\n";
@@ -41,7 +41,7 @@ class AlgorithmeRepartition
             print_r($etudiantData);
 
             // Vérification des données requises
-            $requiredFields = ['latitudeAdresse', 'longitudeAdresse', 'codePostal', 'idEntreprise'];
+            $requiredFields = ['latitudeStage', 'longitudeStage', 'codePostalStage', 'idEntreprise'];
             foreach ($requiredFields as $field) {
                 if (!isset($etudiantData[0][$field])) {
                     echo "Erreur : Donnée manquante : $field\n";
@@ -51,10 +51,10 @@ class AlgorithmeRepartition
 
             // Extraction des données de l'étudiant
             $coordonneesEtudiant = [
-                'lat' => $etudiantData[0]['latitudeAdresse'],
-                'lng' => $etudiantData[0]['longitudeAdresse']
+                'lat' => $etudiantData[0]['latitudeStage'],
+                'lng' => $etudiantData[0]['longitudeStage']
             ];
-            $codePostal = $etudiantData[0]['codePostal'];
+            $codePostal = $etudiantData[0]['codePostalStage'];
             $idEntreprise = $etudiantData[0]['idEntreprise'];
 
             // Définition des critères
@@ -86,16 +86,19 @@ class AlgorithmeRepartition
 
                 // Distance GPS
                 $distance = $this->calculateDistance($coordonneesProf, $coordonneesEtudiant);
-                $resultats[$prof['nom']]['DISTANCE_GPS_PROF_ENTREPRISE'] = 
+                $resultats[$prof['nom']]['DISTANCE_GPS_PROF_ENTREPRISE'] =
                     ($distance > 20 && !in_array($codePostal, ['64', '40'])) ? 1 : 0;
+                
+                echo "Distance entre le professeur " . $prof['nom'] . " et l'étudiant : $distance km\n";
 
                 // Vérification présence ville et entreprise
                 $presentVille = $this->isEtudiantPresentVille($codePostal, $idUPPA);
                 if ($presentVille) {
                     $resultats[$prof['nom']]['ETUDIANT_DEJA_PRESENT_VILLE'] = 1;
-                    $etudiantPresent = $this->isEtudiantPresentEntreprise($idEntreprise, $idUPPA);
-                    if ($etudiantPresent) {
-                        $profAssocié = $this->getProfesseurAssocie($idUPPA);
+                    $etudiantPresentResult = $this->isEtudiantPresentEntreprise($idEntreprise, $idUPPA);
+                    if ($etudiantPresentResult['present']) {
+                        // On utilise l'ID de l'étudiant déjà présent dans l'entreprise
+                        $profAssocié = $this->getProfesseurAssocie($etudiantPresentResult['idUPPA']);
                         $resultats[$prof['nom']]['ETUDIANT_DEJA_PRESENT_ENREPRISE'] = 
                             ($profAssocié === $prof['nom']) ? 1000 : 0;
                     }
@@ -128,9 +131,9 @@ class AlgorithmeRepartition
         return FonctionsAlgorithme::getProfesseursMatrix($this->db);
     }
 
-    private function getEtudiantData(string $idUPPA): array 
+    private function getEtudiantData(string $idUPPA, string $idFicheDescriptive): array 
     {
-        return FonctionsAlgorithme::getEtudiantData($idUPPA, $this->db);
+        return FonctionsAlgorithme::getEtudiantData($idUPPA, $idFicheDescriptive, $this->db);
     }
 
     private function calculateDistance(array $coordsProf, array $coordsEtudiant): float 
@@ -148,7 +151,7 @@ class AlgorithmeRepartition
         return FonctionsAlgorithme::isEtudiantPresentVille($codePostal, $idUPPA, $this->db);
     }
 
-    private function isEtudiantPresentEntreprise(string $idEntreprise, string $idUPPA): bool 
+    private function isEtudiantPresentEntreprise(string $idEntreprise, string $idUPPA): array 
     {
         return FonctionsAlgorithme::isEtudiantPresentEntreprise($idEntreprise, $idUPPA, $this->db);
     }
