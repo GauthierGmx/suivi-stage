@@ -96,7 +96,7 @@ export class StaffService {
     }
 
     
-    return this.http.get<Staff>(`http://localhost:8000/api/personnel/${idStaff}`, {params}).pipe(
+    return this.http.get<Staff>(`http://localhost:8000/api/personnel/{id}/`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );

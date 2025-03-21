@@ -437,23 +437,6 @@
             </div>
 
 
-            <div class="form-grid">
-                <!-- Nom du contact -->
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <label>Tuteur</label>
-                        @if (choicedTutor) {
-                            <p class="info-text">{{ choicedTutor.nom}} {{choicedTutor.prenom}}</p>
-                        }
-                        @else {
-                            <p class="info-text">{{ detailsSheet}}</p>
-                        }
-                    </div>
-                </div>
-                <button class="edit-button" (click)="openAttributionModal()">Enseignant tuteur</button>
-
-            </div>
-
 
             <div class="form-grid">
                 <!-- Nom du contact -->
