@@ -16,6 +16,11 @@ class EtudiantParcoursAnneeunivSeeder extends Seeder
     {
         DB::table('table_etudiant_parcours_anneeuniv')->insert([
             [
+                'idUPPA' => '583303',
+                'codeParcours' => 'BBWIA2',
+                'idAnneeUniversitaire' => 1,
+            ],
+            [
                 'idUPPA' => '610000',
                 'codeParcours' => 'BBWIA2',
                 'idAnneeUniversitaire' => 1,

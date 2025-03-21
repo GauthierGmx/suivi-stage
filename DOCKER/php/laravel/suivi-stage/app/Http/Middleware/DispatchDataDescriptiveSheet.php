@@ -307,7 +307,7 @@ class DispatchDataDescriptiveSheet
         $id = $request->route('id'); // Vous pouvez récupérer l'ID de la route
 
         // Exemple : récupérez les données d'une fiche descriptive, d'un tuteur, ou d'une entreprise
-        $ficheDescriptive = FicheDescriptive::findOrFail($id);
+        $ficheDescriptive = FicheDescriptive::find($id);
 
         // Si la fiche descriptive n'est pas trouvée
         if (!$ficheDescriptive) {

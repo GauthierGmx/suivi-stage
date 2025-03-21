@@ -8,6 +8,9 @@ use Tests\TestCase;
 use App\Models\RechercheStage;
 use App\Models\Etudiant;
 use App\Models\FicheDescriptive;
+use App\Models\Parcours; 
+use App\Models\AnneeUniversitaire;  
+use Illuminate\Support\Facades\DB;
 
 class EtudiantControllerTest extends TestCase
 {
@@ -254,6 +257,67 @@ class EtudiantControllerTest extends TestCase
                  ->assertJson(['message' => 'Aucun étudiant trouvé']);
     }
 
+    /*
+    =========================================
+        TEST DE LA METHODE INDEXPARCOURS
+    ========================================
+    */
+
+    /**
+     * La méthode indexParcours doit retourner une confirmation 200 et la liste des parcours de l'étudiant
+     * 
+     * @return void
+     */
+    public function test_indexParcours_methode_doit_retourner_200_et_la_liste_des_parcours_de_l_etudiant() {
+        $etudiantFirst = Etudiant::first();
+        $parcoursFirst = Parcours::first();
+        $anneeUniv = AnneeUniversitaire::first();
+        $response = $this->get('/api/etudiants/'.$etudiantFirst->idUPPA.'/parcours');
+        $response->assertStatus(200);
+        $response->assertJson([
+            [
+                'idUPPA' => $etudiantFirst->idUPPA,
+                'codeParcours' => $parcoursFirst->codeParcours,
+                'idAnneeUniversitaire' => $anneeUniv->idAnneeUniversitaire
+            ]
+        ]);
+        
+    }
+
+        /**
+     * La méthode indexParcours doit retourner une confirmation 200 et la liste des parcours de l'étudiant
+     * 
+     * @return void
+     */
+    public function test_indexParcours_methode_doit_retourner_404_car_l_etudiant_n_existe_pas() {
+        $etudiantFirst = '6402561';
+        $parcoursFirst = Parcours::first();
+        $anneeUniv = AnneeUniversitaire::first();
+        $response = $this->get('/api/etudiants/'.$etudiantFirst.'/parcours');
+        $response->assertStatus(404)
+                 ->assertJson(['message' => 'Aucun étudiant trouvé']);
+        
+    }
+
+    /**
+     * LA méthode indexParcours doit retourner une erreur 500 si une erreur survient lors de la récupération
+     * 
+     * @return void
+     */
+    public function test_indexParcours_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
+        // Mock du modèle RechercheStage pour déclencher une exception
+        $this->mock(\App\Http\Controllers\EtudiantController::class, function ($mock) {
+            $mock->shouldReceive('indexParcours')->once()->andThrow(new \Exception('Erreur simulée'));
+        });
+
+        $etudiantFirst = Etudiant::first();
+        $parcoursFirst = Parcours::first();
+        $anneeUniv = AnneeUniversitaire::first();
+        $response = $this->get('/api/etudiants/'.$etudiantFirst->idUPPA.'/fiches-descriptives');
+
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
+    }
 
     public function tearDown(): void
     {
