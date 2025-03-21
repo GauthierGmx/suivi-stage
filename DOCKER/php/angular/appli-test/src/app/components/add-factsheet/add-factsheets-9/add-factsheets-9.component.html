@@ -7,7 +7,7 @@
   <h2 class="title">Informations du déroulement du stage</h2>
   <p class="warning">Les informations pré-remplies sont à vérifier !</p>
   <div class="content">
-    <form (ngSubmit)="onNext()">
+    <form #factsheetForm="ngForm" (ngSubmit)="onNext()">
       <div class="form-content">
         <div class="form-row">
           <div class="form-group">
@@ -75,7 +75,7 @@
 
         <div class="buttons">
           <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
-          <button type="submit" class="btn-submit" [disabled]='!isFormValid()'>Valider</button>
+          <button type="submit" class="btn-submit" [disabled]='!factsheetForm.form.valid || !isFormValid()'>Valider</button>
         </div>
       </div>
     </form>
