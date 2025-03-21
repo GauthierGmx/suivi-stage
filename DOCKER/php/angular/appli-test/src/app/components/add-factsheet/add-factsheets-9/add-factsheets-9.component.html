@@ -7,7 +7,7 @@
   <h2 class="title">Informations du déroulement du stage</h2>
   <p class="warning">Les informations pré-remplies sont à vérifier !</p>
   <div class="content">
-    <form (ngSubmit)="onNext()">
+    <form #factsheetForm="ngForm" (ngSubmit)="onNext()">
       <div class="form-content">
         <div class="form-row">
           <div class="form-group">
@@ -15,6 +15,9 @@
             <input type="date" id="dateDebut" [(ngModel)]="formData.debutStageFicheDescriptive.value" name="dateDebut" #dateDebut="ngModel" required>
             <div class="errorMessage" *ngIf="dateDebut.invalid && dateDebut.errors && (dateDebut.dirty || dateDebut.touched)">
               <small *ngIf="dateDebut.errors?.['required']"><b>La date de début est obligatoire.</b></small>
+            </div>
+            <div class="errorMessage" *ngIf="!isDateDebutValid() && dateDebut.dirty && dateFin.dirty">
+              <small><b>La date de début doit être inférieure à la date de fin.</b></small>
             </div>
           </div>
           <div class="form-group">
@@ -72,10 +75,9 @@
 
         <div class="buttons">
           <button type="button" class="btn-cancel" (click)="onPrevious()">Précédent</button>
-          <button type="submit" class="btn-submit" [disabled]='!isFormValid()'>Valider</button>
+          <button type="submit" class="btn-submit" [disabled]='!factsheetForm.form.valid || !isFormValid()'>Valider</button>
         </div>
       </div>
     </form>
   </div>
 </div>
-  

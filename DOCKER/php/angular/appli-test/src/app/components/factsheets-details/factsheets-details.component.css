@@ -105,12 +105,11 @@ h3 {
 .info-box {
     border: 1px solid #e5e7eb; 
     border-radius: 0.5rem;
-    padding: 1.5rem; 
+    padding: 1rem; 
     margin-bottom: 1rem; 
     background-color: #f9fafb; 
     display: flex;
     flex-direction: column; 
-    justify-content: center; 
     align-items: flex-start; 
     min-height: 150px; 
 }

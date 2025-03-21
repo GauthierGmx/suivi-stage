@@ -130,9 +130,7 @@ export class SheetDetailsComponent implements OnInit {
     }
 
     goToEdit() {
-        if (this.sheet) {
-            this.navigationService.navigateToSearchEditForm(this.sheet.idFicheDescriptive)
-        }
+        this.navigationService.navigateToDescriptiveSheetEditForm(this.detailsSheet.idFicheDescriptive.value);
     }
 
     goBack() {
