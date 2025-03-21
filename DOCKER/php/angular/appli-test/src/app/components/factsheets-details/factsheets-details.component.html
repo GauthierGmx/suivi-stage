@@ -442,13 +442,19 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Tuteur</label>
-                        <p class="info-text">{{ choicedTutor?.nom}} {{choicedTutor?.prenom}}</p>
+                        @if (choicedTutor) {
+                            <p class="info-text">{{ choicedTutor.nom}} {{choicedTutor.prenom}}</p>
+                        }
+                        @else {
+                            <p class="info-text">{{ detailsSheet}}</p>
+                        }
                     </div>
                 </div>
+                <button class="edit-button" (click)="openAttributionModal()">Enseignant tuteur</button>
 
             </div>
                 
-                
+            
             
 
 
@@ -460,8 +466,8 @@
                 <button class="edit-button" (click)="goToEdit()">Modifier</button>
             </div>
             <div *ngIf="currentUserRole === 'INTERNSHIP_MANAGER'" class="action-buttons">
-                <button class="edit-button" (click)="openAttributionModal()">Tuteur</button>
                 <button class="cancel-button" (click)="goBack()">Retour</button>
+
             </div>
         </div>
     </div>

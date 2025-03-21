@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
+import { teacherTutorDetails } from '../components/factsheets-details/factsheets-details.component';
 
 interface ExcelResponse {
     message: string;
@@ -15,6 +16,18 @@ interface ExcelResponse {
 export class StudentStaffAcademicYearService {
 
     constructor(private readonly http: HttpClient) {}
+
+
+    updateStudentTeacherAssignments(enterstudentTeacher: teacherTutorDetails): Observable<teacherTutorDetails> {
+        const httpOptions = {
+          headers: new HttpHeaders({'Content-type': 'application/json'})
+        };
+    
+        return this.http.post<teacherTutorDetails>('http://localhost:8000/api/affectation/create', enterstudentTeacher, httpOptions).pipe(
+          tap(response => this.log(response)),
+          catchError(error => this.handleError(error, undefined))
+        );
+      }
 
     extractStudentTeacherAssignments(): Observable<ExcelResponse> {
         return this.http.get<ExcelResponse>('http://localhost:8000/api/affectation/extraction-affectations-etudiants-enseignants').pipe(

@@ -14,9 +14,15 @@ import { StudentService } from '../../services/student.service';
 import { TutorAttributionModalComponent } from '../tutor-attribution-modal/tutor-attribution-modal.component';
 import { Staff } from '../../models/staff.model';
 import { StaffService } from '../../services/staff.service';
+import { StudentStaffAcademicYearService } from '../../services/student-staff-academicYear.service';
+import { AcademicYearService } from '../../services/academic-year.service';
 
 
-
+export class teacherTutorDetails{
+    idStudent?:number;
+    idTutor?:number;
+    idYear?:number;
+}
 
 @Component({
     selector: 'app-sheet-details',
@@ -35,6 +41,7 @@ export class SheetDetailsComponent implements OnInit {
     showAttributionModal: Boolean = false;
     teachers?: Staff[];
     choicedTutor?:Staff;
+    teacherTutorDetails?:teacherTutorDetails;
 
 
     constructor(
@@ -44,7 +51,9 @@ export class SheetDetailsComponent implements OnInit {
         private readonly companyService: CompanyService,
         private readonly navigationService: NavigationService,
         private readonly studentService: StudentService,
-        private readonly staffService: StaffService
+        private readonly staffService: StaffService,
+        private readonly studentStaffService:StudentStaffAcademicYearService,
+        private readonly academicYearService:AcademicYearService
     ) {}
 
     ngOnInit() {
@@ -72,7 +81,6 @@ export class SheetDetailsComponent implements OnInit {
             this.factsheetsService.getSheetById(sheetId).subscribe((sheet) => {
                 if (sheet) {
                     this.sheet = sheet
-
                     this.loadCompanyDetails(sheet.idEntreprise.value)
                     this.loadStudentDetails(sheet.idUPPA.value)
                 }
@@ -81,12 +89,16 @@ export class SheetDetailsComponent implements OnInit {
 
         this.factsheetsService.getSheetById(sheetId).subscribe({
             next: (response) => {
-                this.detailsSheet = response
+                this.detailsSheet = response;
             },
             error: (err) => {
                 console.error('Erreur lors de la récupération de la fiche :', err)
             },
         })
+
+
+        
+    
     }
 
     private loadCompanyDetails(companyId: number) {
@@ -221,7 +233,6 @@ export class SheetDetailsComponent implements OnInit {
         ];
         
         this.teachers = teachers;
-        console.log("Enseignants générés:", this.teachers);
     }
 
     handleConfirmAttribution(teacherId: number) {
@@ -236,11 +247,44 @@ export class SheetDetailsComponent implements OnInit {
     
         this.showAttributionModal = false;
 
+
+        //Envoi de la selection
+
+        if (!this.teacherTutorDetails) {
+            this.teacherTutorDetails = {};
+        }
+    
+        if (this.detailsSheet?.idUPPA) {
+            this.teacherTutorDetails.idStudent = Number(this.detailsSheet.idUPPA.value);
+        }
+    
+        this.academicYearService.getCurrentAcademicYear().subscribe({
+            next: (year) => {
+                if (year) {
+                    this.teacherTutorDetails!.idYear = year.idAnneeUniversitaire; 
+                }
+            },
+            error: (err) => {
+                console.error("Erreur lors de la récupération de l'année académique :", err);
+            },
+            complete: () => {
+                console.log("Récupération de l'année académique terminée.");
+            }
+        });
+        
+    
+        this.teacherTutorDetails.idTutor=this.choicedTutor?.idPersonnel;
+    
+        this.studentStaffService.updateStudentTeacherAssignments(this.teacherTutorDetails);
+        console.log(this.teacherTutorDetails);
     }
     
     handleCancelAttribution() {
         this.showAttributionModal = false;
     }
+
+
+    
 
    
 }
