@@ -12,6 +12,17 @@ use App\Models\Personnel;
 
 class AuthController extends Controller
 {
+    /**
+     * Récupère les informations de l'utilisateur authentifié à partir des cookies.
+     * Vérifie la validité des cookies et retourne les données de l'utilisateur correspondant.
+     *
+     * @param Request $request La requête HTTP contenant les cookies
+     * @return \Illuminate\Http\JsonResponse
+     *         - 200: Données de l'utilisateur
+     *         - 401: Non authentifié
+     *         - 404: Utilisateur non trouvé
+     *         - 400: Erreur de décryptage des cookies
+     */
     public function getUser(Request $request)
     {
         try {

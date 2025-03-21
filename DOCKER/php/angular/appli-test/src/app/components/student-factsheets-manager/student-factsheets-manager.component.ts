@@ -33,10 +33,11 @@ export class StudentFactsheetsManagerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    let user = this.authService.getCurrentUser();
-    if (this.authService.isStaff(user)) {
-      this.currentUser = user;
-    }
+    this.authService.getAuthenticatedUser().subscribe(user => {
+      if (this.authService.isStaff(user)) {
+        this.currentUser = user
+      }
+    });
 
     const studentId = this.route.snapshot.paramMap.get('id');
     if (studentId) {

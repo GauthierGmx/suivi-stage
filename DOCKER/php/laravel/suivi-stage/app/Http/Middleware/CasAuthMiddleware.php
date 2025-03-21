@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\Cookie;
 class CasAuthMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Gère la requête entrante et l'authentification CAS.
+     * Configure le client CAS, vérifie l'authentification et crée les cookies de session.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @param  \Illuminate\Http\Request  $request La requête HTTP entrante
+     * @param  \Closure  $next La fonction suivante dans le pipeline middleware
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Http\Exceptions\HttpResponseException Si l'utilisateur n'est pas autorisé
      */
     public function handle(Request $request, Closure $next)
     {
@@ -94,48 +96,11 @@ class CasAuthMiddleware
     }
 
     /**
-     * Gestion de la déconnexion
+     * Gère uniquement la suppression des cookies d'authentification.
+     * Ne déconnecte pas l'utilisateur du CAS.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function handleLogout()
-    {
-        try {
-            \phpCAS::client(
-                CAS_VERSION_2_0,
-                config('auth.cas.server.hostname'),
-                config('auth.cas.server.port'),
-                config('auth.cas.server.uri'),
-                config('auth.cas.server.basename'),
-            );
-
-            if (app()->environment() !== 'production') {
-                \phpCAS::setNoCasServerValidation();
-            }
-
-            $domain = parse_url(env('ANGULAR_URL'), PHP_URL_HOST);
-            
-            // Créer la réponse JSON
-            $response = response()->json(['message' => 'Envoie de la demande de suppression des cookies']);
-            
-            // Supprimer les cookies avec le bon domaine
-            $response->withCookie(Cookie::forget('user_id', '/', $domain));
-            $response->withCookie(Cookie::forget('user_type', '/', $domain));
-            
-            //dd($response);
-
-            // Envoyer la réponse
-            $response->send();
-
-            \Log::info('Cookies supprimés');
-            
-            // Déconnexion du CAS
-            \phpCAS::logout();
-            
-        } catch (\Exception $e) {
-            \Log::error('Erreur lors de la déconnexion : ' . $e->getMessage());
-            return response()->json(['error' => 'Erreur lors de la déconnexion'], 500);
-        }
-    }
-
     public function handleCookieLogout()
     {
         try {
@@ -152,6 +117,12 @@ class CasAuthMiddleware
         }
     }
 
+    /**
+     * Gère la déconnexion du CAS uniquement.
+     * Déconnecte l'utilisateur du service CAS central.
+     *
+     * @return void|\Illuminate\Http\RedirectResponse En cas d'erreur, redirige vers l'URL Angular
+     */
     public function handleCasLogout()
     {
         try {

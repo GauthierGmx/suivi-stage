@@ -18,6 +18,7 @@ import { FactsheetsService } from '../../services/description-sheet.service';
 import { AuthService } from '../../services/auth.service';
 import { FormDataService } from '../../services/form-data.service';
 import { LoadingComponent } from "../loading/loading.component";
+import { Student } from '../../models/student.model';
 
 @Component({
   selector: 'app-add-factsheet',
@@ -39,7 +40,7 @@ import { LoadingComponent } from "../loading/loading.component";
   styleUrl: './add-factsheet.component.css'
 })
 export class AddFactsheetComponent implements OnInit {
-  currentUser?: any;
+  currentUser?: Student;
   currentUserRole?: string;
   currentStep = 1;
   isSubmitting = false;
@@ -70,14 +71,12 @@ export class AddFactsheetComponent implements OnInit {
     this.currentStep = 1;
 
     this.initializeFormFields();
-    this.currentUser = this.authService.getCurrentUser();
-    
-    if (this.authService.isStudent(this.currentUser)) {
-      this.currentUserRole = 'STUDENT';
-    }
-    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-      this.currentUserRole = 'INTERNSHIP_MANAGER';
-    }
+    this.authService.getAuthenticatedUser().subscribe(user => {
+      if (this.authService.isStudent(user)) {
+        this.currentUser = user;
+        this.currentUserRole = 'STUDENT';
+      }
+    });
   }
 
   ngOnDestroy(): void {

@@ -76,5 +76,5 @@ export const routes: Routes = [
     component: AddFactsheetComponent,
     canActivate: [authGuard]
   },
-  { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
 ];

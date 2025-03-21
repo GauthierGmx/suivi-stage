@@ -26,7 +26,9 @@ export class FactsheetsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.currentUser = this.authService.getCurrentUser();
+    this.authService.getAuthenticatedUser().subscribe(user =>
+      this.currentUser = user
+    );
     
     if (this.authService.isStudent(this.currentUser)) {
       this.currentUserRole = 'STUDENT';
