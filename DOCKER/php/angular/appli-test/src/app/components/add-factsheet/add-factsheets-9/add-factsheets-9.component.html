@@ -16,6 +16,9 @@
             <div class="errorMessage" *ngIf="dateDebut.invalid && dateDebut.errors && (dateDebut.dirty || dateDebut.touched)">
               <small *ngIf="dateDebut.errors?.['required']"><b>La date de début est obligatoire.</b></small>
             </div>
+            <div class="errorMessage" *ngIf="!isDateDebutValid() && dateDebut.dirty && dateFin.dirty">
+              <small><b>La date de début doit être inférieure à la date de fin.</b></small>
+            </div>
           </div>
           <div class="form-group">
             <label for="dateFin">Date de fin</label>
@@ -78,4 +81,3 @@
     </form>
   </div>
 </div>
-  

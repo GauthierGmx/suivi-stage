@@ -37,7 +37,17 @@ export class AddFactsheets9Component implements OnInit {
       this.formData.finStageFicheDescriptive.value &&
       this.formData.nbJourSemaineFicheDescriptive.value &&
       this.formData.nbHeuresSemaineFicheDescriptive.value &&
-      this.formData.materielPreteFicheDescriptive.value);
+      this.formData.materielPreteFicheDescriptive.value) &&
+      this.isDateDebutValid();
+  }
+
+  isDateDebutValid(): boolean {
+    if (!this.formData.debutStageFicheDescriptive.value || !this.formData.finStageFicheDescriptive.value) {
+      return true; // Retourne true si l'une des dates est vide
+    }
+    const dateDebut = new Date(this.formData.debutStageFicheDescriptive.value);
+    const dateFin = new Date(this.formData.finStageFicheDescriptive.value);
+    return dateDebut <= dateFin;
   }
 
   private initializeFormFields() {
