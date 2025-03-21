@@ -412,7 +412,7 @@ class FicheDescriptiveControllerTest extends TestCase
         $response = $this->putJson('/api/fiche-descriptive/update/'.$fausseFiche, $donnees);
 
         $response->assertStatus(404)
-                 ->assertJson(['message' => 'Fiche Descriptive non trouvée']);       
+                 ->assertJson(['error' => 'Fiche descriptive non trouvée']);       
     }
 
     /**
@@ -423,7 +423,7 @@ class FicheDescriptiveControllerTest extends TestCase
     public function test_update_methode_doit_retourner_une_erreur_500_car_un_probleme_est_survenu(){
         // Mock du modèle FicheDescriptive pour déclencher une exception
         $this->partialMock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
-            $mock->shouldReceive('update')->andThrow(new Exception);
+            $mock->shouldReceive('update')->andThrow(new \Exception);
         });
         
         $donnees = [
@@ -527,7 +527,133 @@ class FicheDescriptiveControllerTest extends TestCase
     
         // Vérifier le code de statut 200 et la réponse JSON
         $response->assertStatus(200)
-                 ->assertJson($ficheFirst->toArray());
+                 ->assertJson([
+                    //Informations Fiche Descriptive
+                     'idFicheDescriptive' => [
+                        'value' => $ficheFirst->idFicheDescriptive,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'dateCreationFicheDescriptive' => [
+                        'value' => $ficheFirst->dateCreation,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'dateDerniereModificationFicheDescriptive' => [
+                        'value' => $ficheFirst->dateDerniereModification,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'contenuStageFicheDescriptive' => [
+                        'value' => $ficheFirst->contenuStage,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'thematiqueFicheDescriptive' => [
+                        'value' => $ficheFirst->thematique,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'sujetFicheDescriptive' => [
+                        'value' => $ficheFirst->sujet,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'fonctionsFicheDescriptive' => [
+                        'value' => $ficheFirst->fonctions,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'tachesFicheDescriptive' => [
+                        'value' => $ficheFirst->taches,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'competencesFicheDescriptive' => [
+                        'value' => $ficheFirst->competences,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'detailsFicheDescriptive' => [
+                        'value' => $ficheFirst->details,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'debutStageFicheDescriptive' => [
+                        'value' => $ficheFirst->debutStage,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'finStageFicheDescriptive' => [
+                        'value' => $ficheFirst->finStage,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'nbJourSemaineFicheDescriptive' => [
+                        'value' => $ficheFirst->nbJourSemaine,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'nbHeureSemaineFicheDescriptive' => [
+                        'value' => $ficheFirst->nbHeureSemaine,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'clauseConfidentialiteFicheDescriptive' => [
+                        'value' => $ficheFirst->clauseConfidentialite,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'serviceEntrepriseFicheDescriptive' => [
+                        'value' => $ficheFirst->serviceEntreprise,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'adresseMailStageFicheDescriptive' => [
+                        'value' => $ficheFirst->adresseMailStage,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'telephoneStageFicheDescriptive' => [
+                        'value' => $ficheFirst->telephoneStage,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'adresseStageFicheDescriptive' => [
+                        'value' => $ficheFirst->adresseStage,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'codePostalStageFicheDescriptive' => [
+                        'value' => $ficheFirst->codePostalStage,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'villeStageFicheDescriptive' => [
+                        'value' => $ficheFirst->villeStage,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'paysStageFicheDescriptive' => [
+                        'value' => $ficheFirst->paysStage,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'statut' => [
+                        'value' => $ficheFirst->statut,
+                        'type' => 'ficheDescriptive',
+                    ],
+                     'numeroConventionFicheDescriptive' => [
+                        'value' => $ficheFirst->numeroConvention,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'interruptionStageFicheDescriptive' => [
+                        'value' => $ficheFirst->interruptionStage,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'dateDebutInterruptionFicheDescriptive' => [
+                        'value' => $ficheFirst->dateDebutInterruption,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'dateFinInterruptionFicheDescriptive' => [
+                        'value' => $ficheFirst->dateFinInterruption,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'personnelTechniqueDisponibleFicheDescriptive' => [
+                        'value' => $ficheFirst->personnelTechniqueDisponible,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'materielPreteFicheDescriptive' => [
+                        'value' => $ficheFirst->materielPrete,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'idEntreprise' => [
+                        'value' => $ficheFirst->idEntreprise,
+                        'type' => 'ficheDescriptive',
+                     ],
+                     'idTuteurEntreprise' => [
+                        'value' => $ficheFirst->idTuteurEntreprise,
+                        'type' => 'ficheDescriptive',
+                     ],                 
+                 ]);
     }
 
     /**
@@ -541,7 +667,7 @@ class FicheDescriptiveControllerTest extends TestCase
         $response = $this->get('/api/fiche-descriptive/'.$idFiche);
 
         $response->assertStatus(404)
-                 ->assertJson(['message' => 'Fiche Descriptive non trouvée']);
+                 ->assertJson(['message' => 'Fiche descriptive non trouvée']);
     }
 
     /**
@@ -552,7 +678,7 @@ class FicheDescriptiveControllerTest extends TestCase
     public function test_show_methode_doit_retourner_une_erreur_500_si_une_erreur_survient(){
         // Mock du modèle FicheDescriptive pour déclencher une exception
         $this->partialMock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
-            $mock->shouldReceive('show')->andThrow(new Exception);
+            $mock->shouldReceive('show')->andThrow(new \Exception);
         });
 
         $ficheDescriptive = FicheDescriptive::first();
@@ -608,7 +734,7 @@ class FicheDescriptiveControllerTest extends TestCase
     {
         // Mock du modèle FicheDescriptive pour déclencher une exception
         $this->partialMock(\App\Http\Controllers\FicheDescriptiveController::class, function ($mock) {
-            $mock->shouldReceive('destroy')->andThrow(new Exception);
+            $mock->shouldReceive('destroy')->andThrow(new \Exception);
         });
 
         $uneFicheDescriptive = FicheDescriptive::first();
