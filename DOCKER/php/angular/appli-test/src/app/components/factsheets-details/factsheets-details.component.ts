@@ -19,9 +19,9 @@ import { AcademicYearService } from '../../services/academic-year.service';
 
 
 export class teacherTutorDetails{
-    idStudent?:number;
-    idTutor?:number;
-    idYear?:number;
+    idUPPA?:number;
+    idPersonnel?:number;
+    idAnneeUniversitaire?:number;
 }
 
 @Component({
@@ -244,22 +244,39 @@ export class SheetDetailsComponent implements OnInit {
         }
     
         this.showAttributionModal = false;
-
-
+    
         //Envoi de la selection
-
         if (!this.teacherTutorDetails) {
             this.teacherTutorDetails = {};
         }
     
         if (this.detailsSheet?.idUPPA) {
-            this.teacherTutorDetails.idStudent = Number(this.detailsSheet.idUPPA.value);
+            this.teacherTutorDetails.idUPPA = Number(this.detailsSheet.idUPPA.value);
         }
     
+        // Récupérer l'année académique et ensuite mettre à jour les affectations
         this.academicYearService.getCurrentAcademicYear().subscribe({
             next: (year) => {
                 if (year) {
-                    this.teacherTutorDetails!.idYear = year.idAnneeUniversitaire; 
+                    if(this.teacherTutorDetails){
+                        this.teacherTutorDetails.idAnneeUniversitaire = year.idAnneeUniversitaire; 
+                        this.teacherTutorDetails.idPersonnel = this.choicedTutor?.idPersonnel;
+    
+                        // Ajoutez des logs pour vérifier les valeurs avant l'appel
+                        console.log("Détails de l'affectation avant l'envoi :", this.teacherTutorDetails);
+    
+                        // Appeler updateStudentTeacherAssignments après avoir reçu l'année académique
+                        this.studentStaffService.updateStudentTeacherAssignments(this.teacherTutorDetails).subscribe({
+                            next: (response) => {
+                                console.log("Réponse de updateStudentTeacherAssignments :", response);
+                            },
+                            error: (err) => {
+                                console.error("Erreur lors de l'appel à updateStudentTeacherAssignments :", err);
+                            }
+                        });
+    
+                        console.log("Détails de l'affectation envoyés :", this.teacherTutorDetails);
+                    }
                 }
             },
             error: (err) => {
@@ -269,12 +286,6 @@ export class SheetDetailsComponent implements OnInit {
                 console.log("Récupération de l'année académique terminée.");
             }
         });
-        
-    
-        this.teacherTutorDetails.idTutor=this.choicedTutor?.idPersonnel;
-    
-        this.studentStaffService.updateStudentTeacherAssignments(this.teacherTutorDetails);
-        console.log(this.teacherTutorDetails);
     }
     
     handleCancelAttribution() {
