@@ -20,14 +20,23 @@ export class DeleteConfirmationModalComponent {
         private navigationService: NavigationService,
     ) {}
 
+    /**
+     * Initializes the component by getting the current page URL
+     */
     ngOnInit() {
         this.currentPageUrl = this.navigationService.getCurrentPageUrl();
     }
 
+    /**
+     * Emits the confirm event when user confirms the deletion
+     */
     onConfirm() {
         this.confirm.emit();
     }
 
+    /**
+     * Emits the cancel event when user cancels the deletion
+     */
     onCancel() {
         this.cancel.emit();
     }

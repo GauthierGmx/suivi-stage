@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { AcademicYear } from '../models/academic-year.model';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of, switchMap } from 'rxjs';
@@ -7,6 +8,7 @@ import { Observable, catchError, tap, of, switchMap } from 'rxjs';
   providedIn: 'root'
 })
 export class AcademicYearService {
+    apiUrl = environment.apiUrl;
     currentAcademicYear: AcademicYear = new AcademicYear('');
 
     constructor(private http: HttpClient) {}
@@ -18,7 +20,7 @@ export class AcademicYearService {
         params = params.set('fields', fields.join(','));
         }
 
-        return this.http.get<AcademicYear[]>('http://localhost:8000/api/annee-universitaire', {params}).pipe(
+        return this.http.get<AcademicYear[]>(`${this.apiUrl}/api/annee-universitaire`, {params}).pipe(
             tap(response => this.log(response)),
             catchError(error => this.handleError(error, null))
         );
@@ -42,7 +44,7 @@ export class AcademicYearService {
             params = params.set('fields', fields.join(','));
         }
 
-        return this.http.get<AcademicYear[]>('http://localhost:8000/api/annee-universitaire', {params}).pipe(
+        return this.http.get<AcademicYear[]>(`${this.apiUrl}/api/annee-universitaire`, {params}).pipe(
             tap(response => this.log(response)),
             switchMap(years => {
                 if (years.length === 0) {
@@ -59,7 +61,7 @@ export class AcademicYearService {
               headers: new HttpHeaders({'Content-type': 'application/json'})
         };
             
-        return this.http.post<AcademicYear>('http://localhost:8000/api/annee-universitaire/create', academicYear, httpOptions).pipe(
+        return this.http.post<AcademicYear>(`${this.apiUrl}/api/annee-universitaire/create`, academicYear, httpOptions).pipe(
             tap(response => this.log(response)),
             catchError(error => this.handleError(error, undefined))
         );

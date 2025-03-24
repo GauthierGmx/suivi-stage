@@ -17,6 +17,10 @@ export class AddFactsheets4Component implements OnInit {
   @Output() previous = new EventEmitter<void>();
   currentStep: number;
 
+  /**
+   * Returns form data from the FormDataService
+   * @returns {any} The form data
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
@@ -32,6 +36,10 @@ export class AddFactsheets4Component implements OnInit {
     this.initializeFormFields();
   }
 
+  /**
+   * Checks if the form is valid by verifying all required fields
+   * @returns {boolean} True if the form is valid, false otherwise
+   */
   isFormValid(): boolean {
     const apeNafRegex = /^\d{2}\.\d{2}[A-Z]$/;
     return !!(
@@ -43,6 +51,10 @@ export class AddFactsheets4Component implements OnInit {
     );
   }
 
+  /**
+   * Initializes form fields with their default values
+   * @returns {void}
+   */
   private initializeFormFields() {
     const fields = {
       serviceEntreprise: { value: '', type: 'ficheDescriptive' },
@@ -58,19 +70,37 @@ export class AddFactsheets4Component implements OnInit {
     });
   }
 
+  /**
+   * Validates the APE/NAF code format
+   * @param {string} code - The APE/NAF code to validate
+   * @returns {boolean} True if the format is valid, false otherwise
+   */
   validateAPE_NAF(code: string): boolean {
     const apeNafRegex = /^\d{2}\.\d{2}[A-Z]$/;
     return apeNafRegex.test(code);
   }
 
+  /**
+   * Emits an event to proceed to the next step with form data
+   * @returns {void}
+   */
   onNext() {
     this.next.emit(this.formData);
   }
 
+  /**
+   * Updates the current step in the navigation service
+   * @param {number} step - The step number to set
+   * @returns {void}
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Emits an event to return to the previous step
+   * @returns {void}
+   */
   onPrevious() {
     this.previous.emit();
   }

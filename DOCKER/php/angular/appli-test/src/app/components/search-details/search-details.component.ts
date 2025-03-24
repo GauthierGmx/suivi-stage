@@ -33,6 +33,12 @@ export class SearchDetailsComponent implements OnInit {
         private readonly navigationService: NavigationService
     ) {}
 
+    /**
+     * Initializes the component by:
+     * 1. Setting up the current user role
+     * 2. Loading the selected student from session storage
+     * 3. Retrieving search details based on the URL parameter
+     */
     ngOnInit() {
         let currentUser;
         const user = sessionStorage.getItem('currentUser');
@@ -66,6 +72,10 @@ export class SearchDetailsComponent implements OnInit {
         }
     }
 
+    /**
+     * Loads company details based on the provided company ID
+     * @param companyId - The ID of the company to load
+     */
     private loadCompanyDetails(companyId: number) {
         this.companyService.getCompanyById(companyId, ['idEntreprise', 'raisonSociale', 'adresse', 'codePostal', 'ville']).subscribe(
             company => {
@@ -75,6 +85,11 @@ export class SearchDetailsComponent implements OnInit {
         );
     }
 
+    /**
+     * Returns the CSS class for the search status badge
+     * @param status - The status string to map to a CSS class
+     * @returns The corresponding CSS class for the status
+     */
     getStatusClass(status: string): string {
         const statusMap: Record<string, string> = {
             'Relancé': 'status-badge relance',
@@ -85,16 +100,25 @@ export class SearchDetailsComponent implements OnInit {
         return statusMap[status] || 'status-badge';
     }
 
+    /**
+     * Navigates to the dashboard page
+     */
     goToDashboard() {
         this.navigationService.navigateToDashboard();
     }
 
+    /**
+     * Navigates to the edit form for the current search
+     */
     goToEdit() {
         if (this.search) {
             this.navigationService.navigateToSearchEditForm(this.search.idRecherche);
         }
     }
 
+    /**
+     * Navigates back to the previous page
+     */
     goBack() {
         this.navigationService.goBack();
     }

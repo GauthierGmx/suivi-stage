@@ -27,6 +27,10 @@ export class UpdateFactsheets3Component implements OnInit {
   searchTerm = '';
   selectedCompany?: Company;
 
+  /**
+   * Getter for the form data from FormDataService
+   * @returns The current form data
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
@@ -40,6 +44,10 @@ export class UpdateFactsheets3Component implements OnInit {
     this.setupSearchFilter();
   }
 
+  /**
+   * Sets up the search filter with debounce time and filtering logic
+   * Filters companies based on search term and limits results to 10 entries
+   */
   private setupSearchFilter() {
     this.searchTermChanged.pipe(
       debounceTime(800),
@@ -60,6 +68,10 @@ export class UpdateFactsheets3Component implements OnInit {
     });
   }
 
+  /**
+   * Initializes component by setting up company fields and loading companies
+   * Also retrieves and sets company name from form data if it exists
+   */
   ngOnInit() {
     this.initializeCompanyFields();
     this.loadCompanies();
@@ -70,6 +82,10 @@ export class UpdateFactsheets3Component implements OnInit {
     }
   }
 
+  /**
+   * Validates the form by checking if all required fields are filled
+   * @returns boolean indicating if the form is valid
+   */
   isFormValid(): boolean {
     const data = this.formData;
     return !!(
@@ -82,6 +98,10 @@ export class UpdateFactsheets3Component implements OnInit {
     );
   }
 
+  /**
+   * Initializes all company-related form fields with empty values
+   * Sets up the field type as either 'ficheDescriptive' or 'entreprise'
+   */
   private initializeCompanyFields() {
     const companyFields = {
       'raisonSocialeEntreprise': '',
@@ -104,6 +124,9 @@ export class UpdateFactsheets3Component implements OnInit {
     });
   }
 
+  /**
+   * Fetches companies from the CompanyService and stores them in the component
+   */
   private loadCompanies() {
     this.companyService.getCompanies()
       .subscribe(companies => {
@@ -112,6 +135,10 @@ export class UpdateFactsheets3Component implements OnInit {
       });
   }
 
+  /**
+   * Handles document click events to close the dropdown when clicking outside
+   * @param targetElement The HTML element that was clicked
+   */
   @HostListener('document:click', ['$event.target'])
       onClick(targetElement: HTMLElement) {
           if (this.showDropdown) {
@@ -122,6 +149,11 @@ export class UpdateFactsheets3Component implements OnInit {
           }
       }
 
+  /**
+   * Handles company selection from the dropdown
+   * Updates form fields with selected company data
+   * @param company The selected Company object
+   */
   selectCompany(company: Company) {
     this.selectedCompany = company;
     this.searchTerm = company.raisonSociale ?? '';  // Cette ligne reste inchangée
@@ -146,18 +178,32 @@ export class UpdateFactsheets3Component implements OnInit {
     });
   }
 
+  /**
+   * Triggers search term change event when user types in search field
+   * @param term The search term entered by user
+   */
   onSearchChange(term: string) {
     this.searchTermChanged.next(term);
 }
 
+  /**
+   * Updates the current step in the navigation service
+   * @param step The new step number
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Emits the form data to the parent component when proceeding to next step
+   */
   async onNext() {
     this.next.emit(this.formData);
   }
 
+  /**
+   * Emits an event to return to the previous step
+   */
   onPrevious() {
     this.previous.emit();
   }

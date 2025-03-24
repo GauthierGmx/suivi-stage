@@ -39,6 +39,9 @@ export class StatsCardsComponent implements OnInit {
     private authService: AuthService
   ) {}
 
+  /**
+   * Initializes the component, sets up user information and starts data loading
+   */
   ngOnInit(): void {
     this.currentPageUrl = this.navigationService.getCurrentPageUrl();
 
@@ -53,12 +56,14 @@ export class StatsCardsComponent implements OnInit {
 
     this.loadData();
 
-    // Recharge les données après une suppression
     this.internshipSearchService.searchDeleted$.subscribe(() => {
       this.loadData();
     });
   }
 
+  /**
+   * Loads students, internship searches and factsheets data using forkJoin
+   */
   loadData() {
     forkJoin({
       students: this.studentService.getStudents(['idUPPA']),
@@ -73,6 +78,9 @@ export class StatsCardsComponent implements OnInit {
     );
   }
 
+  /**
+   * Returns the total number of students
+   */
   countStudents() {
     if (!this.students) {
       return 0;
@@ -80,6 +88,9 @@ export class StatsCardsComponent implements OnInit {
     return this.students.length;
   }
 
+  /**
+   * Returns the number of students with a validated internship search
+   */
   countStudentsWithValidedSearch() {
     if (!this.students || !this.searches) {
       return 0;
@@ -92,6 +103,9 @@ export class StatsCardsComponent implements OnInit {
       )).length;
   }
 
+  /**
+   * Returns the number of students without any internship search
+   */
   countStudentWithoutSearch() {
     if (!this.students || !this.searches) {
       return 0;
@@ -102,6 +116,9 @@ export class StatsCardsComponent implements OnInit {
       )).length;
   }
 
+  /**
+   * Returns the number of students without any description sheet
+   */
   countStudentWithoutSheet() {
     if (!this.students) {
       return 0;
@@ -112,6 +129,10 @@ export class StatsCardsComponent implements OnInit {
       )).length;
   }
 
+  /**
+   * Returns the number of students with a specific sheet status
+   * @param statut The sheet status to filter by
+   */
   countStudentBySheetStatut(statut: SheetStatus) {
     if (!this.students || !this.factsheets) {
       return 0;
@@ -123,6 +144,10 @@ export class StatsCardsComponent implements OnInit {
       )).length;
   }
 
+  /**
+   * Returns the number of internship searches for a specific student
+   * @param studentId The student's ID
+   */
   countSearchesByStudentId(studentId: string | undefined) {
     if (!studentId || !this.searches) {
       return 0;
@@ -132,7 +157,10 @@ export class StatsCardsComponent implements OnInit {
     ).length;
   }
 
-  // Compte le nombre de fiches descriptives pour un étudiant donné
+  /**
+   * Returns the number of description sheets for a specific student
+   * @param studentId The student's ID
+   */
   countSheetByStudentId(studentId: string | undefined) {
     if (!studentId || !this.factsheets) {
       return 0;
@@ -142,6 +170,10 @@ export class StatsCardsComponent implements OnInit {
     ).length;
   }
 
+  /**
+   * Returns the number of internship searches made by a student in the last week
+   * @param studentId The student's ID
+   */
   countSearchesByStudentIdThisWeek(studentId: string | undefined) {
     if (!studentId || !this.searches) {
       return 0;
@@ -153,6 +185,11 @@ export class StatsCardsComponent implements OnInit {
     ).length
   }
 
+  /**
+   * Returns the number of internship searches with a specific status for a student
+   * @param studentId The student's ID
+   * @param statut The search status to filter by
+   */
   countSearchesByStudentIdAndStatut(studentId: string | undefined, statut: SearchStatus) {
     if (!studentId || !this.searches) {
       return 0;
@@ -163,7 +200,11 @@ export class StatsCardsComponent implements OnInit {
     ).length;
   }
 
-  // Compte le nombre de fiches descriptives par statut pour un étudiant donné
+  /**
+   * Returns the number of description sheets with a specific status for a student
+   * @param studentId The student's ID
+   * @param statut The sheet status to filter by
+   */
   countSheetByStudentIdByStatus(studentId: string | undefined, statut: SheetStatus) {
     if (!this.factsheets) {
       return 0;
@@ -174,6 +215,10 @@ export class StatsCardsComponent implements OnInit {
     ).length;
   }
 
+  /**
+   * Returns the total number of description sheets with a specific status
+   * @param statut The sheet status to filter by
+   */
   contSheetByStatut(statut: SheetStatus) {
     if (!this.factsheets) {
       return 0;
@@ -183,6 +228,11 @@ export class StatsCardsComponent implements OnInit {
     ).length;
   }
 
+  /**
+   * Returns the number of description sheets with a specific status for a student
+   * @param studentId The student's ID
+   * @param statut The sheet status to filter by
+   */
   countSheetByStudentIdAndStatut(studentId: string, statut: SheetStatus) {
     if (!this.factsheets) {
       return 0;
@@ -193,10 +243,16 @@ export class StatsCardsComponent implements OnInit {
     ).length;
   }
 
+  /**
+   * Returns the current date
+   */
   getCurrentDate() {
     return new Date();
   }
 
+  /**
+   * Returns the date from one week ago
+   */
   getLastWeekDate(): Date {
     const today = new Date();
     let lastWeekDate = today;

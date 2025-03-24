@@ -33,6 +33,9 @@ export class HeaderComponent implements OnInit {
         private readonly elementRef: ElementRef
     ) {}
 
+    /**
+     * Initializes component by fetching current user and setting user-related properties
+     */
     ngOnInit() {
         // Attendre la fin du chargement du Dashboard avant d'initialiser le Header
         this.initService.init$.subscribe(isInitialized => {
@@ -60,38 +63,56 @@ export class HeaderComponent implements OnInit {
         }
     }
 
+    /**
+     * Handles document click events to close menus when clicking outside
+     * @param event Mouse click event
+     */
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: MouseEvent) {
         const target = event.target as HTMLElement;
         
-        // Check if click is outside profile menu
         if (!this.elementRef.nativeElement.querySelector('.profile-menu')?.contains(target)) {
             this.showProfileMenu = false;
         }
 
-        // Check if click is outside mobile menu and not on the toggle button
         if (!this.elementRef.nativeElement.querySelector('.main-nav')?.contains(target) &&
             !this.elementRef.nativeElement.querySelector('.mobile-menu-button')?.contains(target)) {
             this.isMobileMenuOpen = false;
         }
     }
 
+    /**
+     * Returns user initials based on first letter of first and last name
+     * @returns String containing user initials
+     */
     getInitials(): string {
         return `${this.prenomCurrentUser?.slice(0,1)}${this.nomCurrentUser?.slice(0,1)}`
     }
 
+    /**
+     * Toggles the visibility of the profile menu
+     */
     toggleProfileMenu() {
         this.showProfileMenu = !this.showProfileMenu;
     }
 
+    /**
+     * Toggles the visibility of the mobile menu
+     */
     toggleMobileMenu() {
         this.isMobileMenuOpen = !this.isMobileMenuOpen;
     }
 
+    /**
+     * Closes the mobile menu
+     */
     closeMobileMenu() {
         this.isMobileMenuOpen = false;
     }
 
+    /**
+     * Handles user logout by closing menus and calling auth service
+     */
     logout(): void {
         this.isDisconnecting = true;
         this.showProfileMenu = false;
@@ -99,12 +120,15 @@ export class HeaderComponent implements OnInit {
         this.authService.logout();
     }
 
+    /**
+     * Extracts and downloads student-teacher assignments as a file
+     * Creates a blob from the base64 response and triggers download
+     */
     async extractAffectations() {
         this.isExtracting = true;
         try {
             const response = await firstValueFrom(this.studentStaffAcademicYearService.extractStudentTeacherAssignments());
             
-            // Créer un blob à partir du contenu base64
             const byteCharacters = atob(response.fileContent);
             const byteNumbers = new Array(byteCharacters.length);
             for (let i = 0; i < byteCharacters.length; i++) {
@@ -113,13 +137,11 @@ export class HeaderComponent implements OnInit {
             const byteArray = new Uint8Array(byteNumbers);
             const blob = new Blob([byteArray], { type: response.mimeType });
 
-            // Créer un lien de téléchargement
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
             link.download = response.fileName;
             link.click();
 
-            // Nettoyer
             window.URL.revokeObjectURL(link.href);
         }
         catch (error) {

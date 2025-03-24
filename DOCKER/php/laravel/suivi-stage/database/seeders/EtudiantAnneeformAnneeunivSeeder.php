@@ -16,6 +16,11 @@ class EtudiantAnneeformAnneeunivSeeder extends Seeder
     {
         DB::table('table_etudiant_anneeform_anneeuniv')->insert([
             [
+                'idUPPA' => '583303',
+                'idAnneeFormation' => 2,
+                'idAnneeUniversitaire' => 1,
+            ],
+            [
                 'idUPPA' => '610000',
                 'idAnneeFormation' => 2,
                 'idAnneeUniversitaire' => 1,

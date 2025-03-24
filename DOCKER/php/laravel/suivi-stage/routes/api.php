@@ -79,6 +79,7 @@ Route::get('/etudiants/{id}/recherches-stages', [EtudiantController::class, 'ind
 Route::get('/etudiants/{id}/fiches-descriptives', [EtudiantController::class, 'indexFicheDescriptive'])->name('etudiants.indexFicheDescriptive');
 Route::get('/etudiants', [EtudiantController::class, 'index'])->name('etudiants.index');
 Route::get('/etudiants/{id}', [EtudiantController::class, 'show'])->name('etudiants.show');
+Route::get('/etudiants/{id}/parcours', [EtudiantController::class, 'indexParcours'])->name('etudiants.indexParcours');
 
 // Route pour le Controller Parcours
 Route::get('/parcours', [ParcoursController::class, 'index'])->name('parcours.index');
@@ -107,6 +108,6 @@ Route::delete('/personnel/delete/{id}', [PersonnelController::class, 'destroy'])
 Route::get('/affectation', [AffectationEnseignantController::class, 'index'])->name('affectation.index');
 Route::get('/affectation/extraction-affectations-etudiants-enseignants', [AffectationEnseignantController::class, 'extractStudentTeacherAssignments'])->name('affectation.extractStudentTeacherAssignments');
 Route::post('/affectation/create', [AffectationEnseignantController::class, 'store'])->name('affectation.store');
-Route::get('/affectation/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'show'])->name('affectation.show');
+Route::get('/affectation/{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'show'])->name('affectation.show');
 Route::put('/affectation/update/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'update'])->name('affectation.update');
 Route::delete('/affectation/delete/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'destroy'])->name('affectation.destroy');

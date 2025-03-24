@@ -28,7 +28,7 @@ import { Router } from '@angular/router';
     templateUrl: './list-student-tab.component.html',
     styleUrl: './list-student-tab.component.css'
 })
-export class ListStudentTabComponent implements OnInit{
+export class ListStudentTabComponent implements OnInit {
     @Output() dataLoaded = new EventEmitter<void>();
     studentsData?: Student[];
     searches?: InternshipSearch[];
@@ -50,6 +50,10 @@ export class ListStudentTabComponent implements OnInit{
     filteredFactsheetsDatas: Factsheets[] = [];
     currentStatusFilter: 'all' | 'En cours' | 'Validée' | 'Rejetée' = 'all';
 
+    /**
+     * Initializes component services and sets up search debouncing
+     * Determines if the current view is for factsheets based on URL
+     */
     constructor(
         private readonly studentService: StudentService,
         private readonly internshipSearchService: InternshipSearchService,
@@ -71,11 +75,18 @@ export class ListStudentTabComponent implements OnInit{
         });
     }
 
+    /**
+     * Initializes component by loading required data
+     */
     ngOnInit() {
         this.loadData();
     }
 
-    //Chargement des données du tableau de listing des étudiants
+    /**
+     * Loads all necessary data for the student listing table
+     * Handles both factsheet and internship search views
+     * Makes parallel API calls using forkJoin
+     */
     async loadData() {
         if (this.isFactsheetView) {
             return firstValueFrom(forkJoin({
@@ -125,7 +136,11 @@ export class ListStudentTabComponent implements OnInit{
         }
     }
 
-    //Récupération des informations des étudiants
+    /**
+     * Creates filtered list of students with their TD groups and study years
+     * Maps student data with their corresponding searches or factsheets
+     * Calculates number of searches and last search date for each student
+     */
     getFilteredStudentsWithTdAndStudyYear() {
         if (this.studentsData && this.tds && this.trainingYears && this.academicYear && 
             this.datasStudentTrainingYearAcademicYear && this.datasStudentTdAcademicYear) {
@@ -173,7 +188,11 @@ export class ListStudentTabComponent implements OnInit{
         }
     }
 
-    //Application des filtres et de la barre de recherche
+    /**
+     * Applies all active filters to the student data
+     * Handles text search, study year, TD group, and view-specific filters
+     * Updates the filtered student data list
+     */
     applyFilters() {
         if (!this.originalStudentsDatas) return;
 
@@ -222,7 +241,11 @@ export class ListStudentTabComponent implements OnInit{
         this.filteredStudentsDatas = filteredDatas;
     }
 
-    //Récupération de la valeur de la barre de recherche à rechercher
+    /**
+     * Handles search input changes
+     * Triggers debounced search term subject
+     * @param event Input event containing the search term
+     */
     onSearchTermChange(event: Event) {
         const target = event.target as HTMLInputElement;
         if (target) {
@@ -231,27 +254,40 @@ export class ListStudentTabComponent implements OnInit{
         }
     }
 
-    //Réinitialisation à vide du contenu de la barre de recherche
+    /**
+     * Resets the search term and triggers a new search
+     */
     clearSearchTerm() {
         this.searchTerm = '';
         this.searchTermSubject.next(this.searchTerm);
     }
 
-    //Mise à jour de la valeur du filtre sur l'année de formation
+    /**
+     * Updates study year filter and refreshes the filtered list
+     * @param filter Selected study year filter option
+     * @param selectElement HTML select element to blur after selection
+     */
     setStudyYearFilter(filter: 'all' | 'BUT 1' | 'BUT 2' | 'BUT 3', selectElement: HTMLSelectElement) {
         this.currentStudyYearFilter = filter;
         this.applyFilters();
         selectElement.blur();
     }
 
-    //Mise à jour de la valeur du filtre sur le groupe de TD
+    /**
+     * Updates TD group filter and refreshes the filtered list
+     * @param filter Selected TD group filter option
+     * @param selectElement HTML select element to blur after selection
+     */
     setTdGroupFilter(filter: 'all' | 'TD 1' | 'TD 2' | 'TD 3', selectElement: HTMLSelectElement) {
         this.currentTdGroupFilter = filter;
         this.applyFilters();
         selectElement.blur();
     }
 
-    //Changement de l'ordre de filtrage des informations par date de création
+    /**
+     * Toggles date sorting order (default -> ascending -> descending)
+     * Updates filtered list with new sort order
+     */
     toggleDateSort() {
         switch (this.currentDateFilter) {
             case 'default':
@@ -267,7 +303,10 @@ export class ListStudentTabComponent implements OnInit{
         this.applyFilters();
     }
 
-    //Changement de l'ordre de filtrage des informations par nombre de recherche par étudiant
+    /**
+     * Toggles search count sorting order (default -> ascending -> descending)
+     * Updates filtered list with new sort order
+     */
     toggleNbSearchesSort() {
         switch (this.currentNbSearchesFilter) {
             case 'default':
@@ -283,11 +322,18 @@ export class ListStudentTabComponent implements OnInit{
         this.applyFilters();
     }
 
-    //Redirection vers la vue de consultation d'une recherche de stage
+    /**
+     * Navigates to student dashboard view for internship search management
+     * @param studentId ID of the selected student
+     */
     goToStudentDashboardManagerView(studentId: string) {
         this.navigationService.navigateToStudentDashboardManagerView(studentId);
     }
 
+    /**
+     * Navigates to student factsheets view for factsheet management
+     * @param factsheetId ID of the selected factsheet
+     */
     goToStudentFactsheetsManagerView(factsheetId: string) {
         this.navigationService.navigateToStudentFactsheetsManagerView(factsheetId);
     }

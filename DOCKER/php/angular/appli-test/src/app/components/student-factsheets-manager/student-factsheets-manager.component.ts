@@ -26,12 +26,22 @@ export class StudentFactsheetsManagerComponent implements OnInit {
   loadedChildrenCount: number = 0;
   totalChildren: number = 2
 
+  /**
+   * Initializes the component by injecting required services
+   * @param authService Service for authentication operations
+   * @param studentService Service for student-related operations
+   * @param route Service to access route parameters
+   */
   constructor(
     private readonly authService: AuthService,
     private readonly studentService: StudentService,
     private readonly route: ActivatedRoute
   ) {}
 
+  /**
+   * Lifecycle hook that is called after data-bound properties are initialized
+   * Gets the current user and loads student data if a student ID is present in the URL
+   */
   ngOnInit() {
     this.authService.getAuthenticatedUser().subscribe(user => {
       if (this.authService.isStaff(user)) {
@@ -45,6 +55,11 @@ export class StudentFactsheetsManagerComponent implements OnInit {
     }
   }
 
+  /**
+   * Loads student data based on the provided student ID
+   * Stores the selected student in the session storage
+   * @param studentId The ID of the student to load
+   */
   private async loadStudentData(studentId: string) {
     const student = await firstValueFrom(this.studentService.getStudentById(studentId));
     if (student) {
@@ -53,6 +68,10 @@ export class StudentFactsheetsManagerComponent implements OnInit {
     }
   }
 
+  /**
+   * Tracks the loading status of child components
+   * Sets allDataLoaded to true when all children have finished loading
+   */
   onChildDataLoaded() {
     this.loadedChildrenCount++;
     

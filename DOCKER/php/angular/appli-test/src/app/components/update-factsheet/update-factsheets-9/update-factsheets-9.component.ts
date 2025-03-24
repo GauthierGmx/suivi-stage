@@ -17,6 +17,10 @@ export class UpdateFactsheets9Component implements OnInit {
   @Output() previous = new EventEmitter<void>();
   currentStep: number;
 
+  /**
+   * Getter to access the form data from the FormDataService
+   * @returns The current form data
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
@@ -28,10 +32,17 @@ export class UpdateFactsheets9Component implements OnInit {
     this.currentStep = this.navigationService.getCurrentFactsheetStep();
   }
 
+  /**
+   * Initializes the form fields when the component is created
+   */
   ngOnInit() {
     this.initializeFormFields();
   }
 
+  /**
+   * Validates if all required form fields are filled
+   * @returns boolean indicating if the form is valid
+   */
   isFormValid(): boolean {
     return !!(this.formData.debutStageFicheDescriptive.value &&
       this.formData.finStageFicheDescriptive.value &&
@@ -40,6 +51,10 @@ export class UpdateFactsheets9Component implements OnInit {
       this.formData.materielPreteFicheDescriptive.value);
   }
 
+  /**
+   * Initializes all form fields with default values
+   * Sets up the initial state for dates, workdays, hours, and other descriptive fields
+   */
   private initializeFormFields() {
     const fields = {
       debutStageFicheDescriptive: { value: new Date(), type: 'ficheDescriptive' },
@@ -56,14 +71,24 @@ export class UpdateFactsheets9Component implements OnInit {
     });
   }
 
+  /**
+   * Updates the current step in the navigation service
+   * @param step The new step number to set
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Emits the form data when moving to the next step
+   */
   onNext() {
     this.next.emit(this.formData);
   }
 
+  /**
+   * Emits an event to move to the previous step
+   */
   onPrevious() {
     this.previous.emit();
   }

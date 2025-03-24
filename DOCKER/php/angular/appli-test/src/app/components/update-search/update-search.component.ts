@@ -41,7 +41,7 @@ export class UpdateSearchComponent {
         private readonly router: ActivatedRoute,
         private readonly route: Router
     ) {
-        //Configuration du filtrage des entreprises
+        // Configure company filtering with debounce
         this.searchTermChanged.pipe(
             debounceTime(800),
             distinctUntilChanged()
@@ -61,8 +61,10 @@ export class UpdateSearchComponent {
         });
     }
 
+    /**
+     * Initializes component data by fetching internship search, company, and user information
+     */
     async ngOnInit() {
-        //Récupération de la recherche de stage et de son entreprise concernée
         const searchId = Number(this.router.snapshot.paramMap.get('id'));
         const search = await firstValueFrom(this.internshipSearchService.getSearchById(searchId));
         if (search) {
@@ -74,13 +76,11 @@ export class UpdateSearchComponent {
             this.selectCompany(company)
         };
 
-        //Récupération du currentUser
         const user = sessionStorage.getItem('currentUser');
         if (user) {
             this.currentUser = JSON.parse(user);
         }
 
-        //Récupération de toutes les entreprises
         this.companyService.getCompanies(['idEntreprise', 'raisonSociale', 'adresse', 'codePostal', 'ville'])
         .subscribe(companies => {
             this.companies = companies;
@@ -88,7 +88,10 @@ export class UpdateSearchComponent {
         });
     }
 
-    //Fermeture de la liste des résultats de la recherche si l'utilisateur clique en dehors de cette dernière
+    /**
+     * Closes the company search results dropdown when clicking outside
+     * @param targetElement - The clicked HTML element
+     */
     @HostListener('document:click', ['$event.target'])
     onClick(targetElement: HTMLElement) {
         if (this.showDropdown) {
@@ -99,12 +102,17 @@ export class UpdateSearchComponent {
         }
     }
 
-    //Mise à jour du terme à rechercher
+    /**
+     * Updates the search term and triggers filtering
+     * @param term - The search term entered by the user
+     */
     onSearchChange(term: string) {
         this.searchTermChanged.next(term);
     }
 
-    //Mise à jour de la recherche de stage lors de la validation du formulaire
+    /**
+     * Handles the form submission to update the internship search
+     */
     async onSubmit() {
         if (this.isFormValid()) {
             try {
@@ -121,7 +129,10 @@ export class UpdateSearchComponent {
         }
     }
 
-    //Vérification si le formulaire de la recherche de stage est valide
+    /**
+     * Validates if all required fields in the internship search form are filled correctly
+     * @returns boolean indicating if the form is valid
+     */
     isFormValid(): boolean {
         return !!(
             this.updatedSearch.idEntreprise &&
@@ -136,7 +147,10 @@ export class UpdateSearchComponent {
         );
     }
 
-    //Vérification si le formulaire de l'entreprise est valide
+    /**
+     * Validates if all required fields in the company form are filled correctly
+     * @returns boolean indicating if the form is valid
+     */
     isCompanyFormValid(): boolean {
         return !!(
             this.newCompany.raisonSociale!.trim() &&
@@ -147,12 +161,19 @@ export class UpdateSearchComponent {
         );
     }
 
-    //Retour en arrière si la modification est annulée
+    /**
+     * Navigates back to the previous page when canceling the update
+     */
     onCancel() {
         this.navigationService.goBack();
     }
 
-    //Récupération de la classe du bouton de statut sélectionné
+    /**
+     * Returns the CSS classes for status buttons based on selection state and position
+     * @param status - The status value
+     * @param position - The button's position in the group
+     * @returns string of CSS classes
+     */
     getStatusButtonClass(status: string, position: 'first' | 'middle' | 'last'): string {
         const isSelected = this.updatedSearch.statut === status;
         let roundedClasses = '';
@@ -183,17 +204,24 @@ export class UpdateSearchComponent {
         return `${baseClasses} bg-gray-100 text-gray-600 hover:bg-gray-200`;
     }
 
-    //Mise à jour du statut de la recherche de stage
+    /**
+     * Updates the status of the internship search
+     * @param statut - The new status to set
+     */
     setStatus(statut: SearchStatus) {
         this.updatedSearch.statut = statut;
     }
 
-    //Ouverture du formulaire de création d'une entreprise
+    /**
+     * Shows the company creation form modal
+     */
     openCompanyForm() {
         this.showCompanyModal = true;
     }
 
-    //Création de l'entreprise en BD
+    /**
+     * Creates a new company and associates it with the internship search
+     */
     async createCompany() {        
         if (this.isCompanyFormValid()) {
             try {
@@ -201,13 +229,13 @@ export class UpdateSearchComponent {
                 const newCompany = await firstValueFrom(this.companyService.addCompany(this.newCompany));
 
                 if (newCompany) {
-                    // Ajout à la liste des entreprises
+                    // Add to the list of companies
                     this.companies = [...this.companies, newCompany];
                     
-                    // Utiliser la méthode selectCompany pour assurer une sélection cohérente
+                    // Use the selectCompany method to ensure consistent selection
                     this.selectCompany(newCompany);
                     
-                    // Fermeture de la modale
+                    // Close the modal
                     this.showCompanyModal = false;
                 }
             } catch (error) {
@@ -218,7 +246,10 @@ export class UpdateSearchComponent {
         }
     }    
 
-    //Association de l'entreprise à la recherche créée/sélectionnée
+    /**
+     * Associates a selected company with the internship search
+     * @param company - The company to associate
+     */
     selectCompany(company: Company) {
         this.selectedCompany = company;
         this.updatedSearch.idEntreprise = company.idEntreprise;

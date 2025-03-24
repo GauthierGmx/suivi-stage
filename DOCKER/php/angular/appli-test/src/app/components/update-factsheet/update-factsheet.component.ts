@@ -46,12 +46,19 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
   private idFicheDescriptive: number = 0;
   isSubmitting: boolean = false;
 
+  /**
+   * Getter for the form data from the FormDataService
+   * @returns The current form data
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
 
   @Output() dataSended = new EventEmitter<any>();
 
+  /**
+   * Constructor - Initializes services and subscribes to factsheet step changes
+   */
   constructor(
     private readonly navigationService: NavigationService,
     private readonly studentService: StudentService,
@@ -65,20 +72,24 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
       step => this.currentStep = step
     );
   }
+
+  /**
+   * Lifecycle hook that initializes the component
+   * - Forces step to 1 on load
+   * - Loads factsheet data by ID
+   * - Sets up user role based on authentication
+   */
   ngOnInit(): void {
-    // Forcer le step à 1 au chargement
     this.navigationService.setFactsheetStep(1);
     this.currentStep = 1;
     
     this.idFicheDescriptive = Number(this.route.snapshot.paramMap.get('id'));
     
     this.factsheetsService.getSheetById(this.idFicheDescriptive).subscribe({
-    // this.factsheetsService.getSheetById(idFicheDescriptive).subscribe({
       next: (response) => {
         this.factsheet = response;
         this.dataLoaded = true;
-        
-        // Initialisation des champs avec les données reçues
+
         Object.entries(this.factsheet).forEach(([field, value]: [string, any]) => {
             this.formDataService.initializeField(field, value.value, value.type);
         });
@@ -97,22 +108,32 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Lifecycle hook that cleans up the component
+   * Resets the factsheet step to 1 when leaving the component
+   */
   ngOnDestroy(): void {
-    // Réinitialiser le step quand on quitte le composant
     this.navigationService.setFactsheetStep(1);
   }
 
+  /**
+   * Handles step changes in the navigation
+   * @param step The step number to navigate to
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Validates all required fields in the form
+   * Checks for presence and correct type of all mandatory fields
+   * @returns boolean indicating whether all fields are valid
+   */
   private validateAllFields(): boolean {
     const requiredFields = {
-      // Étape 1 - Informations Étudiant
       nomEtudiant: 'string',
       prenomEtudiant: 'string',
       
-      // Étape 3-4 - Entreprise
       raisonSocialeEntreprise: 'string',
       adresseEntreprise: 'string',
       codePostalEntreprise: 'string',
@@ -123,32 +144,27 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
       numSIRETEntreprise: 'string',
       codeAPE_NAFEntreprise: 'string',
       
-      // Étape 5 - Représentant entreprise
       nomRepresentantEntreprise: 'string',
       prenomRepresentantEntreprise: 'string',
       telephoneRepresentantEntreprise: 'string',
       adresseMailRepresentantEntreprise: 'string',
       fonctionRepresentantEntreprise: 'string',
       
-      // Étape 6 - Lieu de stage
       adresseStageFicheDescriptive: 'string',
       codePostalStageFicheDescriptive: 'string',
       villeStageFicheDescriptive: 'string',
       paysStageFicheDescriptive: 'string',
       
-      // Étape 7 - Tuteur entreprise
       nomTuteurEntreprise: 'string',
       prenomTuteurEntreprise: 'string',
       telephoneTuteurEntreprise: 'string',
       adresseMailTuteurEntreprise: 'string',
       fonctionTuteurEntreprise: 'string',
       
-      // Étape 8 - Sujet stage
       thematiqueFicheDescriptive: 'string',
       sujetFicheDescriptive: 'string',
       tachesFicheDescriptive: 'string',
       
-      // Étape 9 - Modalités stage
       debutStageFicheDescriptive: 'string',
       finStageFicheDescriptive: 'string',
       nbJourSemaineFicheDescriptive: 'number',
@@ -158,17 +174,17 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
     for (const [field, type] of Object.entries(requiredFields)) {
       const fieldData = this.formData[field];
       if (!fieldData?.value) {
-        console.error(`Champ manquant: ${field}`);
+        console.error(`Missing field: ${field}`);
         return false;
       }
 
       if (type === 'date' && !(fieldData.value instanceof Date)) {
-        console.error(`Type invalide pour ${field}: attendu Date`);
+        console.error(`Invalid type for ${field}: expected Date`);
         return false;
       }
 
       if (type === 'number' && isNaN(Number(fieldData.value))) {
-        console.error(`Type invalide pour ${field}: attendu Number`);
+        console.error(`Invalid type for ${field}: expected Number`);
         return false;
       }
     }
@@ -176,6 +192,13 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  /**
+   * Handles the next step action
+   * - Updates form data with step data
+   * - Validates all fields if on last step
+   * - Submits the form if on last step and validation passes
+   * @param stepData Data from the current step
+   */
   onNext(stepData: any) {
     Object.entries(stepData).forEach(([field, data]: [string, any]) => {
       this.formDataService.updateField(field, data.value);
@@ -183,7 +206,7 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
     
     if (this.currentStep === 9) {
       if (!this.validateAllFields()) {
-        alert('Certains champs requis ne sont pas correctement remplis. Veuillez vérifier tous les onglets.');
+        alert('Some required fields are not properly filled. Please check all tabs.');
         return;
       }
 
@@ -191,7 +214,7 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
         this.formDataService.updateField('idUPPA', this.currentUser.idUPPA);
       }
 
-      this.isSubmitting = true; // Activer le loading
+      this.isSubmitting = true;
 
       forkJoin({
         students: this.studentService.getStudents(),
@@ -202,20 +225,20 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
             next: (response) => {
               this.dataSended.emit(response);
               this.formDataService.resetFormData();
-              this.isSubmitting = false; // Désactiver le loading
+              this.isSubmitting = false;
               this.router.navigateByUrl('/factsheets');
             },
             error: (error) => {
-              console.error('Erreur lors de la mise à jour de la fiche:', error);
-              alert('Une erreur est survenue lors de la mise à jour de la fiche.');
-              this.isSubmitting = false; // Désactiver le loading en cas d'erreur
+              console.error('Error updating the factsheet:', error);
+              alert('An error occurred while updating the factsheet.');
+              this.isSubmitting = false;
             }
           });
         },
         error: (error) => {
-          console.error('Erreur lors de la vérification des données:', error);
-          alert('Une erreur est survenue lors de la vérification des données.');
-          this.isSubmitting = false; // Désactiver le loading en cas d'erreur
+          console.error('Error verifying data:', error);
+          alert('An error occurred while verifying the data.');
+          this.isSubmitting = false;
         }
       });
       return;
@@ -224,6 +247,10 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
     this.navigationService.setFactsheetStep(this.currentStep + 1);
   }
 
+  /**
+   * Handles the previous step action
+   * Navigates to the previous step if not on first step
+   */
   onPrevious() {
     if (this.currentStep > 1) {
       this.navigationService.setFactsheetStep(this.currentStep - 1);

@@ -20,6 +20,9 @@ export class UpdateFactsheets2Component implements OnInit {
   currentStep: number;
   careers: Career[];
 
+  /**
+   * Getter that returns the current form data from the FormDataService
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
@@ -33,8 +36,11 @@ export class UpdateFactsheets2Component implements OnInit {
     this.careers = [];
   }
 
+  /**
+   * Initializes component by setting default values for establishment fields
+   * and fetches available careers from the CareerService
+   */
   ngOnInit(): void {
-    // Initialisation des champs avec valeurs par défaut
     const defaultValues = {
       'composanteEtablissement': '181 - IUT de Bayonne et du Pays Basque (Anglet)',
       'parcoursEtablissement': 'BBWIA2 - BUT2 - INFO - Intégration d\'Applications et Management du SI',
@@ -42,27 +48,33 @@ export class UpdateFactsheets2Component implements OnInit {
       'telephoneEtablissement': '05.59.57.43.02'
     };
 
-    // Initialisation de chaque champ
     Object.entries(defaultValues).forEach(([field, value]) => {
       this.formDataService.initializeField(field, value, 'etablissement');
     });
 
-    // Récupération des parcours
     this.CareerService.getCareers(['codeParcours', 'libelle', 'idDepartement']).subscribe((careers) => {
       this.careers = careers;
     });
-
-
   }
 
+  /**
+   * Updates the current step in the navigation service
+   * @param step The step number to change to
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Emits the current form data when moving to the next step
+   */
   onNext() {
     this.next.emit(this.formData);
   }
 
+  /**
+   * Emits an event to navigate to the previous step
+   */
   onPrevious() {
     this.previous.emit();
   }
