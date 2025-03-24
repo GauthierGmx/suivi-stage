@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { teacherTutorDetails } from '../components/factsheets-details/factsheets-details.component';
 
@@ -31,6 +31,8 @@ export class StudentStaffAcademicYearService {
         );
     }
 
+    
+
     addStudentTeacherAssignments(enterStudentTeacher: teacherTutorDetails): Observable<teacherTutorDetails> {
       const httpOptions = {
         headers: new HttpHeaders({'Content-type': 'application/json'})
@@ -41,6 +43,19 @@ export class StudentStaffAcademicYearService {
         catchError(error => this.handleError(error, undefined))
       );
   }
+
+  getTutorByUppaYear(studentId: teacherTutorDetails , fields?: string[]): Observable<teacherTutorDetails | undefined> {
+      let params = new HttpParams();
+  
+      if (fields && fields.length > 0) {
+        params = params.set('fields', fields.join(','));
+      }
+  
+      return this.http.get<teacherTutorDetails>(`${this.apiUrl}/api/affectation/${studentId.idUPPA}-${studentId.idAnneeUniversitaire}`, {params}).pipe(
+        tap(response => this.log(response)),
+        catchError(error => this.handleError(error, null))
+      );
+    }
 
 
     extractStudentTeacherAssignments(): Observable<ExcelResponse> {

@@ -288,27 +288,33 @@ export class SheetDetailsComponent implements OnInit {
                 if (year) {
                     this.teacherTutorDetails!.idAnneeUniversitaire = year.idAnneeUniversitaire; 
                     this.teacherTutorDetails!.idPersonnel = this.choicedTutor?.idPersonnel;
-    
-                    this.studentStaffService.updateStudentTeacherAssignments(this.teacherTutorDetails!)
-                        .pipe(
-                            catchError((error) => {
-                                // Capture explicitement toutes les erreurs, y compris 404
-                                console.log("Échec de la mise à jour, tentative d'ajout");
-                                return this.studentStaffService.addStudentTeacherAssignments(this.teacherTutorDetails!);
-                            })
-                        )
-                        .subscribe({
-                            next: (response) => {
-                                // Traitement réussi (soit update, soit add)
-                            },
-                            error: (err) => {
-                                console.error("Erreur lors de l'affectation");
-                            }
-                        });
+
+                    if (this.teacherTutorDetails) {
+                        const tutor = this.studentStaffService.getTutorByUppaYear(this.teacherTutorDetails);
+                        if (tutor) {
+                            this.studentStaffService.updateStudentTeacherAssignments(this.teacherTutorDetails).subscribe({
+                                next: (response) => {
+                                    console.log("Affectation de l'enseignant réussie :", response);
+                                },
+                                error: (err) => {
+                                    console.error("Erreur lors de l'affectation de l'enseignant :", err);
+                                }
+                            });
+                        } else {
+                            this.studentStaffService.addStudentTeacherAssignments(this.teacherTutorDetails).subscribe({
+                                next: (response) => {
+                                    console.log("Ajout de l'affectation de l'enseignant réussie :", response);
+                                },
+                                error: (err) => {
+                                    console.error("Erreur lors de l'ajout de l'affectation de l'enseignant :", err);
+                                }
+                            });
+                        }
+                    }
                 }
             },
             error: (err) => {
-                console.error("Erreur lors de la récupération de l'année académique");
+                console.error("Erreur lors de la récupération de l'année académique :", err);
             }
         });
     }
