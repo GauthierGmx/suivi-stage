@@ -27,8 +27,7 @@ class DatabaseConnection
             }
 
             echo "Variables d'environnement vérifiées.\n";
-            echo "Hôte: {$_ENV['DB_HOST']}\n";
-            echo "Base de données: {$_ENV['DB_DATABASE']}\n";
+
 
             try {
                 self::$connection = new PDO(
