@@ -34,13 +34,15 @@ export class AddSearchFormComponent implements OnInit {
     isCreatingCompany: boolean = false;
     isSubmitting: boolean = false;
 
+    /**
+     * Initializes the component with company search filtering configuration
+     */
     constructor(
         private readonly companyService: CompanyService,
         private readonly internshipSearchService: InternshipSearchService,
         private readonly navigationService: NavigationService,
         private readonly router: Router
     ) {
-        // Configuration du filtrage des entreprises
         this.searchTermChanged.pipe(
             debounceTime(800),
             distinctUntilChanged()
@@ -60,18 +62,18 @@ export class AddSearchFormComponent implements OnInit {
         });
     }
 
+    /**
+     * Initializes component data, setting default values and fetching companies
+     */
     ngOnInit() {
-        // Initialisation des valeurs par défaut
         this.newSearch.typeContact = 'Mail';
         this.newSearch.statut = 'En cours';
 
-        // Récupération du currentUser
         const user = sessionStorage.getItem('currentUser');
         if (user) {
             this.currentUser = JSON.parse(user);
         }
 
-        // Récupération des entreprises
         this.companyService.getCompanies(['idEntreprise', 'raisonSociale', 'adresse', 'codePostal', 'ville'])
             .subscribe(companies => {
                 this.companies = companies;
@@ -79,6 +81,10 @@ export class AddSearchFormComponent implements OnInit {
             });
     }
 
+    /**
+     * Handles document click events to close the dropdown when clicking outside
+     * @param targetElement The HTML element that was clicked
+     */
     @HostListener('document:click', ['$event.target'])
     onClick(targetElement: HTMLElement) {
         if (this.showDropdown) {
@@ -89,10 +95,17 @@ export class AddSearchFormComponent implements OnInit {
         }
     }
 
+    /**
+     * Triggers company search when search term changes
+     * @param term The search term entered by user
+     */
     onSearchChange(term: string) {
         this.searchTermChanged.next(term);
     }
 
+    /**
+     * Handles form submission by adding new internship search
+     */
     async onSubmit() {
         if (this.isFormValid()) {
             try {
@@ -109,6 +122,10 @@ export class AddSearchFormComponent implements OnInit {
         }
     }
 
+    /**
+     * Validates if all required fields in the internship search form are filled correctly
+     * @returns Boolean indicating if the form is valid
+     */
     isFormValid(): boolean {
         return !!(
             this.newSearch.idEntreprise &&
@@ -123,6 +140,10 @@ export class AddSearchFormComponent implements OnInit {
         );
     }
 
+    /**
+     * Validates if all required fields in the company form are filled correctly
+     * @returns Boolean indicating if the form is valid
+     */
     isCompanyFormValid(): boolean {
         return !!(
             this.newCompany.raisonSociale!.trim() &&
@@ -133,10 +154,19 @@ export class AddSearchFormComponent implements OnInit {
         );
     }
 
+    /**
+     * Navigates back to previous page
+     */
     onCancel() {
         this.navigationService.goBack();
     }
 
+    /**
+     * Determines CSS classes for status buttons based on selection state and position
+     * @param status The status value
+     * @param position Button position in the group
+     * @returns String of CSS classes
+     */
     getStatusButtonClass(status: string, position: 'first' | 'middle' | 'last'): string {
         const isSelected = this.newSearch.statut === status;
         let roundedClasses = '';
@@ -167,15 +197,24 @@ export class AddSearchFormComponent implements OnInit {
         return `${baseClasses} bg-gray-100 text-gray-600 hover:bg-gray-200`;
     }
 
+    /**
+     * Updates the search status
+     * @param statut New status to set
+     */
     setStatus(statut: SearchStatus) {
         this.newSearch.statut = statut;
     }
 
+    /**
+     * Opens the company creation modal
+     */
     openCompanyForm() {
         this.showCompanyModal = true;
     }
 
-    //Création de l'entreprise en BD
+    /**
+     * Creates a new company and adds it to the companies list
+     */
     async createCompany() {        
         if (this.isCompanyFormValid()) {
             try {
@@ -183,13 +222,8 @@ export class AddSearchFormComponent implements OnInit {
                 const newCompany = await firstValueFrom(this.companyService.addCompany(this.newCompany));
 
                 if (newCompany) {
-                    // Ajout à la liste des entreprises
                     this.companies = [...this.companies, newCompany];
-                    
-                    // Utiliser la méthode selectCompany pour assurer une sélection cohérente
                     this.selectCompany(newCompany);
-                    
-                    // Fermeture de la modale
                     this.showCompanyModal = false;
                 }
             } catch (error) {
@@ -200,6 +234,10 @@ export class AddSearchFormComponent implements OnInit {
         }
     }    
 
+    /**
+     * Selects a company and updates the search form
+     * @param company The company to select
+     */
     selectCompany(company: Company) {
         this.selectedCompany = company;
         this.newSearch.idEntreprise = company.idEntreprise;

@@ -56,7 +56,9 @@ export class SearchesStudentTabComponent implements OnInit {
         this.loadData();
     }
 
-    //Chargement des données de l'étudiant, de ses recherches de stages et des entreprises liées
+    /**
+     * Loads student data, their internship searches and related companies
+     */
     loadData() {
         const searchFields = ['idRecherche', 'dateCreation', 'statut', 'idEntreprise'];
     
@@ -78,7 +80,9 @@ export class SearchesStudentTabComponent implements OnInit {
     }
     
 
-    //Récupération des recherches, et des entreprises associées, d'un étudiant avec l'application des filtres
+    /**
+     * Retrieves filtered searches with associated companies for a student
+     */
     getFilteredSearchesWithCompanies() {
         if (this.companies && this.searches) {
             let searchCompanies: Company[] = this.companies.filter(
@@ -104,7 +108,9 @@ export class SearchesStudentTabComponent implements OnInit {
         }
     }
 
-    //Application des filtres et de la barre de recherche
+    /**
+     * Applies all active filters and search terms to the list of searches
+     */
     applyFilters() {
         if (!this.originalSearchesWithCompany) return;
 
@@ -162,13 +168,19 @@ export class SearchesStudentTabComponent implements OnInit {
         this.filteredSearchesWithCompany = filteredSearches;
     }
 
-    //Choix du nombre de jours maximums dont on doit récupérer les recherches de l'étudiant
+    /**
+     * Sets the maximum days filter for retrieving student searches
+     * @param days Number of days to filter by
+     */
     setMaxDaysFilter(days: number) {
         this.maxDaysFilter = days;
         this.applyFilters();
     }
 
-    //Récupération de la valeur de la barre de recherche à rechercher
+    /**
+     * Handles search term changes from the search input
+     * @param event Input event containing the new search value
+     */
     onSearchTermChange(event: Event) {
         const target = event.target as HTMLInputElement;
         if (target) {
@@ -177,27 +189,39 @@ export class SearchesStudentTabComponent implements OnInit {
         }
     }
 
-    //Réinitialisation à vide du contenu de la barre de recherche
+    /**
+     * Clears the search term and triggers a new filter
+     */
     clearSearchTerm() {
         this.searchTerm = '';
         this.searchTermSubject.next(this.searchTerm);
     }
 
-    //Mise à jour de la valeur du filtre de statut d'une recherche de stage
+    /**
+     * Updates the status filter and applies it
+     * @param filter The new status filter to apply
+     * @param selectElement The select element that triggered the change
+     */
     setStatutFilter(filter: 'all' | 'Refusé' | 'En cours' | 'Relancé' | 'Validé', selectElement: HTMLSelectElement) {
         this.currentStatutFilter = filter;
         this.applyFilters();
         selectElement.blur();
     }
     
-    //Mise à jour de la valeur du filtre lié à la ville d'une recherche de stage
+    /**
+     * Updates the city filter and applies it
+     * @param city The new city to filter by
+     * @param selectElement The select element that triggered the change
+     */
     setCityFilter(city: string, selectElement: HTMLSelectElement) {
         this.currentCityFilter = city;
         this.applyFilters();
         selectElement.blur();
     }
 
-    //Changement de l'ordre de filtrage des recherches
+    /**
+     * Toggles the date sort order cycling through default, ascending, and descending
+     */
     toggleDateSort() {
         switch (this.currentDateFilter) {
             case 'default':
@@ -213,7 +237,10 @@ export class SearchesStudentTabComponent implements OnInit {
         this.applyFilters();
     }
 
-    //Récupération du label lié à un statut
+    /**
+     * Returns the display label for a given search status
+     * @param status The search status to get the label for
+     */
     getStatusLabel(status: SearchStatus): string {
         const labels: Record<SearchStatus, string> = {
             'Relancé': 'Relancé',
@@ -224,7 +251,10 @@ export class SearchesStudentTabComponent implements OnInit {
         return labels[status];
     }
 
-    //Récupération de la classe lié à un statut
+    /**
+     * Returns the CSS class for a given status
+     * @param status The status to get the class for
+     */
     getStatusClass(status: string): string {
         const statusMap: Record<string, string> = {
             'Relancé': 'status-badge relance',
@@ -235,28 +265,41 @@ export class SearchesStudentTabComponent implements OnInit {
         return statusMap[status] || 'status-badge';
     }
 
-    //Redirection vers la vue de consultation d'une recherche de stage
+    /**
+     * Navigates to the search details view
+     * @param searchId The ID of the search to view
+     */
     goToSearchDetails(searchId: number) {
         this.navigationService.navigateToSearchView(searchId);
     }
 
-    //Redirection vers la vu d'ajout d'une recherche de stage
+    /**
+     * Navigates to the add search form view
+     */
     goToAddSearchFormView() {
         this.navigationService.navigateToSearchForm();
     }
 
-    //Redirection vers la vue de mise à jour d'une recherche de stage
+    /**
+     * Navigates to the search update form view
+     * @param searchId The ID of the search to edit
+     */
     goToUpdateSearchFormView(searchId: number) {
         this.navigationService.navigateToSearchEditForm(searchId);
     }
 
-    //Affiche la fenêtre modale de confirmation de la supression d'une recherche de stage
+    /**
+     * Opens the delete confirmation modal for a search
+     * @param search The search to be deleted
+     */
     openDeleteModal(search: InternshipSearch) {
         this.searchToDelete = search;
         this.showDeleteModal = true;
     }
 
-    //Suppression de la recherche de stage sélectionnée
+    /**
+     * Handles the confirmation of search deletion
+     */
     async onConfirmDelete() {
         if (this.searchToDelete) {
             try {
@@ -276,7 +319,9 @@ export class SearchesStudentTabComponent implements OnInit {
         }
     }
 
-    //Annulation de la suppression d'une recherche de stage
+    /**
+     * Cancels the search deletion operation
+     */
     onCancelDelete() {
         this.showDeleteModal = false;
         this.searchToDelete = undefined;

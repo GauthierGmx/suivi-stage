@@ -17,18 +17,31 @@ export class BackConfirmationModalComponent {
     isDeleting = false;
     currentPageUrl!: string;
 
+    /**
+     * Creates an instance of BackConfirmationModalComponent
+     * @param navigationService Service for handling navigation operations
+     */
     constructor(
         private readonly navigationService: NavigationService,
     ) {}
 
+    /**
+     * Lifecycle hook that gets the current page URL on component initialization
+     */
     ngOnInit() {
         this.currentPageUrl = this.navigationService.getCurrentPageUrl();
     }
 
+    /**
+     * Emits the confirmBack event when user confirms going back
+     */
     onConfirm() {
         this.confirmBack.emit();
     }
 
+    /**
+     * Emits the cancelBack event when user cancels going back
+     */
     onCancel() {
         this.cancelBack.emit();
     }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { TrainingYear } from '../models/training-year.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of } from 'rxjs';
@@ -7,6 +8,7 @@ import { Observable, catchError, tap, of } from 'rxjs';
   providedIn: 'root'
 })
 export class TrainingYearService {
+    apiUrl = environment.apiUrl;
     private readonly mockTrainingYear: TrainingYear[] = [
         {
             idAnneeFormation: 1,
@@ -32,7 +34,7 @@ export class TrainingYearService {
         }
 
         /*
-        return this.http.get<TrainingYear[]>('http://localhost:8000/api/', {params}).pipe(
+        return this.http.get<TrainingYear[]>(`${this.apiUrl}/api/`, {params}).pipe(
         tap(response => this.log(response)),
         catchError(error => this.handleError(error, null))
         );
@@ -48,7 +50,7 @@ export class TrainingYearService {
         }
 
         /*
-        return this.http.get<TrainingYear>(`http://localhost:8000/api/tds/${TDId}`, {params}).pipe(
+        return this.http.get<TrainingYear>(`${this.apiUrl}/api/tds/${TDId}`, {params}).pipe(
         tap(response => this.log(response)),
         catchError(error => this.handleError(error, null))
         );

@@ -17,6 +17,10 @@ export class AddFactsheets6Component implements OnInit {
   @Output() previous = new EventEmitter<void>();
   currentStep: number;
 
+  /**
+   * Getter that returns the current form data from the FormDataService
+   * @returns The current state of the form data
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
@@ -28,10 +32,17 @@ export class AddFactsheets6Component implements OnInit {
     this.currentStep = this.navigationService.getCurrentFactsheetStep();
   }
 
+  /**
+   * Lifecycle hook that initializes the form fields when the component is created
+   */
   ngOnInit() {
     this.initializeFormFields();
   }
 
+  /**
+   * Validates the form by checking if all required fields have values
+   * @returns boolean indicating if the form is valid
+   */
   isFormValid(): boolean {
     return !!(this.formData.adresseMailStageFicheDescriptive.value &&
       this.formData.telephoneStageFicheDescriptive.value &&
@@ -41,6 +52,11 @@ export class AddFactsheets6Component implements OnInit {
       this.formData.paysStageFicheDescriptive.value);
   }
 
+  /**
+   * Initializes all form fields with empty values and their respective types
+   * Sets up the structure for collecting internship location information
+   * @private
+   */
   private initializeFormFields() {
     const fields = {
       adresseMailStageFicheDescriptive: { value: '', type: 'ficheDescriptive' },
@@ -56,14 +72,24 @@ export class AddFactsheets6Component implements OnInit {
     });
   }
 
+  /**
+   * Updates the current step in the navigation service
+   * @param step The step number to navigate to
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Emits the current form data when moving to the next step
+   */
   onNext() {
     this.next.emit(this.formData);
   }
 
+  /**
+   * Emits an event to navigate to the previous step
+   */
   onPrevious() {
     this.previous.emit();
   }

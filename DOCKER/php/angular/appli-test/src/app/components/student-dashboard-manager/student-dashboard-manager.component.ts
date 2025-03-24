@@ -32,6 +32,10 @@ export class StudentDashboardManagerComponent implements OnInit {
     private readonly route: ActivatedRoute
   ) {}
 
+  /**
+   * Initializes the component by setting the current user and loading student data
+   * if a student ID is present in the route parameters
+   */
   ngOnInit() {
     let user = this.authService.getCurrentUser();
     if (this.authService.isStaff(user)) {
@@ -44,6 +48,11 @@ export class StudentDashboardManagerComponent implements OnInit {
     }
   }
 
+  /**
+   * Loads student data based on the provided student ID
+   * and stores it in the session storage
+   * @param studentId - The ID of the student to load
+   */
   private async loadStudentData(studentId: string) {
     const student = await firstValueFrom(this.studentService.getStudentById(studentId));
     if (student) {
@@ -52,6 +61,10 @@ export class StudentDashboardManagerComponent implements OnInit {
     }
   }
 
+  /**
+   * Tracks the loading progress of child components
+   * Sets allDataLoaded to true when all children are loaded
+   */
   onChildDataLoaded() {
     this.loadedChildrenCount++;
     

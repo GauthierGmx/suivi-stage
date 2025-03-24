@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { Student } from '../models/student.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of, BehaviorSubject } from 'rxjs';
@@ -7,6 +8,7 @@ import { Observable, catchError, tap, of, BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class StudentService {
+  apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -17,7 +19,7 @@ export class StudentService {
       params = params.set('fields', fields.join(','));
     }
 
-    return this.http.get<Student[]>('http://localhost:8000/api/etudiants', {params}).pipe(
+    return this.http.get<Student[]>(`${this.apiUrl}/api/etudiants`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
@@ -30,7 +32,7 @@ export class StudentService {
       params = params.set('fields', fields.join(','));
     }
 
-    return this.http.get<Student>(`http://localhost:8000/api/etudiants/${studentId}`, {params}).pipe(
+    return this.http.get<Student>(`${this.apiUrl}/api/etudiants/${studentId}`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );

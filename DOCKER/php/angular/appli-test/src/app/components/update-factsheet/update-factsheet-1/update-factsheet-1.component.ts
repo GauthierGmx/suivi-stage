@@ -20,6 +20,9 @@ export class UpdateFactsheet1Component implements OnInit {
   @Input() student!: Student;
   showBackModal = false;
 
+  /**
+   * Getter that returns the current form data from the FormDataService
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
@@ -31,8 +34,10 @@ export class UpdateFactsheet1Component implements OnInit {
     this.currentStep = this.navigationService.getCurrentFactsheetStep();
   }
 
+  /**
+   * Initializes the form fields with the student's data
+   */
   ngOnInit(): void {
-    // Initialisation des champs avec les valeurs de l'étudiant
     const fieldMappings = {
       'nomEtudiant': this.student?.nom,
       'prenomEtudiant': this.student?.prenom,
@@ -43,35 +48,56 @@ export class UpdateFactsheet1Component implements OnInit {
       'villeEtudiant': this.student?.ville
     };
 
-    // Initialisation de chaque champ
     Object.entries(fieldMappings).forEach(([field, value]) => {
       this.formDataService.initializeField(field, value ?? '', 'etudiant');
     });
   }
 
+  /**
+   * Updates the current factsheet step in the navigation service
+   * @param step The step number to change to
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Emits the current form data to the parent component
+   */
   onNext() {
     this.next.emit(this.formData);
   }
 
+  /**
+   * Opens the back confirmation modal when canceling
+   */
   onCancel() {
     this.openBackModal();
   }
 
+  /**
+   * Shows the back confirmation modal
+   */
   openBackModal() {
     this.showBackModal = true;
   }
 
-  onConfirmBack() { // Renommé de confirmBack à onConfirmBack
+  /**
+   * Handles the confirmation of going back:
+   * - Resets the form data
+   * - Navigates back
+   * - Closes the modal
+   */
+  onConfirmBack() {
     this.formDataService.resetFormData();
     this.navigationService.goBack();
     this.showBackModal = false;
   }
 
-  onCancelBack() { // Renommé de closeBackModal à onCancelBack
+  /**
+   * Closes the back confirmation modal without taking any action
+   */
+  onCancelBack() {
     this.showBackModal = false;
   }
 }

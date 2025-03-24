@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { Company } from '../models/company.model';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, tap, of } from 'rxjs';
@@ -7,6 +8,7 @@ import { Observable, catchError, tap, of } from 'rxjs';
   providedIn: 'root'
 })
 export class CompanyService {
+  apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -17,7 +19,7 @@ export class CompanyService {
       params = params.set('fields', fields.join(','));
     }
 
-    return this.http.get<Company[]>('http://localhost:8000/api/entreprises', {params}).pipe(
+    return this.http.get<Company[]>(`${this.apiUrl}/api/entreprises`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, []))
     );
@@ -30,7 +32,7 @@ export class CompanyService {
       params = params.set('fields', fields.join(','));
     }
 
-    return this.http.get<Company>(`http://localhost:8000/api/entreprises/${idCompany}`, {params}).pipe(
+    return this.http.get<Company>(`${this.apiUrl}/api/entreprises/${idCompany}`, {params}).pipe(
       tap(response => this.log(response)),
       catchError((error) => this.handleError(error, undefined))
     );
@@ -41,7 +43,7 @@ export class CompanyService {
       headers: new HttpHeaders({'Content-type': 'application/json'})
     };
 
-    return this.http.post<Company>('http://localhost:8000/api/entreprises/create', enterprise, httpOptions).pipe(
+    return this.http.post<Company>(`${this.apiUrl}/api/entreprises/create`, enterprise, httpOptions).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, undefined))
     );
