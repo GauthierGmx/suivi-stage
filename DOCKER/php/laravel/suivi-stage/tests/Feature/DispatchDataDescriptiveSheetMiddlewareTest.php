@@ -318,7 +318,7 @@ class DispatchDataDescriptiveSheetMiddlewareTest extends TestCase
                  ->assertJson(['message' => 'Une erreur s\'est produite :']);
     }
 
-        /*
+    /*
     =============================================
         TEST DE LA METHODE handleSheetCreate
     =============================================
@@ -1094,5 +1094,72 @@ class DispatchDataDescriptiveSheetMiddlewareTest extends TestCase
                  ->assertJson(['message' => 'Une erreur s\'est produite :']);
     }
 
+    /*
+    =============================================
+        TEST DE LA METHODE handleSheetUpdate
+    =============================================
+    */
+
+    /**
+     * La méthode handleSheetUpdate doit retourner une confirmation 200 car la fiche descriptive a bien été modifiée
+     * 
+     * @return void
+     */
+    public function test_handleSheetUpdate_doit_renvoyer_200_car_la_fiche_descriptive_a_ete_mise_a_jour(){
+        $ficheDescriptive = FicheDescriptive::first();
+
+        $ficheDescriptive->statut = "Validée";
+        $response = $this->putJson('/api/fiche-descriptive/update/'.$ficheDescriptive->idFicheDescriptive, $ficheDescriptive->toArray());
+        $response->assertStatus(200)
+                 ->assertJson([
+                     'entreprise' => null,
+                     'tuteurEntreprise' => null,
+                 ]);
+    }
+
+    /**
+     * La méthode handleSheetUpdate doit retourner une erreur 404 car la fiche descriptive n'existe pas
+     * 
+     * @return void
+     */
+    public function test_handleSheetUpdate_renvoie_une_erreur_404_car_la_fiche_descriptive_n_existe_pas(){
+        $ficheDescriptive = 100000;
+        $response = $this->put('/api/fiche-descriptive/update/'.$ficheDescriptive);
+        $response->assertStatus(404)
+                 ->assertJson([
+                    'message' => 'Fiche descriptive non trouvée'
+                ]);
+    }
+
+    /**
+     * La méthode handleSheetUpdate doit retourner une erreur 400 car le format JSON est invalide
+     * 
+     * @return void
+     */
+    public function test_handleSheetUpdate_renvoie_une_erreur_400_car_le_format_JSON_est_invalide(){
+        $ficheDescriptive = FicheDescriptive::first();
+        $jsonInvalide = ["idFicheDescriptive"=>1]; // Virgule en trop
+        
+        $response = $this->putJson('/api/fiche-descriptive/update/'.$ficheDescriptive->idFicheDescriptive,$jsonInvalide);
+        $response->assertStatus(400)
+                 ->assertJson([
+                    'message' => 'Le format JSON est invalide'
+                ]);
+    }
+
+        /**
+     * La méthode handleSheetUpdate doit renvoyer 500 car on simule une erreur
+     * 
+     * @return void 
+     */
+    public function test_handleSheetUpdate_renvoie_une_erreur_500_car_une_erreur_est_simule(){
+        $this->partialMock(\App\Http\Middleware\DispatchDataDescriptiveSheet::class, function ($mock) {
+            $mock->shouldReceive('handleSheetUpdate')->andThrow(new Exception);
+        });
+        $ficheDescriptive = FicheDescriptive::first();
+        $response = $this->putJson('/api/fiche-descriptive/update'.$ficheDescriptive->idFicheDescriptive);
     
+        $response->assertStatus(500)
+                 ->assertJson(['message' => 'Une erreur s\'est produite :']);
+    }
 }

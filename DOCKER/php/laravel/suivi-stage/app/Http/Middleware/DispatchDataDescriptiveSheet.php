@@ -90,7 +90,7 @@ class DispatchDataDescriptiveSheet
         $data = $request->json()->all();
 
         if (!is_array($data)) {
-            return response()->json(['error' => 'Invalid JSON format'], 400);
+            return response()->json(['message' => 'Invalid JSON format'], 400);
         }
 
          // Vérifiez si la route demandée correspond à celle de handleSheetCreation
@@ -223,7 +223,7 @@ class DispatchDataDescriptiveSheet
         // **1️⃣ Récupération de la fiche descriptive**
         $ficheDescriptive = FicheDescriptive::find($id);
         if (!$ficheDescriptive) {
-            return response()->json(['error' => 'Fiche descriptive non trouvée'], 404);
+            return response()->json(['message' => 'Fiche descriptive non trouvée'], 404);
         }
 
         // **2️⃣ Récupérer les IDs de l'entreprise et du tuteur associés**
@@ -233,7 +233,7 @@ class DispatchDataDescriptiveSheet
         // **3️⃣ Récupération et validation des données du JSON**
         $data = $request->json()->all();
         if (!is_array($data)) {
-            return response()->json(['error' => 'Invalid JSON format'], 400);
+            return response()->json(['message' => 'Invalid JSON format'], 400);
         }
 
         // **4️⃣ Structuration des données avec le mapping**
@@ -265,7 +265,7 @@ class DispatchDataDescriptiveSheet
 
         // **6️⃣ Mise à jour de la fiche descriptive**
         $ficheDescriptive->update($validatedData['ficheDescriptive']);
-
+        $entreprise = null;
         // **7️⃣ Mise à jour de l'entreprise si nécessaire**
         if (!empty($validatedData['entreprise'])) {
             $entreprise = Entreprise::find($idEntreprise);
@@ -277,6 +277,7 @@ class DispatchDataDescriptiveSheet
         }
 
         // **8️⃣ Mise à jour du tuteur entreprise si nécessaire**
+        $tuteur = null;
         if (!empty($validatedData['tuteurEntreprise'])) {
             $tuteur = TuteurEntreprise::find($idTuteurEntreprise);
             if ($tuteur) {
@@ -326,7 +327,7 @@ class DispatchDataDescriptiveSheet
 
         // Vérification de la validité des champs obligatoires
         if (empty($entreprise->numSIRET) || empty($entreprise->raisonSociale)) {
-            return response()->json(['error' => 'Le numéro SIRET ou/et la raison sociale est obligatoire'], 400);
+            return response()->json(['message' => 'Le numéro SIRET ou/et la raison sociale est obligatoire'], 400);
         }
  
          // Construire le tableau des données à renvoyer
