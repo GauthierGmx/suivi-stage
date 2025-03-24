@@ -1,8 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { Staff } from '../../models/staff.model';
-import { Student } from '../../models/student.model';
 import { WelcomeComponent } from "../welcome-card/welcome-card.component";
 import { StatsCardsComponent } from "../stats-cards/stats-cards.component";
 import { SearchesStudentTabComponent } from '../searches-student-tab/searches-student-tab.component';
@@ -29,6 +27,10 @@ export class DashboardComponent implements OnInit {
     private readonly cdRef: ChangeDetectorRef
   ) {}
 
+  /**
+   * Initializes the component by setting up the current user and their role.
+   * Forces change detection after initialization.
+   */
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
     
@@ -41,10 +43,13 @@ export class DashboardComponent implements OnInit {
 
     this.loadedChildrenCount = 0;
 
-    //Force la vérification des changements de valeurs des variables après ngOnInit
     this.cdRef.detectChanges();
   }
 
+  /**
+   * Tracks the loading progress of child components.
+   * Sets allDataLoaded to true when all children have finished loading.
+   */
   onChildDataLoaded() {
     this.loadedChildrenCount++;
     

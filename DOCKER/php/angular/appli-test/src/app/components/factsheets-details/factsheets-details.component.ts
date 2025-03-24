@@ -57,6 +57,11 @@ export class SheetDetailsComponent implements OnInit {
         private readonly academicYearService:AcademicYearService
     ) {}
 
+    /**
+     * Initializes the component and loads the sheet details.
+     * Determines user role, gets selected student from session storage,
+     * and fetches sheet data using the sheet ID from route parameters.
+     */
     ngOnInit() {
         let currentUser
         const user = sessionStorage.getItem('currentUser')
@@ -102,6 +107,11 @@ export class SheetDetailsComponent implements OnInit {
     
     }
 
+    /**
+     * Loads company details using the provided company ID.
+     * Fetches specific fields of company information.
+     * @param companyId - The ID of the company to load
+     */
     private loadCompanyDetails(companyId: number) {
         this.companyService
             .getCompanyById(companyId, [
@@ -123,6 +133,11 @@ export class SheetDetailsComponent implements OnInit {
             })
     }
 
+    /**
+     * Loads student details using the provided student ID.
+     * Fetches specific fields of student information and updates the component state.
+     * @param studentId - The ID of the student to load
+     */
     private loadStudentDetails(studentId: string) {
         this.studentService
             .getStudentById(studentId, [
@@ -141,6 +156,12 @@ export class SheetDetailsComponent implements OnInit {
             })
     }
 
+    /**
+     * Returns the appropriate CSS class for a given status.
+     * Maps status strings to their corresponding CSS classes.
+     * @param status - The status string to map
+     * @returns The corresponding CSS class name
+     */
     getStatusClass(status: string): string {
         const statusMap: Record<string, string> = {
             Validee: 'status-badge valide',
@@ -150,14 +171,23 @@ export class SheetDetailsComponent implements OnInit {
         return statusMap[status] || 'status-badge'
     }
 
+    /**
+     * Navigates to the dashboard page.
+     */
     goToDashboard() {
         this.navigationService.navigateToDashboard()
     }
 
+    /**
+     * Navigates to the edit form for the current sheet.
+     */
     goToEdit() {
         this.navigationService.navigateToDescriptiveSheetEditForm(this.detailsSheet.idFicheDescriptive.value);
     }
 
+    /**
+     * Navigates back to the previous page.
+     */
     goBack() {
         this.navigationService.goBack()
     }

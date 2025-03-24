@@ -17,6 +17,9 @@ export class UpdateFactsheets5Component implements OnInit {
   @Output() previous = new EventEmitter<void>();
   currentStep: number;
 
+  /**
+   * Getter that returns the current form data from the FormDataService
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
@@ -28,10 +31,17 @@ export class UpdateFactsheets5Component implements OnInit {
     this.currentStep = this.navigationService.getCurrentFactsheetStep();
   }
 
+  /**
+   * Initializes form fields when component is initialized
+   */
   ngOnInit() {
     this.initializeFormFields();
   }
 
+  /**
+   * Checks if all required form fields are filled
+   * @returns boolean indicating if the form is valid
+   */
   isFormValid(): boolean {
     return this.formData.nomRepresentantEntreprise.value !== '' &&
       this.formData.prenomRepresentantEntreprise.value !== '' &&
@@ -40,6 +50,9 @@ export class UpdateFactsheets5Component implements OnInit {
       this.formData.fonctionRepresentantEntreprise.value !== '';
   }
 
+  /**
+   * Initializes all form fields with empty values and 'entreprise' type
+   */
   private initializeFormFields() {
     const fields = {
       nomRepresentantEntreprise: { value: '', type: 'entreprise' },
@@ -54,14 +67,24 @@ export class UpdateFactsheets5Component implements OnInit {
     });
   }
 
+  /**
+   * Updates the current factsheet step in the navigation service
+   * @param step The step number to set
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Emits the current form data when moving to the next step
+   */
   onNext() {
     this.next.emit(this.formData);
   }
 
+  /**
+   * Emits an event when moving to the previous step
+   */
   onPrevious() {
     this.previous.emit();
   }

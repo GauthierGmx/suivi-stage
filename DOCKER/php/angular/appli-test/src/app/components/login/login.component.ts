@@ -26,6 +26,10 @@ export class LoginComponent implements OnInit {
     private readonly router: Router
   ) {}
 
+  /**
+   * Initializes the component by loading authentication data and setting up user subscription
+   * Redirects to dashboard if user is already authenticated
+   */
   async ngOnInit() {
     await this.authService.initializeData();
     this.authService.currentUser$.subscribe(user => {
@@ -37,6 +41,11 @@ export class LoginComponent implements OnInit {
     this.dataLoaded = true;
   }
 
+  /**
+   * Handles the login form submission
+   * Attempts to log in the user with the provided email
+   * Shows an alert if login fails
+   */
   async onSubmit(): Promise<void> {
     if (this.email) {
       this.isLogining = true;
