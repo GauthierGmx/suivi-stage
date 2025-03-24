@@ -17,6 +17,9 @@ export class UpdateFactsheets8Component implements OnInit {
   @Output() previous = new EventEmitter<void>();
   currentStep: number;
 
+  /**
+   * Getter that returns the current form data from the FormDataService
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
@@ -28,10 +31,17 @@ export class UpdateFactsheets8Component implements OnInit {
     this.currentStep = this.navigationService.getCurrentFactsheetStep();
   }
 
+  /**
+   * Lifecycle hook that initializes form fields when component is created
+   */
   ngOnInit() {
     this.initializeFormFields();
   }
 
+  /**
+   * Validates if all required fields in the form are filled
+   * @returns boolean indicating if the form is valid
+   */
   isFormValid(): boolean {
     return !!(
       this.formData.thematiqueFicheDescriptive.value &&
@@ -40,6 +50,10 @@ export class UpdateFactsheets8Component implements OnInit {
       this.formData.competencesFicheDescriptive.value);
   }
 
+  /**
+   * Initializes all form fields with default values
+   * Sets up the structure for factsheet descriptive fields
+   */
   private initializeFormFields() {
     const fields = {
       typeStageFicheDescriptive: { value: 'Obligatoire', type: 'ficheDescriptive' },
@@ -55,14 +69,24 @@ export class UpdateFactsheets8Component implements OnInit {
     });
   }
 
+  /**
+   * Updates the current factsheet step in the navigation service
+   * @param step The step number to navigate to
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Emits the current form data to the parent component when moving to next step
+   */
   onNext() {
     this.next.emit(this.formData);
   }
 
+  /**
+   * Emits an event to the parent component to move to the previous step
+   */
   onPrevious() {
     this.previous.emit();
   }

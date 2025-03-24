@@ -27,8 +27,11 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     private readonly router: Router
   ) {}
 
+  /**
+   * Initializes the component by subscribing to router events
+   * and generating initial breadcrumbs
+   */
   ngOnInit() {
-    // S'abonner aux changements de route
     this.subscription.add(
       this.router.events
         .pipe(filter(event => event instanceof NavigationEnd))
@@ -37,14 +40,20 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
         })
     );
     
-    // Générer les breadcrumbs initiaux
     this.generateBreadcrumbs();
   }
 
+  /**
+   * Cleans up subscriptions when component is destroyed
+   */
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
+  /**
+   * Generates breadcrumb items based on the current URL path
+   * Handles numeric path segments by attaching them to the previous segment
+   */
   private generateBreadcrumbs() {
     const rawPaths = this.router.url.split('/').filter(path => path !== '');
     const paths: string[] = [];
@@ -53,10 +62,9 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
     rawPaths.forEach(path => {
       if (this.isNumeric(path) && urls.length > 0) {
-        // Attache le nombre au dernier segment d'URL trouvé
         urls[urls.length - 1] += '/' + path;
       } else {
-        paths.push(path); // Ajoute uniquement les segments non numériques au chemin
+        paths.push(path);
         lastUrlSegment = (urls.length > 0 ? urls[urls.length - 1] + '/' : '/') + path;
         urls.push(lastUrlSegment);
       }
@@ -67,12 +75,22 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Checks if a given string value is numeric
+   * @param value - String to check
+   * @returns True if the string contains only digits
+   */
   private isNumeric(value: string): boolean {
     return /^\d+$/.test(value);
   }
 
+  /**
+   * Formats the path label according to user role and translations
+   * Handles special cases for student dashboard and factsheets
+   * @param path - Path segment to format
+   * @returns Formatted and translated label
+   */
   private formatLabel(path: string): string {
-    // Dictionnaire de traduction selon le rôle
     const translations: { [key: string]: { [key: string]: string } } = {
       'STUDENT': {
         'dashboard': 'journal de bord',
@@ -98,10 +116,8 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
       }
     };
     
-    // Utilise les traductions du rôle actuel ou STUDENT par défaut
     const roleTranslations = translations[this.currentUserRole || 'STUDENT'];
     
-    // Traduit chaque mot s'il existe dans le dictionnaire
     const translatedWords = path.split(' ').map(word => 
       roleTranslations[word.toLowerCase()] || word
     );
@@ -110,7 +126,6 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
       return roleTranslations['student-dashboard'];
     }
 
-    // Met une majuscule uniquement au premier mot
     return translatedWords
       .map((word, index) => {
         if (index === 0) {

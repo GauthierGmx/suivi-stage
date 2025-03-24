@@ -21,10 +21,19 @@ export class FactsheetsComponent implements OnInit {
   loadedChildrenCount: number = 0;
   totalChildren: number = 2;
 
+  /**
+   * Initializes the component with AuthService for user authentication
+   * @param authService Service handling user authentication
+   */
   constructor(
     private readonly authService: AuthService
   ) {}
 
+  /**
+   * Initializes the component on load
+   * Gets current user and sets their role based on authentication status
+   * Resets the loaded children counter
+   */
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
     
@@ -38,6 +47,10 @@ export class FactsheetsComponent implements OnInit {
     this.loadedChildrenCount = 0;
   }
 
+  /**
+   * Tracks the loading status of child components
+   * Sets allDataLoaded to true when all children are loaded
+   */
   onChildDataLoaded() {
     this.loadedChildrenCount++;
     

@@ -27,6 +27,10 @@ export class AddFactsheets3Component implements OnInit {
   searchTerm = '';
   selectedCompany?: Company;
 
+  /**
+   * Getter that returns form data from the FormDataService
+   * @returns {any} The form data
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
@@ -40,6 +44,10 @@ export class AddFactsheets3Component implements OnInit {
     this.setupSearchFilter();
   }
 
+  /**
+   * Configures the search filter with debounce and distinctUntilChanged
+   * Updates filteredCompanies and showDropdown based on search terms
+   */
   private setupSearchFilter() {
     this.searchTermChanged.pipe(
       debounceTime(800),
@@ -60,6 +68,9 @@ export class AddFactsheets3Component implements OnInit {
     });
   }
 
+  /**
+   * Initializes the component by loading company fields and data
+   */
   ngOnInit() {
     this.initializeCompanyFields();
     this.loadCompanies();
@@ -70,6 +81,10 @@ export class AddFactsheets3Component implements OnInit {
     }
   }
 
+  /**
+   * Checks if the form is valid by verifying all required fields
+   * @returns {boolean} True if the form is valid, false otherwise
+   */
   isFormValid(): boolean {
     const data = this.formData;
     return !!(
@@ -82,6 +97,9 @@ export class AddFactsheets3Component implements OnInit {
     );
   }
 
+  /**
+   * Initializes company-related form fields with default values
+   */
   private initializeCompanyFields() {
     const companyFields = {
       'raisonSocialeEntreprise': '',
@@ -104,6 +122,9 @@ export class AddFactsheets3Component implements OnInit {
     });
   }
 
+  /**
+   * Loads the list of companies from the service
+   */
   private loadCompanies() {
     this.companyService.getCompanies()
       .subscribe(companies => {
@@ -112,6 +133,10 @@ export class AddFactsheets3Component implements OnInit {
       });
   }
 
+  /**
+   * Handles clicks outside the dropdown to close it
+   * @param targetElement HTML element that was clicked
+   */
   @HostListener('document:click', ['$event.target'])
       onClick(targetElement: HTMLElement) {
           if (this.showDropdown) {
@@ -122,6 +147,10 @@ export class AddFactsheets3Component implements OnInit {
           }
       }
 
+  /**
+   * Selects a company and fills form fields with its data
+   * @param company The selected company
+   */
   selectCompany(company: Company) {
     this.selectedCompany = company;
     this.searchTerm = company.raisonSociale ?? '';  // Cette ligne reste inchangée
@@ -146,18 +175,32 @@ export class AddFactsheets3Component implements OnInit {
     });
   }
 
+  /**
+   * Triggers the search when the search term changes
+   * @param term The search term
+   */
   onSearchChange(term: string) {
     this.searchTermChanged.next(term);
 }
 
+  /**
+   * Updates the current step in the navigation service
+   * @param step The step number
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Emits the next event with form data
+   */
   async onNext() {
     this.next.emit(this.formData);
   }
 
+  /**
+   * Emits the previous event to return to the previous step
+   */
   onPrevious() {
     this.previous.emit();
   }
