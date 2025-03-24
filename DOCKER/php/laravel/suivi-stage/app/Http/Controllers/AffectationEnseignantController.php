@@ -93,7 +93,6 @@ class AffectationEnseignantController extends Controller
     /**
      * Retourne une affectation particulière
      *
-     * @param  int  $idPersonnel
      * @param  int  $idUPPA
      * @param  int  $idAnneeUniversitaire
      * @return \Illuminate\Http\Response
@@ -101,15 +100,14 @@ class AffectationEnseignantController extends Controller
      *      - Code 200 : si l'affectation a été trouvée
      *      - Code 404 : si l'affectation n'a pas été trouvée
      */
-    public function show($idPersonnel, $idUPPA, $idAnneeUniversitaire)
+    public function show($idUPPA, $idAnneeUniversitaire)
     {
         // Récupère les informations de l'affectation avec les noms-prénoms de l'étudiant et du personnel
         $affectation = \DB::table('table_personnel_etudiant_anneeuniv')
             ->join('personnels', 'table_personnel_etudiant_anneeuniv.idPersonnel', '=', 'personnels.idPersonnel')
             ->join('etudiants', 'table_personnel_etudiant_anneeuniv.idUPPA', '=', 'etudiants.idUPPA')
             ->join('annee_universitaires', 'table_personnel_etudiant_anneeuniv.idAnneeUniversitaire', '=', 'annee_universitaires.idAnneeUniversitaire')
-            ->select('annee_universitaires.libelle as anneeUniversitaire','personnels.nom as nomPersonnel', 'personnels.prenom as prenomPersonnel', 'etudiants.nom as nomEtudiant', 'etudiants.prenom as prenomEtudiant')
-            ->where('personnels.idPersonnel', $idPersonnel)
+            ->select('annee_universitaires.idAnneeUniversitaire as idAnneeUniversitaire','annee_universitaires.libelle as anneeUniversitaire','personnels.idPersonnel as idPersonnel','personnels.nom as nomPersonnel','personnels.prenom as prenomPersonnel','etudiants.idUPPA as idUPPA','etudiants.nom as nomEtudiant', 'etudiants.prenom as prenomEtudiant')
             ->where('etudiants.idUPPA', $idUPPA)
             ->where('annee_universitaires.idAnneeUniversitaire', $idAnneeUniversitaire)
             ->first();

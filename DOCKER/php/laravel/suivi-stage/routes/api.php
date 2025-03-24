@@ -83,6 +83,6 @@ Route::delete('/personnel/delete/{id}', [PersonnelController::class, 'destroy'])
 Route::get('/affectation', [AffectationEnseignantController::class, 'index'])->name('affectation.index');
 Route::get('/affectation/extraction-affectations-etudiants-enseignants', [AffectationEnseignantController::class, 'extractStudentTeacherAssignments'])->name('affectation.extractStudentTeacherAssignments');
 Route::post('/affectation/create', [AffectationEnseignantController::class, 'store'])->name('affectation.store');
-Route::get('/affectation/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'show'])->name('affectation.show');
+Route::get('/affectation/{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'show'])->name('affectation.show');
 Route::put('/affectation/update/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'update'])->name('affectation.update');
 Route::delete('/affectation/delete/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'destroy'])->name('affectation.destroy');
