@@ -16,6 +16,7 @@ import { Staff } from '../../models/staff.model';
 import { StaffService } from '../../services/staff.service';
 import { StudentStaffAcademicYearService } from '../../services/student-staff-academicYear.service';
 import { AcademicYearService } from '../../services/academic-year.service';
+import { catchError } from 'rxjs/operators';
 
 
 export class teacherTutorDetails{
@@ -237,15 +238,13 @@ export class SheetDetailsComponent implements OnInit {
         const selectedTeacher = this.teachers?.find(teacher => teacher.idPersonnel === teacherId);
         
         if (selectedTeacher) {
-            this.choicedTutor = selectedTeacher; 
-            console.log("Tuteur attribué :", this.choicedTutor);
+            this.choicedTutor = selectedTeacher;
         } else {
             console.warn("Aucun enseignant trouvé avec cet ID :", teacherId);
         }
     
         this.showAttributionModal = false;
     
-        //Envoi de la selection
         if (!this.teacherTutorDetails) {
             this.teacherTutorDetails = {};
         }
@@ -254,36 +253,32 @@ export class SheetDetailsComponent implements OnInit {
             this.teacherTutorDetails.idUPPA = Number(this.detailsSheet.idUPPA.value);
         }
     
-        // Récupérer l'année académique et ensuite mettre à jour les affectations
         this.academicYearService.getCurrentAcademicYear().subscribe({
             next: (year) => {
                 if (year) {
-                    if(this.teacherTutorDetails){
-                        this.teacherTutorDetails.idAnneeUniversitaire = year.idAnneeUniversitaire; 
-                        this.teacherTutorDetails.idPersonnel = this.choicedTutor?.idPersonnel;
+                    this.teacherTutorDetails!.idAnneeUniversitaire = year.idAnneeUniversitaire; 
+                    this.teacherTutorDetails!.idPersonnel = this.choicedTutor?.idPersonnel;
     
-                        // Ajoutez des logs pour vérifier les valeurs avant l'appel
-                        console.log("Détails de l'affectation avant l'envoi :", this.teacherTutorDetails);
-    
-                        // Appeler updateStudentTeacherAssignments après avoir reçu l'année académique
-                        this.studentStaffService.updateStudentTeacherAssignments(this.teacherTutorDetails).subscribe({
+                    this.studentStaffService.updateStudentTeacherAssignments(this.teacherTutorDetails!)
+                        .pipe(
+                            catchError((error) => {
+                                // Capture explicitement toutes les erreurs, y compris 404
+                                console.log("Échec de la mise à jour, tentative d'ajout");
+                                return this.studentStaffService.addStudentTeacherAssignments(this.teacherTutorDetails!);
+                            })
+                        )
+                        .subscribe({
                             next: (response) => {
-                                console.log("Réponse de updateStudentTeacherAssignments :", response);
+                                // Traitement réussi (soit update, soit add)
                             },
                             error: (err) => {
-                                console.error("Erreur lors de l'appel à updateStudentTeacherAssignments :", err);
+                                console.error("Erreur lors de l'affectation");
                             }
                         });
-    
-                        console.log("Détails de l'affectation envoyés :", this.teacherTutorDetails);
-                    }
                 }
             },
             error: (err) => {
-                console.error("Erreur lors de la récupération de l'année académique :", err);
-            },
-            complete: () => {
-                console.log("Récupération de l'année académique terminée.");
+                console.error("Erreur lors de la récupération de l'année académique");
             }
         });
     }
