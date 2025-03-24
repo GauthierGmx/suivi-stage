@@ -25,7 +25,7 @@ export class WelcomeComponent implements OnInit {
         this.prenomCurrentUser = this.currentUser.prenom ? this.currentUser.prenom : '';
         this.currentUserRole = 'Etudiant';
     }
-    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+    else if (this.authService.isStaff(this.currentUser)) {
         this.nomCurrentUser = this.currentUser.nom ? this.currentUser.nom : '';
         this.prenomCurrentUser = this.currentUser.prenom ? this.currentUser.prenom : '';
         this.currentUserRole = 'Responsable des Stages';

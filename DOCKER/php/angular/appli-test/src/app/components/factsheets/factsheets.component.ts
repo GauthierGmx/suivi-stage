@@ -26,18 +26,18 @@ export class FactsheetsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.authService.getAuthenticatedUser().subscribe(user =>
-      this.currentUser = user
-    );
-    
-    if (this.authService.isStudent(this.currentUser)) {
-      this.currentUserRole = 'STUDENT';
-    }
-    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-      this.currentUserRole = 'INTERNSHIP_MANAGER';
-    }
-
     this.loadedChildrenCount = 0;
+
+    this.authService.getAuthenticatedUser().subscribe(user => {
+      this.currentUser = user
+
+      if (this.authService.isStudent(this.currentUser)) {
+        this.currentUserRole = 'STUDENT';
+      }
+      else if (this.authService.isStaff(this.currentUser)) {
+        this.currentUserRole = 'INTERNSHIP_MANAGER';
+      }
+    });
   }
 
   onChildDataLoaded() {

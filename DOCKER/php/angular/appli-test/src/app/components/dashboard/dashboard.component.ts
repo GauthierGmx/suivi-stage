@@ -21,7 +21,7 @@ import { ListStudentTabComponent } from '../list-student-tab/list-student-tab.co
 export class DashboardComponent implements OnInit {
   currentUser?: any;
   currentUserRole?: string;
-  allDataLoaded: Boolean = false;
+  allDataLoaded: boolean = false;
   loadedChildrenCount: number = 0;
   totalChildren: number = 2;
 
@@ -32,22 +32,21 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.authService.getAuthenticatedUser().subscribe(currentUser =>
-      this.currentUser = currentUser
-    );
-
-    this.initService.setInitialized();
-    
-    if (this.authService.isStudent(this.currentUser)) {
-      this.currentUserRole = 'STUDENT';
-    }
-    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-      this.currentUserRole = 'INTERNSHIP_MANAGER';
-    }
-
     this.loadedChildrenCount = 0;
+    
+    this.authService.getAuthenticatedUser().subscribe(currentUser => {
+      this.currentUser = currentUser;
+      
+      if (this.authService.isStudent(this.currentUser)) {
+        this.currentUserRole = 'STUDENT';
+      }
+      else if (this.authService.isStaff(this.currentUser)) {
+        this.currentUserRole = 'INTERNSHIP_MANAGER';
+      }
 
-    //Force la vérification des changements de valeurs des variables après ngOnInit
+      this.initService.setInitialized();
+    });
+    
     this.cdRef.detectChanges();
   }
 

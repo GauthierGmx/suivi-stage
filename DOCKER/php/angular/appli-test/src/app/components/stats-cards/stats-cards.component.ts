@@ -46,7 +46,7 @@ export class StatsCardsComponent implements OnInit {
       this.currentUserId = this.currentUser.idUPPA;
       this.currentUserRole = 'STUDENT';
     }
-    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
+    else if (this.authService.isStaff(this.currentUser)) {
       this.currentUserId = `${this.currentUser.idPersonnel}`;
       this.currentUserRole = 'INTERNSHIP_MANAGER';
     }
