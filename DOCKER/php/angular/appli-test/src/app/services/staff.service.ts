@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { Staff } from '../models/staff.model';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of } from 'rxjs';
@@ -8,8 +7,67 @@ import { Observable, catchError, tap, of } from 'rxjs';
   providedIn: 'root'
 })
 export class StaffService {
-  apiUrl = environment.apiUrl;
   currentUser?: Staff;
+
+  private staffs: Staff[] = [
+    {
+      idPersonnel: 1,
+      role: 'SUPERADMIN',
+      nom: 'Admin',
+      prenom: 'Super',
+      adresse: 'Rue ...',
+      ville: 'Ville',
+      codePostal: '64000',
+      telephone: '0606060606',
+      adresseMail: 'superadmin@test.com',
+      longitudeAdresse: '',
+      latitudeAdresse: '',
+      quotaEtudiant: 16
+    },
+    {
+      idPersonnel: 2,
+      role: 'ADMIN',
+      nom: 'User',
+      prenom: 'Admin',
+      adresse: 'Rue ...',
+      ville: 'Ville',
+      codePostal: '64000',
+      telephone: '0606060606',
+      adresseMail: 'admin@test.com',
+      longitudeAdresse: '',
+      latitudeAdresse: '',
+      quotaEtudiant: 16
+    },
+    {
+      idPersonnel: 6,
+      role: 'INTERNSHIP_MANAGER',
+      prenom: 'Responsable',
+      nom: 'Stages',
+      adresse: 'Rue ...',
+      ville: 'Ville',
+      codePostal: '64000',
+      telephone: '0606060606',
+      adresseMail: 'responsable@test.com',
+      longitudeAdresse: '',
+      latitudeAdresse: '',
+      quotaEtudiant: 16
+      
+    },
+    {
+      idPersonnel: 7,
+      role: 'Enseignant',
+      prenom: 'Enseignant',
+      nom: 'Référent',
+      adresse: 'Rue ...',
+      ville: 'Ville',
+      codePostal: '64000',
+      telephone: '0606060606',
+      adresseMail: 'enseignant@test.com',
+      longitudeAdresse: '',
+      latitudeAdresse: '',
+      quotaEtudiant: 16
+    }
+  ];
 
   constructor(private http: HttpClient) {}
 
@@ -20,10 +78,14 @@ export class StaffService {
       params = params.set('fields', fields.join(','));
     }
 
-    return this.http.get<Staff[]>(`${this.apiUrl}/api/personnel`, {params}).pipe(
+    /*
+    return this.http.get<Student[]>('http://localhost:8000/api/', {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
+    */
+
+    return of(this.staffs);
   }
 
   getStaffById(idStaff: number, fields?: string[]): Observable<Staff | undefined> {
@@ -33,10 +95,14 @@ export class StaffService {
       params = params.set('fields', fields.join(','));
     }
 
-    return this.http.get<Staff>(`${this.apiUrl}/api/personnel/${idStaff}`, {params}).pipe(
+    /*
+    return this.http.get<Student[]>(`http://localhost:8000/api/`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
+    */
+
+    return of(this.staffs.find(s => s.idPersonnel === idStaff));
   }
 
   //Log la réponse de l'API

@@ -148,7 +148,6 @@ class AffectationEnseignantController extends Controller
 
             // Met à jour les données
             $affectation = \DB::table('table_personnel_etudiant_anneeuniv')
-                ->where('idPersonnel', $idPersonnel)
                 ->where('idUPPA', $idUPPA)
                 ->where('idAnneeUniversitaire', $idAnneeUniversitaire)
                 ->update($donneesValidees);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Student } from '../../models/student.model';
@@ -16,34 +16,50 @@ import { Staff } from '../../models/staff.model';
 import { StaffService } from '../../services/staff.service';
 import { StudentStaffAcademicYearService } from '../../services/student-staff-academicYear.service';
 import { AcademicYearService } from '../../services/academic-year.service';
-import { catchError } from 'rxjs/operators';
+import { Subscription, forkJoin, of } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 
+export class teacherTutorDetails {
+    idUPPA?: number;
+    idPersonnel?: number;
+    idAnneeUniversitaire?: number;
+    nomPersonnel?: string;
+}
 
-export class teacherTutorDetails{
-    idUPPA?:number;
-    idPersonnel?:number;
-    idAnneeUniversitaire?:number;
+export class tutorAlgorithm {
+    idPersonnel?: number;
+    nom?: string;
+    prenom?: string;
+    compteurEtudiant?: number;
+    distanceGpsProfEntreprise?: number;
+    etudiantPresentVille?: boolean;
+    etudiantPresentEntreprise?: boolean;
+    equiteDeuxTroisAnnees?: boolean;
+    somme?:number;
 }
 
 @Component({
     selector: 'app-sheet-details',
     standalone: true,
-    imports: [CommonModule, LoadingComponent, BreadcrumbComponent,TutorAttributionModalComponent],
+    imports: [CommonModule, LoadingComponent, BreadcrumbComponent, TutorAttributionModalComponent],
     templateUrl: './factsheets-details.component.html',
     styleUrl: './factsheets-details.component.css',
 })
-export class SheetDetailsComponent implements OnInit {
+export class SheetDetailsComponent implements OnInit, OnDestroy {
     selectedStudent?: Student;
     currentUserRole?: string;
     sheet?: Factsheets;
     company?: Company;
     dataLoaded: boolean = false;
-    detailsSheet?:any;
+    detailsSheet?: any;
     showAttributionModal: Boolean = false;
-    teachers?: Staff[];
-    choicedTutor?:Staff;
-    teacherTutorDetails?:teacherTutorDetails;
-
+    teachers?: tutorAlgorithm[];
+    choicedTutor?: tutorAlgorithm;
+    teacherTutorDetails: teacherTutorDetails = {};
+    tutor?: teacherTutorDetails;
+    currentAcademicYear?: any;
+    
+    private subscriptions: Subscription[] = [];
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -53,67 +69,81 @@ export class SheetDetailsComponent implements OnInit {
         private readonly navigationService: NavigationService,
         private readonly studentService: StudentService,
         private readonly staffService: StaffService,
-        private readonly studentStaffService:StudentStaffAcademicYearService,
-        private readonly academicYearService:AcademicYearService
+        private readonly studentStaffService: StudentStaffAcademicYearService,
+        private readonly academicYearService: AcademicYearService
     ) {}
 
-    /**
-     * Initializes the component and loads the sheet details.
-     * Determines user role, gets selected student from session storage,
-     * and fetches sheet data using the sheet ID from route parameters.
-     */
     ngOnInit() {
-        let currentUser
-        const user = sessionStorage.getItem('currentUser')
+        let currentUser;
+        const user = sessionStorage.getItem('currentUser');
         if (user) {
-            currentUser = JSON.parse(user)
+            currentUser = JSON.parse(user);
         }
 
         if (this.authService.isStudent(currentUser)) {
-            this.currentUserRole = 'STUDENT'
+            this.currentUserRole = 'STUDENT';
         } else if (this.authService.isStaff(currentUser)) {
-            this.currentUserRole = 'INTERNSHIP_MANAGER'
+            this.currentUserRole = 'INTERNSHIP_MANAGER';
         }
-
         
         const selectedStudent = sessionStorage.getItem('selectedStudent');
         if (selectedStudent) {
-            this.selectedStudent = JSON.parse(selectedStudent)
+            this.selectedStudent = JSON.parse(selectedStudent);
         }
 
-        const sheetId = Number(this.route.snapshot.paramMap.get('idSheet'))
+        const sheetId = Number(this.route.snapshot.paramMap.get('idSheet'));
 
         if (sheetId) {
-            this.factsheetsService.getSheetById(sheetId).subscribe((sheet) => {
-                if (sheet) {
-                    this.sheet = sheet
-                    this.loadCompanyDetails(sheet.idEntreprise.value)
-                    this.loadStudentDetails(sheet.idUPPA.value)
-                }
-            })
+            const yearSub = this.academicYearService.getCurrentAcademicYear().pipe(
+                tap(year => {
+                    if (year) {
+                        this.currentAcademicYear = year;
+                        this.teacherTutorDetails.idAnneeUniversitaire = year.idAnneeUniversitaire;
+                    }
+                }),
+                switchMap(year => {
+                    return this.factsheetsService.getSheetById(sheetId).pipe(
+                        tap(sheet => {
+                            if (sheet) {
+                                this.detailsSheet = sheet;
+                                this.sheet = sheet;
+                                
+                                if (sheet.idUPPA && sheet.idUPPA.value) {
+                                    this.teacherTutorDetails.idUPPA = Number(sheet.idUPPA.value);
+                                }
+                                
+                                if (sheet.idEntreprise && sheet.idEntreprise.value) {
+                                    this.loadCompanyDetails(sheet.idEntreprise.value);
+                                }
+                                
+                                if (sheet.idUPPA && sheet.idUPPA.value) {
+                                    this.loadStudentDetails(sheet.idUPPA.value);
+                                }
+                            }
+                        }),
+                        switchMap(sheet => {
+                            if (sheet?.idUPPA?.value && this.teacherTutorDetails.idAnneeUniversitaire) {
+                                return this.studentStaffService.getTutorByUppaYear(this.teacherTutorDetails).pipe(
+                                    tap(tutorResponse => {
+                                        this.tutor = tutorResponse;
+                                    }),
+                                    catchError(err => {
+                                        return of(null);
+                                    })
+                                );
+                            }
+                            return of(null);
+                        })
+                    );
+                })
+            ).subscribe();
+            
+            this.subscriptions.push(yearSub);
         }
-
-        this.factsheetsService.getSheetById(sheetId).subscribe({
-            next: (response) => {
-                this.detailsSheet = response;
-            },
-            error: (err) => {
-                console.error('Erreur lors de la récupération de la fiche :', err)
-            },
-        })
-
-
-        
-    
     }
-
-    /**
-     * Loads company details using the provided company ID.
-     * Fetches specific fields of company information.
-     * @param companyId - The ID of the company to load
-     */
+    
     private loadCompanyDetails(companyId: number) {
-        this.companyService
+        const companySub = this.companyService
             .getCompanyById(companyId, [
                 'idEntreprise',
                 'raisonSociale',
@@ -129,17 +159,13 @@ export class SheetDetailsComponent implements OnInit {
                 'effectif',
             ])
             .subscribe((company) => {
-                this.company = company
-            })
+                this.company = company;
+            });
+        this.subscriptions.push(companySub);
     }
 
-    /**
-     * Loads student details using the provided student ID.
-     * Fetches specific fields of student information and updates the component state.
-     * @param studentId - The ID of the student to load
-     */
     private loadStudentDetails(studentId: string) {
-        this.studentService
+        const studentSub = this.studentService
             .getStudentById(studentId, [
                 'idUPPA',
                 'nom',
@@ -151,180 +177,169 @@ export class SheetDetailsComponent implements OnInit {
                 'adresseMail',
             ])
             .subscribe((student) => {
-                this.selectedStudent = student
-                this.dataLoaded = true
-            })
+                this.selectedStudent = student;
+                this.dataLoaded = true;
+            });
+        this.subscriptions.push(studentSub);
     }
 
-    /**
-     * Returns the appropriate CSS class for a given status.
-     * Maps status strings to their corresponding CSS classes.
-     * @param status - The status string to map
-     * @returns The corresponding CSS class name
-     */
     getStatusClass(status: string): string {
         const statusMap: Record<string, string> = {
             Validee: 'status-badge valide',
             'En cours': 'status-badge en-attente',
             Refusée: 'status-badge refuse',
-        }
-        return statusMap[status] || 'status-badge'
+        };
+        return statusMap[status] || 'status-badge';
     }
 
-    /**
-     * Navigates to the dashboard page.
-     */
     goToDashboard() {
-        this.navigationService.navigateToDashboard()
+        this.navigationService.navigateToDashboard();
     }
 
-    /**
-     * Navigates to the edit form for the current sheet.
-     */
     goToEdit() {
-        this.navigationService.navigateToDescriptiveSheetEditForm(this.detailsSheet.idFicheDescriptive.value);
+        if (this.detailsSheet?.idFicheDescriptive?.value) {
+            this.navigationService.navigateToDescriptiveSheetEditForm(this.detailsSheet.idFicheDescriptive.value);
+        }
     }
 
-    /**
-     * Navigates back to the previous page.
-     */
     goBack() {
-        this.navigationService.goBack()
+        this.navigationService.goBack();
     }
 
-    //Affiche la fenêtre modale de confirmation de la supression d'une recherche de stage
     openAttributionModal() {
+        this.generateTeacher();
         this.showAttributionModal = true;
     }
-    //Annulation de la suppression d'une fiche descriptive
+    
     onCancelDelete() {
         this.showAttributionModal = false;
     }
 
     generateTeacher() {
-        const teachers: Staff[] = [
-            {
-                idPersonnel: 1,
-                role: 'Enseignant',
-                nom: 'Dupont',
-                prenom: 'Jean',
-                adresse: '12 rue des Lilas',
-                ville: 'Paris',
-                codePostal: '75001',
-                telephone: '0123456789',
-                adresseMail: 'jean.dupont@universite.fr',
-                longitudeAdresse: '2.3522',
-                latitudeAdresse: '48.8566',
-                quotaEtudiant: 5
+        const rawData = {
+            4: {
+                NOM: 'VOISIN',
+                PRENOM: 'Sophie',
+                COMPTEUR_ETUDIANT: 1,
+                DISTANCE_GPS_PROF_ENTREPRISE: 1,
+                ETUDIANT_DEJA_PRESENT_VILLE: 0,
+                ETUDIANT_DEJA_PRESENT_ENREPRISE: 0,
+                EQUITE_DEUX_TROIS_ANNEE: 0,
+                SOMME: 2
             },
-            {
-                idPersonnel: 2,
-                role: 'Enseignant',
-                nom: 'Martin',
-                prenom: 'Marie',
-                adresse: '45 avenue des Roses',
-                ville: 'Lyon',
-                codePostal: '69001',
-                telephone: '0234567890',
-                adresseMail: 'marie.martin@universite.fr',
-                longitudeAdresse: '4.8357',
-                latitudeAdresse: '45.7640',
-                quotaEtudiant: 4
+            5: {
+                NOM: 'BORTHWICK',
+                PRENOM: 'Margaret',
+                COMPTEUR_ETUDIANT: 1,
+                DISTANCE_GPS_PROF_ENTREPRISE: 1,
+                ETUDIANT_DEJA_PRESENT_VILLE: 0,
+                ETUDIANT_DEJA_PRESENT_ENREPRISE: 0,
+                EQUITE_DEUX_TROIS_ANNEE: 0,
+                SOMME: 2
             },
-            {
-                idPersonnel: 3,
-                role: 'Enseignant',
-                nom: 'Leroy',
-                prenom: 'Pierre',
-                adresse: '8 boulevard des Chênes',
-                ville: 'Bordeaux',
-                codePostal: '33000',
-                telephone: '0345678901',
-                adresseMail: 'pierre.leroy@universite.fr',
-                longitudeAdresse: '-0.5792',
-                latitudeAdresse: '44.8378',
-                quotaEtudiant: 6
+            3: {
+                NOM: 'CARPENTIER',
+                PRENOM: 'Yann',
+                COMPTEUR_ETUDIANT: 1,
+                DISTANCE_GPS_PROF_ENTREPRISE: 1,
+                ETUDIANT_DEJA_PRESENT_VILLE: 0,
+                ETUDIANT_DEJA_PRESENT_ENREPRISE: 0,
+                EQUITE_DEUX_TROIS_ANNEE: 0,
+                SOMME: 2
             },
-            {
-                idPersonnel: 4,
-                role: 'Enseignant',
-                nom: 'Petit',
-                prenom: 'Sophie',
-                adresse: '23 rue des Peupliers',
-                ville: 'Toulouse',
-                codePostal: '31000',
-                telephone: '0456789012',
-                adresseMail: 'sophie.petit@universite.fr',
-                longitudeAdresse: '1.4442',
-                latitudeAdresse: '43.6047',
-                quotaEtudiant: 3
+            1: {
+                NOM: 'LOPISTEGUY',
+                PRENOM: 'Philippe',
+                COMPTEUR_ETUDIANT: 1,
+                DISTANCE_GPS_PROF_ENTREPRISE: 1,
+                ETUDIANT_DEJA_PRESENT_VILLE: 0,
+                ETUDIANT_DEJA_PRESENT_ENREPRISE: 0,
+                EQUITE_DEUX_TROIS_ANNEE: 0,
+                SOMME: 2
+            },
+            2: {
+                NOM: 'DOURISBOURE',
+                PRENOM: 'Yon',
+                COMPTEUR_ETUDIANT: 1,
+                DISTANCE_GPS_PROF_ENTREPRISE: 1,
+                ETUDIANT_DEJA_PRESENT_VILLE: 0,
+                ETUDIANT_DEJA_PRESENT_ENREPRISE: 0,
+                EQUITE_DEUX_TROIS_ANNEE: 0,
+                SOMME: 2
             }
-        ];
-        
-        this.teachers = teachers;
+        };
+
+        const tutorList: tutorAlgorithm[] = Object.entries(rawData).map(([id, data]) => ({
+            idPersonnel: Number(id),
+            nom: data.NOM,
+            prenom: data.PRENOM,
+            compteurEtudiant: data.COMPTEUR_ETUDIANT,
+            distanceGpsProfEntreprise: data.DISTANCE_GPS_PROF_ENTREPRISE,
+            etudiantPresentVille: !!data.ETUDIANT_DEJA_PRESENT_VILLE,
+            etudiantPresentEntreprise: !!data.ETUDIANT_DEJA_PRESENT_ENREPRISE,
+            equiteDeuxTroisAnnees: !!data.EQUITE_DEUX_TROIS_ANNEE,
+            somme: data.SOMME
+        }));
+
+        console.log(tutorList); 
+        this.teachers = tutorList;
     }
 
     handleConfirmAttribution(teacherId: number) {
+        if (!this.currentAcademicYear || !this.teacherTutorDetails.idAnneeUniversitaire) {
+            return;
+        }
+        
         const selectedTeacher = this.teachers?.find(teacher => teacher.idPersonnel === teacherId);
         
-        if (selectedTeacher) {
-            this.choicedTutor = selectedTeacher;
-        } else {
-            console.warn("Aucun enseignant trouvé avec cet ID :", teacherId);
+        if (!selectedTeacher) {
+            return;
         }
-    
+        
+        this.choicedTutor = selectedTeacher;
         this.showAttributionModal = false;
-    
-        if (!this.teacherTutorDetails) {
-            this.teacherTutorDetails = {};
+        
+        if (!this.teacherTutorDetails.idUPPA) {
+            return;
         }
-    
-        if (this.detailsSheet?.idUPPA) {
-            this.teacherTutorDetails.idUPPA = Number(this.detailsSheet.idUPPA.value);
-        }
-    
-        this.academicYearService.getCurrentAcademicYear().subscribe({
-            next: (year) => {
-                if (year) {
-                    this.teacherTutorDetails!.idAnneeUniversitaire = year.idAnneeUniversitaire; 
-                    this.teacherTutorDetails!.idPersonnel = this.choicedTutor?.idPersonnel;
-
-                    if (this.teacherTutorDetails) {
-                        const tutor = this.studentStaffService.getTutorByUppaYear(this.teacherTutorDetails);
-                        if (tutor) {
-                            this.studentStaffService.updateStudentTeacherAssignments(this.teacherTutorDetails).subscribe({
-                                next: (response) => {
-                                    console.log("Affectation de l'enseignant réussie :", response);
-                                },
-                                error: (err) => {
-                                    console.error("Erreur lors de l'affectation de l'enseignant :", err);
-                                }
-                            });
-                        } else {
-                            this.studentStaffService.addStudentTeacherAssignments(this.teacherTutorDetails).subscribe({
-                                next: (response) => {
-                                    console.log("Ajout de l'affectation de l'enseignant réussie :", response);
-                                },
-                                error: (err) => {
-                                    console.error("Erreur lors de l'ajout de l'affectation de l'enseignant :", err);
-                                }
-                            });
-                        }
-                    }
+        
+        this.teacherTutorDetails.idPersonnel = selectedTeacher.idPersonnel;
+        
+        const tutorSub = this.studentStaffService.getTutorByUppaYear(this.teacherTutorDetails).pipe(
+            switchMap(existingTutor => {
+                if (existingTutor && existingTutor.idAnneeUniversitaire === this.teacherTutorDetails.idAnneeUniversitaire) {
+                    return this.studentStaffService.updateStudentTeacherAssignments(this.teacherTutorDetails);
+                } else {
+                    return this.studentStaffService.addStudentTeacherAssignments(this.teacherTutorDetails);
                 }
-            },
-            error: (err) => {
-                console.error("Erreur lors de la récupération de l'année académique :", err);
-            }
-        });
+            }),
+            tap(response => {
+                this.studentStaffService.getTutorByUppaYear(this.teacherTutorDetails).pipe(
+                    tap(tutorResponse => {
+                        this.tutor = tutorResponse;
+                    }),
+                    catchError(err => {
+                        return of(null);
+                    })
+                ).subscribe(); 
+            }),
+            catchError(err => {
+                return of(null);
+            })
+        ).subscribe();
+        
+        this.subscriptions.push(tutorSub);
     }
     
     handleCancelAttribution() {
         this.showAttributionModal = false;
     }
 
-
-    
-
-   
+    ngOnDestroy() {
+        this.subscriptions.forEach(sub => {
+            if (sub) {
+                sub.unsubscribe();
+            }
+        });
+    }
 }

@@ -443,11 +443,11 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Tuteur</label>
-                        @if (choicedTutor) {
-                            <p class="info-text">{{ choicedTutor.nom}} {{choicedTutor.prenom}}</p>
+                        @if (tutor) {
+                            <p class="info-text">{{ tutor.nomPersonnel}}</p> 
                         }
                         @else {
-                            <p class="info-text">{{ detailsSheet}}</p>
+                            <p class="info-text">Aucun tuteur</p>
                         }
                     </div>
                 </div>
