@@ -12,13 +12,14 @@ class FonctionsAlgorithme
     public static function getProfesseursMatrix(PDO $db): array
     {
         $query = "SELECT
+            personnels.idPersonnel,
             personnels.nom,
+            personnels.prenom,
             personnels.codePostal,
             personnels.longitudeAdresse,
             personnels.latitudeAdresse,
             personnels.coptaEtudiant,
-            COUNT(etudiants.idUPPA) AS totalEtudiants,
-            personnels.idPersonnel
+            COUNT(etudiants.idUPPA) AS totalEtudiants
         FROM personnels
         JOIN table_personnel_etudiant_anneeuniv ON personnels.idPersonnel = table_personnel_etudiant_anneeuniv.idPersonnel
         JOIN etudiants ON table_personnel_etudiant_anneeuniv.idUPPA = etudiants.idUPPA
@@ -31,9 +32,9 @@ class FonctionsAlgorithme
         $stmt->execute(['role' => 'Enseignant']);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        echo "La matrice des professeurs contient uniquement les entrées valides :\n";
+        //echo "La matrice des professeurs contient uniquement les entrées valides :\n";
         foreach ($rows as $row) {
-            print_r($row);
+            // print_r($row);
         }
 
         return $rows;
@@ -66,7 +67,7 @@ class FonctionsAlgorithme
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (empty($rows)) {
-            echo "Aucune donnée trouvée pour l'étudiant avec idUPPA=$idUPPA et idFicheDescriptive=$idFicheDescriptive\n";
+            // echo "Aucune donnée trouvée pour l'étudiant avec idUPPA=$idUPPA et idFicheDescriptive=$idFicheDescriptive\n";
             return [];
         }
 
@@ -92,7 +93,7 @@ class FonctionsAlgorithme
             // Construire l'adresse finale
             $adresse = trim(implode(', ', $adresseElements));
 
-            echo "Recherche des coordonnées GPS pour l'adresse formatée : $adresse\n";
+            // echo "Recherche des coordonnées GPS pour l'adresse formatée : $adresse\n";
             
             // Récupérer les coordonnées via l'API
             $coordinates = self::getGpsCoordinates($adresse);
@@ -115,14 +116,14 @@ class FonctionsAlgorithme
                 $rows[0]['longitudeStage'] = $coordinates['lng'];
                 $rows[0]['latitudeStage'] = $coordinates['lat'];
                 
-                echo "Coordonnées GPS mises à jour en base de données\n";
+                // echo "Coordonnées GPS mises à jour en base de données\n";
             } else {
-                echo "Impossible de récupérer les coordonnées GPS pour cette adresse\n";
+                // echo "Impossible de récupérer les coordonnées GPS pour cette adresse\n";
             }
         }
 
-        echo "Données de l'étudiant récupérées avec succès\n";
-        print_r($rows);
+        // echo "Données de l'étudiant récupérées avec succès\n";
+        // print_r($rows);
         return $rows;
     }
 
@@ -174,14 +175,14 @@ class FonctionsAlgorithme
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (!empty($results)) {
-            echo "Étudiants déjà présents dans la ville (code postal: $codePostal):\n";
+            // echo "Étudiants déjà présents dans la ville (code postal: $codePostal):\n";
             foreach ($results as $result) {
-                echo "- {$result['nom']} chez {$result['raisonSociale']}\n";
+                // echo "- {$result['nom']} chez {$result['raisonSociale']}\n";
             }
             return true;
         }
 
-        echo "Aucun étudiant n'effectue de stage dans cette ville (code postal: $codePostal)\n";
+        // echo "Aucun étudiant n'effectue de stage dans cette ville (code postal: $codePostal)\n";
         return false;
     }
 
@@ -203,14 +204,14 @@ class FonctionsAlgorithme
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
-            echo "Un étudiant ({$result['nom']}) est déjà présent dans cette entreprise\n";
+            // echo "Un étudiant ({$result['nom']}) est déjà présent dans cette entreprise\n";
             return [
                 'present' => true,
                 'idUPPA' => $result['idUPPA']
             ];
         }
 
-        echo "Aucun étudiant n'effectue de stage dans cette entreprise\n";
+        // echo "Aucun étudiant n'effectue de stage dans cette entreprise\n";
         return ['present' => false];
     }
 
@@ -239,7 +240,7 @@ class FonctionsAlgorithme
 
     public static function getProfesseurAssocie(string $idUPPA, PDO $db): ?string
     {
-        echo "Recherche du professeur associé à l'étudiant $idUPPA\n";
+        // echo "Recherche du professeur associé à l'étudiant $idUPPA\n";
 
         $query = "SELECT personnels.nom, personnels.idPersonnel
                 FROM personnels
@@ -252,11 +253,11 @@ class FonctionsAlgorithme
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            echo "Professeur associé trouvé : {$result['nom']} (ID: {$result['idPersonnel']})\n";
+            // echo "Professeur associé trouvé : {$result['nom']} (ID: {$result['idPersonnel']})\n";
             return $result['nom'];
         }
 
-        echo "Aucun professeur associé trouvé pour l'étudiant $idUPPA\n";
+        // echo "Aucun professeur associé trouvé pour l'étudiant $idUPPA\n";
         return null;
     }
 
@@ -286,14 +287,14 @@ class FonctionsAlgorithme
             $response = file_get_contents($url, false, $context);
             
             if ($response === false) {
-                echo "Erreur lors de la requête à l'API de géocodage\n";
+                // echo "Erreur lors de la requête à l'API de géocodage\n";
                 return null;
             }
             
             $data = json_decode($response, true);
             
             if (empty($data)) {
-                echo "Aucun résultat trouvé pour l'adresse : $adresse\n";
+                // echo "Aucun résultat trouvé pour l'adresse : $adresse\n";
                 return null;
             }
             
@@ -302,7 +303,7 @@ class FonctionsAlgorithme
                 'lng' => $data[0]['lon']
             ];
         } catch (\Exception $e) {
-            echo "Erreur lors de la récupération des coordonnées : " . $e->getMessage() . "\n";
+            // echo "Erreur lors de la récupération des coordonnées : " . $e->getMessage() . "\n";
             return null;
         }
     }
