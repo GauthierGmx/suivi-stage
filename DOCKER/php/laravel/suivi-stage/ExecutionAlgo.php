@@ -31,5 +31,5 @@ try {
         // echo "Aucune attribution possible.\n";
     }
 } catch (Exception $e) {
-    // echo "ERREUR : " . $e->getMessage() . "\n";
+    echo "ERREUR : " . $e->getMessage() . "\n";
 }

@@ -15,7 +15,7 @@ class DatabaseConnection
         if (self::$connection === null) {
             // echo "Tentative de connexion à la base de données...\n";
             
-            $dotenv = Dotenv::createImmutable(__DIR__.'/../html/suivi-stage/');
+            $dotenv = Dotenv::createImmutable(__DIR__);
             $dotenv->load();
 
             $requiredVars = ['DB_HOST', 'DB_USERNAME', 'DB_PASSWORD'];
