@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { InitService } from '../../services/init.service';
 import { WelcomeComponent } from "../welcome-card/welcome-card.component";
 import { StatsCardsComponent } from "../stats-cards/stats-cards.component";
 import { SearchesStudentTabComponent } from '../searches-student-tab/searches-student-tab.component';
@@ -18,31 +19,32 @@ import { ListStudentTabComponent } from '../list-student-tab/list-student-tab.co
 export class DashboardComponent implements OnInit {
   currentUser?: any;
   currentUserRole?: string;
-  allDataLoaded: Boolean = false;
+  allDataLoaded: boolean = false;
   loadedChildrenCount: number = 0;
   totalChildren: number = 2;
 
   constructor(
     private readonly authService: AuthService,
-    private readonly cdRef: ChangeDetectorRef
+    private readonly cdRef: ChangeDetectorRef,
+    private readonly initService: InitService
   ) {}
 
-  /**
-   * Initializes the component by setting up the current user and their role.
-   * Forces change detection after initialization.
-   */
-  ngOnInit() {
-    this.currentUser = this.authService.getCurrentUser();
-    
-    if (this.authService.isStudent(this.currentUser)) {
-      this.currentUserRole = 'STUDENT';
-    }
-    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-      this.currentUserRole = 'INTERNSHIP_MANAGER';
-    }
-
+  async ngOnInit() {
     this.loadedChildrenCount = 0;
+    
+    this.authService.getAuthenticatedUser().subscribe(currentUser => {
+      this.currentUser = currentUser;
+      
+      if (this.authService.isStudent(this.currentUser)) {
+        this.currentUserRole = 'STUDENT';
+      }
+      else if (this.authService.isStaff(this.currentUser)) {
+        this.currentUserRole = 'INTERNSHIP_MANAGER';
+      }
 
+      this.initService.setInitialized();
+    });
+    
     this.cdRef.detectChanges();
   }
 

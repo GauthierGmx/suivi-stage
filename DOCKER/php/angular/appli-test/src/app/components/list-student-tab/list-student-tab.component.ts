@@ -111,7 +111,8 @@ export class ListStudentTabComponent implements OnInit {
                     this.filteredFactsheetsDatas = [...factsheets];
                 })
             ));
-        } else {
+        }
+        else {
             return firstValueFrom(forkJoin({
                 students: this.studentService.getStudents(['idUPPA','nom', 'prenom']),
                 searches: this.internshipSearchService.getSearches(['idRecherche', 'dateCreation', 'idUPPA']),
@@ -229,12 +230,23 @@ export class ListStudentTabComponent implements OnInit {
                 });
             }
         } else {
-            // Tri existant pour les recherches
+            // Tri par date
             if (this.currentDateFilter !== 'default') {
-                // ...existing date sorting code...
+                filteredDatas.sort((a, b) => {
+                    if (!a.lastSearchDate) return 1;
+                    if (!b.lastSearchDate) return -1;
+                    return this.currentDateFilter === 'date_asc'
+                        ? a.lastSearchDate.getTime() - b.lastSearchDate.getTime()
+                        : b.lastSearchDate.getTime() - a.lastSearchDate.getTime();
+                });
             }
+            // Tri par nombre de recherches
             if (this.currentNbSearchesFilter !== 'default') {
-                // ...existing number sorting code...
+                filteredDatas.sort((a, b) => {
+                    return this.currentNbSearchesFilter === 'nb_asc'
+                        ? a.countSearches - b.countSearches
+                        : b.countSearches - a.countSearches;
+                });
             }
         }
     

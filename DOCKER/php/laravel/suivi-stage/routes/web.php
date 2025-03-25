@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CasAuthMiddleware;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
