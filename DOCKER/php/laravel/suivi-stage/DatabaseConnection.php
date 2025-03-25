@@ -13,20 +13,20 @@ class DatabaseConnection
     public static function connect(): PDO 
     {
         if (self::$connection === null) {
-            echo "Tentative de connexion à la base de données...\n";
+            // echo "Tentative de connexion à la base de données...\n";
             
-            $dotenv = Dotenv::createImmutable(__DIR__.'/../html/suivi-stage/');
+            $dotenv = Dotenv::createImmutable(__DIR__);
             $dotenv->load();
 
             $requiredVars = ['DB_HOST', 'DB_USERNAME', 'DB_PASSWORD'];
             foreach ($requiredVars as $var) {
                 if (!isset($_ENV[$var])) {
-                    echo "ERREUR : Variable d'environnement manquante : $var\n";
+                    // echo "ERREUR : Variable d'environnement manquante : $var\n";
                     throw new \RuntimeException("Variable d'environnement manquante : $var");
                 }
             }
 
-            echo "Variables d'environnement vérifiées.\n";
+            // echo "Variables d'environnement vérifiées.\n";
 
 
             try {
@@ -41,9 +41,9 @@ class DatabaseConnection
                     ]
                 );
                 
-                echo "Connexion réussie à la base de données!\n";
+                // echo "Connexion réussie à la base de données!\n";
             } catch (PDOException $e) {
-                echo "ERREUR de connexion : " . $e->getMessage() . "\n";
+                // echo "ERREUR de connexion : " . $e->getMessage() . "\n";
                 throw $e;
             }
         }

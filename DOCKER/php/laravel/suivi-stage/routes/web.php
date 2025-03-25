@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CasAuthMiddleware;
+use App\Http\Controllers\AlgorithmeController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +19,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/run-algo/{idUPPA}-{idFicheDescriptive}', [AlgorithmeController::class, 'run']);

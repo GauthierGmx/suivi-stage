@@ -25,26 +25,26 @@ class AlgorithmeRepartition
     public function executeForStudent(string $idUPPA, string $idFicheDescriptive): ?array 
     {
         try {
-            echo "Traitement pour l'étudiant avec l'ID : $idUPPA (Fiche descriptive: $idFicheDescriptive)\n";
+            // echo "Traitement pour l'étudiant avec l'ID : $idUPPA (Fiche descriptive: $idFicheDescriptive)\n";
             
             // Récupération des données
             $this->professeursMatrix = $this->getProfesseursMatrix();
             $etudiantData = $this->getEtudiantData($idUPPA, $idFicheDescriptive);
             
             if (empty($etudiantData)) {
-                echo "Erreur : Données insuffisantes pour poursuivre le traitement.\n";
+                // echo "Erreur : Données insuffisantes pour poursuivre le traitement.\n";
                 return null;
             }
 
-            echo "Données de l'étudiant récupérées avec succès\n";
-            echo "Données de l'étudiant : \n";
-            print_r($etudiantData);
+            // echo "Données de l'étudiant récupérées avec succès\n";
+            // echo "Données de l'étudiant : \n";
+            // print_r($etudiantData);
 
             // Vérification des données requises
             $requiredFields = ['latitudeStage', 'longitudeStage', 'codePostalStage', 'idEntreprise'];
             foreach ($requiredFields as $field) {
                 if (!isset($etudiantData[0][$field])) {
-                    echo "Erreur : Donnée manquante : $field\n";
+                    // echo "Erreur : Donnée manquante : $field\n";
                     return null;
                 }
             }
@@ -60,18 +60,21 @@ class AlgorithmeRepartition
             // Définition des critères
             $criteres = [
                 "NOM",
+                "PRENOM",
                 "COMPTEUR_ETUDIANT",
                 "DISTANCE_GPS_PROF_ENTREPRISE",
                 "ETUDIANT_DEJA_PRESENT_VILLE",
                 "ETUDIANT_DEJA_PRESENT_ENREPRISE",
                 "EQUITE_DEUX_TROIS_ANNEE"
             ];
-            echo "Critères de sélection : " . implode(", ", $criteres) . "\n";
 
             // Initialisation de la matrice de résultats
             $resultats = [];
             foreach ($this->professeursMatrix as $prof) {
                 $resultats[$prof['nom']] = array_fill_keys($criteres, 0);
+                // Initialiser directement NOM et PRENOM
+                $resultats[$prof['nom']]['NOM'] = $prof['nom'];
+                $resultats[$prof['nom']]['PRENOM'] = $prof['prenom'];
             }
 
             // Calcul des critères pour chaque professeur
@@ -89,7 +92,7 @@ class AlgorithmeRepartition
                 $resultats[$prof['nom']]['DISTANCE_GPS_PROF_ENTREPRISE'] =
                     ($distance > 20 && !in_array($codePostal, ['64', '40'])) ? 1 : 0;
                 
-                echo "Distance entre le professeur " . $prof['nom'] . " et l'étudiant : $distance km\n";
+                // echo "Distance entre le professeur " . $prof['nom'] . " et l'étudiant : $distance km\n";
 
                 // Vérification présence ville et entreprise
                 $presentVille = $this->isEtudiantPresentVille($codePostal, $idUPPA);
@@ -109,19 +112,27 @@ class AlgorithmeRepartition
                     $this->checkEquiteDeuxTrois($prof['idPersonnel']) ? 1 : 0;  // Changed from 'id'
             }
 
-            // Affichage des résultats
-            echo "\nRésultats finaux :\n";
-            print_r($resultats);
+            // Réorganiser les résultats pour l'affichage
+            $resultatsFinal = [];
+            foreach ($resultats as $nomProf => $valeurs) {
+                // Trouver l'idPersonnel correspondant au nom
+                foreach ($this->professeursMatrix as $prof) {
+                    if ($prof['nom'] === $nomProf) {
+                        // Créer une nouvelle entrée avec idPersonnel comme clé
+                        $resultatsFinal[$prof['idPersonnel']] = $valeurs;
+                        break;
+                    }
+                }
+            }
 
             // Tri des professeurs
-            $professeursTries = $this->trierProfesseurs($resultats);
-            echo "\nProfesseurs triés par probabilité :\n";
+            $professeursTries = $this->trierProfesseurs($resultatsFinal);
             print_r($professeursTries);
 
             return $professeursTries;
 
         } catch (Exception $e) {
-            echo "ERREUR : " . $e->getMessage() . "\n";
+            // echo "ERREUR : " . $e->getMessage() . "\n";
             throw $e;
         }
     }

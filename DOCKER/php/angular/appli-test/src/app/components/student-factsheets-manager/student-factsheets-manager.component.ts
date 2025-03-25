@@ -43,10 +43,11 @@ export class StudentFactsheetsManagerComponent implements OnInit {
    * Gets the current user and loads student data if a student ID is present in the URL
    */
   ngOnInit() {
-    let user = this.authService.getCurrentUser();
-    if (this.authService.isStaff(user)) {
-      this.currentUser = user;
-    }
+    this.authService.getAuthenticatedUser().subscribe(user => {
+      if (this.authService.isStaff(user)) {
+        this.currentUser = user
+      }
+    });
 
     const studentId = this.route.snapshot.paramMap.get('id');
     if (studentId) {

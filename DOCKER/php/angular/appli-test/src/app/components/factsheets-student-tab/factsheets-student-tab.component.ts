@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Student } from '../../models/student.model';
 import { Company } from '../../models/company.model';
 import { Factsheets, SheetStatus } from '../../models/description-sheet.model';
+import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
 import { NavigationService } from '../../services/navigation.service';
 import { CompanyService } from '../../services/company.service';
 import { FactsheetsService } from '../../services/description-sheet.service';
-import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
-import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
 import { AuthService } from '../../services/auth.service';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
 
 
 @Component({
@@ -23,7 +23,6 @@ export class FactsheetsStudentTabComponent implements OnInit {
     @Input() student!: Student;
     @Input() currentUserRole?: string
     @Output() dataLoaded = new EventEmitter<void>()
-    currentUserId!: string
     studentData?: Student
     companies?: Company[]
     sheets?: Factsheets[]
@@ -45,15 +44,16 @@ export class FactsheetsStudentTabComponent implements OnInit {
         private readonly companyService: CompanyService,
         private readonly cdr: ChangeDetectorRef,
         private readonly authService: AuthService,
-    ) {
-        const currentUser = this.authService.getCurrentUser();
-        this.isStudent = this.authService.isStudent(currentUser);
-    }
+    ) {}
 
     /**
      * Initialize the search configuration with debounce and loads initial data
      */
     ngOnInit() {
+        this.authService.getAuthenticatedUser().subscribe(user =>
+            this.isStudent = this.authService.isStudent(user)
+        );
+
         // Configuration de la recherche avec debounce
         this.searchTermSubject.pipe(
             debounceTime(800), 

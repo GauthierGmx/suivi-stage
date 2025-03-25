@@ -34,9 +34,8 @@ class Affichage
             return $b['SOMME'] <=> $a['SOMME'];
         });
 
-        // Supprimer la colonne 'NOM' du résultat final
+
         $result = array_map(function($row) {
-            unset($row['NOM']);
             return $row;
         }, $data);
 

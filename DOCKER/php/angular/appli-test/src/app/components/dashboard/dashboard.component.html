@@ -1,9 +1,8 @@
 <div class="dashboard">
   <div class="content">
-    @if (currentUser) {      
-      @if (!allDataLoaded) {
-        <app-loading/>
-      }
+    @if (!currentUser || !allDataLoaded) {
+      <app-loading/>
+    }
       <div [hidden]="!allDataLoaded">
         <app-breadcrumb [currentUserRole]="currentUserRole"/>
         <app-welcome-card [currentUser]="currentUser"/>
@@ -16,6 +15,5 @@
           <app-list-student-tab (dataLoaded)="onChildDataLoaded()"/>
         }
       </div>
-    }
   </div>
 </div>

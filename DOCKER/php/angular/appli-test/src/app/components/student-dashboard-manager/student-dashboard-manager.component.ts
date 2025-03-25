@@ -36,11 +36,11 @@ export class StudentDashboardManagerComponent implements OnInit {
    * Initializes the component by setting the current user and loading student data
    * if a student ID is present in the route parameters
    */
-  ngOnInit() {
-    let user = this.authService.getCurrentUser();
-    if (this.authService.isStaff(user)) {
-      this.currentUser = user;
-    }
+  async ngOnInit() {
+    let user;
+    this.authService.getAuthenticatedUser().subscribe(currentUser =>
+      user = currentUser
+    );
 
     const studentId = this.route.snapshot.paramMap.get('id');
     if (studentId) {

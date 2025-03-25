@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UpdateFactsheet1Component } from './update-factsheet-1/update-factsheet-1.component';
 import { UpdateFactsheets2Component } from './update-factsheet-2/update-factsheet-2.component';
 import { UpdateFactsheets3Component } from './update-factsheets-3/update-factsheets-3.component';
@@ -9,14 +10,13 @@ import { UpdateFactsheets6Component } from './update-factsheets-6/update-factshe
 import { UpdateFactsheets7Component } from './update-factsheets-7/update-factsheets-7.component';
 import { UpdateFactsheets8Component } from './update-factsheets-8/update-factsheets-8.component';
 import { UpdateFactsheets9Component } from './update-factsheets-9/update-factsheets-9.component';
+import { LoadingComponent } from "../loading/loading.component";
 import { NavigationService } from '../../services/navigation.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { firstValueFrom, forkJoin } from 'rxjs';
 import { StudentService } from '../../services/student.service';
 import { FactsheetsService } from '../../services/description-sheet.service';
 import { AuthService } from '../../services/auth.service';
 import { FormDataService } from '../../services/form-data.service';
-import { LoadingComponent } from "../loading/loading.component";
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-update-factsheet',
@@ -100,14 +100,12 @@ export class UpdateFactsheetComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.currentUser = this.authService.getCurrentUser();
-    
-    if (this.authService.isStudent(this.currentUser)) {
-      this.currentUserRole = 'STUDENT';
-    }
-    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-      this.currentUserRole = 'INTERNSHIP_MANAGER';
-    }
+    this.authService.getAuthenticatedUser().subscribe(user => {
+      if (this.authService.isStudent(user)) {
+        this.currentUser = user;
+        this.currentUserRole = 'STUDENT';
+      }
+    });
   }
 
   /**
