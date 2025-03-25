@@ -216,73 +216,26 @@ export class SheetDetailsComponent implements OnInit, OnDestroy {
     }
 
     generateTeacher() {
-        const rawData = {
-            4: {
-                NOM: 'VOISIN',
-                PRENOM: 'Sophie',
-                COMPTEUR_ETUDIANT: 1,
-                DISTANCE_GPS_PROF_ENTREPRISE: 1,
-                ETUDIANT_DEJA_PRESENT_VILLE: 0,
-                ETUDIANT_DEJA_PRESENT_ENREPRISE: 0,
-                EQUITE_DEUX_TROIS_ANNEE: 0,
-                SOMME: 2
-            },
-            5: {
-                NOM: 'BORTHWICK',
-                PRENOM: 'Margaret',
-                COMPTEUR_ETUDIANT: 1,
-                DISTANCE_GPS_PROF_ENTREPRISE: 1,
-                ETUDIANT_DEJA_PRESENT_VILLE: 0,
-                ETUDIANT_DEJA_PRESENT_ENREPRISE: 0,
-                EQUITE_DEUX_TROIS_ANNEE: 0,
-                SOMME: 2
-            },
-            3: {
-                NOM: 'CARPENTIER',
-                PRENOM: 'Yann',
-                COMPTEUR_ETUDIANT: 1,
-                DISTANCE_GPS_PROF_ENTREPRISE: 1,
-                ETUDIANT_DEJA_PRESENT_VILLE: 0,
-                ETUDIANT_DEJA_PRESENT_ENREPRISE: 0,
-                EQUITE_DEUX_TROIS_ANNEE: 0,
-                SOMME: 2
-            },
-            1: {
-                NOM: 'LOPISTEGUY',
-                PRENOM: 'Philippe',
-                COMPTEUR_ETUDIANT: 1,
-                DISTANCE_GPS_PROF_ENTREPRISE: 1,
-                ETUDIANT_DEJA_PRESENT_VILLE: 0,
-                ETUDIANT_DEJA_PRESENT_ENREPRISE: 0,
-                EQUITE_DEUX_TROIS_ANNEE: 0,
-                SOMME: 2
-            },
-            2: {
-                NOM: 'DOURISBOURE',
-                PRENOM: 'Yon',
-                COMPTEUR_ETUDIANT: 1,
-                DISTANCE_GPS_PROF_ENTREPRISE: 1,
-                ETUDIANT_DEJA_PRESENT_VILLE: 0,
-                ETUDIANT_DEJA_PRESENT_ENREPRISE: 0,
-                EQUITE_DEUX_TROIS_ANNEE: 0,
-                SOMME: 2
-            }
-        };
+        if(this.teacherTutorDetails.idUPPA && this.sheet?.idFicheDescriptive) {
+            const rawData = this.studentStaffService.runAlgorithm(this.teacherTutorDetails.idUPPA, this.sheet?.idFicheDescriptive).subscribe();
+            const tutorList: tutorAlgorithm[] = Object.entries(rawData).map(([id, data]) => ({
+                idPersonnel: Number(id),
+                nom: data.NOM,
+                prenom: data.PRENOM,
+                compteurEtudiant: data.COMPTEUR_ETUDIANT,
+                distanceGpsProfEntreprise: data.DISTANCE_GPS_PROF_ENTREPRISE,
+                etudiantPresentVille: !!data.ETUDIANT_DEJA_PRESENT_VILLE,
+                etudiantPresentEntreprise: !!data.ETUDIANT_DEJA_PRESENT_ENREPRISE,
+                equiteDeuxTroisAnnees: !!data.EQUITE_DEUX_TROIS_ANNEE,
+                somme: data.SOMME
+            }));
+    
+            console.log(tutorList); 
+            this.teachers = tutorList;
+        }else {
+            console.log("Erreur lors de la génération des tuteurs");
+        }
 
-        const tutorList: tutorAlgorithm[] = Object.entries(rawData).map(([id, data]) => ({
-            idPersonnel: Number(id),
-            nom: data.NOM,
-            prenom: data.PRENOM,
-            compteurEtudiant: data.COMPTEUR_ETUDIANT,
-            distanceGpsProfEntreprise: data.DISTANCE_GPS_PROF_ENTREPRISE,
-            etudiantPresentVille: !!data.ETUDIANT_DEJA_PRESENT_VILLE,
-            etudiantPresentEntreprise: !!data.ETUDIANT_DEJA_PRESENT_ENREPRISE,
-            equiteDeuxTroisAnnees: !!data.EQUITE_DEUX_TROIS_ANNEE,
-            somme: data.SOMME
-        }));
-
-        console.log(tutorList); 
-        this.teachers = tutorList;
     }
 
     handleConfirmAttribution(teacherId: number) {

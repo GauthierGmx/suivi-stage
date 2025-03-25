@@ -57,6 +57,10 @@ export class StudentStaffAcademicYearService {
       );
     }
 
+    runAlgorithm(idUPPA: number, idFicheDescriptive: number): Observable<string> {
+      return this.http.get<string>(`${this.apiUrl}/run-algorithm/${idUPPA}/${idFicheDescriptive}`);
+    }
+
 
     extractStudentTeacherAssignments(): Observable<ExcelResponse> {
         return this.http.get<ExcelResponse>(`${this.apiUrl}/api/affectation/extraction-affectations-etudiants-enseignants`).pipe(

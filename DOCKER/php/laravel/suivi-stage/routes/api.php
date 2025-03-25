@@ -18,6 +18,7 @@ use App\Http\Controllers\AnneeUniversitaireController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\AffectationEnseignantController;
 use App\Http\Middleware\DispatchDataDescriptiveSheet;
+use App\Http\Controllers\AlgorithmeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,9 @@ Route::get('/cas-logout', function (Request $request) {
     $middleware = new CasAuthMiddleware();
     return $middleware->handleCasLogout();
 });
+
+//Route pour executer l'algorithme
+Route::get('/run-algorithm/{idUPPA}/{idFicheDescriptive}', [AlgorithmeController::class, 'run']);
 
 // Route pour le Controller Auth
 Route::get('/get-authenticated-user', [AuthController::class, 'getUser']);
