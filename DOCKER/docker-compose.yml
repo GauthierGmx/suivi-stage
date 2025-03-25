@@ -6,8 +6,6 @@ services:
     #image: rogh/sae-php74:latest
     volumes:
       - ./php/laravel:/var/www/html
-      - ./php/algorithme:/var/www/algorithme
-      - ./php/algorithme_php:/var/www/algorithme_php
       - ./apachedefaultconf:/etc/apache2/sites-enabled
     ports:
       - "8000:80"
