@@ -11,7 +11,7 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 
 
 ---
-## Guide d'installation de développement
+## Guide d'installation de l'environnement de développement
 
 > [!TIP]
 > Section liée à l'installation de l'environnement de développement identique à celle des développeurs à l'origine du projet.  
@@ -63,7 +63,7 @@ git switch nomBranche
 
 C'est bon, vous pouvez développer ! 
 
-### <ins>Sauvegarde du projet </ins>
+### <ins>Sauvegarde du projet</ins>
 
 Pour le versionning du code, il est donc utile d'utiliser les commandes GIT
 
