@@ -180,20 +180,18 @@
                     </div>
                 </div>
 
-                
-                
                 <!-- Fonction du contact -->
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>N° SIRET</label>
-                        <p class="info-text">{{ company?.numSiret }}</p>
+                        <p class="info-text">{{ company?.numSIRET }}</p>
                     </div>
                 </div>
                 
                 <!-- Fonction du contact -->
                 <div class="form-group">
                     <div class="input-wrapper">
-                        <label>Code NAP ou NAF</label>
+                        <label>Code APE ou NAF</label>
                         <p class="info-text">{{ company?.codeAPE_NAF }}</p>
                     </div>
                 </div>
@@ -386,7 +384,9 @@
             <label>Fonction et tâches du stagiaire</label>
             <div class="info-box">
                 <p class="info-text">
-                    {{ detailsSheet?.fonction }}<br><br>
+                    Fonctions :<br>
+                    {{ detailsSheet?.fonctions }}<br><br>
+                    Tâches :<br>
                     {{ detailsSheet?.taches }}</p>
             </div>
             
@@ -453,7 +453,7 @@
                         }
                     </div>
                 </div>
-                <button class="attribution-button" (click)="openAttributionModal()">Attribution Enseignant</button>
+                <button *ngIf="currentUserRole === 'INTERNSHIP_MANAGER'" class="attribution-button" (click)="openAttributionModal()">Attribution Enseignant</button>
 
             </div>
 
@@ -478,5 +478,11 @@
         (confirm)="handleConfirmAttribution($event)"
         (cancel)="handleCancelAttribution()">
         </app-tutor-attribution-modal>
+    }
+
+    @if (isLoading) {
+        <div class="loading-overlay">
+            <app-loading/>
+        </div>
     }
 </div>

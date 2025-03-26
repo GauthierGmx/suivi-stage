@@ -19,8 +19,8 @@ import { StudentStaffAcademicYearService } from '../../services/student-staff-ac
 import { AcademicYearService } from '../../services/academic-year.service';
 import { StaffService } from '../../services/staff.service';
 import { CompanyTutorService } from '../../services/company-tutor.service';
-import { of, Observable, forkJoin } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { StudentService } from '../../services/student.service';
+import { of, Observable, forkJoin, switchMap, map } from 'rxjs';
 
 export interface algorithmResponse {
     idPersonnel?: number;
@@ -47,12 +47,13 @@ export class SheetDetailsComponent implements OnInit {
     detailsSheet?: Factsheets;
     company?: Company;
     companyTutor?: CompanyTutor;
-    teacherTutor: Staff | null = null; // Changed initialization
+    teacherTutor: Staff | null = null;
     affectation?: Student_Staff_AcademicYear = undefined;
     dataLoaded: boolean = false;
     showAttributionModal: Boolean = false;
     teachers?: algorithmResponse[];
     currentAcademicYear?: AcademicYear;
+    isLoading: boolean = false;
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -63,7 +64,8 @@ export class SheetDetailsComponent implements OnInit {
         private readonly studentStaffAcademicYearService: StudentStaffAcademicYearService,
         private readonly academicYearService: AcademicYearService,
         private readonly companyTutorService: CompanyTutorService,
-        private readonly staffService: StaffService
+        private readonly staffService: StaffService,
+        private readonly studentService: StudentService
     ) {}
 
     ngOnInit() {
@@ -83,6 +85,12 @@ export class SheetDetailsComponent implements OnInit {
         const selectedStudent = sessionStorage.getItem('selectedStudent');
         if (selectedStudent) {
             this.selectedStudent = JSON.parse(selectedStudent);
+        }
+        else {
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (currentUser) {
+                this.selectedStudent = JSON.parse(currentUser);
+            }
         }
         
         this.loadData().subscribe(() => {
@@ -131,8 +139,8 @@ export class SheetDetailsComponent implements OnInit {
                     'paysStageFicheDescriptive': 'paysStage',
                     'personnelTechniqueDisponibleFicheDescriptive': 'personnelTechniqueDisponible',
                     'serviceEntrepriseFicheDescriptive': 'serviceEntreprise',
-                    'sujetFicheDescriptive': 'sujetFiche',
-                    'tachesFicheDescriptive': 'tachesFiche',
+                    'sujetFicheDescriptive': 'sujet',
+                    'tachesFicheDescriptive': 'taches',
                     'telephoneStageFicheDescriptive': 'telephoneStage',
                     'thematiqueFicheDescriptive': 'thematique',
                     'villeStageFicheDescriptive': 'villeStage'
@@ -154,7 +162,7 @@ export class SheetDetailsComponent implements OnInit {
                 if (this.detailsSheet?.idEntreprise) {
                     observables['company'] = this.companyService.getCompanyById(this.detailsSheet.idEntreprise, [
                         'idEntreprise', 'raisonSociale', 'adresse', 'codePostal', 'ville', 
-                        'pays', 'telephone', 'typeEtablissement', 'numSiret', 
+                        'pays', 'telephone', 'typeEtablissement', 'numSIRET',
                         'codeAPE_NAF', 'statutJuridique', 'effectif'
                     ]);
                 }
@@ -168,6 +176,7 @@ export class SheetDetailsComponent implements OnInit {
                     return forkJoin(observables).pipe(
                         switchMap(baseResults => {
                             if (baseResults['company']) this.company = baseResults['company'];
+                            console.log(this.company);
                             if (baseResults['companyTutor']) this.companyTutor = baseResults['companyTutor'];
 
                             // Charger le tuteur enseignant
@@ -237,27 +246,37 @@ export class SheetDetailsComponent implements OnInit {
 
     generateTeacher() {
         if (this.detailsSheet?.idUPPA && this.detailsSheet?.idFicheDescriptive) {
+            this.isLoading = true;
             this.studentStaffAcademicYearService.runAlgorithm(this.detailsSheet.idUPPA, this.detailsSheet.idFicheDescriptive)
-                .subscribe(rawData => {
-                    if (rawData) {
-                        let tutorList: algorithmResponse[] = Object.entries(rawData).map(([id, data]: [string, any]) => ({
-                            idPersonnel: Number(id),
-                            nom: data.NOM,
-                            prenom: data.PRENOM,
-                            compteurEtudiant: data.COMPTEUR_ETUDIANT,
-                            distanceGpsProfEntreprise: data.DISTANCE_GPS_PROF_ENTREPRISE,
-                            etudiantPresentVille: !!data.ETUDIANT_DEJA_PRESENT_VILLE,
-                            etudiantPresentEntreprise: !!data.ETUDIANT_DEJA_PRESENT_ENREPRISE,
-                            equiteDeuxTroisAnnees: !!data.EQUITE_DEUX_TROIS_ANNEE,
-                            somme: data.SOMME
-                        }));
-                        tutorList = tutorList.sort((a, b) => {
-                            if (b.somme! !== a.somme!) {
-                                return b.somme! - a.somme!;
-                            }
-                            return (a.nom || '').localeCompare(b.nom || '');
-                        });
-                        this.teachers = tutorList;
+                .subscribe({
+                    next: (rawData) => {
+                        if (rawData) {
+                            let tutorList: algorithmResponse[] = Object.entries(rawData).map(([id, data]: [string, any]) => ({
+                                idPersonnel: Number(id),
+                                nom: data.NOM,
+                                prenom: data.PRENOM,
+                                compteurEtudiant: data.COMPTEUR_ETUDIANT,
+                                distanceGpsProfEntreprise: data.DISTANCE_GPS_PROF_ENTREPRISE,
+                                etudiantPresentVille: !!data.ETUDIANT_DEJA_PRESENT_VILLE,
+                                etudiantPresentEntreprise: !!data.ETUDIANT_DEJA_PRESENT_ENREPRISE,
+                                equiteDeuxTroisAnnees: !!data.EQUITE_DEUX_TROIS_ANNEE,
+                                somme: data.SOMME
+                            }));
+                            tutorList = tutorList.sort((a, b) => {
+                                if (b.somme! !== a.somme!) {
+                                    return b.somme! - a.somme!;
+                                }
+                                return (a.nom || '').localeCompare(b.nom || '');
+                            });
+                            this.teachers = tutorList;
+                        }
+                    },
+                    error: (error) => {
+                        console.error("Erreur lors de la génération des tuteurs", error);
+                        this.isLoading = false;
+                    },
+                    complete: () => {
+                        this.isLoading = false;
                     }
                 });
         }
@@ -275,6 +294,8 @@ export class SheetDetailsComponent implements OnInit {
         if (!selectedTeacher) return;
 
         this.showAttributionModal = false;
+        this.isLoading = true;
+
         const affectation: Student_Staff_AcademicYear = {
             idAnneeUniversitaire: this.currentAcademicYear.idAnneeUniversitaire,
             idUPPA: this.detailsSheet.idUPPA,
@@ -291,21 +312,30 @@ export class SheetDetailsComponent implements OnInit {
                     return operation;
                 })
             )
-            .subscribe(() => {
-                this.teacherTutor = {
-                    idPersonnel: selectedTeacher.idPersonnel!,
-                    nom: selectedTeacher.nom!,
-                    prenom: selectedTeacher.prenom!,
-                    role: null,
-                    adresse: '',
-                    ville: '',
-                    codePostal: '',
-                    telephone: '',
-                    adresseMail: '',
-                    longitudeAdresse: '0',
-                    latitudeAdresse: '0',
-                    quotaEtudiant: 0
-                };
+            .subscribe({
+                next: () => {
+                    this.teacherTutor = {
+                        idPersonnel: selectedTeacher.idPersonnel!,
+                        nom: selectedTeacher.nom!,
+                        prenom: selectedTeacher.prenom!,
+                        role: null,
+                        adresse: '',
+                        ville: '',
+                        codePostal: '',
+                        telephone: '',
+                        adresseMail: '',
+                        longitudeAdresse: '0',
+                        latitudeAdresse: '0',
+                        quotaEtudiant: 0
+                    };
+                },
+                error: (error) => {
+                    console.error("Erreur lors de l'attribution du tuteur", error);
+                    this.isLoading = false;
+                },
+                complete: () => {
+                    this.isLoading = false;
+                }
             });
     }
     

@@ -167,7 +167,7 @@ export class UpdateFactsheets3Component implements OnInit {
       'paysEntreprise': company.pays,
       'telephoneEntreprise': company.telephone,
       'typeEtablissementEntreprise': company.typeEtablissement,
-      'numSIRETEntreprise': company.numSiret,
+      'numSIRETEntreprise': company.numSIRET,
       'codeAPE_NAFEntreprise': company.codeAPE_NAF,
       'statutJuridiqueEntreprise': company.statutJuridique,
       'effectifEntreprise': company.effectif?.toString()

@@ -1,6 +1,6 @@
 export class Company {
     idEntreprise: number;
-    numSiret?: string | null;
+    numSIRET?: string | null;
     raisonSociale: string | null;
     typeEtablissement?: EtablissementType | null;
     adresse: string | null;
@@ -27,7 +27,7 @@ export class Company {
         ville: string = '',
         codePostal: string = '',
         pays: string = '',
-        numSiret?: string,
+        numSIRET?: string,
         typeEtablissement?: EtablissementType,
         telephone?: string,
         codeAPE_NAF?: string,
@@ -48,7 +48,7 @@ export class Company {
         this.ville = ville;
         this.codePostal = codePostal;
         this.pays = pays;
-        this.numSiret = numSiret;
+        this.numSIRET = numSIRET;
         this.typeEtablissement = typeEtablissement;
         this.telephone = telephone;
         this.codeAPE_NAF = codeAPE_NAF;
