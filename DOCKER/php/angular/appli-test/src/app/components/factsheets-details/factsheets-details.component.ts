@@ -176,7 +176,6 @@ export class SheetDetailsComponent implements OnInit {
                     return forkJoin(observables).pipe(
                         switchMap(baseResults => {
                             if (baseResults['company']) this.company = baseResults['company'];
-                            console.log(this.company);
                             if (baseResults['companyTutor']) this.companyTutor = baseResults['companyTutor'];
 
                             // Charger le tuteur enseignant
