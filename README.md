@@ -3,9 +3,8 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 
 ## Table des matières
 
-- [Table des matières](#table-des-matières)
 - [Arborescence](#arborescence-des-dossiers)
-- [Guide d'Installation de l'environnement de développement](#guide-d-installation-de-l-environnement-de-developpement)
+- [Guide d'installation](#guide-d-installation-de-l-environnement-de-developpement)
   - [Prérequis](#prérequis)
   - [Démarrage rapide](#démarrage-rapide)
   - [Informations importantes](#informations-importantes)
