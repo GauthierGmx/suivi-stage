@@ -60,6 +60,10 @@ git switch nomBranche
 
 C'est bon, vous pouvez développer ! 
 
+### <ins>Mise en place de l'environnement d'execution d'Angular</ins> : 
+
+> [!CAUTION]
+> Section en cours de construction
 ---
 ## Sauvegarde du projet
 
