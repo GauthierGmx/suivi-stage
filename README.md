@@ -17,7 +17,7 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 
 ---
 ## Installation
-[Consultez la documentation d'installation](INSTALLATION.md)
+- [Consultez la documentation d'installation](INSTALLATION.md)
 ---
 ## Identité des collaborateurs 
 
