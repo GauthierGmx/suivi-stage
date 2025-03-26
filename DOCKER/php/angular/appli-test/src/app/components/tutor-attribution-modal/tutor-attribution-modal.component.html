@@ -10,7 +10,7 @@
                 (click)="onGenerateTeachers()"
                 class="generate-button"
             >
-                Générer les enseignants
+                Lancer l'algorithme
             </button>
             
             <div *ngIf="teachers && teachers.length > 0">
@@ -41,7 +41,7 @@
                 class="delete-button"
                 [disabled]="!selectedTeacherId"
             >
-                Attribuer le tuteur
+                Attribuer l'enseignant
             </button>
         </div>
     </div>

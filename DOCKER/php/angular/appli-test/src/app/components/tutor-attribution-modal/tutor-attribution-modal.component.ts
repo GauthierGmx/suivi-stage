@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavigationService } from '../../services/navigation.service';
 import { Staff } from '../../models/staff.model';
-import { tutorAlgorithm } from '../factsheets-details/factsheets-details.component';
+import { algorithmResponse } from '../factsheets-details/factsheets-details.component';
 
 @Component({
     selector: 'app-tutor-attribution-modal',
@@ -13,7 +13,7 @@ import { tutorAlgorithm } from '../factsheets-details/factsheets-details.compone
     styleUrls: ['./tutor-attribution-modal.component.css'] 
 })
 export class TutorAttributionModalComponent {
-    @Input() teachers: tutorAlgorithm[] = [];
+    @Input() teachers: algorithmResponse[] = [];
     @Output() confirm = new EventEmitter<number>();
     @Output() cancel = new EventEmitter<void>();
     @Output() generateTeachers = new EventEmitter<void>();

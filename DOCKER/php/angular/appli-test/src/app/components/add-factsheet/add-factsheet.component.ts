@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { AddFactsheets1Component } from './add-factsheets-1/add-factsheets-1.component';
 import { AddFactsheets2Component } from './add-factsheets-2/add-factsheets-2.component';
 import { AddFactsheets3Component } from './add-factsheets-3/add-factsheets-3.component';
@@ -9,16 +10,15 @@ import { AddFactsheets6Component } from './add-factsheets-6/add-factsheets-6.com
 import { AddFactsheets7Component } from './add-factsheets-7/add-factsheets-7.component';
 import { AddFactsheets8Component } from './add-factsheets-8/add-factsheets-8.component';
 import { AddFactsheets9Component } from './add-factsheets-9/add-factsheets-9.component';
+import { LoadingComponent } from "../loading/loading.component";
+import { Student } from '../../models/student.model';
 import { NavigationService } from '../../services/navigation.service';
-import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { StudentService } from '../../services/student.service';
 import { InternshipSearchService } from '../../services/internship-search.service';
 import { FactsheetsService } from '../../services/description-sheet.service';
 import { AuthService } from '../../services/auth.service';
 import { FormDataService } from '../../services/form-data.service';
-import { LoadingComponent } from "../loading/loading.component";
-import { Student } from '../../models/student.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-add-factsheet',

@@ -8,8 +8,8 @@
             <!-- En-tête avec le statut -->
             <div class="status-section">
                 <h3><b>Informations de l'étudiant</b></h3>
-                <span [class]="getStatusClass(detailsSheet?.statut.value || '')">
-                    {{ detailsSheet?.statut.value }}
+                <span [class]="getStatusClass(detailsSheet?.statut || '')">
+                    {{ detailsSheet?.statut }}
                 </span>
             </div>
 
@@ -168,7 +168,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Service/Division</label>
-                        <p class="info-text">{{  detailsSheet?.serviceEntrepriseFicheDescriptive.value }}</p>
+                        <p class="info-text">{{  detailsSheet?.serviceEntreprise }}</p>
                     </div>
                 </div>
                 
@@ -224,7 +224,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Téléphone</label>
-                        <p class="info-text">{{ detailsSheet?.telephoneStageFicheDescriptive.value}}</p>
+                        <p class="info-text">{{ detailsSheet?.telephoneStage}}</p>
                     </div>
                 </div>
 
@@ -232,7 +232,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Email</label>
-                        <p class="info-text">{{ detailsSheet?.adresseMailStageFicheDescriptive.value}}</p>
+                        <p class="info-text">{{ detailsSheet?.adresseMailStage}}</p>
                     </div>
                 </div>
 
@@ -240,7 +240,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Adresse</label>
-                        <p class="info-text">{{ detailsSheet?.adresseStageFicheDescriptive.value}}</p>
+                        <p class="info-text">{{ detailsSheet?.adresseStage}}</p>
                     </div>
                 </div>
 
@@ -248,7 +248,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Pays</label>
-                        <p class="info-text">{{ detailsSheet?.paysStageFicheDescriptive.value}}</p>
+                        <p class="info-text">{{ detailsSheet?.paysStage}}</p>
                     </div>
                 </div>
 
@@ -256,7 +256,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Ville</label>
-                        <p class="info-text">{{ detailsSheet?.villeStageFicheDescriptive.value}}</p>
+                        <p class="info-text">{{ detailsSheet?.villeStage}}</p>
                     </div>
                 </div>
 
@@ -271,7 +271,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Nom</label>
-                        <p class="info-text">{{ detailsSheet?.nomRepresentantEntreprise.value}}</p>
+                        <p class="info-text">{{ company?.nomRepresentant }}</p>
                     </div>
                 </div>
 
@@ -279,7 +279,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Prenom</label>
-                        <p class="info-text">{{ detailsSheet?.prenomRepresentantEntreprise.value}}</p>
+                        <p class="info-text">{{ company?.prenomRepresentant }}</p>
                     </div>
                 </div>
 
@@ -287,7 +287,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Téléphone</label>
-                        <p class="info-text">{{ detailsSheet?.telephoneRepresentantEntreprise.value}}</p>
+                        <p class="info-text">{{ company?.telephoneRepresentant }}</p>
                     </div>
                 </div>
 
@@ -295,7 +295,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Email</label>
-                        <p class="info-text">{{ detailsSheet?.adresseMailRepresentantEntreprise.value}}</p>
+                        <p class="info-text">{{ company?.adresseMailRepresentant }}</p>
                     </div>
                 </div>
 
@@ -303,7 +303,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Fonction</label>
-                        <p class="info-text">{{ detailsSheet?.fonctionRepresentantEntreprise.value}}</p>
+                        <p class="info-text">{{ company?.fonctionRepresentant}}</p>
                     </div>
                 </div>
 
@@ -318,39 +318,39 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Nom</label>
-                        <p class="info-text">{{ detailsSheet?.nomTuteurEntreprise.value}}</p>
+                        <p class="info-text">{{ companyTutor?.nom }}</p>
                     </div>
                 </div>
 
-                <!-- Nom du contact -->
+                <!-- Prénom du contact -->
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Prenom</label>
-                        <p class="info-text">{{ detailsSheet?.prenomTuteurEntreprise.value}}</p>
+                        <p class="info-text">{{ companyTutor?.prenom }}</p>
                     </div>
                 </div>
 
-                <!-- Nom du contact -->
+                <!-- Téléphone du contact -->
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Téléphone</label>
-                        <p class="info-text">{{ detailsSheet?.telephoneTuteurEntreprise.value}}</p>
+                        <p class="info-text">{{ companyTutor?.telephone }}</p>
                     </div>
                 </div>
 
-                <!-- Nom du contact -->
+                <!-- Mail du contact -->
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Mail</label>
-                        <p class="info-text">{{ detailsSheet?.adresseMailTuteurEntreprise.value}}</p>
+                        <p class="info-text">{{ companyTutor?.adresseMail }}</p>
                     </div>
                 </div>
 
-                <!-- Nom du contact -->
+                <!-- Fonction du contact -->
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Fonction</label>
-                        <p class="info-text">{{ detailsSheet?.fonctionTuteurEntreprise.value}}</p>
+                        <p class="info-text">{{ companyTutor?.fonction }}</p>
                     </div>
                 </div>
 
@@ -372,7 +372,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Thématique du stage</label>
-                        <p class="info-text">{{ detailsSheet?.thematiqueFicheDescriptive.value}}</p>
+                        <p class="info-text">{{ detailsSheet?.thematique}}</p>
                     </div>
                 </div>
 
@@ -380,22 +380,24 @@
 
             <label>Sujet (précis du stage)</label>
             <div class="info-box">
-                <p class="info-text">{{ detailsSheet?.sujetFicheDescriptive.value }}</p>
+                <p class="info-text">{{ detailsSheet?.sujet }}</p>
             </div>
             
             <label>Fonction et tâches du stagiaire</label>
             <div class="info-box">
-                <p class="info-text">{{ detailsSheet?.tachesFicheDescriptive.value }}</p>
+                <p class="info-text">
+                    {{ detailsSheet?.fonction }}<br><br>
+                    {{ detailsSheet?.taches }}</p>
             </div>
             
             <label>Compétences (à acquérir ou à développer)</label>
             <div class="info-box">
-                <p class="info-text">{{ detailsSheet?.competencesFicheDescriptive.value }}</p>
+                <p class="info-text">{{ detailsSheet?.competences }}</p>
             </div>
             
             <label>Détails</label>
             <div class="info-box">
-                <p class="info-text">{{ detailsSheet?.detailsFicheDescriptive.value }}</p>
+                <p class="info-text">{{ detailsSheet?.details }}</p>
             </div>
 
             <hr class="separator">
@@ -406,7 +408,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Début du stage</label>
-                        <p class="info-text">{{ detailsSheet?.debutStageFicheDescriptive.value}}</p>
+                        <p class="info-text">{{ detailsSheet?.debutStage}}</p>
                     </div>
                 </div>
 
@@ -414,7 +416,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Fin du stage</label>
-                        <p class="info-text">{{ detailsSheet?.finStageFicheDescriptive.value}}</p>
+                        <p class="info-text">{{ detailsSheet?.finStage}}</p>
                     </div>
                 </div>
 
@@ -422,7 +424,7 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Nombre de jour de travail hebdomadaires</label>
-                        <p class="info-text">{{ detailsSheet?.nbJourSemaineFicheDescriptive.value}}</p>
+                        <p class="info-text">{{ detailsSheet?.nbJourParSemaine}}</p>
                     </div>
                 </div>
 
@@ -430,36 +432,28 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Nombres d'heures par semaines</label>
-                        <p class="info-text">{{ detailsSheet?.nbHeureSemaineFicheDescriptive.value}}</p>
+                        <p class="info-text">{{ detailsSheet?.nbHeureParSemaine}}</p>
                     </div>
                 </div>
 
             </div>
 
-
-
             <div class="form-grid">
                 <!-- Nom du contact -->
                 <div class="form-group">
                     <div class="input-wrapper">
-                        <label>Tuteur</label>
-                        @if (tutor) {
-                            <p class="info-text">{{ tutor.nomPersonnel}}</p> 
+                        <label>Enseignant Tuteur</label>
+                        @if (teacherTutor) {
+                            <p class="info-text">{{ teacherTutor.nom }} {{ teacherTutor.prenom }}</p>
                         }
                         @else {
                             <p class="info-text">Aucun tuteur</p>
                         }
                     </div>
                 </div>
-                <button class="edit-button" (click)="openAttributionModal()">Enseignant tuteur</button>
+                <button class="edit-button" (click)="openAttributionModal()">Attribution Enseignant</button>
 
             </div>
-                
-            
-            
-
-
-
 
             <!-- Boutons d'action -->
             <div *ngIf="currentUserRole === 'STUDENT'" class="action-buttons">
@@ -482,5 +476,5 @@
         (confirm)="handleConfirmAttribution($event)"
         (cancel)="handleCancelAttribution()">
         </app-tutor-attribution-modal>
-      }
+    }
 </div>
