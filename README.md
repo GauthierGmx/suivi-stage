@@ -13,7 +13,8 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 ---
 ## Guide d'installation de développement
 
-Section liée à l'installation de l'environnement de développement identique à celle des développeurs à l'origine du projet.  
+> [!TIP]
+> Section liée à l'installation de l'environnement de développement identique à celle des développeurs à l'origine du projet.  
 
 ### Prérequis :
 
