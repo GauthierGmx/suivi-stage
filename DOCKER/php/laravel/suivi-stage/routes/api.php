@@ -8,6 +8,10 @@ use App\Http\Controllers\RechercheStageController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\FicheDescriptiveController; 
 use App\Http\Controllers\EtudiantController;
+use App\Http\Controllers\AuthController;
+
+// Import du middleware du CAS
+use App\Http\Middleware\CasAuthMiddleware;
 use App\Http\Controllers\ParcoursController;
 use App\Http\Controllers\TuteurEntrepriseController;
 use App\Http\Controllers\AnneeUniversitaireController;
@@ -29,6 +33,27 @@ use App\Http\Middleware\DispatchDataDescriptiveSheet;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Route du middleware du CAS
+Route::get('/cas-auth', function (Request $request) {
+    $middleware = new CasAuthMiddleware();
+    return $middleware->handle($request, function ($request) {
+        return redirect()->away(env('ANGULAR_URL'));
+    });
+});
+
+Route::get('/logout', function (Request $request) {
+    $middleware = new CasAuthMiddleware();
+    return $middleware->handleCookieLogout();
+});
+
+Route::get('/cas-logout', function (Request $request) {
+    $middleware = new CasAuthMiddleware();
+    return $middleware->handleCasLogout();
+});
+
+// Route pour le Controller Auth
+Route::get('/get-authenticated-user', [AuthController::class, 'getUser']);
 
 // Route pour le Controller RechercheStage
 Route::get('/recherches-stages', [RechercheStageController::class, 'index'])->name('recherches-stages.index');
@@ -81,7 +106,8 @@ Route::delete('/personnel/delete/{id}', [PersonnelController::class, 'destroy'])
 
 // Route pour le Controller AffectationEtudiant
 Route::get('/affectation', [AffectationEnseignantController::class, 'index'])->name('affectation.index');
+Route::get('/affectation/extraction-affectations-etudiants-enseignants', [AffectationEnseignantController::class, 'extractStudentTeacherAssignments'])->name('affectation.extractStudentTeacherAssignments');
 Route::post('/affectation/create', [AffectationEnseignantController::class, 'store'])->name('affectation.store');
-Route::get('/affectation/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'show'])->name('affectation.show');
+Route::get('/affectation/{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'show'])->name('affectation.show');
 Route::put('/affectation/update/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'update'])->name('affectation.update');
 Route::delete('/affectation/delete/{idPersonnel}-{idUPPA}-{idAnneeUniversitaire}', [AffectationEnseignantController::class, 'destroy'])->name('affectation.destroy');

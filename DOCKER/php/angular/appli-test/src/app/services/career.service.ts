@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Observable, catchError, tap, of } from 'rxjs'
 import { Career } from '../models/career.model'
@@ -7,6 +8,7 @@ import { Career } from '../models/career.model'
     providedIn: 'root',
 })
 export class CareerService {
+    apiUrl = environment.apiUrl
     constructor(private readonly http: HttpClient) {}
 
     getCareers(fields?: string[]): Observable<Career[]> {
@@ -16,7 +18,7 @@ export class CareerService {
             params = params.set('fields', fields.join(','))
         }
 
-        return this.http.get<Career[]>('http://localhost:8000/api/parcours', { params }).pipe(
+        return this.http.get<Career[]>(`${this.apiUrl}/api/parcours`, { params }).pipe(
             tap((response) => this.log(response)),
             catchError((error) => this.handleError(error, null))
         )

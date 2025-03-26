@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Etudiant;
 use App\Models\Personnel;
 use App\Models\AnneUniversitaire;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AffectationsExport;
+use Illuminate\Support\Facades\Log;
 
 class AffectationEnseignantController extends Controller
 {
@@ -90,7 +93,6 @@ class AffectationEnseignantController extends Controller
     /**
      * Retourne une affectation particulière
      *
-     * @param  int  $idPersonnel
      * @param  int  $idUPPA
      * @param  int  $idAnneeUniversitaire
      * @return \Illuminate\Http\Response
@@ -98,15 +100,14 @@ class AffectationEnseignantController extends Controller
      *      - Code 200 : si l'affectation a été trouvée
      *      - Code 404 : si l'affectation n'a pas été trouvée
      */
-    public function show($idPersonnel, $idUPPA, $idAnneeUniversitaire)
+    public function show($idUPPA, $idAnneeUniversitaire)
     {
         // Récupère les informations de l'affectation avec les noms-prénoms de l'étudiant et du personnel
         $affectation = \DB::table('table_personnel_etudiant_anneeuniv')
             ->join('personnels', 'table_personnel_etudiant_anneeuniv.idPersonnel', '=', 'personnels.idPersonnel')
             ->join('etudiants', 'table_personnel_etudiant_anneeuniv.idUPPA', '=', 'etudiants.idUPPA')
             ->join('annee_universitaires', 'table_personnel_etudiant_anneeuniv.idAnneeUniversitaire', '=', 'annee_universitaires.idAnneeUniversitaire')
-            ->select('annee_universitaires.libelle as anneeUniversitaire','personnels.nom as nomPersonnel', 'personnels.prenom as prenomPersonnel', 'etudiants.nom as nomEtudiant', 'etudiants.prenom as prenomEtudiant')
-            ->where('personnels.idPersonnel', $idPersonnel)
+            ->select('annee_universitaires.idAnneeUniversitaire as idAnneeUniversitaire','annee_universitaires.libelle as anneeUniversitaire','personnels.idPersonnel as idPersonnel','personnels.nom as nomPersonnel','personnels.prenom as prenomPersonnel','etudiants.idUPPA as idUPPA','etudiants.nom as nomEtudiant', 'etudiants.prenom as prenomEtudiant')
             ->where('etudiants.idUPPA', $idUPPA)
             ->where('annee_universitaires.idAnneeUniversitaire', $idAnneeUniversitaire)
             ->first();
@@ -231,6 +232,87 @@ class AffectationEnseignantController extends Controller
         {
             return response()->json([
                 'message' => 'Une erreur s\'est produite :',
+                'erreur' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Exporte les affectations de l'année universitaire courante en Excel
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * Code HTTP retourné :
+     *      - Code 200 : si le fichier Excel est généré avec succès
+     *      - Code 204 : si aucune affectation n'est trouvée pour l'année courante
+     *      - Code 500 : s'il y a une erreur
+     * @throws \Exception
+     */
+    public function extractStudentTeacherAssignments()
+    {
+        try
+        {
+            $date = new \DateTime();
+            // Si la date du jour est supérieure ou égale à septembre
+            if ((int)$date->format('m') >= 9) {
+                // L'année universitaire courante est de la forme "anneeN-anneeN+1"
+                $anneeUniversitaireCourante = $date->format('Y').'-'.($date->format('Y')+1);
+            }
+            else {
+                // L'année universitaire courante est de la forme "anneeN-1-anneeN"
+                $anneeUniversitaireCourante = ($date->format('Y')-1).'-'.date('Y');
+            }
+
+            $affectations = \DB::table('table_personnel_etudiant_anneeuniv')
+                ->join('personnels', 'table_personnel_etudiant_anneeuniv.idPersonnel', '=', 'personnels.idPersonnel')
+                ->join('etudiants', 'table_personnel_etudiant_anneeuniv.idUPPA', '=', 'etudiants.idUPPA')
+                ->join('annee_universitaires', 'table_personnel_etudiant_anneeuniv.idAnneeUniversitaire', '=', 'annee_universitaires.idAnneeUniversitaire')
+                ->where('annee_universitaires.libelle', $anneeUniversitaireCourante)
+                ->select(
+                    'annee_universitaires.libelle as anneeUniversitaire',
+                    \DB::raw("CONCAT(personnels.nom, ' ', personnels.prenom) as nomPersonnel"),
+                    \DB::raw("CONCAT(etudiants.nom, ' ', etudiants.prenom) as nomEtudiant")
+                )
+                ->orderBy('personnels.nom')
+                ->orderBy('personnels.prenom')
+                ->orderBy('etudiants.nom')
+                ->orderBy('etudiants.prenom')
+                ->get();
+
+            if ($affectations->isEmpty()) {
+                return response()->json([
+                    'message' => "Aucune affectation trouvée pour l'année universitaire courante"
+                ], 204);
+            }
+
+            // Exemple de nom de fichier : affectations_2024-2025_1903_214353.xlsx
+            $fileName = $date->format('dm_His') . '_affectations_' . $anneeUniversitaireCourante . '.xlsx';
+            
+            // Créer un chemin temporaire pour le fichier
+            $tempPath = storage_path('app/temp/' . $fileName);
+            
+            // Sauvegarder le fichier Excel temporairement
+            Excel::store(new AffectationsExport($affectations), 'temp/' . $fileName);
+            
+            // Lire le contenu du fichier et le convertir en base64
+            $fileContent = file_get_contents($tempPath);
+            $base64Excel = base64_encode($fileContent);
+            
+            // Supprimer le fichier temporaire
+            unlink($tempPath);
+
+            // Renvoyer la réponse JSON avec le fichier encodé
+            return response()->json([
+                'message' => 'Le fichier Excel a été généré avec succès',
+                'fileName' => $fileName,
+                'fileContent' => $base64Excel,
+                'mimeType' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            \Log::error("Erreur lors de l'extraction Excel : " . $e->getMessage());
+            return response()->json([
+                'message' => 'Une erreur s\'est produite lors de l\'export Excel',
                 'erreur' => $e->getMessage()
             ], 500);
         }

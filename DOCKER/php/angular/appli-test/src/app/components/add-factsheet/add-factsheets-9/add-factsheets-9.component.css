@@ -137,9 +137,10 @@
     border-radius: 4px;
     cursor: pointer;
   }
-  
-  .btn-submit:hover {
-    background-color: #0056b3;
+
+  .btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
   
   @media (max-width: 768px) {

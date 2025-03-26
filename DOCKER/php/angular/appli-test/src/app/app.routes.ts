@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { AddSearchFormComponent } from './components/add-search-form/add-search-form.component';
@@ -10,10 +9,9 @@ import { StudentDashboardManagerComponent } from './components/student-dashboard
 import { AddFactsheetComponent } from './components/add-factsheet/add-factsheet.component';
 import { SheetDetailsComponent } from './components/factsheets-details/factsheets-details.component';
 import { UpdateFactsheetComponent } from './components/update-factsheet/update-factsheet.component';
+import { StudentFactsheetsManagerComponent } from './components/student-factsheets-manager/student-factsheets-manager.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-
   { 
     path: 'dashboard', 
     component: DashboardComponent,
@@ -48,6 +46,12 @@ export const routes: Routes = [
     data: { role: 'INTERNSHIP_MANAGER' }
   },
   {
+    path: 'factsheets/student-factsheets/:idStudent/sheet-details/:idSheet',
+    component: SheetDetailsComponent,
+    canActivate: [authGuard],
+    data: { role: 'INTERNSHIP_MANAGER' }
+  },
+  {
     path: 'dashboard/update-search/:id',
     component: UpdateSearchComponent,
     canActivate: [authGuard]
@@ -63,9 +67,14 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'factsheets/student-factsheets/:id',
+    component: StudentFactsheetsManagerComponent,
+    canActivate: [authGuard]
+  },
+  {
     path: 'factsheets/add-factsheet',
     component: AddFactsheetComponent,
     canActivate: [authGuard]
   },
-  { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
 ];

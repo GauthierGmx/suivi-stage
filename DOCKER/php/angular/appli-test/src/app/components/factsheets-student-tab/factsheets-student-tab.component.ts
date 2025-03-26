@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Student } from '../../models/student.model';
 import { Company } from '../../models/company.model';
 import { Factsheets, SheetStatus } from '../../models/description-sheet.model';
+import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
 import { NavigationService } from '../../services/navigation.service';
 import { CompanyService } from '../../services/company.service';
 import { FactsheetsService } from '../../services/description-sheet.service';
+import { AuthService } from '../../services/auth.service';
 import { Subject, debounceTime, distinctUntilChanged, forkJoin, firstValueFrom, tap } from 'rxjs';
-import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/delete-confirmation-modal.component';
 
 
 @Component({
@@ -19,10 +20,9 @@ import { DeleteConfirmationModalComponent } from '../delete-confirmation-modal/d
     styleUrls: ['./factsheets-student-tab.component.css'],
 })
 export class FactsheetsStudentTabComponent implements OnInit {
-    @Input() currentUser!: Student
+    @Input() student!: Student;
     @Input() currentUserRole?: string
     @Output() dataLoaded = new EventEmitter<void>()
-    currentUserId!: string
     studentData?: Student
     companies?: Company[]
     sheets?: Factsheets[]
@@ -32,32 +32,51 @@ export class FactsheetsStudentTabComponent implements OnInit {
     originalSheetsWithCompanies: { sheet: Factsheets; company: Company }[] = []
     currentDateFilter: 'all' | 'date_asc' | 'date_desc' = 'all'
     currentStatutFilter: 'all' | 'Refusée' | 'Validee' | 'En cours' = 'all'
-    allDataLoaded: Boolean = false
+    allDataLoaded: boolean = false
     sheetToDelete?: Factsheets
     showDeleteModal = false
     isDeleting = false
+    isStudent: boolean = false;
 
     constructor(
         private readonly navigationService: NavigationService,
         private readonly factsheetsService: FactsheetsService,
         private readonly companyService: CompanyService,
-        private readonly cdr: ChangeDetectorRef
+        private readonly cdr: ChangeDetectorRef,
+        private readonly authService: AuthService,
     ) {}
 
+    /**
+     * Initialize the search configuration with debounce and loads initial data
+     */
     ngOnInit() {
-        this.searchTermSubject.pipe(debounceTime(800), distinctUntilChanged()).subscribe(() => {
-            this.applyFilters()
-        })
+        this.authService.getAuthenticatedUser().subscribe(user =>
+            this.isStudent = this.authService.isStudent(user)
+        );
 
-        this.loadData()
+        // Configuration de la recherche avec debounce
+        this.searchTermSubject.pipe(
+            debounceTime(800), 
+            distinctUntilChanged()
+        ).subscribe(() => {
+            this.applyFilters();
+        });
+
+        // Charger les données
+        this.loadData().then(() => {
+            this.allDataLoaded = true
+        });
     }
 
-    //Chargement des données de l'étudiant, de ses recherches de stages et des entreprises liées
+    /**
+     * Loads student data, their internship searches and related companies
+     * @returns Promise that resolves when all data is loaded
+     */
     loadData() {
         return firstValueFrom(
             forkJoin({
                 companies: this.companyService.getCompanies(['idEntreprise', 'raisonSociale', 'ville']),
-                sheet: this.factsheetsService.getSheetsByStudentId(this.currentUser.idUPPA),
+                sheet: this.factsheetsService.getSheetsByStudentId(this.student.idUPPA),
             }).pipe(
                 tap(({ companies, sheet }) => {
                     this.companies = companies
@@ -79,6 +98,10 @@ export class FactsheetsStudentTabComponent implements OnInit {
         )
     }
 
+    /**
+     * Returns the CSS class for a given status
+     * @param status The status to get the class for
+     */
     getStatusClass(status: string): string {
         const statusMap: Record<string, string> = {
             Validee: 'status-badge valide',
@@ -88,13 +111,21 @@ export class FactsheetsStudentTabComponent implements OnInit {
         return statusMap[status] || 'status-badge'
     }
 
+    /**
+     * Sets the status filter and applies filters
+     * @param filter The filter to apply
+     * @param selectElement The select element to blur
+     */
     setStatutFilter(filter: 'all' | 'Refusée' | 'Validee' | 'En cours', selectElement: HTMLSelectElement) {
         this.currentStatutFilter = filter
         this.applyFilters()
         selectElement.blur()
     }
 
-    //Récupération du label lié à un statut
+    /**
+     * Gets the display label for a given status
+     * @param status The status to get the label for
+     */
     getStatusLabel(status: SheetStatus): string {
         const labels: Record<SheetStatus, string> = {
             'En cours': 'En cours',
@@ -104,7 +135,9 @@ export class FactsheetsStudentTabComponent implements OnInit {
         return labels[status]
     }
 
-    //Application des filtres et de la barre de recherche
+    /**
+     * Applies all active filters and search terms to the factsheets list
+     */
     applyFilters() {
         let filteredSearches = [...this.originalSheetsWithCompanies];
         const searchTermLower = this.searchTerm.toLowerCase().trim()
@@ -142,6 +175,10 @@ export class FactsheetsStudentTabComponent implements OnInit {
         this.filteredSheetsWithCompanies = filteredSearches
     }
 
+    /**
+     * Handles changes to the search term
+     * @param event The input event
+     */
     onSearchTermChange(event: Event) {
         const target = event.target as HTMLInputElement
         if (target) {
@@ -151,12 +188,18 @@ export class FactsheetsStudentTabComponent implements OnInit {
         }
     }
 
+    /**
+     * Clears the current search term and reapplies filters
+     */
     clearSearchTerm() {
         this.searchTerm = ''
         this.searchTermSubject.next(this.searchTerm)
         this.applyFilters()
     }
 
+    /**
+     * Toggles the date sort order between ascending, descending and none
+     */
     toggleDateSort() {
         if (this.currentDateFilter === 'date_asc') {
             this.currentDateFilter = 'date_desc'
@@ -168,29 +211,41 @@ export class FactsheetsStudentTabComponent implements OnInit {
         this.applyFilters()
     }
 
+    /**
+     * Navigates to the search details view
+     * @param searchId The ID of the search to view
+     */
     viewSearchDetails(searchId: number) {
         this.navigationService.navigateToSearchView(searchId)
     }
 
+    /**
+     * Navigates to the add factsheet form
+     */
     goToAddFactSheetForm() {
         this.navigationService.navigateToAddFactSheetForm()
     }
 
-    goToUpdateSearchFormView(idFicheDescriptive: number) {
+    /**
+     * Navigates to the update factsheet form view
+     * @param idFicheDescriptive The ID of the factsheet to edit
+     */
+    goToUpdateFactsheetFormView(idFicheDescriptive: number) {
         this.navigationService.navigateToDescriptiveSheetEditForm(idFicheDescriptive);
     }
 
-    //Affiche la fenêtre modale de confirmation de la supression d'une recherche de stage
+    /**
+     * Opens the delete confirmation modal for a factsheet
+     * @param sheet The factsheet to delete
+     */
     openDeleteModal(sheet: Factsheets) {
         this.sheetToDelete = sheet
         this.showDeleteModal = true
     }
 
-
-
-
-
-    //Suppression de la fiche descriptive
+    /**
+     * Handles the confirmation of factsheet deletion
+     */
     async onConfirmDelete() {
         if (this.sheetToDelete) {
             try {
@@ -208,14 +263,18 @@ export class FactsheetsStudentTabComponent implements OnInit {
         }
     }
 
-    //Annulation de la suppression d'une fiche descriptive
+    /**
+     * Cancels the deletion operation and closes the modal
+     */
     onCancelDelete() {
         this.showDeleteModal = false
         this.sheetToDelete = undefined
     }
 
-
-    //Redirection vers la vue de consultation d'une recherche de stage
+    /**
+     * Navigates to the factsheet details view
+     * @param sheetId The ID of the sheet to view
+     */
     goToSheetDetails(sheetId: number) {
         this.navigationService.navigateToSheetView(sheetId);
     }

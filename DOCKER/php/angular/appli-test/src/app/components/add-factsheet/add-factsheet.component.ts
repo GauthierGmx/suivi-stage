@@ -18,6 +18,7 @@ import { FactsheetsService } from '../../services/description-sheet.service';
 import { AuthService } from '../../services/auth.service';
 import { FormDataService } from '../../services/form-data.service';
 import { LoadingComponent } from "../loading/loading.component";
+import { Student } from '../../models/student.model';
 
 @Component({
   selector: 'app-add-factsheet',
@@ -39,17 +40,23 @@ import { LoadingComponent } from "../loading/loading.component";
   styleUrl: './add-factsheet.component.css'
 })
 export class AddFactsheetComponent implements OnInit {
-  currentUser?: any;
+  currentUser?: Student;
   currentUserRole?: string;
   currentStep = 1;
   isSubmitting = false;
 
+  /**
+   * Returns the current form data from the FormDataService
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
 
   @Output() dataSended = new EventEmitter<any>();
 
+  /**
+   * Initializes the component with required services and subscribes to factsheet step changes
+   */
   constructor(
     private readonly navigationService: NavigationService,
     private readonly studentService: StudentService,
@@ -64,27 +71,32 @@ export class AddFactsheetComponent implements OnInit {
     );
   }
 
+  /**
+   * Initializes the component by setting initial step, form fields and user role
+   */
   ngOnInit() {
-    // Forcer le step à 1 au chargement
     this.navigationService.setFactsheetStep(1);
     this.currentStep = 1;
 
     this.initializeFormFields();
-    this.currentUser = this.authService.getCurrentUser();
-    
-    if (this.authService.isStudent(this.currentUser)) {
-      this.currentUserRole = 'STUDENT';
-    }
-    else if (this.authService.isStaff(this.currentUser) && this.currentUser.role === 'INTERNSHIP_MANAGER') {
-      this.currentUserRole = 'INTERNSHIP_MANAGER';
-    }
+    this.authService.getAuthenticatedUser().subscribe(user => {
+      if (this.authService.isStudent(user)) {
+        this.currentUser = user;
+        this.currentUserRole = 'STUDENT';
+      }
+    });
   }
 
+  /**
+   * Resets the factsheet step when component is destroyed
+   */
   ngOnDestroy(): void {
-    // Réinitialiser le step quand on quitte le composant
     this.navigationService.setFactsheetStep(1);
   }
 
+  /**
+   * Initializes the base form fields with default values
+   */
   private initializeFormFields() {
     const fields = {
       idUPPA: { value: '', type: 'ficheDescriptive' },
@@ -96,17 +108,23 @@ export class AddFactsheetComponent implements OnInit {
     });
   }
 
+  /**
+   * Updates the current factsheet step
+   * @param step - The step number to navigate to
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Validates all required fields in the form
+   * @returns boolean indicating if all fields are valid
+   */
   private validateAllFields(): boolean {
     const requiredFields = {
-      // Étape 1 - Informations Étudiant
       nomEtudiant: 'string',
       prenomEtudiant: 'string',
-      
-      // Étape 3-4 - Entreprise
+
       raisonSocialeEntreprise: 'string',
       adresseEntreprise: 'string',
       codePostalEntreprise: 'string',
@@ -116,34 +134,29 @@ export class AddFactsheetComponent implements OnInit {
       serviceEntreprise: 'string',
       numSIRETEntreprise: 'string',
       codeAPE_NAFEntreprise: 'string',
-      
-      // Étape 5 - Représentant entreprise
+
       nomRepresentantEntreprise: 'string',
       prenomRepresentantEntreprise: 'string',
       telephoneRepresentantEntreprise: 'string',
       adresseMailRepresentantEntreprise: 'string',
       fonctionRepresentantEntreprise: 'string',
-      
-      // Étape 6 - Lieu de stage
+
       adresseStageFicheDescriptive: 'string',
       codePostalStageFicheDescriptive: 'string',
       villeStageFicheDescriptive: 'string',
       paysStageFicheDescriptive: 'string',
-      
-      // Étape 7 - Tuteur entreprise
+
       nomTuteurEntreprise: 'string',
       prenomTuteurEntreprise: 'string',
       telephoneTuteurEntreprise: 'string',
       adresseMailTuteurEntreprise: 'string',
       fonctionTuteurEntreprise: 'string',
-      
-      // Étape 8 - Sujet stage
+
       typeStageFicheDescriptive: 'string',
       thematiqueFicheDescriptive: 'string',
       sujetFicheDescriptive: 'string',
       tachesFicheDescriptive: 'string',
       
-      // Étape 9 - Modalités stage
       debutStageFicheDescriptive: 'string',
       finStageFicheDescriptive: 'string',
       nbJourSemaineFicheDescriptive: 'number',
@@ -171,6 +184,10 @@ export class AddFactsheetComponent implements OnInit {
     return true;
   }
 
+  /**
+   * Handles progression to next step or form submission on final step
+   * @param stepData - The data from the current step
+   */
   onNext(stepData: any) {
     Object.entries(stepData).forEach(([field, data]: [string, any]) => {
       this.formDataService.updateField(field, data.value);
@@ -198,7 +215,6 @@ export class AddFactsheetComponent implements OnInit {
           
           this.factsheetsService.addSheet(this.formData).subscribe({
             next: (response) => {
-              console.log('Formulaire envoyé avec succès:', response);
               this.dataSended.emit(response);
               this.formDataService.resetFormData();
               this.isSubmitting = false; // Désactiver le loading
@@ -223,6 +239,9 @@ export class AddFactsheetComponent implements OnInit {
     this.navigationService.setFactsheetStep(this.currentStep + 1);
   }
 
+  /**
+   * Navigates to the previous step if not on the first step
+   */
   onPrevious() {
     if (this.currentStep > 1) {
       this.navigationService.setFactsheetStep(this.currentStep - 1);

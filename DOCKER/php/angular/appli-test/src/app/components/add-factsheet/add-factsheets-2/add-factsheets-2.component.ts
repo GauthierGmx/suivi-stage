@@ -17,6 +17,10 @@ export class AddFactsheets2Component implements OnInit {
   @Output() previous = new EventEmitter<void>();
   currentStep: number;
 
+  /**
+   * Getter that returns the form data
+   * @returns {any} Form data stored in the FormDataService
+   */
   get formData() {
     return this.formDataService.getFormData();
   }
@@ -28,8 +32,11 @@ export class AddFactsheets2Component implements OnInit {
     this.currentStep = this.navigationService.getCurrentFactsheetStep();
   }
 
+  /**
+   * Initializes form fields with default values
+   * regarding the establishment during component initialization
+   */
   ngOnInit(): void {
-    // Initialisation des champs avec valeurs par défaut
     const defaultValues = {
       'composanteEtablissement': '181 - IUT de Bayonne et du Pays Basque (Anglet)',
       'parcoursEtablissement': 'BBWIA2 - BUT2 - INFO - Intégration d\'Applications et Management du SI',
@@ -37,20 +44,29 @@ export class AddFactsheets2Component implements OnInit {
       'telephoneEtablissement': '05.59.57.43.02'
     };
 
-    // Initialisation de chaque champ
     Object.entries(defaultValues).forEach(([field, value]) => {
       this.formDataService.initializeField(field, value, 'etablissement');
     });
   }
 
+  /**
+   * Updates the current form step in the navigation service
+   * @param {number} step - The step number to set
+   */
   onStepChange(step: number) {
     this.navigationService.setFactsheetStep(step);
   }
 
+  /**
+   * Emits an event containing the form data to move to the next step
+   */
   onNext() {
     this.next.emit(this.formData);
   }
 
+  /**
+   * Emits an event to return to the previous step
+   */
   onPrevious() {
     this.previous.emit();
   }

@@ -32,9 +32,9 @@ export class TDService {
         }
 
         /*
-        return this.http.get<TD[]>('http://localhost:8000/api/tds', {params}).pipe(
-        tap(response => this.log(response)),
-        catchError(error => this.handleError(error, null))
+        return this.http.get<TD[]>(`${this.apiUrl}/api/tds`, {params}).pipe(
+            tap(response => this.log(response)),
+            catchError(error => this.handleError(error, null))
         );
         */
         return of(this.mockTD);
@@ -48,7 +48,7 @@ export class TDService {
         }
 
         /*
-        return this.http.get<TD>(`http://localhost:8000/api/tds/${TDId}`, {params}).pipe(
+        return this.http.get<TD>(`${this.apiUrl}/api/tds/${TDId}`, {params}).pipe(
         tap(response => this.log(response)),
         catchError(error => this.handleError(error, null))
         );

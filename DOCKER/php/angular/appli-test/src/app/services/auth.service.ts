@@ -1,80 +1,57 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Student } from '../models/student.model';
 import { Staff } from '../models/staff.model';
-import { StudentService } from './student.service';
-import { StaffService } from './staff.service';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  currentUserSubject = new BehaviorSubject<Student | Staff | undefined>(undefined);
-  currentUser$ = this.currentUserSubject.asObservable();
-  currentUser: Student | Staff | undefined;
-  students: Student[] = [];
-  staffs: Staff[] = [];
+  currentUser?: Student | Staff;
 
   constructor(
-    private readonly router: Router,
-    private readonly studentService: StudentService,
-    private readonly staffService: StaffService
+    private readonly http: HttpClient
   ) {}
 
-  async initializeData() {
+  getAuthenticatedUser(): Observable<Student | Staff | undefined> {
     const savedUser = sessionStorage.getItem('currentUser');
     if (savedUser && savedUser != "undefined") {
-      this.currentUserSubject.next(JSON.parse(savedUser));
-    } else {
-      const [students, staffs] = await Promise.all([
-        firstValueFrom(this.studentService.getStudents(['idUPPA', 'adresseMail'])),
-        firstValueFrom(this.staffService.getStaffs())
-      ]);
-
-      this.students = students || [];
-      this.staffs = staffs || [];
+      this.currentUser = JSON.parse(savedUser);
+      return of(this.currentUser);
     }
-  }
-  
-  async login(email: string): Promise<boolean> {
-    let user: Student | Staff | undefined = this.students.find(s => s.adresseMail === email) || this.staffs.find(s => s.adresseMail === email);
-
-    if (!user) {
-      return false;
+    else {
+      return this.http.get<Student | Staff>('http://localhost:8000/api/get-authenticated-user', { withCredentials: true }).pipe(
+        tap(response => sessionStorage.setItem('currentUser', JSON.stringify(response))),
+        tap(response => this.log(response)),
+        catchError(error => this.handleError(error, []))
+      );
     }
+  }  
 
-    try {
-      if (this.isStudent(user)) {
-        this.currentUser = await firstValueFrom(this.studentService.getStudentById(user.idUPPA));
-      }
-      else if (this.isStaff(user)) {
-        this.currentUser = await firstValueFrom(this.staffService.getStaffById(user.idPersonnel));
-      }
-      
-      this.currentUserSubject.next(this.currentUser);
-      sessionStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-  
-      this.router.navigate(['/dashboard']);
-      return true;
-    }
-    catch (error) {
-      return false;
-    }
-  }    
-
-  logout(): void {
+  logout() {
+    // Clear session storage first
     sessionStorage.removeItem('currentUser');
-    this.currentUserSubject.next(undefined);
-    this.router.navigate(['/login']);
+    this.currentUser = undefined;
+    
+    // First, clear cookies
+    this.http.get('http://localhost:8000/api/logout', { withCredentials: true })
+      .subscribe({
+        next: () => {
+          window.location.href = 'http://localhost:8000/api/cas-logout';
+        },
+        error: (error) => {
+          console.error('Erreur lors de la déconnexion:', error);
+        }
+      });
   }
 
   isAuthenticated(): boolean {
-    return !!this.currentUserSubject.value;
-  }
-
-  getCurrentUser(): Student | Staff | undefined {
-    return this.currentUserSubject.value;
+    const savedUser = sessionStorage.getItem('currentUser');
+    if (savedUser && savedUser != "undefined") {
+      return true;
+    }
+    return false;
   }
 
   isStudent(user: Student | Staff | undefined): user is Student {
@@ -83,5 +60,16 @@ export class AuthService {
 
   isStaff(user: Student | Staff | undefined): user is Staff {
     return !!user && 'idPersonnel' in user;
+  }
+
+  //Log la réponse de l'API
+  private log(response: any) {
+    console.table(response);
+  }
+
+  //Retourne l'erreur en cas de problème avec l'API
+  private handleError(error: Error, errorValue: any) {
+    console.error(error);
+    return of(errorValue);
   }
 }

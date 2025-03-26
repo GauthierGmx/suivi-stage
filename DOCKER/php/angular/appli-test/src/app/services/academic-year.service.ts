@@ -1,22 +1,15 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { AcademicYear } from '../models/academic-year.model';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, catchError, tap, of } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, catchError, tap, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AcademicYearService {
-    private readonly mockAcademicYear: AcademicYear[] = [
-        {
-            idAnneeUniversitaire: 1,
-            libelle: '2023-2024'
-        },
-        {
-            idAnneeUniversitaire: 2,
-            libelle: '2024-2025'
-        }
-    ];
+    apiUrl = environment.apiUrl;
+    currentAcademicYear: AcademicYear = new AcademicYear('');
 
     constructor(private http: HttpClient) {}
 
@@ -27,41 +20,51 @@ export class AcademicYearService {
         params = params.set('fields', fields.join(','));
         }
 
-        /*
-        return this.http.get<AcademicYear[]>('http://localhost:8000/api/', {params}).pipe(
-        tap(response => this.log(response)),
-        catchError(error => this.handleError(error, null))
+        return this.http.get<AcademicYear[]>(`${this.apiUrl}/api/annee-universitaire`, {params}).pipe(
+            tap(response => this.log(response)),
+            catchError(error => this.handleError(error, null))
         );
-        */
-        return of(this.mockAcademicYear);
     }
 
     getCurrentAcademicYear(fields?: string[]): Observable<AcademicYear | undefined> {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
-        let currentAcademicYear;
 
         if (currentDate.getMonth() < 8) {
-            currentAcademicYear = `${currentYear - 1}-${currentYear}`;
+            this.currentAcademicYear.libelle = `${currentYear - 1}-${currentYear}`;
         }
         else {
-            currentAcademicYear = `${currentYear}-${currentYear + 1}`
+            this.currentAcademicYear.libelle = `${currentYear}-${currentYear + 1}`
         }
 
-        let params = new HttpParams();
+        let params = new HttpParams()
+            .set('search', this.currentAcademicYear.libelle);
 
         if (fields && fields.length > 0) {
-        params = params.set('fields', fields.join(','));
+            params = params.set('fields', fields.join(','));
         }
 
-        /*
-        return this.http.get<AcademicYear>('http://localhost:8000/api/', {params}).pipe(
-        tap(response => this.log(response)),
-        catchError(error => this.handleError(error, null))
+        return this.http.get<AcademicYear[]>(`${this.apiUrl}/api/annee-universitaire`, {params}).pipe(
+            tap(response => this.log(response)),
+            switchMap(years => {
+                if (years.length === 0) {
+                    return this.addAcademicYear(this.currentAcademicYear);
+                }
+                return of(years[0]);
+            }),
+            catchError(error => this.handleError(error, undefined))
         );
-        */
+    }
 
-        return of(this.mockAcademicYear.find(year => year.libelle === currentAcademicYear));
+    addAcademicYear(academicYear: AcademicYear): Observable<AcademicYear> {
+        const httpOptions = {
+              headers: new HttpHeaders({'Content-type': 'application/json'})
+        };
+            
+        return this.http.post<AcademicYear>(`${this.apiUrl}/api/annee-universitaire/create`, academicYear, httpOptions).pipe(
+            tap(response => this.log(response)),
+            catchError(error => this.handleError(error, undefined))
+        );
     }
 
     //Log la réponse de l'API
