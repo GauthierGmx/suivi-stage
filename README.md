@@ -16,7 +16,7 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 > [!TIP]
 > Section liée à l'installation de l'environnement de développement identique à celle des développeurs à l'origine du projet.  
 
-### Prérequis :
+### <ins>Prérequis</ins> :
 
 > Afin d'obtenir le même environnement, il est nécessaire d'avoir GIT, DOCKER et Docker Desktop installés sur sa machine. Selon les OS (Windows, Mac ou Linux), l'installation des outils peut différer mais ne sera pas traitée ici.
 
