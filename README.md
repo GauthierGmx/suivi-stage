@@ -7,18 +7,10 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 - [Arborescence](#arborescence-des-dossiers)
 - [Guide d'Installation](#guide-installation)
   - [Prérequis](#prerequis)
-  - [Version docker](#version-docker)
-    - [Programmes requis](#programmes-requis)
-    - [Installation Windows](#installation-windows)
-    - [Installation UNIX](#installation-unix)
-  - [Version standalone](#version-standalone)
-    - [Programmes requis](#programmes-requis-1)
-    - [Installation automatique Windows](#installation-automatique-windows)
-    - [Installation automatique UNIX](#installation-automatique-unix)
-    - [Installation manuelle (Windows/UNIX)](#installation-manuelle-windowsunix)
-  - [Version de bureau](#version-de-bureau)
+  - [Démarrage rapide](#demarrage-rapide)
+  - [Informations importantes](#informations-importantes)
+- [Sauvegarde du projet](#sauvegarde-du-projet)
 - [Identité collaborateurs](#identité-collaborateurs)
-- [Structure des dossiers](#structure-des-dossiers)
 
 ---
 ## Arborescence des dossiers
@@ -82,7 +74,7 @@ git switch nomBranche
 
 C'est bon, vous pouvez développer ! 
 
-### <ins>Sauvegarde du projet</ins>
+## Sauvegarde du projet
 
 Pour le versionning du code, il est donc utile d'utiliser les commandes GIT
 
