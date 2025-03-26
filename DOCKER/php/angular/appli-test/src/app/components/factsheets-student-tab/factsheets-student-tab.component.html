@@ -129,7 +129,7 @@
   <!-- Vue cards pour mobile -->
   <div class="cards-view">
     @for (item of filteredSheetsWithCompanies; track item.sheet.idFicheDescriptive) {
-      <div class="search-card">
+      <div class="search-card" (click)="goToSheetDetails(item.sheet.idFicheDescriptive)">
         <div class="card-header">
           <h4>{{ item.company.raisonSociale }}</h4>
           <span [class]="getStatusClass(item.sheet.statut!)">

@@ -1,6 +1,6 @@
 //ATTENTION
 //Champ role implenté de manière à ne pouvoir attribuer qu'un seul role à un personnel en attendant
-//d'implémenter la classe d'entité Role et la classe d'association Posseder_Role
+//d'implémenter la classe d'entité role et la classe d'association Posseder_Role
 export class Staff {
   idPersonnel: number;
   role: StaffRole | null;
@@ -44,4 +44,4 @@ export class Staff {
   }
 }
 
-export type StaffRole = 'SUPERADMIN' | 'ADMIN' | 'STUDENT' | 'TEACHER' | 'INTERNSHIP_MANAGER' | 'MANAGER';
+export type StaffRole = 'SUPERADMIN' | 'ADMIN' | 'STUDENT' | 'Enseignant' | 'INTERNSHIP_MANAGER' | 'MANAGER';

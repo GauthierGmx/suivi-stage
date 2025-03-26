@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Staff } from '../models/staff.model';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StaffService {
-  apiUrl = environment.apiUrl;
   currentUser?: Staff;
+  apiUrl = environment.apiUrl
 
   constructor(private http: HttpClient) {}
 

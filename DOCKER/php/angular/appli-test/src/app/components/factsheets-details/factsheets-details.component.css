@@ -26,6 +26,10 @@
     margin-bottom: 1.5rem;
 }
 
+#attribution-form-grid {
+    display: flex;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -130,7 +134,7 @@ h3 {
     border-top: 1px solid #e5e7eb;
 }
 
-.cancel-button, .edit-button {
+.cancel-button, .edit-button, .attribution-button {
     padding: 0.5rem 2rem;
     border-radius: 0.375rem;
     font-weight: 500;
@@ -143,16 +147,33 @@ h3 {
     color: #374151;
 }
 
-.edit-button {
+.edit-button, .attribution-button {
     background: #0A63A4;
     color: white;
     border-color: #0A63A4;
+}
+
+.attribution-button {
+    min-width: 25%;
 }
 
 .separator {
     margin: 2rem 0;
     border: none;
     border-top: 1px solid #e5e7eb;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1100;
 }
 
 @media (min-width: 768px) {

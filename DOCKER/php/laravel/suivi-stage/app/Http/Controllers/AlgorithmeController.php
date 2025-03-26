@@ -16,7 +16,7 @@ class AlgorithmeController extends Controller
     public function run($idUPPA, $idFicheDescriptive)
     {
         $scriptPath = env('ALGO_AFFECTATION_URL');
-        //dd($scriptPath);
+        
         $command = "php " . escapeshellarg($scriptPath) . " " . escapeshellarg($idUPPA) . " " . escapeshellarg($idFicheDescriptive);
         $output = shell_exec($command);
 

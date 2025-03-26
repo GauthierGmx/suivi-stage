@@ -5,7 +5,7 @@ export class Factsheets {
   contenuStage: string | null;
   thematique: string | null;
   sujet: string | null;
-  fonction: string | null;
+  fonctions: string | null;
   taches: string | null;
   competences: string | null;
   details: string | null;
@@ -41,7 +41,7 @@ export class Factsheets {
     contenuStage: string,
     thematique: string,
     sujet: string,
-    fonction: string,
+    fonctions: string,
     taches: string,
     competences: string,
     details: string,
@@ -76,7 +76,7 @@ export class Factsheets {
     this.contenuStage = contenuStage;
     this.thematique = thematique;
     this.sujet = sujet;
-    this.fonction = fonction;
+    this.fonctions = fonctions;
     this.taches = taches;
     this.competences = competences;
     this.details = details;
