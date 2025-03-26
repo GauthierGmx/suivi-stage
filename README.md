@@ -24,7 +24,7 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 [Docker](https://docs.docker.com/get-started/get-docker/)  
 [Docker Desktop](https://www.docker.com/products/docker-desktop/)  
 
-### Démarrage rapide :
+### <ins>Démarrage rapide</ins> :
 
 Pour télécharger le projet en local, il faut cloner le projet. 
 
@@ -44,7 +44,7 @@ docker compose up -d
 ```
 
 
-### Informations importantes
+### <ins>Informations importantes</ins>
 
 > [!WARNING]
 > Nous avons procédé de manière simple. Pour éviter tout conflit avec la branche de travail principale, il est impossible de pousser directement du code dessus. Il est donc nécessaire de passer par des branches. 
@@ -63,7 +63,7 @@ git switch nomBranche
 
 C'est bon, vous pouvez développer ! 
 
-### Sauvegarde du projet 
+### <ins>Sauvegarde du projet </ins>
 
 Pour le versionning du code, il est donc utile d'utiliser les commandes GIT
 
