@@ -127,7 +127,7 @@ class AlgorithmeRepartition
 
             // Tri des professeurs
             $professeursTries = $this->trierProfesseurs($resultatsFinal);
-            print_r($professeursTries);
+            echo json_encode($professeursTries, JSON_PRETTY_PRINT);
 
             return $professeursTries;
 
