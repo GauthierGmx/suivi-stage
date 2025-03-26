@@ -41,3 +41,39 @@ Une fois dans le dossier, il faut lancer docker et les conteneurs du projet depu
 ```bash
 docker compose up -d
 ```
+
+
+### Informations importantes
+
+Nous avons procéder demanière simple. Pour éviter tout conflit avec la branche de travail pricipale, il est impossible de pousser directement du code dessus. Il est donc nécessaire de passer par des branches. 
+
+> Création d'une branche (être placé sur main)
+
+```bash
+git branch nomBranche
+```
+
+> Se déplacer dans cette dernière
+
+```bash
+git switch nomBranche
+```
+
+C'est bon, vous pouvez développer ! 
+
+### Sauvegarde du projet 
+
+Pour le versionning du code, il est donc utile d'utiliser les commandes GIT
+
+Sauvegarde du projet (sur le dossier courant): 
+
+```bash
+git add .
+git commit -m "MESSAGE"
+```
+
+Pour pousser le code sur GITHUB : 
+
+```bash
+git push
+```
