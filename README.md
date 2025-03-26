@@ -9,7 +9,7 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
   - [Démarrage rapide](#démarrage-rapide)
   - [Informations importantes](#informations-importantes)
 - [Sauvegarde du projet](#sauvegarde-du-projet)
-- [Identité collaborateurs](#identité-collaborateurs)
+- [Identité collaborateurs](#identité-des-collaborateurs)
 
 ---
 ## Arborescence des dossiers
