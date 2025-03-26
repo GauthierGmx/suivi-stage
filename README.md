@@ -89,3 +89,11 @@ Pour pousser le code sur GITHUB :
 ```bash
 git push
 ```
+
+## Identité des collaborateurs 
+
+- Anthony HERRMANN: [**@AnthoHerrmann**](https://github.com/AnthoHerrmann)
+- Gauthier GOUMEAUX: [**@GauthierGmx**](https://github.com/GauthierGmx)
+- Lucas CRUSSIERE: [**@CRUSSIERE**](https://github.com/CRUSSIERE)
+- Maxime MONTOURO: [**@MaxMontouro**](https://github.com/MaxMontouro)
+- Virgile ESPINASSE: [**@sololo**](https://github.com/sololo303)
