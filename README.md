@@ -5,6 +5,7 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 ## Table des matières
 
 - [Arborescence](#arborescence-des-dossiers)
+- [Installation](#installation)
 - [Identité collaborateurs](#identité-des-collaborateurs)
 
 ---
