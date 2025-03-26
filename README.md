@@ -5,6 +5,7 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 ## Table des matières
 
 - [Arborescence](#arborescence-des-dossiers)
+- [Installation](#installation)
 - [Identité collaborateurs](#identité-des-collaborateurs)
 
 ---
@@ -15,6 +16,9 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 * DOCKER/php/angular : contient le code source propre à Angular
 * DOCKER/php/laravel : contient le code source propre à Laravel
 
+---
+## Installation
+- [Consultez la documentation d'installation](INSTALLATION.md)
 ---
 ## Identité des collaborateurs 
 
