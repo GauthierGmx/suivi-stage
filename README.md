@@ -19,9 +19,9 @@ Section liée à l'installation de l'environnement de développement identique �
 
 > *Afin d'obtenir le même environnement, il est nécessaire d'avoir GIT, DOCKER et Docker Desktop installés sur sa machine. Selon les OS (Windows, Mac ou Linux), l'installation des outils peut différer mais ne sera pas traitée ici.
 
-[Git](https://git-scm.com/downloads)
-[Docker](https://docs.docker.com/get-started/get-docker/)
-[DockerDesktop](https://www.docker.com/products/docker-desktop/)
+[Git](https://git-scm.com/downloads)  
+[Docker](https://docs.docker.com/get-started/get-docker/)  
+[DockerDesktop](https://www.docker.com/products/docker-desktop/)  
 
 ### Démarrage rapide
 
