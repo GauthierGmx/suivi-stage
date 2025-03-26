@@ -16,6 +16,9 @@ Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'I
 * DOCKER/php/laravel : contient le code source propre à Laravel
 
 ---
+## Installation
+[Consultez la documentation d'installation](INSTALLATION.md)
+---
 ## Identité des collaborateurs 
 
 - Anthony HERRMANN: [**@AnthoHerrmann**](https://github.com/AnthoHerrmann)
