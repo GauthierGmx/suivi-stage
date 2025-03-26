@@ -27,16 +27,16 @@ Section liée à l'installation de l'environnement de développement identique �
 
 Pour télécharger le projet en local, il faut cloner le projet. 
 
-> Se placer dans le dossier ou l'on veut télécharger le projet
+> Se placer dans le dossier où l'on veut télécharger le projet
 
 ```bash
 git clone https://github.com/GauthierGmx/suivi-stage
 cd suivi-stage/
 ```
 
-Une fois dans le dossier, il faut lancer docker et les conteneurs du projet depuis un terminal. 
+Une fois dans le dossier, il faut lancer Docker et les conteneurs du projet depuis un terminal. 
 
-> PS: Ne pas oublier de se placer dans le dossier du projet
+> PS : Ne pas oublier de se placer dans le dossier du projet
 
 ```bash
 docker compose up -d
@@ -45,9 +45,10 @@ docker compose up -d
 
 ### Informations importantes
 
-Nous avons procéder demanière simple. Pour éviter tout conflit avec la branche de travail pricipale, il est impossible de pousser directement du code dessus. Il est donc nécessaire de passer par des branches. 
+> [!WARNING]
+> Nous avons procédé de manière simple. Pour éviter tout conflit avec la branche de travail principale, il est impossible de pousser directement du code dessus. Il est donc nécessaire de passer par des branches. 
 
-> Création d'une branche (être placé sur main)
+> Création d'une branche (être placée sur la main)
 
 ```bash
 git branch nomBranche
