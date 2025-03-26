@@ -19,5 +19,3 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/run-algo/{idUPPA}-{idFicheDescriptive}', [AlgorithmeController::class, 'run']);

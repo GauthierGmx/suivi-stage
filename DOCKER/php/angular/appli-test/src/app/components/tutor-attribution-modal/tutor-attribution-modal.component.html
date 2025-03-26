@@ -17,10 +17,10 @@
                 
                 <div class="dropdown-container">
                     <label for="teacherSelect">Sélectionnez un enseignant :</label>
-                    <select id="teacherSelect" [(ngModel)]="selectedTeacherId">
+                    <select id="teacherSelect" name="teacherSelect" [(ngModel)]="selectedTeacherId">
                         <option [ngValue]="null">-- Sélectionner --</option>
                         <option *ngFor="let teacher of teachers" [ngValue]="teacher.idPersonnel">
-                            {{ teacher.prenom }} {{ teacher.nom }}
+                            {{ teacher.prenom }} {{ teacher.nom }} - Score : {{ teacher.somme }}
                         </option>
                     </select>
                 </div>

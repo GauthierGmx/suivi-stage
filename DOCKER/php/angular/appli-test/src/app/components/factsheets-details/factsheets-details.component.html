@@ -438,20 +438,22 @@
 
             </div>
 
-            <div class="form-grid">
+            <hr class="separator">
+            <h3><b>Attribution Enseignant Tuteur</b></h3>
+
+            <div class="form-grid" id="attribution-form-grid">
                 <!-- Nom du contact -->
                 <div class="form-group">
                     <div class="input-wrapper">
                         <label>Enseignant Tuteur</label>
                         @if (teacherTutor) {
                             <p class="info-text">{{ teacherTutor.nom }} {{ teacherTutor.prenom }}</p>
-                        }
-                        @else {
+                        } @else {
                             <p class="info-text">Aucun tuteur</p>
                         }
                     </div>
                 </div>
-                <button class="edit-button" (click)="openAttributionModal()">Attribution Enseignant</button>
+                <button class="attribution-button" (click)="openAttributionModal()">Attribution Enseignant</button>
 
             </div>
 

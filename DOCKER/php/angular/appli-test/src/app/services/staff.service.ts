@@ -78,14 +78,10 @@ export class StaffService {
       params = params.set('fields', fields.join(','));
     }
 
-    /*
-    return this.http.get<Student[]>('http://localhost:8000/api/', {params}).pipe(
+    return this.http.get<Staff[]>('http://localhost:8000/api/personnel', {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
-    */
-
-    return of(this.staffs);
   }
 
   getStaffById(idStaff: number, fields?: string[]): Observable<Staff | undefined> {
@@ -95,14 +91,10 @@ export class StaffService {
       params = params.set('fields', fields.join(','));
     }
 
-    /*
-    return this.http.get<Student[]>(`http://localhost:8000/api/`, {params}).pipe(
+    return this.http.get<Staff>(`http://localhost:8000/api/personnel/${idStaff}`, {params}).pipe(
       tap(response => this.log(response)),
       catchError(error => this.handleError(error, null))
     );
-    */
-
-    return of(this.staffs.find(s => s.idPersonnel === idStaff));
   }
 
   //Log la réponse de l'API

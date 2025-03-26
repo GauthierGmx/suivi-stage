@@ -53,8 +53,7 @@ Route::get('/cas-logout', function (Request $request) {
     return $middleware->handleCasLogout();
 });
 
-//Route pour executer l'algorithme
-Route::get('/run-algorithm/{idUPPA}/{idFicheDescriptive}', [AlgorithmeController::class, 'run']);
+Route::get('/run-algo/{idUPPA}-{idFicheDescriptive}', [AlgorithmeController::class, 'run']);
 
 // Route pour le Controller Auth
 Route::get('/get-authenticated-user', [AuthController::class, 'getUser']);

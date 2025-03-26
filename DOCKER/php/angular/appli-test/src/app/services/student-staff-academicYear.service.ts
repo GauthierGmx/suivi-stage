@@ -55,7 +55,7 @@ export class StudentStaffAcademicYearService {
   }
 
   runAlgorithm(idUPPA: string, idFicheDescriptive: number): Observable<string> {
-    return this.http.get<string>(`${this.apiUrl}/run-algo/${idUPPA}-${idFicheDescriptive}`);
+    return this.http.get<string>(`${this.apiUrl}/api/run-algo/${idUPPA}-${idFicheDescriptive}`);
   }
 
   extractStudentTeacherAssignments(): Observable<ExcelResponse> {
