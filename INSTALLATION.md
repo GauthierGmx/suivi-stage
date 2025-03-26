@@ -75,6 +75,12 @@ Sauvegarde du projet (sur le dossier courant):
 git add .
 git commit -m "MESSAGE"
 ```
+> [!WARNING]
+> Si vous n'avez pas lié votre branche avec votre dépôt distant, il est nécessaire de le faire
+
+```bash
+git branch --set-upstream nomBranche origin/nomBranche
+```
 
 Pour pousser le code sur GITHUB : 
 
