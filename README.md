@@ -1,6 +1,25 @@
 # suivi-stage
 Projet de SAE pour le suivi des stages des étudiants du BUT Informatique de l'IUT de Bayonne
 
+## Table des matières
+
+- [Table des matières](#table-des-matières)
+- [Arborescence](#arborescence-des-dossiers)
+- [Guide d'Installation](#guide-installation)
+  - [Prérequis](#prerequis)
+  - [Version docker](#version-docker)
+    - [Programmes requis](#programmes-requis)
+    - [Installation Windows](#installation-windows)
+    - [Installation UNIX](#installation-unix)
+  - [Version standalone](#version-standalone)
+    - [Programmes requis](#programmes-requis-1)
+    - [Installation automatique Windows](#installation-automatique-windows)
+    - [Installation automatique UNIX](#installation-automatique-unix)
+    - [Installation manuelle (Windows/UNIX)](#installation-manuelle-windowsunix)
+  - [Version de bureau](#version-de-bureau)
+- [Identité collaborateurs](#identité-collaborateurs)
+- [Structure des dossiers](#structure-des-dossiers)
+
 ---
 ## Arborescence des dossiers
 * SQL : contient les scripts de création des tables SQL et de peuplement des tables
