@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Student } from '../models/student.model';
 import { Staff } from '../models/staff.model';
@@ -8,6 +9,7 @@ import { catchError, Observable, of, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+  apiUrl = environment.apiUrl
   currentUser?: Student | Staff;
 
   constructor(
@@ -21,7 +23,7 @@ export class AuthService {
       return of(this.currentUser);
     }
     else {
-      return this.http.get<Student | Staff>('http://localhost:8000/api/get-authenticated-user', { withCredentials: true }).pipe(
+      return this.http.get<Student | Staff>(`${this.apiUrl}/api/get-authenticated-user`, { withCredentials: true }).pipe(
         tap(response => sessionStorage.setItem('currentUser', JSON.stringify(response))),
         tap(response => this.log(response)),
         catchError(error => this.handleError(error, []))
@@ -35,10 +37,10 @@ export class AuthService {
     this.currentUser = undefined;
     
     // First, clear cookies
-    this.http.get('http://localhost:8000/api/logout', { withCredentials: true })
+    this.http.get(`${this.apiUrl}/api/logout`, { withCredentials: true })
       .subscribe({
         next: () => {
-          window.location.href = 'http://localhost:8000/api/cas-logout';
+          window.location.href = `${this.apiUrl}/api/cas-logout`;
         },
         error: (error) => {
           console.error('Erreur lors de la déconnexion:', error);
