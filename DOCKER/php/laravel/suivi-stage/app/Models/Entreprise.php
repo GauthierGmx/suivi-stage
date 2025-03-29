@@ -17,7 +17,6 @@ class Entreprise extends Model
         'adresse',
         'ville',
         'codePostal',
-        'pays',
         'telephone',
         'codeAPE_NAF',
         'statutJuridique',
@@ -28,7 +27,8 @@ class Entreprise extends Model
         'telephoneRepresentant',
         'fonctionRepresentant',
         'longitudeAdresse',
-        'latitudeAdresse'
+        'latitudeAdresse',
+        'idPays',
     ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idEntreprise';
@@ -57,5 +57,11 @@ class Entreprise extends Model
     public function rechercheStages()
     {
         return $this->hasMany(RechercheStage::class);
+    }
+
+    // Relation 1-N avec Pays
+    public function pays()
+    {
+        return $this->belongsTo(Pays::class);
     }
 }

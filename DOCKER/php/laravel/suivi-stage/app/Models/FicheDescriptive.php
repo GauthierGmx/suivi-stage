@@ -31,7 +31,6 @@ class FicheDescriptive extends Model
         'adresseStage',
         'codePostalStage',
         'villeStage',
-        'paysStage',
         'longitudeStage',
         'latitudeStage',
         'statut',
@@ -43,7 +42,8 @@ class FicheDescriptive extends Model
         'materielPrete',
         'idEntreprise',
         'idTuteurEntreprise',
-        'idUPPA'
+        'idUPPA',
+        'idPays',
     ];
     // Définit l'attribut de la clé primaire
     protected $primaryKey = 'idFicheDescriptive';
@@ -66,5 +66,11 @@ class FicheDescriptive extends Model
     public function etudiant()
     {
         return $this->belongsTo(Etudiant::class);
+    }
+
+    // Relation 1-N avec Pays
+    public function pays()
+    {
+        return $this->belongsTo(Pays::class);
     }
 }

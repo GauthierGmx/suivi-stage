@@ -36,7 +36,6 @@ class FicheDescriptiveSeeder extends Seeder
                 'adresseStage' => '20 Rue Ernest Guillier',
                 'codePostalStage' => '24000',
                 'villeStage' => 'Périgueux',
-                'paysStage' => 'France',
                 'longitudeStage' => '0.716667',
                 'latitudeStage' => '45.183333',
                 'statut' => 'En cours',
@@ -49,6 +48,7 @@ class FicheDescriptiveSeeder extends Seeder
                 'idEntreprise' => 1,
                 'idTuteurEntreprise' => 1,
                 'idUPPA' => '610000',
+                'idPays' => 67,
             ],
             [
                 'dateCreation' => '2024-01-01',
@@ -71,7 +71,6 @@ class FicheDescriptiveSeeder extends Seeder
                 'adresseStage' => '6 Rue des cometes',
                 'codePostalStage' => '33185',
                 'villeStage' => 'Le haillan',
-                'paysStage' => 'France',
                 'longitudeStage' => '-0.666667',
                 'latitudeStage' => '44.833333',
                 'statut' => 'Validee',
@@ -84,6 +83,7 @@ class FicheDescriptiveSeeder extends Seeder
                 'idEntreprise' => 2,
                 'idTuteurEntreprise' => 2,
                 'idUPPA' => '610001',
+                'idPays' => 67,
             ],
             [
                 'dateCreation' => '2024-01-01',
@@ -106,7 +106,6 @@ class FicheDescriptiveSeeder extends Seeder
                 'adresseStage' => '2 allée du Parc Montaury',
                 'codePostalStage' => '64600',
                 'villeStage' => 'Anglet',
-                'paysStage' => 'France',
                 'longitudeStage' => '-1.50939',
                 'latitudeStage' => '43.47977',
                 'statut' => 'Validee',
@@ -118,7 +117,8 @@ class FicheDescriptiveSeeder extends Seeder
                 'materielPrete' => 'Ordinateur, écrans, souris, clavier',
                 'idEntreprise' => 7,
                 'idTuteurEntreprise' => 7,
-                'idUPPA' => '610123'
+                'idUPPA' => '610123',
+                'idPays' => 67,
             ],
             [
                 'dateCreation' => '2024-01-01',
@@ -141,7 +141,6 @@ class FicheDescriptiveSeeder extends Seeder
                 'adresseStage' => '6 Rue des cometes',
                 'codePostalStage' => '33185',
                 'villeStage' => 'Le haillan',
-                'paysStage' => 'France',
                 'longitudeStage' => '-0.666667',
                 'latitudeStage' => '44.833333',
                 'statut' => 'Validee',
@@ -153,7 +152,8 @@ class FicheDescriptiveSeeder extends Seeder
                 'materielPrete' => 'Ordinateur, écrans, souris, clavier',
                 'idEntreprise' => 2,
                 'idTuteurEntreprise' => 2,
-                'idUPPA' => '610124'
+                'idUPPA' => '610124',
+                'idPays' => 67,
             ]
         ]);        
     }

@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         RoleSeeder::class,
         DepartementIUTSeeder::class,
         PersonnelSeeder::class,
+        PaysSeeder::class,
         EntrepriseSeeder::class,
         ParcoursSeeder::class,
         TuteurEntrepriseSeeder::class,

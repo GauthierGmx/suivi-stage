@@ -25,7 +25,6 @@ class CreateEntreprisesTable extends Migration
             $table->string('adresse',100)->nullable();
             $table->string('ville',50)->nullable();
             $table->string('codePostal',5)->nullable();
-            $table->string('pays',50)->nullable();
             $table->string('telephone',12)->nullable();
             $table->string('codeAPE_NAF',6)->nullable();
             $table->enum('statutJuridique',['EI','EURL','SARL','SASU','SAS','SA','SNC','SCS','SCA'])->nullable();
@@ -37,6 +36,10 @@ class CreateEntreprisesTable extends Migration
             $table->string('fonctionRepresentant',50)->nullable();
             $table->string('longitudeAdresse',20)->nullable();
             $table->string('latitudeAdresse',20)->nullable();
+
+            // Clé étrangère
+            $table->unsignedInteger('idPays');
+            $table->foreign('idPays')->references('idPays')->on('pays');
         });
     }
 

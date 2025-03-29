@@ -39,7 +39,6 @@ class CreateFicheDescriptivesTable extends Migration
             $table->string('adresseStage', 100)->nullable();
             $table->string('codePostalStage', 10)->nullable();
             $table->string('villeStage', 50)->nullable();
-            $table->string('paysStage', 50)->nullable();
             $table->string('longitudeStage', 20)->nullable();
             $table->string('latitudeStage', 20)->nullable();
             $table->enum('statut', ['En cours','Validee','Refusée'])->default('En cours');
@@ -59,6 +58,9 @@ class CreateFicheDescriptivesTable extends Migration
 
             $table->string('idUPPA');
             $table->foreign('idUPPA')->references('idUPPA')->on('etudiants');
+
+            $table->unsignedInteger('idPays')->nullable();
+            $table->foreign('idPays')->references('idPays')->on('pays');
         });
     }
 

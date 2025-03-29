@@ -22,14 +22,14 @@ class EntrepriseSeeder extends Seeder
                 'adresse' => '20 Rue Ernest Guillier',
                 'ville' => 'Périgueux',
                 'codePostal' => '24000',
-                'pays' => 'France',
                 'nomRepresentant' => 'DUPONT',
                 'prenomRepresentant' => 'Jean',
                 'adresseMailRepresentant' => 'jean.dupont@zero-infini.fr',
                 'telephoneRepresentant' => '0553098765',
                 'fonctionRepresentant' => 'PDG',
                 'longitudeAdresse' => '0.716667',
-                'latitudeAdresse' => '45.183333'
+                'latitudeAdresse' => '45.183333',
+                'idPays' => 67,
             ],
             [
                 'idEntreprise' => 2,
@@ -38,14 +38,14 @@ class EntrepriseSeeder extends Seeder
                 'adresse' => '6 Rue des cometes',
                 'ville' => 'Le haillan',
                 'codePostal' => '33185',
-                'pays' => 'France',
                 'nomRepresentant' => 'DUPONT',
                 'prenomRepresentant' => 'Jean',
                 'adresseMailRepresentant' => 'jean.dupont@zero-infini.fr',
                 'telephoneRepresentant' => '0553098765',
                 'fonctionRepresentant' => 'PDG',
                 'longitudeAdresse' => '-0.666667',
-                'latitudeAdresse' => '44.833333'
+                'latitudeAdresse' => '44.833333',
+                'idPays' => 67,
             ],
             [
                 'idEntreprise' => 3,
@@ -54,14 +54,14 @@ class EntrepriseSeeder extends Seeder
                 'adresse' => '50 Avenue du Lac Marion',
                 'ville' => 'Biarritz',
                 'codePostal' => '64200',
-                'pays' => 'France',
                 'nomRepresentant' => 'DUPONT',
                 'prenomRepresentant' => 'Jean',
                 'adresseMailRepresentant' => 'jean.dupont@zero-infini.fr',
                 'telephoneRepresentant' => '0553098765',
                 'fonctionRepresentant' => 'PDG',
                 'longitudeAdresse' => '-1.55',
-                'latitudeAdresse' => '43.483333'
+                'latitudeAdresse' => '43.483333',
+                'idPays' => 67,
             ],
             [
                 'idEntreprise' => 4,
@@ -70,14 +70,14 @@ class EntrepriseSeeder extends Seeder
                 'adresse' => '90 Allée Fausto de Elhuyar',
                 'ville' => 'Bidart',
                 'codePostal' => '64210',
-                'pays' => 'France',
                 'nomRepresentant' => 'DUPONT',
                 'prenomRepresentant' => 'Jean',
                 'adresseMailRepresentant' => 'jean.dupont@zero-infini.fr',
                 'telephoneRepresentant' => '0553098765',
                 'fonctionRepresentant' => 'PDG',
                 'longitudeAdresse' => '-1.55',
-                'latitudeAdresse' => '43.45'
+                'latitudeAdresse' => '43.45',
+                'idPays' => 67,
             ],
             [
                 'idEntreprise' => 5,
@@ -86,14 +86,14 @@ class EntrepriseSeeder extends Seeder
                 'adresse' => '2 Allée Andromède',
                 'ville' => 'Anglet',
                 'codePostal' => '64600',
-                'pays' => 'France',
                 'nomRepresentant' => 'DUPONT',
                 'prenomRepresentant' => 'Jean',
                 'adresseMailRepresentant' => 'jean.dupont@zero-infini.fr',
                 'telephoneRepresentant' => '0553098765',
                 'fonctionRepresentant' => 'PDG',
                 'longitudeAdresse' => '-1.5',
-                'latitudeAdresse' => '43.5'
+                'latitudeAdresse' => '43.5',
+                'idPays' => 67,
             ],
             [
                 'idEntreprise' => 6,
@@ -102,14 +102,14 @@ class EntrepriseSeeder extends Seeder
                 'adresse' => '25 Rue du cardinal Richaud',
                 'ville' => 'Bordeaux',
                 'codePostal' => '33000',
-                'pays' => 'France',
                 'nomRepresentant' => 'DUPONT',
                 'prenomRepresentant' => 'Jean',
                 'adresseMailRepresentant' => 'jean.dupont@zero-infini.fr',
                 'telephoneRepresentant' => '0553098765',
                 'fonctionRepresentant' => 'PDG',
                 'longitudeAdresse' => '-0.566667',
-                'latitudeAdresse' => '44.833333'
+                'latitudeAdresse' => '44.833333',
+                'idPays' => 67,
             ],
             [
                 'idEntreprise' => 7,
@@ -118,14 +118,14 @@ class EntrepriseSeeder extends Seeder
                 'adresse' => '2 allée du parc montaury',
                 'ville' => 'Anglet',
                 'codePostal' => '64600',
-                'pays' => 'France',
                 'nomRepresentant' => 'DUPONT',
                 'prenomRepresentant' => 'Jean',
                 'adresseMailRepresentant' => 'jean.dupont@zero-infini.fr',
                 'telephoneRepresentant' => '0553098765',
                 'fonctionRepresentant' => 'PDG',
                 'longitudeAdresse' => '-1.50939',
-                'latitudeAdresse' => '43.47977'
+                'latitudeAdresse' => '43.47977',
+                'idPays' => 67,
             ]
         ]);
     }
