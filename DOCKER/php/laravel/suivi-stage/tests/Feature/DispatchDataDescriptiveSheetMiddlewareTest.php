@@ -138,7 +138,7 @@ class DispatchDataDescriptiveSheetMiddlewareTest extends TestCase
                         'type' => 'ficheDescriptive',
                      ],
                      'paysStageFicheDescriptive' => [
-                        'value' => $ficheDescriptive->paysStage,
+                        'value' => $ficheDescriptive->idPays,
                         'type' => 'ficheDescriptive',
                      ],
                      'statut' => [
@@ -476,7 +476,7 @@ class DispatchDataDescriptiveSheetMiddlewareTest extends TestCase
                 "type" => "ficheDescriptive"
             ],
             "paysStageFicheDescriptive" => [
-                "value" => "France",
+                "value" => 67,
                 "type" => "ficheDescriptive"
             ],
             "nomTuteurEntreprise" => [
@@ -582,7 +582,7 @@ class DispatchDataDescriptiveSheetMiddlewareTest extends TestCase
                  "adresseStage" => "15 rue de la Victoire",
                  "codePostalStage" => "47000",
                  "villeStage" => "Agen",
-                 "paysStage" => "France",
+                 "idPays" => 67,
                  "longitudeStage" => null,
                  "latitudeStage" => null,
                  "statut" => "En cours",

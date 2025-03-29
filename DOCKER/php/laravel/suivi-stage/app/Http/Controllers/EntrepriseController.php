@@ -47,12 +47,11 @@ class EntrepriseController extends Controller
         {
             $donneesValidees = $request->validate([
                 'numSIRET'                  => ["nullable","string","regex:/^\d{14}$/"], // Obligé de passer les paramètres dans un tableau puisque la règle "regex" est utilisée avec d'autres
-                'raisonSociale'             => 'required|string|max:100',
+                'raisonSociale'             => 'bail|required|string|max:100',
                 'typeEtablissement'         => 'nullable|string|in:Administration,Association,Entreprise,Etablissement public',
                 'adresse'                   => 'nullable|string|max:100',
                 'ville'                     => 'nullable|string|max:50',
                 'codePostal'                => ["nullable","string","regex:/^\d{5}$/"],
-                'pays'                      => 'nullable|string|max:50',
                 'telephone'                 => ["nullable","string","regex:/^(\+33|0)\d{9}$/"],
                 'codeAPE_NAF'               => ["nullable","string","regex:/^\d{2}\.\d{2}[A-Z]$/"],
                 'statutJuridique'           => 'nullable|string|in:EI,EURL,SARL,SASU,SAS,SA,SNC,SCS,SCA',
@@ -64,6 +63,7 @@ class EntrepriseController extends Controller
                 'fonctionRepresentant'      => 'nullable|string|max:50',
                 'longitudeAdresse'          => 'nullable|string|max:20',
                 'latitudeAdresse'           => 'nullable|string|max:20',
+                'idPays'                    => 'required|integer',
             ]);
     
             $uneEntreprise = Entreprise::create([
@@ -85,6 +85,7 @@ class EntrepriseController extends Controller
                 'fonctionRepresentant'      => $donneesValidees['fonctionRepresentant'] ?? null,
                 'longitudeAdresse'          => $donneesValidees['longitudeAdresse'] ?? null,
                 'latitudeAdresse'           => $donneesValidees['latitudeAdresse'] ?? null,
+                'idPays'                    => $donneesValidees['idPays'],
             ]);
     
             return response()->json($uneEntreprise,201);

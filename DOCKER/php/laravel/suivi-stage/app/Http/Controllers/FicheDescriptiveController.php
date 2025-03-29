@@ -39,7 +39,6 @@ class FicheDescriptiveController extends Controller
                 'adresseStage'                  => 'nullable|string|max:100',
                 'codePostalStage'               => ['nullable','string','regex:/^\d{5}$/'],
                 'villeStage'                    => 'nullable|string|max:50',
-                'paysStage'                     => 'nullable|string|max:50',
                 'longitudeStage'                => 'nullable|string|max:20',
                 'latitudeStage'                 => 'nullable|string|max:20',
                 'statut'                        => 'bail|required|string|in:En cours,Validee,Refusée',
@@ -51,7 +50,8 @@ class FicheDescriptiveController extends Controller
                 'materielPrete'                 => 'nullable|string',
                 'idEntreprise'                  => 'bail|required|integer',
                 'idTuteurEntreprise'            => 'bail|required|integer',
-                'idUPPA'                        => 'bail|required|integer'
+                'idUPPA'                        => 'bail|required|integer',
+                'idPays'                        => 'bail|required|integer',
             ]);
 
             $uneFicheDescriptive = FicheDescriptive::create([
@@ -75,7 +75,6 @@ class FicheDescriptiveController extends Controller
                 'adresseStage' => $validatedData['adresseStage']?? null,
                 'codePostalStage' => $validatedData['codePostalStage']?? null,
                 'villeStage' => $validatedData['villeStage']?? null,
-                'paysStage' => $validatedData['paysStage']?? null,
                 'longitudeStage' => $validatedData['longitudeStage']?? null,
                 'latitudeStage' => $validatedData['latitudeStage']?? null,
                 'statut' => $validatedData['statut'],
@@ -87,7 +86,8 @@ class FicheDescriptiveController extends Controller
                 'materielPrete' => $validatedData['materielPrete']?? null,
                 'idEntreprise' => $validatedData['idEntreprise'],
                 'idTuteurEntreprise' => $validatedData['idTuteurEntreprise'],
-                'idUPPA' => $validatedData['idUPPA']
+                'idUPPA' => $validatedData['idUPPA'],
+                'idPays' => $validatedData['idPays'],
             ]);
 
             return response()->json($uneFicheDescriptive,201);
@@ -146,7 +146,6 @@ class FicheDescriptiveController extends Controller
                 'adresseStage'                  => 'nullable|string|max:100',
                 'codePostalStage'               => ['nullable','string','regex:/^\d{5}$/'],
                 'villeStage'                    => 'nullable|string|max:50',
-                'paysStage'                     => 'nullable|string|max:50',
                 'longitudeStage'                => 'nullable|string|max:20',
                 'latitudeStage'                 => 'nullable|string|max:20',
                 'statut'                        => 'bail|required|string|in:En cours,Validee,Refusée',
@@ -156,6 +155,7 @@ class FicheDescriptiveController extends Controller
                 'dateFinInterruption'           => 'nullable|date|date-format:Y-m-d',
                 'personnelTechniqueDisponible'  => 'nullable||boolean',
                 'materielPrete'                 => 'nullable|string',
+                'idPays'                        => 'bail|required|integer',
             ]);
             
             // Récupération et mise à jour en une seule ligne

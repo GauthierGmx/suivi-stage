@@ -62,7 +62,6 @@ class EntrepriseControllerTest extends TestCase
             'adresse' => null,
             'ville' => null,
             'codePostal' => null,
-            'pays' => null,
             'telephone' => null,
             'codeAPE_NAF' => null,
             'statutJuridique' => null,
@@ -74,6 +73,7 @@ class EntrepriseControllerTest extends TestCase
             'fonctionRepresentant' => null,
             'longitudeAdresse' => null,
             'latitudeAdresse' => null,
+            'idPays' => 67,
         ];
 
         $response = $this->postJson('/api/entreprises/create', $donnees);
@@ -108,6 +108,7 @@ class EntrepriseControllerTest extends TestCase
             'fonctionRepresentant' => null,
             'longitudeAdresse' => null,
             'latitudeAdresse' => null,
+            'idPays' => 67,
         ];
 
         $response = $this->postJson('/api/entreprises/create', $donnees);
@@ -123,14 +124,6 @@ class EntrepriseControllerTest extends TestCase
      */
     public function test_store_renvoie_une_erreur_de_base_de_donnees()
     {
-        // Mock du modèle RechercheStage pour déclencher une exception
-        $this->mock(\App\Http\Controllers\EntrepriseController::class, function ($mock) {
-            $mock->shouldReceive('store')->andThrow(new \Illuminate\Database\QueryException('Erreur simulée',
-            [],
-            new \Exception('Erreur simulée')
-            ));
-        });
-
         $donnees = [
             'numSIRET' => null,
             'raisonSociale' => 'TEST API',
@@ -138,7 +131,6 @@ class EntrepriseControllerTest extends TestCase
             'adresse' => null,
             'ville' => null,
             'codePostal' => null,
-            'pays' => null,
             'telephone' => null,
             'codeAPE_NAF' => null,
             'statutJuridique' => null,
@@ -150,6 +142,7 @@ class EntrepriseControllerTest extends TestCase
             'fonctionRepresentant' => null,
             'longitudeAdresse' => null,
             'latitudeAdresse' => null,
+            'idPays' => PHP_INT_MAX, // Valeur invalide pour provoquer une erreur
         ];
 
         $response = $this->postJson('/api/entreprises/create', $donnees);

@@ -77,7 +77,7 @@ class DispatchDataDescriptiveSheet
         'adresseStageFicheDescriptive' => 'adresseStage',
         'codePostalStageFicheDescriptive'=> 'codePostalStage',
         'villeStageFicheDescriptive' => 'villeStage',
-        'paysStageFicheDescriptive' => 'paysStage',
+        'paysStageFicheDescriptive' => 'idPays',
         'idEntreprise' => 'idEntreprise',
         'idTuteurEntreprise' => 'idTuteurEntreprise',
     ];
@@ -418,7 +418,7 @@ class DispatchDataDescriptiveSheet
                 'type' => 'ficheDescriptive',
              ],
              'paysStageFicheDescriptive' => [
-                'value' => $ficheDescriptive->paysStage,
+                'value' => $ficheDescriptive->idPays,
                 'type' => 'ficheDescriptive',
              ],
              'statut' => [
